@@ -190,7 +190,7 @@ foreach my $i (sort keys %restdata){
     }
     else {
 	my $string = "";
-	foreach my $element (sort keys $restdata{$i}) {
+	foreach my $element (sort keys %{$restdata{$i}}) {
 	    if ($string eq "") {
 		$string = $element;
 	    }
@@ -290,6 +290,17 @@ sub tables{
     my $rootCun = $twigObjCun->root;
     $twigObjCun->purge;
     
+my %signdata = ();
+
+    my @signs = $rootCun->get_xpath('sign');
+    foreach my $sign (@signs){
+	my @utf8 = $sign->get_xpath("utf8");
+	my $hex = $utf8[0]->{att}->{"hex"};
+	my @vs = $sign->get_xpath("v");
+	foreach my $thing (@vs){
+	    $signdata{$thing->{att}->{"n"}} = $hex;
+	}
+    }
     
     foreach my $i (@data){
 	my $value = $i->{att}->{'name'};  # type name, e.g., CV, CV, etc.
@@ -328,7 +339,9 @@ sub tables{
 	    }
 
 # I would like to add the cuneiform code, but no luck so far.
-	    my $cunhex = "";
+	    my $cunhex = $signdata{$formname};
+	    print $cunhex;
+	    
 	#    my $expr = "q{v[\@n='".$formname."']}";
 	#    foreach my $cuntemp ($rootCun->findnodes($expr)) {
 	#	my $parent = $cuntemp->parent();
