@@ -75,7 +75,7 @@ sub general_stats{
     }
     
     foreach my $lang (keys %{$cvcdata{'lang'}}){	
-	&writetofile("SYLLABIC_".$lang,$cvcdata{'lang'}{$lang});  # NEW/CHANGED - new name; TODO: one file per Akkadian language
+	&writetofile("SYLLABIC_".$lang,$cvcdata{'lang'}{$lang}); 
 	&outputtext("\n\n");
     }
     
@@ -390,10 +390,10 @@ sub dographemeData{
 	    $form = $i->{att}->{"form"};
 	}
 	if($i->{att}->{"g:break"}){
-	    savebroken($splitname,$splitlang,$form,"","","",$localdata,$i->{att}->{"g:break"} ,$temp,"splitwords");
+	    savebroken($splitname,"",$splitlang,$form,"","","",$localdata,$i->{att}->{"g:break"} ,$temp,"splitwords");
 	}
 	else{
-	    saveinfo($splitname,$splitlang,$form,"","","",$localdata ,$temp ,"splitwords");
+	    saveinfo($splitname,"",$splitlang,$form,"","","",$localdata ,$temp ,"splitwords");
 	}
 	
 	push(@{ $graphemearraytemp{'splitgraphemes'} }, $temp);
@@ -412,10 +412,10 @@ sub dographemeData{
 	    $form = $i->{att}->{"form"};
 	}
 	if($i->{att}->{"g:break"}){
-	    savebroken($name,$lang,$form,"","",0,$localdata,$i->{att}->{"g:break"} ,$temp,"words");
+	    savebroken($name,"",$lang,$form,"","",0,$localdata,$i->{att}->{"g:break"} ,$temp,"words");
 	}
 	else{
-	    saveinfo($name,$lang,$form,"","",0,$localdata ,$temp ,"words");
+	    saveinfo($name,"",$lang,$form,"","",0,$localdata ,$temp ,"words");
 	}
 	
 	push(@{ $graphemearraytemp{'graphemes'} }, $temp);
@@ -561,11 +561,22 @@ sub doGsv{ # TODO: semantic/phonetic pre/post should be integrated here PRIORITY
     
     my @graphemes = $root->get_xpath($xpath);
     foreach my $i (@graphemes){
-	my @syllables = ("V", "VC", "CV", "CVC");
+	my %syllables = ();
+	$syllables{"V"} = 1;
+	$syllables{"VC"} = 1;
+	$syllables{"CV"} = 1;
+	$syllables{"CVC"} = 1;
 	my $form = "";
 	my $baseform = "";
 	if($i->text){
 	    $form = $i->text;
+	}
+	my $role = "syll";
+	if($i->{att}->{"g:role"} && $i->{att}->{"g:role"} ne ""){
+	    $role = $i->{att}->{"g:role"};
+	}
+	elsif($root->{att}->{"g:role"} && $root->{att}->{"g:role"} ne ""){
+	    $role = $root->{att}->{"g:role"};
 	}
 	
 	#TODO do we need to keep the composite and the non composite - is order important
@@ -587,12 +598,10 @@ sub doGsv{ # TODO: semantic/phonetic pre/post should be integrated here PRIORITY
 	}
 	
 	# NEW/CHANGED from here: moved down and change to baseform
-	# IMPORTANT & TODO: I have now changed the language to akk-x-neoass (as I needed this data to play with); however, a cvcfile
-	# should be build for each of the Akkadian forms (the basic lang="akk", other forms beginning with "akk...")
 	
 	#    only for lang:akk aei{O}u
 	my $cvc = ""; my $logo = 0;  
-	if($xpath eq "g:v" && ($lang eq "akk-x-neoass" || $lang=~m|^akk|)){ #extend to other languages later *** PRIORITY
+	if($xpath eq "g:v" && ($lang=~m|^akk|)){ #extend to other languages later *** 
 	    if ($baseform ne "") {
 		$cvc = lc($baseform);
 	    }
@@ -618,34 +627,35 @@ sub doGsv{ # TODO: semantic/phonetic pre/post should be integrated here PRIORITY
 	    # still have to get rid of words/values = "o"
 	    # Greta: what happens to unclear readings? $BA etc.? How marked in SAAo?
 	    
+	    
 	    # TODO: something like this should be put here, but don't yet know how to do this PRIORITY
-	#    if ($cvc not in @syllables) {  # no idea how I have to express this correctly
-	#	if ($role eq "semantic") {
-	#	    $cvc = ""; $logo = 1;  
-	#	}
-	#	elsif ($cvc eq "C") { $role = "syll"; }  # then the value should be x, so unreadable sign, treat as syllabic value
-	#	    else { $role = "logo"; }	
-	#	}
-	#    }
-	#    else {
-	#	$role = "syll";
-	#    }
+	    if (!($syllables{$cvc})) {
+	    #if ($cvc  @syllables) {  # no idea how I have to express this correctly
+		if ($role eq "semantic") {
+		    $cvc = ""; $logo = 1;  
+		}
+		elsif ($cvc eq "C") { $role = "syll"; }  # then the value should be x, so unreadable sign, treat as syllabic value
+		else { $role = "logo"; }
+	    }
+	    else {
+		$role = "syll";
+	    }
 
 	}
-
+	print $role;
 	
-	if($xpath eq "g:s" && $lang eq "akk-x-neoass"){ #extend to other languages later *** PRIORITY
+	if($xpath eq "g:s" && $lang =~m|^akk|){ #extend to other languages later *** 
 	    $logo = 1;
 	    # check how it deals with {1} *** Greta
-	    }
+	}
 
 	# NEW/CHANGED until here
 # TODO: role should be saved too PRIORITY
 	if($i->{att}->{"g:break"}){
-	    savebroken($name,$lang,$form,$baseform,$cvc,$logo,$localdata,$i->{att}->{"g:break"} ,\%singledata);
+	    savebroken($name,$role,$lang,$form,$baseform,$cvc,$logo,$localdata,$i->{att}->{"g:break"} ,\%singledata);
 	}
 	else{
-	    saveinfo($name,$lang,$form,$baseform,$cvc,$logo,$localdata ,\%singledata);
+	    saveinfo($name,$role,$lang,$form,$baseform,$cvc,$logo,$localdata ,\%singledata);
 	}
     }
     return \%singledata;
@@ -653,6 +663,7 @@ sub doGsv{ # TODO: semantic/phonetic pre/post should be integrated here PRIORITY
 sub savebroken{
     
     my $name = shift;
+    my $role = shift;
     my $lang = shift;
     my $form = shift;
     my $baseform = shift;
@@ -716,19 +727,19 @@ sub savebroken{
 	if ($break eq "missing"){
 	    $cvcdata{"lang"}{$lang}{"type"}{$cvc}{$break}{"num"}++;
 		if($baseform ne "") {
-		    $cvcdata{"lang"}{$lang}{"type"}{$cvc}{$break}{"form"}{$baseform}{"num"}++;
+		    $cvcdata{"lang"}{$lang}{"type"}{$cvc}{$break}{"form"}{$baseform}{"role"}{$role}{"num"}++;
 		}
 		else {
-		    $cvcdata{"lang"}{$lang}{"type"}{$cvc}{$break}{"form"}{$form}{"num"}++;
+		    $cvcdata{"lang"}{$lang}{"type"}{$cvc}{$break}{"form"}{$form}{"role"}{$role}{"num"}++;
 		}  
 	}
 	else { # the sign is preserved but damaged
 	    $cvcdata{"lang"}{$lang}{"type"}{$cvc}{"num"}++;
 		if($baseform ne "") {
-		    $cvcdata{"lang"}{$lang}{"type"}{$cvc}{"form"}{$baseform}{"num"}++;
+		    $cvcdata{"lang"}{$lang}{"type"}{$cvc}{"form"}{$baseform}{"role"}{$role}{"num"}++;
 		}
 		else {
-		    $cvcdata{"lang"}{$lang}{"type"}{$cvc}{"form"}{$form}{"num"}++;
+		    $cvcdata{"lang"}{$lang}{"type"}{$cvc}{"form"}{$form}{"role"}{$role}{"num"}++;
 		}
 	}
 	# NEW/CHANGED until here
@@ -809,6 +820,7 @@ sub savebroken{
 
 sub saveinfo{
     my $name = shift;
+    my $role = shift;
     my $lang = shift;
     my $form = shift;
     my $baseform = shift;
@@ -864,10 +876,10 @@ sub saveinfo{
     if($cvc ne ""){
 	$cvcdata{"lang"}{$lang}{"type"}{$cvc}{"num"}++;
 	if($baseform ne "") {
-	    $cvcdata{"lang"}{$lang}{"type"}{$cvc}{"form"}{$baseform}{"num"}++;
+	    $cvcdata{"lang"}{$lang}{"type"}{$cvc}{"form"}{$baseform}{"role"}{$role}{"num"}++;
 	}
 	else {
-	    $cvcdata{"lang"}{$lang}{"type"}{$cvc}{"form"}{$form}{"num"}++;
+	    $cvcdata{"lang"}{$lang}{"type"}{$cvc}{"form"}{$form}{"role"}{$role}{"num"}++;
 	}
 	
 	# NEW/CHANGED until here
@@ -943,10 +955,10 @@ sub doG{
 	    $form = $i->{att}->{"form"};
 	}
 	if($i->{att}->{"g:break"}){
-	    savebroken($name,$lang,$form,"","",0,$localdata,$i->{att}->{"g:break"} ,\%singledata);
+	    savebroken($name,"",$lang,$form,"","",0,$localdata,$i->{att}->{"g:break"} ,\%singledata);
 	}
 	else{
-	    saveinfo($name,$lang,$form,"","",0,$localdata ,\%singledata);
+	    saveinfo($name,"",$lang,$form,"","",0,$localdata ,\%singledata);
 	    &doGSingles($lang, $i, $localdata);
 	}
     }
