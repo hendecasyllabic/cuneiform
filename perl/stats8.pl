@@ -74,8 +74,10 @@ sub general_stats{
 	&writetofile("LANG_".$lang,$langdata{$lang});
     }
     
-    &writetofile("SYLLABIC",\%cvcdata);  # NEW/CHANGED - new name; TODO: one file per Akkadian language
-    &outputtext("\n\n");
+    foreach my $lang (keys %{$cvcdata{'lang'}}){	
+	&writetofile("SYLLABIC_".$lang,$cvcdata{'lang'}{$lang});  # NEW/CHANGED - new name; TODO: one file per Akkadian language
+	&outputtext("\n\n");
+    }
     
     &writetofile("LOGOGRAM",\%logodata);  # added in analogy with cvcdata
     &outputtext("\n\n");
@@ -590,7 +592,7 @@ sub doGsv{ # TODO: semantic/phonetic pre/post should be integrated here PRIORITY
 	
 	#    only for lang:akk aei{O}u
 	my $cvc = ""; my $logo = 0;  
-	if($xpath eq "g:v" && $lang eq "akk-x-neoass"){ #extend to other languages later *** PRIORITY
+	if($xpath eq "g:v" && ($lang eq "akk-x-neoass" || $lang=~m|^akk|)){ #extend to other languages later *** PRIORITY
 	    if ($baseform ne "") {
 		$cvc = lc($baseform);
 	    }
@@ -638,7 +640,6 @@ sub doGsv{ # TODO: semantic/phonetic pre/post should be integrated here PRIORITY
 	    }
 
 	# NEW/CHANGED until here
-
 # TODO: role should be saved too PRIORITY
 	if($i->{att}->{"g:break"}){
 	    savebroken($name,$lang,$form,$baseform,$cvc,$logo,$localdata,$i->{att}->{"g:break"} ,\%singledata);
@@ -713,24 +714,25 @@ sub savebroken{
     
     if($cvc ne ""){
 	if ($break eq "missing"){
-	    $cvcdata{"type"}{$cvc}{$break}{"num"}++;
+	    $cvcdata{"lang"}{$lang}{"type"}{$cvc}{$break}{"num"}++;
 		if($baseform ne "") {
-		    $cvcdata{"type"}{$cvc}{$break}{"form"}{$baseform}{"num"}++;
+		    $cvcdata{"lang"}{$lang}{"type"}{$cvc}{$break}{"form"}{$baseform}{"num"}++;
 		}
 		else {
-		    $cvcdata{"type"}{$cvc}{$break}{"form"}{$form}{"num"}++;
+		    $cvcdata{"lang"}{$lang}{"type"}{$cvc}{$break}{"form"}{$form}{"num"}++;
 		}  
 	}
 	else { # the sign is preserved but damaged
-	    $cvcdata{"type"}{$cvc}{"num"}++;
+	    $cvcdata{"lang"}{$lang}{"type"}{$cvc}{"num"}++;
 		if($baseform ne "") {
-		    $cvcdata{"type"}{$cvc}{"form"}{$baseform}{"num"}++;
+		    $cvcdata{"lang"}{$lang}{"type"}{$cvc}{"form"}{$baseform}{"num"}++;
 		}
 		else {
-		    $cvcdata{"type"}{$cvc}{"form"}{$form}{"num"}++;
+		    $cvcdata{"lang"}{$lang}{"type"}{$cvc}{"form"}{$form}{"num"}++;
 		}
 	}
 	# NEW/CHANGED until here
+	
 		
 	$singledata->{$type}{"type"}{$name}{"lang"}{$lang}{"type"}{'all'}{'cvc'}{$cvc}{'num'}++;
 	$output{$type}{"type"}{$name}{"lang"}{$lang}{"type"}{'all'}{'cvc'}{$cvc}{'num'}++;
@@ -860,12 +862,12 @@ sub saveinfo{
     
     # NEW/CHANGED from here
     if($cvc ne ""){
-	$cvcdata{"type"}{$cvc}{"num"}++;
+	$cvcdata{"lang"}{$lang}{"type"}{$cvc}{"num"}++;
 	if($baseform ne "") {
-	    $cvcdata{"type"}{$cvc}{"form"}{$baseform}{"num"}++;
+	    $cvcdata{"lang"}{$lang}{"type"}{$cvc}{"form"}{$baseform}{"num"}++;
 	}
 	else {
-	    $cvcdata{"type"}{$cvc}{"form"}{$form}{"num"}++;
+	    $cvcdata{"lang"}{$lang}{"type"}{$cvc}{"form"}{$form}{"num"}++;
 	}
 	
 	# NEW/CHANGED until here
