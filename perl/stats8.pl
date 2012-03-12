@@ -7,11 +7,17 @@ use Data::Dumper;
 use XML::Twig;
 use XML::Simple;
 use utf8;
+binmode STDOUT, ":utf8";
 
 my %perioddata = ();
 my %langdata = ();
-my %cvcdata = ();  # the syllabic reading values in Akkadian [later to be extended to other languages]
+
+# sign use
+my %sylldata = ();  # the syllabic reading values in Akkadian [later to be extended to other languages]
 my %logodata = (); # the logograms in Akkadian [later to be extended to other languages]
+my %numberdata = (); # the numbers
+my %leftovers = (); # undetermined signs
+
 my %output = ();
 my %config;
 $config{"typename"} = "";
@@ -36,54 +42,93 @@ sub general_stats{
     &traverseDir($startpath, $startdir,$config{"typename"},1,$ext);
     my @allfiles = @{$config{"filelist"}{$config{"typename"}}};
     
-    
-#    loop over each of the files we found 
+#    loop over each of the files we found
+# Q-files
     foreach(@allfiles){
         my $filename = $_;
         if($filename=~m|/([^/]*).${ext}$|){
             my $shortname = $1;
 	    $output{$shortname} = ();
-	    &outputtext("\n ShortName_". $shortname);
+	    &outputtext("\nShortName: ". $shortname);
             if($shortname=~m|^Q|gsi){
                 &doQstats($filename, $shortname);
             }
 	}
     }
-#create 2 OUTPUT files - OUTPUTP & OUTPUTQ
-    &writetofile("OUTPUTQ",\%output);    
+    
+# Create outputfiles for sign data of Q-files
+#   &writetofile("OUTPUTQ",\%output);    # deleted as it becomes too big
+    foreach my $lang (keys %{$sylldata{'lang'}}){	
+	&writetofile("Q_SYLLABIC_".$lang,$sylldata{'lang'}{$lang}); 
+    }
+
+    foreach my $lang (keys %{$logodata{'lang'}}){	
+        &writetofile("Q_LOGOGRAM_".$lang,$logodata{'lang'}{$lang});  # added in analogy with sylldata
+    }
+    
+    foreach my $lang (keys %{$numberdata{'lang'}}){	
+        &writetofile("Q_NUMBER_".$lang,$numberdata{'lang'}{$lang});  # added in analogy with sylldata
+    }
+    
+    foreach my $lang (keys %{$leftovers{'lang'}}){	
+        &writetofile("Q_LEFTOVERS_".$lang,$leftovers{'lang'}{$lang});  # added in analogy with sylldata
+    }
+    
+    foreach my $period (keys %perioddata){
+	&writetofile("Q_PERIOD_".$period,$perioddata{$period});
+    }
+    
+    foreach my $lang (keys %langdata){
+	&writetofile("Q_LANG_".$lang,$langdata{$lang});
+    }
+    
+# P-files
+# empty hashes and restart for P-files
     %output = ();
+    %sylldata = ();  # the syllabic reading values in Akkadian [later to be extended to other languages]
+    %logodata = (); # the logograms in Akkadian [later to be extended to other languages]
+    %numberdata = (); # the numbers
+    %leftovers = (); # undetermined signs
+    %langdata = ();
+    %perioddata = ();
 
     foreach(@allfiles){
         my $filename = $_;
         if($filename=~m|/([^/]*).${ext}$|){
             my $shortname = $1;
 	    $output{$shortname} = ();
-	    &outputtext("\n ShortName_". $shortname);
+	    &outputtext("\nShortName: ". $shortname);
             if($shortname=~m|^P|gsi){
                 &doPstats($filename, $shortname);
             }
 	}
     }
-    &writetofile("OUTPUTP",\%output);
+
+# Create outputfiles for sign data of P-files
+#    &writetofile("OUTPUTP",\%output);  # deleted because it gets far too big and thus becomes useless
+    foreach my $lang (keys %{$sylldata{'lang'}}){	
+	&writetofile("P_SYLLABIC_".$lang,$sylldata{'lang'}{$lang}); 
+    }
+
+    foreach my $lang (keys %{$logodata{'lang'}}){	
+        &writetofile("P_LOGOGRAM_".$lang,$logodata{'lang'}{$lang});  # added in analogy with sylldata
+    }
     
-    foreach my $period (keys %perioddata){
-	&writetofile("PERIOD_".$period,$perioddata{$period});
+    foreach my $lang (keys %{$numberdata{'lang'}}){	
+        &writetofile("P_NUMBER_".$lang,$numberdata{'lang'}{$lang});  # added in analogy with sylldata
+    }
+    
+    foreach my $lang (keys %{$leftovers{'lang'}}){	
+        &writetofile("P_LEFTOVERS_".$lang,$leftovers{'lang'}{$lang});  # added in analogy with sylldata
     }
     
     foreach my $lang (keys %langdata){
-	&writetofile("LANG_".$lang,$langdata{$lang});
+	&writetofile("P_LANG_".$lang,$langdata{$lang});
     }
-    
-    foreach my $lang (keys %{$cvcdata{'lang'}}){	
-	&writetofile("SYLLABIC_".$lang,$cvcdata{'lang'}{$lang}); 
-	&outputtext("\n\n");
-    }
-    
-    &writetofile("LOGOGRAM",\%logodata);  # added in analogy with cvcdata
-    &outputtext("\n\n");
-    
-    &writetofile("OUTPUT",\%output);
+
+#    &writetofile("OUTPUT",\%output);
 }
+
 #TODO make this better
 sub doQstats{
     my $filename = shift;
@@ -98,7 +143,7 @@ sub doQstats{
 #            for Q texts
     my @divs = $root->get_xpath('div');
     my $dsize = scalar @divs;
-    &outputtext("\n Number of Divs:". $dsize);
+    #&outputtext("\n Number of Divs:". $dsize);
     my $dcount = 0;
     $output{$shortname}{"div"} = ();
     
@@ -110,7 +155,7 @@ sub doQstats{
     foreach my $i (@divs){
         $dcount++;
 	my $linedata = "";
-        &outputtext("\n Div ".$dcount." of type ".$i->{att}->{type});
+        #&outputtext("\n Div ".$dcount." of type ".$i->{att}->{type});
 #        my %data = &doLineData($i);
 #	$sumlines  = &addLines($sumlines, \%data);
 #	$sumgraphemes  = &addgraphemes($sumgraphemes,\%data);
@@ -189,7 +234,7 @@ sub doPstats{
 #   for P texts
     my @surfaces = $root->get_xpath('object/surface');
     my $size = scalar @surfaces;
-    &outputtext("\n Number of surfaces:". $size);
+    #&outputtext("\n Number of surfaces:". $size);
     
     $localdata{"name"} = $shortname;
     
@@ -206,7 +251,7 @@ sub doPstats{
         my $csize = scalar @columns;
         #print  $i->print;
 	
-        &outputtext("\n Number of columns for surface ".$count." :". $csize);
+        #&outputtext("\n Number of columns for surface ".$count." :". $csize);
 	my %alldata = ("type","","label","","columns",0);
         my $ccount = 0;
     
@@ -228,7 +273,7 @@ sub doPstats{
 		    $alldata{'column'} = ();
 		}
 		$ccount++;
-		&outputtext("\n Number of lines for surface ".$count."  column ".$ccount." :");
+		#&outputtext("\n Number of lines for surface ".$count."  column ".$ccount." :");
 		$linedata = &doLineData($j, \%localdata);
 	    }
 	    elsif($type eq "nonx"){
@@ -293,7 +338,7 @@ sub doLineData{
     my %linearray = ();
     my @gruplines = $root->get_xpath('lg');
     my $lgsize = scalar @gruplines;
-    &outputtext("\n Number of group lines ".$lgsize);
+    #&outputtext("\n Number of group lines ".$lgsize);
     my $dcount = 0;
     my $sumlines =0;
     
@@ -314,7 +359,7 @@ sub doLineData{
 
     my $total = $sumlines + $lsize;
     #&outputtext("\n Total Number of lines within Groups ".$sumlines);
-    &outputtext("\n Number of lines not in groups ".$lsize);
+    #&outputtext("\n Number of lines not in groups ".$lsize);
     #&outputtext("\n Total Number of lines ".$total);
     $linearray{'lines'} = $lsize;
     $linearray{'groups'} = $lgsize;
@@ -384,7 +429,8 @@ sub dographemeData{
     my $splitlang = "";
     
     foreach my $i (@splitgraphemes){
-	my $temp = &doInsideGrapheme($i, $localdata);
+	my $splitlang = $i->{att}->{'xml:lang'};
+	my $temp = &doInsideGrapheme($i, $localdata, $splitlang);
 	my $form = "";
 	if($i->{att}->{"form"}){
 	    $form = $i->{att}->{"form"};
@@ -399,26 +445,29 @@ sub dographemeData{
 	push(@{ $graphemearraytemp{'splitgraphemes'} }, $temp);
     }
     
-    my @graphemes = $root->get_xpath('g:w');
-    my $graphemesize = scalar @graphemes;
+    # analyze words
+    my @words = $root->get_xpath('g:w');
+    my $graphemesize = scalar @words;
     my $name = "words";
     my $lang = "";
-    
-    
-    foreach my $i (@graphemes){
-	my $temp = &doInsideGrapheme($i, $localdata);
-	my $form = "";
-	if($i->{att}->{"form"}){
-	    $form = $i->{att}->{"form"};
+
+    foreach my $word (@words){
+	if ($word->{att}->{"form"} ne "o"){ # words with form="o" are not words at all and shouldn't be considered (e.g. SAA 1 10 o 18 = P 334195).
+	    $lang = $word->{att}->{'xml:lang'};
+	    my $temp = &doInsideGrapheme($word, $localdata, $lang);
+	    my $form = "";
+	    if($word->{att}->{"form"}){
+	        $form = $word->{att}->{"form"};
+	    }
+	    &outputtext("\nWord: ". $form."; lang: ".$lang);
+	    if($word->{att}->{"g:break"}){
+	        savebroken($name,"",$lang,$form,"","",0,$localdata,$word->{att}->{"g:break"} ,$temp,"words");
+	    }
+	    else{
+	        saveinfo($name,"",$lang,$form,"","",0,$localdata ,$temp ,"words");
+	    }
+	    push(@{ $graphemearraytemp{'words'} }, $temp);
 	}
-	if($i->{att}->{"g:break"}){
-	    savebroken($name,"",$lang,$form,"","",0,$localdata,$i->{att}->{"g:break"} ,$temp,"words");
-	}
-	else{
-	    saveinfo($name,"",$lang,$form,"","",0,$localdata ,$temp ,"words");
-	}
-	
-	push(@{ $graphemearraytemp{'graphemes'} }, $temp);
     }
     
     my $total = $sumgraphemes + $graphemesize;
@@ -434,9 +483,9 @@ sub dographemeData{
     }
     
     
-    &outputtext("\n Total Number of graphemes within Line ".$sumgraphemes);
-    &outputtext("\n Number of graphemes not in sub groups ".$graphemesize);
-    &outputtext("\n Total Number of lines ".$total);
+    #&outputtext("\n Total Number of graphemes within Line ".$sumgraphemes);
+    #&outputtext("\n Number of graphemes not in sub groups ".$graphemesize);
+    #&outputtext("\n Total Number of lines ".$total);
     #$graphemearray->{'grapheme'} = $graphemesize;
     #$graphemearray->{'allgraphemes'} = $total;
     return \%graphemearraytemp;
@@ -444,13 +493,14 @@ sub dographemeData{
 
 
 sub doInsideGrapheme{
-    my $root = shift;
+    my $root = shift;  # word or sign
     my $localdata = shift;
-    my $lang = shift || ""; #inherit lang if passed
+    my $lang = shift; # always passed || ""; #inherit lang if passed
+    
     my %singledata = ();
-    if($root->{att}->{"xml:lang"}){
-	$lang = $root->{att}->{"xml:lang"};
-    }
+#    if($root->{att}->{"xml:lang"}){
+#	$lang = $root->{att}->{"xml:lang"};
+#    }
     my @graphemesN = $root->get_xpath('g:n');
     my @graphemesX = $root->get_xpath('g:x');
     
@@ -465,7 +515,7 @@ sub doInsideGrapheme{
 	$singledata{"graphemesN"} = $ntemp;
     }
     
-    my $singletemp = &doGSingles($lang,$root, $localdata);
+    my $singletemp = &doGSingles($lang,$root, $localdata); # why this one ???
     if (scalar keys %$singletemp){
 	$singledata{"graphemeSingles"} = $singletemp;
     }
@@ -551,7 +601,7 @@ sub doGSingles{
     #$singledata{"graphemesM"} = &doGsv("graphemesM",$lang,$root,"g:m", $localdata);
     return \%singledata;
 }
-sub doGsv{ # TODO: semantic/phonetic pre/post should be integrated here PRIORITY
+sub doGsv{ 
     my $name = shift;
     my $lang = shift;
     my $root = shift;
@@ -561,101 +611,103 @@ sub doGsv{ # TODO: semantic/phonetic pre/post should be integrated here PRIORITY
     
     my @graphemes = $root->get_xpath($xpath);
     foreach my $i (@graphemes){
-	my %syllables = ();
-	$syllables{"V"} = 1;
-	$syllables{"VC"} = 1;
-	$syllables{"CV"} = 1;
-	$syllables{"CVC"} = 1;
-	my $form = "";
-	my $baseform = "";
-	if($i->text){
-	    $form = $i->text;
-	}
-	my $role = "syll";
-	if($i->{att}->{"g:role"} && $i->{att}->{"g:role"} ne ""){
-	    $role = $i->{att}->{"g:role"};
-	}
-	elsif($root->{att}->{"g:role"} && $root->{att}->{"g:role"} ne ""){
-	    $role = $root->{att}->{"g:role"};
-	}
+	if ($i->text ne "o") {
+	    my %syllables = ();
+	    $syllables{"V"} = 1;
+	    $syllables{"VC"} = 1;
+	    $syllables{"CV"} = 1;
+	    $syllables{"CVC"} = 1;
+	    my $form = "";
+	    my $baseform = "";
+	    if($i->text){
+	        $form = $i->text;
+	    }
+	    my $role = "syll";
+	    if($i->{att}->{"g:role"} && $i->{att}->{"g:role"} ne ""){
+	        $role = $i->{att}->{"g:role"};
+	    }
+	    elsif($root->{att}->{"g:role"} && $root->{att}->{"g:role"} ne ""){
+	        $role = $root->{att}->{"g:role"};
+	    }
+	    
+	    # there seems to be a problem with language, that's why I'm reading it in again here - no idea why it's going wrong
+	    # language is marked on word level
+#	    $lang = $root->{att}->{"xml:lang"};
+	    
 	
 	#TODO do we need to keep the composite and the non composite - is order important
 #	is this right?
 	#glue B+M together with the S or V that is above it and do not consider separately
-	if($xpath eq "g:s" || $xpath eq "g:v"){
-	    my @graphemesb = $i->get_xpath("g:b");
-	    my @graphemesm = $i->get_xpath("g:m");
-	    foreach my $j (@graphemesb){
-		if($j->text){
-		    $baseform .= $j->text;
+	    if($xpath eq "g:s" || $xpath eq "g:v"){
+	        my @graphemesb = $i->get_xpath("g:b");
+	        my @graphemesm = $i->get_xpath("g:m");
+	        foreach my $j (@graphemesb){
+		    if($j->text){
+		        $baseform .= $j->text;
+		    }
+		}
+		foreach my $k (@graphemesm){
+		    if($k->text){
+		        $baseform .= $k->text;
+		    }
 		}
 	    }
-	    foreach my $k (@graphemesm){
-		if($k->text){
-		    $baseform .= $k->text;
-		}
-	    }
-	}
-	
-	# NEW/CHANGED from here: moved down and change to baseform
 	
 	#    only for lang:akk aei{O}u
-	my $cvc = ""; my $logo = 0;  
-	if($xpath eq "g:v" && ($lang=~m|^akk|)){ #extend to other languages later *** 
-	    if ($baseform ne "") {
-		$cvc = lc($baseform);
-	    }
-	    else {
-		$cvc = lc($form);
-	    }
-	    $cvc=~s|(\d)||g;
-	    $cvc=~s|([aeiou])|V|g;
-	    $cvc=~s|(\x{2080})||g;
-	    $cvc=~s|(\x{2081})||g;
-	    $cvc=~s|(\x{2082})||g;
-	    $cvc=~s|(\x{2083})||g;
-	    $cvc=~s|(\x{2084})||g;
-	    $cvc=~s|(\x{2085})||g;
-	    $cvc=~s|(\x{2086})||g;
-	    $cvc=~s|(\x{2087})||g;
-	    $cvc=~s|(\x{2088})||g;
-	    $cvc=~s|(\x{2089})||g;
-	    $cvc=~s|([^V])|C|g;
+	    my $cvc = ""; my $logo = 0;  
+	    if(($xpath eq "g:v") && ($lang=~m|^akk|)){ #extend to other languages later
+	        if ($baseform ne "") {
+		    $cvc = lc($baseform);
+		}
+		else {
+		    $cvc = lc($form);
+		}
+		$cvc=~s|(\d)||g;
+		$cvc=~s|([aeiou])|V|g;
+		$cvc=~s|(\x{2080})||g;
+		$cvc=~s|(\x{2081})||g;
+		$cvc=~s|(\x{2082})||g;
+		$cvc=~s|(\x{2083})||g;
+		$cvc=~s|(\x{2084})||g;
+		$cvc=~s|(\x{2085})||g;
+		$cvc=~s|(\x{2086})||g;
+		$cvc=~s|(\x{2087})||g;
+		$cvc=~s|(\x{2088})||g;
+		$cvc=~s|(\x{2089})||g;
+		$cvc=~s|([^V])|C|g;
 	    
 	    #nuke the subscripts like numbers cf vcvv ia? 2080 - 2089
 	    
 	    # still have to get rid of words/values = "o"
 	    # Greta: what happens to unclear readings? $BA etc.? How marked in SAAo?
 	    
-	    
-	    # TODO: something like this should be put here, but don't yet know how to do this PRIORITY
-	    if (!($syllables{$cvc})) {
-	    #if ($cvc  @syllables) {  # no idea how I have to express this correctly
-		if ($role eq "semantic") {
-		    $cvc = ""; $logo = 1;  
+		if (!($syllables{$cvc})) {
+		    if ($role eq "semantic") {
+		        $cvc = ""; $logo = 1;  
+		    }
+		    elsif ($cvc eq "C") { $role = "syll"; }  # then the value should be x, so unreadable sign, treat as syllabic value
+		    else { $role = "logo"; }
 		}
-		elsif ($cvc eq "C") { $role = "syll"; }  # then the value should be x, so unreadable sign, treat as syllabic value
-		else { $role = "logo"; }
-	    }
-	    else {
-		$role = "syll";
-	    }
+		else {
+		    $role = "syll";
+		    if ($form eq "o") { $role = ""; $cvc = ""; }  # latest change - check if this works *** am I finally rid of the o's?
+		}
 
-	}
-	print $role;
+	    }	
+#	print $role;
 	
-	if($xpath eq "g:s" && $lang =~m|^akk|){ #extend to other languages later *** 
-	    $logo = 1;
+	    if($xpath eq "g:s" && $lang =~m|^akk|){ #extend to other languages later
+	        $logo = 1;
 	    # check how it deals with {1} *** Greta
-	}
+	    }
 
-	# NEW/CHANGED until here
-# TODO: role should be saved too PRIORITY
-	if($i->{att}->{"g:break"}){
-	    savebroken($name,$role,$lang,$form,$baseform,$cvc,$logo,$localdata,$i->{att}->{"g:break"} ,\%singledata);
-	}
-	else{
-	    saveinfo($name,$role,$lang,$form,$baseform,$cvc,$logo,$localdata ,\%singledata);
+#TODO: role should be saved too PRIORITY
+	    if($i->{att}->{"g:break"}){
+	        savebroken($name,$role,$lang,$form,$baseform,$cvc,$logo,$localdata,$i->{att}->{"g:break"} ,\%singledata);
+	    }
+	    else{
+	        saveinfo($name,$role,$lang,$form,$baseform,$cvc,$logo,$localdata ,\%singledata);
+	    }
 	}
     }
     return \%singledata;
@@ -725,21 +777,21 @@ sub savebroken{
     
     if($cvc ne ""){
 	if ($break eq "missing"){
-	    $cvcdata{"lang"}{$lang}{"type"}{$cvc}{$break}{"num"}++;
+	    $sylldata{"lang"}{$lang}{"type"}{$cvc}{$break}{"num"}++;
 		if($baseform ne "") {
-		    $cvcdata{"lang"}{$lang}{"type"}{$cvc}{$break}{"form"}{$baseform}{"role"}{$role}{"num"}++;
+		    $sylldata{"lang"}{$lang}{"type"}{$cvc}{$break}{"form"}{$baseform}{"role"}{$role}{"num"}++;
 		}
 		else {
-		    $cvcdata{"lang"}{$lang}{"type"}{$cvc}{$break}{"form"}{$form}{"role"}{$role}{"num"}++;
+		    $sylldata{"lang"}{$lang}{"type"}{$cvc}{$break}{"form"}{$form}{"role"}{$role}{"num"}++;
 		}  
 	}
 	else { # the sign is preserved but damaged
-	    $cvcdata{"lang"}{$lang}{"type"}{$cvc}{"num"}++;
+	    $sylldata{"lang"}{$lang}{"type"}{$cvc}{"num"}++;
 		if($baseform ne "") {
-		    $cvcdata{"lang"}{$lang}{"type"}{$cvc}{"form"}{$baseform}{"role"}{$role}{"num"}++;
+		    $sylldata{"lang"}{$lang}{"type"}{$cvc}{"form"}{$baseform}{"role"}{$role}{"num"}++;
 		}
 		else {
-		    $cvcdata{"lang"}{$lang}{"type"}{$cvc}{"form"}{$form}{"role"}{$role}{"num"}++;
+		    $sylldata{"lang"}{$lang}{"type"}{$cvc}{"form"}{$form}{"role"}{$role}{"num"}++;
 		}
 	}
 	# NEW/CHANGED until here
@@ -765,7 +817,7 @@ sub savebroken{
     # NEW/CHANGED from here
     # TODO: add their role (determinative?)
     
-    if($logo == 1){
+    if($logo){
 	if ($break eq "missing"){
 	    $logodata{$break}{"num"}++;
 		if($baseform ne "") {
@@ -821,7 +873,7 @@ sub savebroken{
 sub saveinfo{
     my $name = shift;
     my $role = shift;
-    my $lang = shift;
+    my $lang = shift || "";
     my $form = shift;
     my $baseform = shift;
     my $cvc = shift;
@@ -874,12 +926,12 @@ sub saveinfo{
     
     # NEW/CHANGED from here
     if($cvc ne ""){
-	$cvcdata{"lang"}{$lang}{"type"}{$cvc}{"num"}++;
+	$sylldata{"lang"}{$lang}{"type"}{$cvc}{"num"}++;
 	if($baseform ne "") {
-	    $cvcdata{"lang"}{$lang}{"type"}{$cvc}{"form"}{$baseform}{"role"}{$role}{"num"}++;
+	    $sylldata{"lang"}{$lang}{"type"}{$cvc}{"form"}{$baseform}{"role"}{$role}{"num"}++;
 	}
 	else {
-	    $cvcdata{"lang"}{$lang}{"type"}{$cvc}{"form"}{$form}{"role"}{$role}{"num"}++;
+	    $sylldata{"lang"}{$lang}{"type"}{$cvc}{"form"}{$form}{"role"}{$role}{"num"}++;
 	}
 	
 	# NEW/CHANGED until here
@@ -973,10 +1025,6 @@ sub addLines{
     return $data + $adddata->{"alllines"};
 }
 
-
-
-
-
 sub outputtext{
     my $data = shift;
     if($outputtype eq "text"){
@@ -1000,10 +1048,12 @@ sub writetofile{
     print $destinationdir."/".$shortname;
     if(defined $data){
     #    create a file called the shortname - allows sub sectioning of error messages
+	&outputtext("\n");
 	open(SUBFILE2, ">".$destinationdir."/".$shortname) or die "Couldn't open: $!";
 	binmode SUBFILE2, ":utf8";
-	print SUBFILE2 XMLout($data);
+	print SUBFILE2 XMLout($data);  # Use of uninitialized value ?
 	close(SUBFILE2);
+	&outputtext("\n");
     }
 }
 #generic function to write to an error file somewhere
