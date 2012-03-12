@@ -439,7 +439,7 @@ sub dographemeData{
 	    savebroken($splitname,"",$splitlang,$form,"","","",$localdata,$i->{att}->{"g:break"} ,$temp,"splitwords");
 	}
 	else{
-	    saveinfo($splitname,"",$splitlang,$form,"","","",$localdata ,$temp ,"splitwords");
+	    savebroken($splitname,"",$splitlang,$form,"","","",$localdata,"preserved",$temp,"splitwords");
 	}
 	
 	push(@{ $graphemearraytemp{'splitgraphemes'} }, $temp);
@@ -460,11 +460,11 @@ sub dographemeData{
 	        $form = $word->{att}->{"form"};
 	    }
 	    &outputtext("\nWord: ". $form."; lang: ".$lang);
-	    if($word->{att}->{"g:break"}){
+	    if($word->{att}->{"g:break"}){  # words don't have this info! depending on its children ***
 	        savebroken($name,"",$lang,$form,"","",0,$localdata,$word->{att}->{"g:break"} ,$temp,"words");
 	    }
 	    else{
-	        saveinfo($name,"",$lang,$form,"","",0,$localdata ,$temp ,"words");
+		savebroken($name,"",$lang,$form,"","",0,$localdata,"preserved",$temp,"words");
 	    }
 	    push(@{ $graphemearraytemp{'words'} }, $temp);
 	}
@@ -706,7 +706,7 @@ sub doGsv{
 	        savebroken($name,$role,$lang,$form,$baseform,$cvc,$logo,$localdata,$i->{att}->{"g:break"} ,\%singledata);
 	    }
 	    else{
-	        saveinfo($name,$role,$lang,$form,$baseform,$cvc,$logo,$localdata ,\%singledata);
+		savebroken($name,$role,$lang,$form,$baseform,$cvc,$logo,$localdata,"preserved",\%singledata);
 	    }
 	}
     }
@@ -725,9 +725,9 @@ sub savebroken{
     my $break = shift;
     my $singledata = shift;
     my $type = shift;
-    if(!defined $break){  # can be "missing" or "damaged"
-	$break = "BROKEN";
-    }
+#    if(!defined $break){  # can be "missing" or "damaged"
+#	$break = "BROKEN";
+#    }
     
     if(!defined $type){
 	$type = "graphemes";
@@ -772,7 +772,6 @@ sub savebroken{
 	$localdata->{$type}{"type"}{$name}{"lang"}{$lang}{"type"}{$break}{'form'}{$form}{'baseform'}{$baseform}{'num'}++;
     }
     
-    # NEW/CHANGED from here
     # TODO: find out which ones are phonetic complements
     
     if($cvc ne ""){
@@ -794,8 +793,6 @@ sub savebroken{
 		    $sylldata{"lang"}{$lang}{"type"}{$cvc}{"form"}{$form}{"role"}{$role}{"num"}++;
 		}
 	}
-	# NEW/CHANGED until here
-	
 		
 	$singledata->{$type}{"type"}{$name}{"lang"}{$lang}{"type"}{'all'}{'cvc'}{$cvc}{'num'}++;
 	$output{$type}{"type"}{$name}{"lang"}{$lang}{"type"}{'all'}{'cvc'}{$cvc}{'num'}++;
@@ -814,7 +811,6 @@ sub savebroken{
 	$localdata->{$type}{"type"}{$name}{"lang"}{$lang}{"type"}{$break}{'cvc'}{$cvc}{'form'}{$form}{'num'}++;
     }
     
-    # NEW/CHANGED from here
     # TODO: add their role (determinative?)
     
     if($logo){
@@ -837,7 +833,6 @@ sub savebroken{
 		}
 	}
     }
-	# NEW/CHANGED until here
     
     if($localdata->{"period"}){
 	$perioddata{$localdata->{"period"}}{$type}{"type"}{$name}{"lang"}{$lang}{"type"}{$break}{'num'}++;
@@ -855,145 +850,22 @@ sub savebroken{
 	$perioddata{$localdata->{"period"}}{$type}{'count'}++;
     }
     if($lang){
+	# reorganized: first form, then number of instances that are broken
 	# TODO: add information about determinatives/phonetic complements
-	$langdata{$lang}{$type}{"type"}{$name}{"type"}{$break}{'num'}++;
-	$langdata{$lang}{$type}{"type"}{$name}{"type"}{$break}{'form'}{$form}{'num'}++;
+	$langdata{$lang}{$type}{"type"}{$name}{"state"}{$break}{'num'}++;
+	$langdata{$lang}{$type}{"type"}{$name}{"state"}{$break}{'form'}{$form}{'num'}++;
 	
 	if($baseform ne ""){
-	    $langdata{$lang}{$type}{"type"}{$name}{"type"}{$break}{'form'}{$form}{'baseform'}{$baseform}{'num'}++;
+	    $langdata{$lang}{$type}{"type"}{$name}{"state"}{$break}{'form'}{$form}{'baseform'}{$baseform}{'num'}++;
 	}
 	if($cvc ne ""){
-	    $langdata{$lang}{$type}{"type"}{$name}{"type"}{$break}{'cvc'}{$cvc}{'form'}{$form}{'num'}++;
-	    $langdata{$lang}{$type}{"type"}{$name}{"type"}{$break}{'cvc'}{$cvc}{'num'}++;
+	    $langdata{$lang}{$type}{"type"}{$name}{"state"}{$break}{'cvc'}{$cvc}{'form'}{$form}{'num'}++;
+	    $langdata{$lang}{$type}{"type"}{$name}{"state"}{$break}{'cvc'}{$cvc}{'num'}++;
 	}
 	$langdata{$lang}{$type}{'count'}++;
     }
 }
 
-sub saveinfo{
-    my $name = shift;
-    my $role = shift;
-    my $lang = shift || "";
-    my $form = shift;
-    my $baseform = shift;
-    my $cvc = shift;
-    my $logo = shift;
-    my $localdata = shift;
-    my $singledata = shift;
-    my $type = shift;
-    
-    if(!defined $type){
-	$type = "graphemes";
-    }
-    
-    $localdata->{$type}{'count'}++;
-    $localdata->{$type}{'preserved'}++;
-    push(@{$singledata->{'all'.$type.'Forms'}},$form);
-    if($baseform ne "" && $type ne "words"){
-	push(@{$singledata->{'all'.$type.'BaseForms'}},$baseform);
-    }
-    
-    if($lang eq ""){
-	$lang = "noLang";
-    }
-    $singledata->{$type}{"type"}{$name}{"lang"}{$lang}{"type"}{'all'}{'num'}++;
-    $output{$type}{"type"}{$name}{"lang"}{$lang}{"type"}{'all'}{'num'}++;
-    $localdata->{$type}{"type"}{$name}{"lang"}{$lang}{"type"}{'all'}{'num'}++;
-    
-    $singledata->{$type}{"type"}{$name}{"lang"}{$lang}{"type"}{'all'}{'form'}{$form}{'num'}++;
-    $output{$type}{"type"}{$name}{"lang"}{$lang}{"type"}{'all'}{'form'}{$form}{'num'}++;
-    $localdata->{$type}{"type"}{$name}{"lang"}{$lang}{"type"}{'all'}{'form'}{$form}{'num'}++;
-    
-    if($baseform ne ""){
-	$singledata->{$type}{"type"}{$name}{"lang"}{$lang}{"type"}{'all'}{'form'}{$form}{'baseform'}{$baseform}{'num'}++;
-	$output{$type}{"type"}{$name}{"lang"}{$lang}{"type"}{'all'}{'form'}{$form}{'baseform'}{$baseform}{'num'}++;
-	$localdata->{$type}{"type"}{$name}{"lang"}{$lang}{"type"}{'all'}{'form'}{$form}{'baseform'}{$baseform}{'num'}++;
-    }
-    
-    $localdata->{$type}{"type"}{$name}{"lang"}{$lang}{"type"}{'preserved'}{'num'}++;
-    $singledata->{$type}{"type"}{$name}{"lang"}{$lang}{"type"}{'preserved'}{'num'}++;
-    $output{$type}{"type"}{$name}{"lang"}{$lang}{"type"}{'preserved'}{'num'}++;
-    
-    $singledata->{$type}{"type"}{$name}{"lang"}{$lang}{"type"}{'preserved'}{'form'}{$form}{'num'}++;
-    $output{$type}{"type"}{$name}{"lang"}{$lang}{"type"}{'preserved'}{'form'}{$form}{'num'}++;
-    $localdata->{$type}{"type"}{$name}{"lang"}{$lang}{"type"}{'preserved'}{'form'}{$form}{'num'}++;
-    
-    if($baseform ne ""){
-	$singledata->{$type}{"type"}{$name}{"lang"}{$lang}{"type"}{'preserved'}{'form'}{$form}{'baseform'}{$baseform}{'num'}++;
-	$output{$type}{"type"}{$name}{"lang"}{$lang}{"type"}{'preserved'}{'form'}{$form}{'baseform'}{$baseform}{'num'}++;
-	$localdata->{$type}{"type"}{$name}{"lang"}{$lang}{"type"}{'preserved'}{'form'}{$form}{'baseform'}{$baseform}{'num'}++;
-    }
-    
-    # NEW/CHANGED from here
-    if($cvc ne ""){
-	$sylldata{"lang"}{$lang}{"type"}{$cvc}{"num"}++;
-	if($baseform ne "") {
-	    $sylldata{"lang"}{$lang}{"type"}{$cvc}{"form"}{$baseform}{"role"}{$role}{"num"}++;
-	}
-	else {
-	    $sylldata{"lang"}{$lang}{"type"}{$cvc}{"form"}{$form}{"role"}{$role}{"num"}++;
-	}
-	
-	# NEW/CHANGED until here
-	
-	$singledata->{$type}{"type"}{$name}{"lang"}{$lang}{"type"}{'all'}{'cvc'}{$cvc}{'num'}++;
-	$output{$type}{"type"}{$name}{"lang"}{$lang}{"type"}{'all'}{'cvc'}{$cvc}{'num'}++;
-	$localdata->{$type}{"type"}{$name}{"lang"}{$lang}{"type"}{'all'}{'cvc'}{$cvc}{'num'}++;
-	
-	$singledata->{$type}{"type"}{$name}{"lang"}{$lang}{"type"}{'all'}{'cvc'}{$cvc}{'form'}{$form}{'num'}++;
-	$output{$type}{"type"}{$name}{"lang"}{$lang}{"type"}{'all'}{'cvc'}{$cvc}{'form'}{$form}{'num'}++;
-	$localdata->{$type}{"type"}{$name}{"lang"}{$lang}{"type"}{'all'}{'cvc'}{$cvc}{'form'}{$form}{'num'}++;
-	
-	$singledata->{$type}{"type"}{$name}{"lang"}{$lang}{"type"}{'preserved'}{'cvc'}{$cvc}{'num'}++;
-	$output{$type}{"type"}{$name}{"lang"}{$lang}{"type"}{'preserved'}{'cvc'}{$cvc}{'num'}++;
-	$localdata->{$type}{"type"}{$name}{"lang"}{$lang}{"type"}{'preserved'}{'cvc'}{$cvc}{'num'}++;
-	
-	$singledata->{$type}{"type"}{$name}{"lang"}{$lang}{"type"}{'preserved'}{'cvc'}{$cvc}{'form'}{$form}{'num'}++;
-	$output{$type}{"type"}{$name}{"lang"}{$lang}{"type"}{'preserved'}{'cvc'}{$cvc}{'form'}{$form}{'num'}++;
-	$localdata->{$type}{"type"}{$name}{"lang"}{$lang}{"type"}{'preserved'}{'cvc'}{$cvc}{'form'}{$form}{'num'}++;
-	
-    }
-    
-    # NEW/CHANGED from here
-    if($logo == 1){
-	$logodata{"num"}++;
-	if($baseform ne "") {
-	    $logodata{"form"}{$baseform}{"num"}++;
-	}
-	else {
-	    $logodata{"form"}{$form}{"num"}++;
-	}
-    }
-    # NEW/CHANGED until here
-	
-    if($localdata->{"period"}){
-	$perioddata{$localdata->{"period"}}{$type}{"type"}{$name}{"lang"}{$lang}{"type"}{'preserved'}{'num'}++;
-	$perioddata{$localdata->{"period"}}{$type}{"type"}{$name}{"lang"}{$lang}{"type"}{'preserved'}{'form'}{$form}{'num'}++;
-	if($baseform ne ""){
-	    $perioddata{$localdata->{"period"}}{$type}{"type"}{$name}{"lang"}{$lang}{"type"}{'preserved'}{'form'}{$form}{'baseform'}{$baseform}{'num'}++;
-	}
-	if($cvc ne ""){
-	    $perioddata{$localdata->{"period"}}{"type"}{$name}{"lang"}{$lang}{"type"}{'preserved'}{'cvc'}{$cvc}{'form'}{$form}{'num'}++;
-	    $perioddata{$localdata->{"period"}}{"type"}{$name}{"lang"}{$lang}{"type"}{'preserved'}{'cvc'}{$cvc}{'num'}++;
-	    
-	    $perioddata{$localdata->{"period"}}{"type"}{'preserved'}{'cvc'}{$cvc}{'form'}{$form}{'num'}++;
-	    $perioddata{$localdata->{"period"}}{"type"}{'preserved'}{'cvc'}{$cvc}{'num'}++;
-	}
-	$perioddata{$localdata->{"period"}}{$type}{'count'}++;
-    }
-    if($lang){
-	$langdata{$lang}{$type}{"type"}{$name}{"type"}{'preserved'}{'num'}++;
-	$langdata{$lang}{$type}{"type"}{$name}{"type"}{'preserved'}{'form'}{$form}{'num'}++;
-	if($baseform ne ""){
-	    $langdata{$lang}{$type}{"type"}{$name}{"type"}{'preserved'}{'form'}{$form}{'baseform'}{$baseform}{'num'}++;
-	}
-	if($cvc ne ""){
-	    $langdata{$lang}{$type}{"type"}{$name}{"type"}{'preserved'}{'cvc'}{$cvc}{'form'}{$form}{'num'}++;
-	    $langdata{$lang}{$type}{"type"}{$name}{"type"}{'preserved'}{'cvc'}{$cvc}{'num'}++;
-	}
-	$langdata{$lang}{$type}{'count'}++;
-    }
-}
 
 sub doG{
     my $name = shift;
@@ -1010,7 +882,7 @@ sub doG{
 	    savebroken($name,"",$lang,$form,"","",0,$localdata,$i->{att}->{"g:break"} ,\%singledata);
 	}
 	else{
-	    saveinfo($name,"",$lang,$form,"","",0,$localdata ,\%singledata);
+	    savebroken($name,"",$lang,$form,"","",0,$localdata,"preserved",\%singledata);
 	    &doGSingles($lang, $i, $localdata);
 	}
     }
