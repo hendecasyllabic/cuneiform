@@ -459,7 +459,7 @@ sub dographemeData{
 	    if($word->{att}->{"form"}){
 	        $form = $word->{att}->{"form"};
 	    }
-	    &outputtext("\nWord: ". $form."; lang: ".$lang);
+	    #&outputtext("\nWord: ". $form."; lang: ".$lang);
 	    if($word->{att}->{"g:break"}){  # words don't have this info! depending on its children ***
 	        savebroken($name,"",$lang,$form,"","",0,$localdata,$word->{att}->{"g:break"} ,$temp,"words");
 	    }
@@ -618,7 +618,7 @@ sub doGsv{
 	    $syllables{"CV"} = 1;
 	    $syllables{"CVC"} = 1;
 	    my $form = "";
-	    my $baseform = "";
+	    
 	    if($i->text){
 	        $form = $i->text;
 	    }
@@ -634,24 +634,20 @@ sub doGsv{
 	    # language is marked on word level
 #	    $lang = $root->{att}->{"xml:lang"};
 	    
-	
-	#TODO do we need to keep the composite and the non composite - is order important
-#	is this right?
-	#glue B+M together with the S or V that is above it and do not consider separately
+	    # The baseform is the basic form without modifiers or the like	
+	    my $baseform = "";
 	    if($xpath eq "g:s" || $xpath eq "g:v"){
-	        my @graphemesb = $i->get_xpath("g:b");
-	        my @graphemesm = $i->get_xpath("g:m");
-	        foreach my $j (@graphemesb){
-		    if($j->text){
-		        $baseform .= $j->text;
-		    }
-		}
-		foreach my $k (@graphemesm){
-		    if($k->text){
-		        $baseform .= $k->text;
-		    }
-		}
+		$baseform = $i->findvalue("g:b");
 	    }
+	    
+#	TODO: There is still a problem with the detection of the following baseform - no idea why PRIORITY (P224395)
+#	<g:w xml:id="P224395.8.3" xml:lang="akk-x-neoass" form="TA@v">
+#            <g:s form="TA@v" g:utf8="??" xml:id="P224395.8.3.0" g:break="damaged" g:status="ok" g:role="logo" g:logolang="sux" g:hc="1">
+#              <g:b>TA</g:b>
+#              <g:m>v</g:m>
+#              <g:f>m</g:f>
+#            </g:s>
+#          </g:w>
 	
 	#    only for lang:akk aei{O}u
 	    my $cvc = ""; my $logo = 0;  
@@ -850,18 +846,39 @@ sub savebroken{
 	$perioddata{$localdata->{"period"}}{$type}{'count'}++;
     }
     if($lang){
-	# reorganized: first form, then number of instances that are broken
+	# reorganized: first type, then form, then break, hope this works.
 	# TODO: add information about determinatives/phonetic complements
 	$langdata{$lang}{$type}{"type"}{$name}{"state"}{$break}{'num'}++;
-	$langdata{$lang}{$type}{"type"}{$name}{"state"}{$break}{'form'}{$form}{'num'}++;
 	
-	if($baseform ne ""){
-	    $langdata{$lang}{$type}{"type"}{$name}{"state"}{$break}{'form'}{$form}{'baseform'}{$baseform}{'num'}++;
+	if($baseform eq ""){
+	    $langdata{$lang}{$type}{"type"}{$name}{'form'}{$form}{"state"}{$break}{'num'}++;
 	}
+	else {
+	    print ("\n Baseform :".$baseform." of form ".$form);
+	    $langdata{$lang}{$type}{"type"}{$name}{'form'}{$baseform}{"state"}{$break}{'num'}++;
+	    $langdata{$lang}{$type}{"type"}{$name}{'form'}{$baseform}{'extform'}{$form}{"state"}{$break}{'num'}++;
+	}
+	
 	if($cvc ne ""){
-	    $langdata{$lang}{$type}{"type"}{$name}{"state"}{$break}{'cvc'}{$cvc}{'form'}{$form}{'num'}++;
-	    $langdata{$lang}{$type}{"type"}{$name}{"state"}{$break}{'cvc'}{$cvc}{'num'}++;
+	    if ($baseform eq "") {
+		$langdata{$lang}{$type}{"type"}{$name}{'cvc'}{$cvc}{'form'}{$form}{"state"}{$break}{'num'}++;
+	    }
+	    else {
+		$langdata{$lang}{$type}{"type"}{$name}{'cvc'}{$cvc}{'form'}{$baseform}{'extform'}{$form}{"state"}{$break}{'num'}++;
+	    }
+	    $langdata{$lang}{$type}{"type"}{$name}{'cvc'}{$cvc}{"state"}{$break}{'num'}++;
 	}
+	
+	
+	#$langdata{$lang}{$type}{"type"}{$name}{"state"}{$break}{'form'}{$form}{'num'}++;
+	#
+	#if($baseform ne ""){
+	#    $langdata{$lang}{$type}{"type"}{$name}{"state"}{$break}{'form'}{$form}{'baseform'}{$baseform}{'num'}++;
+	#}
+	#if($cvc ne ""){
+	#    $langdata{$lang}{$type}{"type"}{$name}{"state"}{$break}{'cvc'}{$cvc}{'form'}{$form}{'num'}++;
+	#    $langdata{$lang}{$type}{"type"}{$name}{"state"}{$break}{'cvc'}{$cvc}{'num'}++;
+	#}
 	$langdata{$lang}{$type}{'count'}++;
     }
 }
