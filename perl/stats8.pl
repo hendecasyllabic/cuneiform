@@ -79,7 +79,7 @@ sub general_stats{
     }
     
     foreach my $lang (keys %langdata){
-	&writetofile("Q_LANG_".$lang,$langdata{$lang});
+	&writetofile("Q_LANG_".$lang.".xml",$langdata{$lang});
     }
     
 # P-files
@@ -123,7 +123,7 @@ sub general_stats{
     }
     
     foreach my $lang (keys %langdata){
-	&writetofile("P_LANG_".$lang,$langdata{$lang});
+	&writetofile("P_LANG_".$lang.".xml",$langdata{$lang});
     }
 
 #    &writetofile("OUTPUT",\%output);
@@ -336,16 +336,39 @@ sub doLineData{
     my $root = shift;
     my $localdata = shift;
     my %linearray = ();
-    my @gruplines = $root->get_xpath('lg');
-    my $lgsize = scalar @gruplines;
+    my @grouplines = $root->get_xpath('lg');
+    my $lgsize = scalar @grouplines;
     #&outputtext("\n Number of group lines ".$lgsize);
     my $dcount = 0;
     my $sumlines =0;
     
-    foreach my $i (@gruplines){
-	my $temp = &doLineData($i,$localdata);
-	$sumlines  = &addLines($sumlines, $temp);
-	push(@{ $linearray{'linegroups'} }, $temp);
+    foreach my $i (@grouplines){ # still think about linegroups (GUS, BIL, NTS, LGS) ***
+	my @speciallines = $i->get_xpath('l');
+	my $type = "";
+	foreach my $j (@speciallines) {
+	    if ($type eq "") {
+		if ($j->{att}->{"type"}) {
+		    $type = $j->{att}->{"type"};
+		}
+	    }
+	}
+	#print ("\n lg type ".$type."\n");
+	if (($type eq "gus") || ($type eq "bil")) {
+	    my $temp = &doLineData($i,$localdata);
+	    $sumlines  = &addLines($sumlines, $temp);
+	    push(@{ $linearray{'linegroups'} }, $temp);
+	}
+	elsif ($type eq "lgs") { #disregard l line *** still to be implemented
+	    my $temp = &doLineData($i,$localdata);
+	    $sumlines  = &addLines($sumlines, $temp);
+	    push(@{ $linearray{'linegroups'} }, $temp);
+	}
+	else { # check anew
+	    my $temp = &doLineData($i,$localdata);
+	    $sumlines  = &addLines($sumlines, $temp);
+	    push(@{ $linearray{'linegroups'} }, $temp);
+	}
+	
     }
     
     my @lines = $root->get_xpath('l');
@@ -353,8 +376,13 @@ sub doLineData{
     
     my $sumgraphemes =0;
     foreach my $i (@lines){
-	my $graphemearray = &dographemeData($i, $localdata);
-	push(@{ $linearray{'graphemes'} }, $graphemearray);
+	if (($i->{att}->{"type"}) && ($i->{att}->{"type"} eq "nts")) {
+	    # then something to think about
+	}
+	else {
+	    my $graphemearray = &dographemeData($i, $localdata);
+	    push(@{ $linearray{'graphemes'} }, $graphemearray);
+	}
     }
 
     my $total = $sumlines + $lsize;
