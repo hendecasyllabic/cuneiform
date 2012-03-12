@@ -488,12 +488,28 @@ sub dographemeData{
 	        $form = $word->{att}->{"form"};
 	    }
 	    #&outputtext("\nWord: ". $form."; lang: ".$lang);
-	    if($word->{att}->{"g:break"}){  # words don't have this info! depending on its children ***
-	        savebroken($name,"word","",$lang,$form,"","",0,$localdata,$word->{att}->{"g:break"} ,$temp,"words");
+	    my @children = $word->children();
+	    my $no_children = scalar @children;
+	    my $condition = 0;  # missing (2), damaged (1), preserved (0)
+	    foreach my $i (@children) {
+		my $break = "";
+		if ($i->{att}->{"g:break"}) {
+		    $break = $i->{att}->{"g:break"};
+		}
+		if ($break eq "missing") { $condition = $condition + 2; }
+		elsif ($break eq "damaged") { $condition++; }
 	    }
-	    else{
-		savebroken($name,"word","",$lang,$form,"","",0,$localdata,"preserved",$temp,"words");
-	    }
+	    my $state = "damaged";
+	    if ($condition == 0) { $state = "preserved"; }
+	    elsif ($condition == (2*$no_children))
+		{ $state = "missing"; }
+	    
+	    #if($word->{att}->{"g:break"}){  # words don't have this info! depending on its children ***
+	    #    savebroken($name,"word","",$lang,$form,"","",0,$localdata,$word->{att}->{"g:break"} ,$temp,"words");
+	    #}
+	    #else{
+		savebroken($name,"word","",$lang,$form,"","",0,$localdata,$state,$temp,"words");
+	    #}
 	    push(@{ $graphemearraytemp{'words'} }, $temp);
 	}
     }
@@ -531,26 +547,31 @@ sub doInsideGrapheme{
     
     #missing elements
     my @graphemesX = $root->get_xpath('g:x');
-    foreach my $i (@graphemesX) {
-	my $xtemp =  &doG("graphemesX",$lang,\@graphemesX, $localdata, "", "");
-	if (scalar keys %$xtemp){
+    my $xtemp =  &doG("graphemesX",$lang,\@graphemesX, $localdata, "", "");
+    if (scalar keys %$xtemp){
 	    $singledata{"graphemesX"} = $xtemp;
 	}
+    foreach my $i (@graphemesX) {
+	my $temp = &doInsideGrapheme($i, $localdata,  $lang, "gone", "");
+	if (scalar keys %$temp){
+	    push @{ $singledata{"graphemesX"}{"inner"} } , $temp;
+        }
     }
     
     #numbers 
     my @graphemesN = $root->get_xpath('g:n');
-    foreach my $i (@graphemesN){
-	if ($role eq "") {
-	    $role = "number";
-        }
-        my $ntemp = &doG("graphemesN",$lang,\@graphemesN, $localdata, $role, $pos);
-        if (scalar keys %$ntemp){
+    my $ntemp = &doG("graphemesN",$lang,\@graphemesN, $localdata, "number", $pos);
+    if (scalar keys %$ntemp){
 	    $singledata{"graphemesN"} = $ntemp;
 	}
-    }
-    
-    # what's the purpose of this?
+    foreach my $i (@graphemesN){
+	my $temp = &doInsideGrapheme($i, $localdata,  $lang, "number", "");
+	if (scalar keys %$temp){
+	    push @{ $singledata{"graphemesN"}{"inner"} } , $temp;
+        }
+     }   
+     
+    # what's the purpose of this? is this the way to handle g:s and g:v?
     my $singletemp = &doGSingles($lang,$root, $localdata, $role, $pos); 
     if (scalar keys %$singletemp){
 	$singledata{"graphemeSingles"} = $singletemp;
@@ -559,7 +580,6 @@ sub doInsideGrapheme{
     #g:c contain g:s,n,x,v
     my @graphemesC = $root->get_xpath('g:c');
     my $ctemp = &doG("graphemesC",$lang,\@graphemesC, $localdata, "", "");
-    
     if (scalar keys %$ctemp){
 	$singledata{"graphemesC"}{"data"} = $ctemp;
     }
@@ -587,7 +607,6 @@ sub doInsideGrapheme{
     # Greta: ? extra information needed to pass on to datafiles ?
     my @graphemesGG = $root->get_xpath('g:gg');
     my $gtemp = &doG("graphemesGG",$lang,\@graphemesGG, $localdata, "", "");
-    
     if (scalar keys %$gtemp){
 	$singledata{"graphemesGG"}{"data"} = $gtemp;
     }
@@ -601,33 +620,39 @@ sub doInsideGrapheme{
 #    g:role attribute = phonetic/semantic; g:pos
     my @graphemesD = $root->get_xpath('g:d');
     # QUESTION: should $role and $pos be determined before going to doG ?
-    $singledata{"graphemesD"}{"data"} = &doG("graphemesD",$lang,\@graphemesD, $localdata, $role, $pos);
+    #$singledata{"graphemesD"}{"data"} = &doG("graphemesD",$lang,\@graphemesD, $localdata, $role, $pos);
+    my $dtemp = &doG("graphemesD",$lang,\@graphemesD, $localdata, $role, $pos);
+    if (scalar keys %$dtemp){
+	$singledata{"graphemesD"}{"data"} = $dtemp;
+    }
     foreach my $i (@graphemesD){
 	$role = $i->{att}->{"g:role"};
 	$pos = $i->{att}->{"g:pos"};
 	my $temp = &doInsideGrapheme($i, $localdata, $lang, $role, $pos);
 	if (scalar keys %$temp){
     #		TODO - what am I meant to be doing with the semantic/phonetic stuff?
-    # I'd like to get this data together with cvc and logo [still to be done, but parallel to cvc]
-	    push @{ $singledata{$i->{att}->{"g:role"}}{$i->{att}->{"g:pos"}} } , $temp;
+	    push @{ $singledata{$i->{att}->{"g:role"}}{$i->{att}->{"g:pos"}} } , $temp;  # what's the function of this?
 	    push @{ $singledata{"graphemesD"}{"inner"} } , $temp;
 	}
     };#can be 1st and last
     
-    my @graphemesS = $root->get_xpath('g:s');
-    my $stemp = &doG("graphemesS",$lang,\@graphemesS, $localdata, $role, $pos);
-    if (scalar keys %$stemp){
-	$singledata{"graphemesS"}{"data"} = $stemp;
-    }
-    foreach my $i (@graphemesS){
-	if (($role eq "") && ($i->{att}->{"g:role"})) {
-	    $role = $i->{att}->{"g:role"};
-	}
-	my $temp = &doInsideGrapheme($i, $localdata, $lang, $role, $pos);
-	if (scalar keys %$temp){
-	    push @{ $singledata{"graphemesS"}{"inner"} } , $temp;
-	}
-    };#can have things inside
+    
+# in this subroutine there is no section for @graphemesV and these values are correctly gathered;
+# the values for @graphemesS, however, are wrong. Hope deleting this helps. Bit better, not yet totally fixed though.
+#    my @graphemesS = $root->get_xpath('g:s');
+#    my $stemp = &doG("graphemesS",$lang,\@graphemesS, $localdata, $role, $pos);
+#    if (scalar keys %$stemp){
+#	$singledata{"graphemesS"}{"data"} = $stemp;
+#    }
+#    foreach my $i (@graphemesS){
+#	if (($role eq "") && ($i->{att}->{"g:role"})) {
+#	    $role = $i->{att}->{"g:role"};
+#	}
+#	my $temp = &doInsideGrapheme($i, $localdata, $lang, $role, $pos);
+#	if (scalar keys %$temp){
+#	    push @{ $singledata{"graphemesS"}{"inner"} } , $temp;
+#	}
+#    };#can have things inside
     
     return \%singledata;
 }
@@ -906,16 +931,28 @@ sub savebroken{
     if($lang){
 	# reorganized: first type, then form, then break, hope this works.
 	# TODO: add information about determinatives/phonetic complements
-	$langdata{$lang}{$type}{"type"}{$name}{"state"}{$break}{'num'}++;
+	$langdata{$lang}{$type}{"type"}{$name}{"total_grapheme"}{$break}{'num'}++;
 	
-	if($cvc ne ""){
-	    if ($baseform eq "") {
-		$langdata{$lang}{$type}{"type"}{$name}{"role"}{$role}{'cvc'}{$cvc}{'form'}{$form}{"state"}{$break}{'num'}++;
+	if ($form ne "") {
+	if ($lang=~m|^akk|) {
+	    if($cvc ne ""){ 
+	       if ($baseform eq "") {
+		    $langdata{$lang}{$type}{"type"}{$name}{"role"}{$role}{'cvc'}{$cvc}{'form'}{$form}{"state"}{$break}{'num'}++;
+		}
+		else {
+		    $langdata{$lang}{$type}{"type"}{$name}{"role"}{$role}{'cvc'}{$cvc}{'form'}{$baseform}{'extform'}{$form}{"state"}{$break}{'num'}++;
+		}
+		$langdata{$lang}{$type}{"type"}{$name}{"role"}{$role}{'cvc'}{$cvc}{"total"}{$break}{'num'}++;
 	    }
 	    else {
-		$langdata{$lang}{$type}{"type"}{$name}{"role"}{$role}{'cvc'}{$cvc}{'form'}{$baseform}{'extform'}{$form}{"state"}{$break}{'num'}++;
+		if ($baseform eq "") {
+		    $langdata{$lang}{$type}{"type"}{$name}{"role"}{$role}{'form'}{$form}{"state"}{$break}{'num'}++;
+		}
+		else {
+		    $langdata{$lang}{$type}{"type"}{$name}{"role"}{$role}{'form'}{$baseform}{'extform'}{$form}{"state"}{$break}{'num'}++;
+		}
+		$langdata{$lang}{$type}{"type"}{$name}{"role"}{$role}{"total"}{$break}{'num'}++;
 	    }
-	    $langdata{$lang}{$type}{"type"}{$name}{"role"}{$role}{'cvc'}{$cvc}{"state"}{$break}{'num'}++;
 	}
 	else {
 	    if($baseform eq ""){
@@ -926,6 +963,8 @@ sub savebroken{
 	        $langdata{$lang}{$type}{"type"}{$name}{"role"}{$role}{'form'}{$baseform}{"state"}{$break}{'num'}++;
 	        $langdata{$lang}{$type}{"type"}{$name}{"role"}{$role}{'form'}{$baseform}{'extform'}{$form}{"state"}{$break}{'num'}++;
 	    }
+	    $langdata{$lang}{$type}{"type"}{$name}{"role"}{$role}{"total"}{$break}{'num'}++;
+	}
 	}
 	
 	
@@ -956,16 +995,25 @@ sub doG{
 	if($i->{att}->{"form"}){
 	    $form = $i->{att}->{"form"};
 	}
+	else {
+	    if ($i->{att}->{"g:type"}) {
+	    $form = $i->{att}->{"g:type"}; # maybe ellipsis or so
+	    }
+	}
+	
 	if (($role eq "") && ($i->{att}->{"g:role"})) {
 	    $role = $i->{att}->{"g:role"};
 	}
-	if($i->{att}->{"g:break"}){
-	    savebroken($name,$role,$pos,$lang,$form,"","",0,$localdata,$i->{att}->{"g:break"} ,\%singledata);
-	}
-	else{
-	    savebroken($name,$role,$pos,$lang,$form,"","",0,$localdata,"preserved",\%singledata);
-	    &doGSingles($lang, $i, $localdata, $role, $pos);
-	}
+	my $break = "preserved";
+	if($i->{att}->{"g:break"}) { $break = $i->{att}->{"g:break"}; }
+	
+	#{
+	&savebroken($name,$role,$pos,$lang,$form,"","",0,$localdata,$break,\%singledata);
+	#}
+	#else{
+	#    savebroken($name,$role,$pos,$lang,$form,"","",0,$localdata,"preserved",\%singledata);
+	#    &doGSingles($lang, $i, $localdata, $role, $pos);
+	#}
     }
     return \%singledata;
 }
