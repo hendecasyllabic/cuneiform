@@ -13,21 +13,33 @@ binmode STDOUT, ":utf8";
 
 # with logograms:
 # ? plural markers (-MESZ, -ME, -DIDLI), dual (-MIN, .2), and ditto signs distinguished somehow in Oracc? not really
-# ? how about numbers? n
 
-my $projname = "SAA 1";
+my $projname = "SAA ***";
 my $projdir = "../dataout/";
 my $ogslfile = "../resources/ogsl.xml";
+
+my $wordcount = 0;
+my $missingwords = 0;
+my $damagedwords = 0;
+my $preservedwords = 0;
+my $signcount = 0;
+my $valuecount = 0;
+my %syllcount = ();
+my $sylldoubles = 0;
 
 my @vowels = ("a", "e", "i", "u");
 my @consonants = ("\x{02BE}", "b", "d", "g", "h", "j", "k", "l", "m", "n", "p", "q", "r", "s", "\x{1E63}", "\x{0161}", "t", "\x{1E6D}", "z");
 my @finalconsonants = ("\x{02BE}", "b/p", "d/t/\x{1E6D}", "g/k/q", "h", "l", "m", "n", "r", "\x{0161}", "z/s/\x{1E63}");
 my @tableheaders = ("V", "CV", "VC", "CVC");
 
-my %restdata = ();
+my %sylldata = ();
+my %syllsign = ();
+my %logodata = ();
+my %deterdata = ();
 my %totals = ();
 
-&tables($projdir.'SYLLABIC');
+
+&tables($projdir.'P_LANG_akk-x-neoass.xml');  # depends on language and P or Q!!! ***
 
 print   header({-charset => 'utf-8'}),
         start_html(
@@ -35,13 +47,205 @@ print   header({-charset => 'utf-8'}),
                        -script => [ {-language=>'javascript',
                                    -src=>"http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"},
 				    {-language=>'javascript',
-                                   -src=>"js/highcharts.js"},
+                                   -src=>"../www/js/highcharts.js"},
 				    {-language=>'javascript',
-                                   -src=>"js/genericchart.js"}
+                                   -src=>"../www/js/genericchart.js"}
 				    ]
                        ),
-                
-        h1('Syllabic sign use '.$projname);
+        h1('Corpus'),
+	p('The analyzed corpus comprises '.$wordcount.' words:'),
+	p({-style => 'text-indent:50px' },'- '.$preservedwords.' fully preserved words;'),
+	p({-style => 'text-indent:50px' },'- '.$damagedwords.' partially preserved words;'),
+	p({-style => 'text-indent:50px' },'- '.$missingwords.' restored words.'),
+	p('Disregarding the restored signs, '.$signcount.' signs are attested with '.$valuecount.' readings.');
+	
+my $total = $signcount-$sylldoubles;
+print	p('Taking into account that  signs ending in a labial, dental or velar stop or in a sibilant (except /&#353;/) did not distinguish between voiced, voiceless and emphatic,
+	the number of different readings decreases to '.$total.'.');
+
+print	h1('General division of signs'),
+	p('- according to their attestations ');
+
+my $pieroles = "<div id='container1' style='min-width: 400px; height: 400px; margin: 0 auto'></div><script>";
+$pieroles .= " var currentdata1 = [";
+foreach my $r (keys %{$totals{"role"}}){
+    my $sum = 0;
+    if ($r ne "syll") {
+	$sum = $totals{"role"}{$r}{"total"};
+	$pieroles .= " ['".$r." (".$sum.")"."',   ".$sum."],";
+    }
+    else {
+	my $sumcvc = 0;
+	foreach my $c (keys %{$totals{"role"}{$r}{"cvc"}}) {
+	    $sumcvc += $totals{"role"}{$r}{"cvc"}{$c}{"total"};
+	}
+	$pieroles .= " ['Syll (".$sumcvc.")"."',   ".$sumcvc."],";
+    }
+    
+}
+$pieroles = substr($pieroles,0,length($pieroles)-1);
+$pieroles .= " ]";
+
+$pieroles .= "; \$(document).ready(function() {";
+$pieroles .= "   var alldata1 = pieoptions;";
+$pieroles .= "   alldata1.chart.renderTo = 'container1';"; 
+$pieroles .= "   alldata1.title.text = 'Distribution across corpus (attestations)';";
+$pieroles .= "   alldata1.series[0].data = currentdata1;";
+$pieroles .= "	chart1 = new Highcharts.Chart(alldata1);";
+$pieroles .= "});</script>";
+
+print $pieroles;
+
+my $pierolescvc = "<div id='container2' style='min-width: 400px; height: 400px; margin: 0 auto'></div><script>";
+$pierolescvc .= " var currentdata1b = [";
+foreach my $c (keys %{$totals{"role"}{"syll"}{"cvc"}}) {
+    my $temp = $totals{"role"}{"syll"}{"cvc"}{$c}{"total"};
+    $pierolescvc .= " ['syllabic (".$c."; ".$temp.")',   ".$temp."],";
+}
+$pierolescvc = substr($pierolescvc,0,length($pierolescvc)-1);
+$pierolescvc .= " ]";
+
+$pierolescvc .= "; \$(document).ready(function() {";
+$pierolescvc .= "   var alldata1b = pieoptions;";
+$pierolescvc .= "   alldata1b.chart.renderTo = 'container2';"; 
+$pierolescvc .= "   alldata1b.title.text = 'Distribution across corpus (syllabic attestations)';";
+$pierolescvc .= "   alldata1b.series[0].data = currentdata1b;";
+$pierolescvc .= "	chart1b = new Highcharts.Chart(alldata1b);";
+$pierolescvc .= "});</script>";
+
+print $pierolescvc;
+
+
+print p('- according to the number of signs within each category');
+
+my $pieroles2 = "<div id='container3' style='min-width: 400px; height: 400px; margin: 0 auto'></div><script>";
+$pieroles2 .= " var currentdata2 = [";
+foreach my $r (keys %{$totals{"role"}}){
+    my $sum = 0;
+    if ($r ne "syll") {
+	$sum = $totals{"role"}{$r}{"diff_forms"};
+	$pieroles2 .= " ['".$r." (".$sum.")"."',   ".$sum."],";
+    }
+    else {
+	my $sumcvc = 0;
+	foreach my $c (keys %{$totals{"role"}{$r}{"cvc"}}) {
+	    $sumcvc += $totals{"role"}{$r}{"cvc"}{$c}{"diff_forms"};
+	}
+	$pieroles2 .= " ['Syll (".$sumcvc.")"."',   ".$sumcvc."],";
+    }
+    
+}
+$pieroles2 = substr($pieroles2,0,length($pieroles2)-1);
+$pieroles2 .= " ]";
+
+$pieroles2 .= "; \$(document).ready(function() {";
+$pieroles2 .= "   var alldata2 = pieoptions;";
+$pieroles2 .= "   alldata2.chart.renderTo = 'container3';"; 
+$pieroles2 .= "   alldata2.title.text = 'Distribution across corpus (categories)';";
+$pieroles2 .= "   alldata2.series[0].data = currentdata2;";
+$pieroles2 .= "	chart2 = new Highcharts.Chart(alldata2);";
+$pieroles2 .= "});</script>";
+
+print $pieroles2;
+
+my $pierolescvc2 = "<div id='container4' style='min-width: 400px; height: 400px; margin: 0 auto'></div><script>";
+$pierolescvc2 .= " var currentdata2b = [";
+my $sumcvc = 0;
+foreach my $c (keys %{$totals{"role"}{"syll"}{"cvc"}}) {
+    my $temp = $totals{"role"}{"syll"}{"cvc"}{$c}{"diff_forms"};
+    $pierolescvc2 .= " ['"."syllabic"." (".$c."; ".$temp.")"."',   ".$temp."],";
+}
+
+$pierolescvc2 = substr($pierolescvc2,0,length($pierolescvc2)-1);
+$pierolescvc2 .= " ]";
+
+$pierolescvc2 .= "; \$(document).ready(function() {";
+$pierolescvc2 .= "   var alldata2b = pieoptions;";
+$pierolescvc2 .= "   alldata2b.chart.renderTo = 'container4';"; 
+$pierolescvc2 .= "   alldata2b.title.text = 'Distribution across corpus (syllabic categories)';";
+$pierolescvc2 .= "   alldata2b.series[0].data = currentdata2b;";
+$pierolescvc2 .= "	chart2b = new Highcharts.Chart(alldata2b);";
+$pierolescvc2 .= "});</script>";
+
+print $pierolescvc2;
+
+# trying to get a pie-donut, but no luck. Guess I'm doing something wrong
+#my $pieroles2 = "<div id='container2' style='min-width: 400px; height: 300px; margin: 0 auto'></div><script>";
+#$pieroles2 .= " var currentdata2 = [";
+## categories syll (V, CV, VC, CVC), logo (logo, determ), numbers
+## syllabic data first
+#my $sumcvc = 0;
+#foreach my $c (keys %{$totals{"role"}{"syll"}{"cvc"}}) {
+#    #print p($totals{"role"}{$r}{"cvc"}{$c}{"total"});
+#    $sumcvc += $totals{"role"}{"syll"}{"cvc"}{$c}{"total"};
+#    }
+#$pieroles2 .= " { y:".$sumcvc.", drilldown: ";
+#$pieroles2 .= " { name: 'Syllabic values', ";
+#$pieroles2 .= " categories: ['V', 'CV', 'VC', 'CVC'], ";
+#$pieroles2 .= " data: [".$totals{"role"}{"syll"}{"cvc"}{"V"}{"total"}.", ";
+#$pieroles2 .= " data: [".$totals{"role"}{"syll"}{"cvc"}{"CV"}{"total"}.", ";
+#$pieroles2 .= " data: [".$totals{"role"}{"syll"}{"cvc"}{"VC"}{"total"}.", ";
+#$pieroles2 .= " data: [".$totals{"role"}{"syll"}{"cvc"}{"CVC"}{"total"}."] },";
+#
+#my $sumlogo = $totals{"role"}{"logo"}{"total"} + $totals{"role"}{"semantic"}{"total"};
+#$pieroles2 .= " { y:".$sumlogo.", drilldown: ";
+#$pieroles2 .= " categories: ['logo', 'determinative'], ";
+#$pieroles2 .= " data: [".$totals{"role"}{"logo"}{"total"}.", ";
+#$pieroles2 .= " data: [".$totals{"role"}{"semantic"}{"total"}."] }, ";
+#
+#$pieroles2 .= " { y:".$totals{"role"}{"number"}{"total"}.", drilldown: ";
+#$pieroles2 .= " categories: ['number'], ";
+#$pieroles2 .= " data: [".$totals{"role"}{"number"}{"total"}."] } ";
+#
+#$pieroles2 .= " }];";
+#
+#$pieroles2 .= " \$(document).ready(function() {";
+#$pieroles2 .= "   var alldata2 = pieoptions;";
+#$pieroles2 .= "   alldata2.chart.renderTo = 'container2';"; 
+#$pieroles2 .= "   alldata2.title.text = 'Distribution across corpus (categories)';";
+#$pieroles2 .= "   alldata2.series[0].data = currentdata2;";
+#
+#$pieroles2 .= "	chart2 = new Highcharts.Chart(alldata2);";
+#$pieroles2 .= "});</script>";
+#
+#print $pieroles2;
+
+print h1('Logographic sign use');
+
+my $pielogo = "<div id='container5' style='min-width: 400px; height: 400px; margin: 0 auto'></div><script>";
+$pielogo .= " var currentdata3 = [";
+
+my $i = 0;
+my $rest = $totals{"role"}{"logo"}{"total"};
+my $remlogo = $totals{"role"}{"logo"}{"diff_forms"};
+foreach my $n (sort { $b <=> $a } keys %{$logodata{"num"}}) {
+    if ($i < 10) {
+	foreach my $s (@{$logodata{"num"}{$n}{"value"}}) {
+	    #print p($s." ".$n);
+	    $i++;
+	$pielogo .= " ['"."$s"." (".$n.")"."',   ".$n."],";
+	$rest -= $n;
+	}
+	}
+    }
+$remlogo -= $i;
+$pielogo .= " ['Remaining ".$remlogo." logograms (".$rest.")"."',   ".$rest."],";
+
+$pielogo = substr($pielogo,0,length($pielogo)-1);
+$pielogo .= " ]";
+
+$pielogo .= "; \$(document).ready(function() {";
+$pielogo .= "   var alldata3 = pieoptions;";
+$pielogo .= "   alldata3.chart.renderTo = 'container5';"; 
+$pielogo .= "   alldata3.title.text = 'Logographic distribution across corpus';";
+$pielogo .= "   alldata3.series[0].data = currentdata3;";
+$pielogo .= "	chart3 = new Highcharts.Chart(alldata3);";
+$pielogo .= "});</script>";
+
+print $pielogo;
+
+print h1('Syllabic sign use'), 
+	p('Remembering Gelb&apos;s principle of the economy of the writing system...');
 
 my $h2count = 0;
 foreach my $i (@tableheaders) {
@@ -59,7 +263,7 @@ foreach my $i (@tableheaders) {
 	$lastone = $j;
 	my @tempdata = ();
 	@lastbutone = ();
-	if($cnt ==0){#this is the first time around
+	if($cnt == 0){#this is the first time around
 	    if($j eq 'C'){
 		foreach my $c (@consonants){
 		    push(@tempdata,$c);
@@ -105,15 +309,15 @@ foreach my $i (@tableheaders) {
 	    foreach my $v (@vowels) {
 		print start_Tr;
 		print td($v);
-		my $string = ref($restdata{$i}{$v}) eq 'ARRAY' ?join(", ",@{$restdata{$i}{$v}}):" ";
+		my $string = ref($sylldata{$i}{$v}) eq 'ARRAY' ?join(", ",@{$sylldata{$i}{$v}}):" ";
 		print td([$string]);
 	    }
 	}
 	else {
-	foreach (keys %{$restdata{$i}}){   # this shouldn't happen
+	foreach (keys %{$sylldata{$i}}){   # this shouldn't happen
 	    print start_Tr;
 	    print td($_);
-	    my $string = ref($restdata{$i}{$_}) eq 'ARRAY' ?join(", ",@{$restdata{$i}{$_}}):" ";
+	    my $string = ref($sylldata{$i}{$_}) eq 'ARRAY' ?join(", ",@{$sylldata{$i}{$_}}):" ";
 	    print td([$string]);
 	}
 	print end_Tr;
@@ -137,7 +341,7 @@ foreach my $i (@tableheaders) {
 		# check if there are values beginning with $key when checking CVCs, otherwise no use to print them
 		my $thereis = 0;
 		foreach my $c (@consonants){  # must be possible to do this easier
-		    if (exists($restdata{$i}{$key.$c})) {
+		    if (exists($sylldata{$i}{$key.$c})) {
 			$thereis++;
 		    }
 		}
@@ -145,14 +349,14 @@ foreach my $i (@tableheaders) {
 		    print start_Tr, td([$key]);
 		    foreach my $c (@finalconsonants){
 			if (length($c) == 1) {
-			    my $string = ref($restdata{$i}{$key.$c}) eq 'ARRAY' ?join(", ",@{$restdata{$i}{$key.$c}}):" ";
+			    my $string = ref($sylldata{$i}{$key.$c}) eq 'ARRAY' ?join(", ",@{$sylldata{$i}{$key.$c}}):" ";
 			    print td([$string]);
 			}
 			else {
 			    my @letter = split("/",$c);
 			    my $string = "";
 			    foreach my $j (@letter){
-				my $temp = ref($restdata{$i}{$key.$j}) eq 'ARRAY' ?join(", ",@{$restdata{$i}{$key.$j}}):" ";
+				my $temp = ref($sylldata{$i}{$key.$j}) eq 'ARRAY' ?join(", ",@{$sylldata{$i}{$key.$j}}):" ";
 				if ($temp ne " ") {
 				    if ($string eq "") {
 				    $string = $temp;
@@ -171,7 +375,7 @@ foreach my $i (@tableheaders) {
 	    elsif($lastone eq 'V'){
 		print start_Tr, td([$key]);
 		foreach my $v (@vowels){
-		    my $string = ref($restdata{$i}{$key.$v}) eq 'ARRAY' ?join(", ",@{$restdata{$i}{$key.$v}}):" ";
+		    my $string = ref($sylldata{$i}{$key.$v}) eq 'ARRAY' ?join(", ",@{$sylldata{$i}{$key.$v}}):" ";
 		    print td([$string]);
 		}
 	    }
@@ -182,47 +386,45 @@ foreach my $i (@tableheaders) {
 }
 
 # print Others
-print h2($h2count++.". Others");
-print start_table({-border=>1, -cellpadding=>3});
-foreach my $i (sort keys %restdata){
-    if (grep {$_ eq $i} @tableheaders) {
-  	# already done, just don't know how to negate the grep
-    }
-    else {
-	my $string = "";
-	foreach my $element (sort keys %{$restdata{$i}}) {
-	    if ($string eq "") {
-		$string = $element;
-	    }
-	    else {
-		$string = $string.', '.$element;
-	    }
-	}
-	print start_Tr, td([$i]), td([$string]), end_Tr;
-    }
-}
-print end_table;
+#print h2($h2count++.". Others");
+#print start_table({-border=>1, -cellpadding=>3});
+#foreach my $i (sort keys %sylldata){
+#    if (grep {$_ eq $i} @tableheaders) {
+#  	# already done, just don't know how to negate the grep
+#    }
+#    else {
+#	my $string = "";
+#	foreach my $element (sort keys %{$sylldata{$i}}) {
+#	    if ($string eq "") {
+#		$string = $element;
+#	    }
+#	    else {
+#		$string = $string.', '.$element;
+#	    }
+#	}
+#	print start_Tr, td([$i]), td([$string]), end_Tr;
+#    }
+#}
+#print end_table;
 
 my $pietotals="<div id='container' style='min-width: 400px; height: 400px; margin: 0 auto'></div><script>";
 $pietotals .= " var currentdata= [";
-my $others = 0;
-my $VVtotal = $totals{"VV"}{"total"};
+#my $others = 0;
+#my $VVtotal = $totals{"VV"}{"total"};
 foreach my $d (sort keys %totals){
     if (grep {$_ eq $d} @tableheaders) {
 	my $sum = $totals{$d}{"total"};
-	if ($d eq "CV") { $sum = $sum + $VVtotal; }
-	$pietotals .= " ['".$d."',   ".$sum."],";
-	print p($d.": ".$sum);
+	#if ($d eq "CV") { $sum = $sum + $VVtotal; }
+	$pietotals .= " ['".$d." (".$sum.")"."',   ".$sum."],";
     }
-    elsif (($d ne "VV") && ($d ne "C")) {
-	# VVs are counted together with CVs while Cs are determinatives and do not belong here.
-	$others = $others + $totals{$d}{"total"};
-	}    
+#    elsif (($d ne "VV") && ($d ne "C")) {  # I think I got rid of these in stats8
+#	# VVs are counted together with CVs while Cs are determinatives and do not belong here.
+#	$others = $others + $totals{$d}{"total"};
+#	}    
 }
-if ($others > 0) {
-    $pietotals .= " ['Others',   ".$others."],";
-    print p("Others: ".$others);
-}
+#if ($others > 0) {
+#    $pietotals .= " ['Others (".$others.")',   ".$others."],";
+#}
 
 $pietotals = substr($pietotals,0,length($pietotals)-1);
 $pietotals .= " ]";
@@ -244,18 +446,16 @@ foreach my $d (sort keys %totals){
     if (grep {$_ eq $d} @tableheaders) {
 	my $sum = $totals{$d}{"diff_values"};
 	if ($d eq "CV") { $sum = $sum + $VVdiff; }
-	$piediffvalues .= " ['".$d."',   ".$sum."],";
-	print p($d.": ".$sum);
+	$piediffvalues .= " ['".$d." (".$sum.")"."',   ".$sum."],";
     }
-    elsif (($d ne "VV") && ($d ne "C")) {
-	# VVs are counted together with CVs while Cs are determinatives and do not belong here.
-	$othercat = $othercat + $totals{$d}{"diff_values"};
-	}    
+#    elsif (($d ne "VV") && ($d ne "C")) {
+#	# VVs are counted together with CVs while Cs are determinatives and do not belong here.
+#	$othercat = $othercat + $totals{$d}{"diff_values"};
+#	}    
 }
-if ($othercat > 0) {
-    $piediffvalues .= " ['Others',   ".$othercat."],";
-    print p("Others: ".$othercat);
-}
+#if ($othercat > 0) {
+#    $piediffvalues .= " ['Others (".$others.")',   ".$othercat."],";
+#}
 
 $piediffvalues = substr($piediffvalues,0,length($piediffvalues)-1);
 $piediffvalues .= " ]";
@@ -273,85 +473,190 @@ print $piediffvalues;
 
 print end_html;
 
+
 sub tables{
     my $filename = shift;
     my $twigObj = XML::Twig->new();
-    
     $twigObj->parsefile($filename);
     my $root = $twigObj->root;
     $twigObj->purge;
 
     my $counter = 0;
-    my @data = $root->get_xpath('type');
     my %alldata;
     
+    # get signinfo from ogsl
     my $twigObjCun = XML::Twig->new();
     $twigObjCun->parsefile($ogslfile);
     my $rootCun = $twigObjCun->root;
     $twigObjCun->purge;
     
-my %signdata = ();
+    my %signdata = ();
 
     my @signs = $rootCun->get_xpath('sign');
     foreach my $sign (@signs){
 	my @utf8 = $sign->get_xpath("utf8");
 	my $hex = $utf8[0]->{att}->{"hex"};
+	#my $cunsign = $sign->findvalue('utf8');
+	#print p($cunsign);
 	my @vs = $sign->get_xpath("v");
 	foreach my $thing (@vs){
 	    $signdata{$thing->{att}->{"n"}} = $hex;
 	}
     }
+
     
-    foreach my $i (@data){
-	my $value = $i->{att}->{'name'};  # type name, e.g., CV, CV, etc.
-	my $count = $i->{att}->{'num'};
-	my @forms = $i->get_xpath('form');
-	
-	# still problem with letter o, because system takes it as word instead of "possibly nothing to restore"
-	$totals{$value}{"total"} = $count;
-	$totals{$value}{"diff_values"} = scalar @forms;
-	
-	foreach my $j (@forms){
-	    my $formname = $j->{att}->{'name'};
-	    push(@{$alldata{$value}},$formname);
-	    
-	    my $first = substr($formname, 0, 1);
-	    
-	    my $second = "";
-	    if(length($value) >= 2){   # length of $value, not of $formname!
-		$second = substr($formname, 1, 1);
+    # process datafile
+    # collect data
+    
+    my @roles = $root->get_xpath("graphemes/type/role");
+    my $totalcvc = 0;
+    foreach my $i (@roles){
+	my $role = $i->{att}->{name};
+	if ($role ne "") {
+	    if ($role ne "syll") {
+		my @forms = $i->get_xpath("form");
+		my $no_forms = 0;
+		my $tot_forms = 0;
+		if (defined($totals{"role"}{$role}{"total"})) {
+		    $tot_forms = $totals{"role"}{$role}{"total"};
+		}
+		else {$tot_forms = 0;}
+		if (defined($totals{"role"}{$role}{"diff_forms"})) {
+		    $no_forms = $totals{"role"}{$role}{"diff_forms"};
+		}
+		else {$no_forms = 0;}
+		
+		foreach my $j (@forms) {
+		    my $value = $j->{att}->{'name'}; # sign value
+		    #push(@{$alldata{$value}},$value);
+		    #push(@{$formdata{$role}{$value}},$value);
+		    my @states = $j->get_xpath("state");
+		    my $number = 0;
+		    foreach my $k (@states) {
+		        if (($k->{att}->{'name'} eq "preserved") || ($k->{att}->{'name'} eq "damaged")) { $number = $number + $k->{att}->{'num'}; }
+		    }
+		    if ($number > 0) {
+		        $no_forms++;
+			$tot_forms+= $number;
+			if ($role eq "logo") { push(@{$logodata{"num"}{$number}{"value"}},$value); }
+			if ($role eq "semantic") { push(@{$deterdata{"num"}{$number}{"value"}},$value); }
+		    }
+		    
+		$totals{"role"}{$role}{"total"} = $tot_forms;
+		$totals{"role"}{$role}{"diff_forms"} = $no_forms;
+		}
+		$signcount+= $no_forms;
+		$valuecount+= $tot_forms;
+		#print p("Role ".$role." total ".$totals{"role"}{$role}{"total"}." diff ".$totals{"role"}{$role}{"diff_forms"});
 	    }
-	    my $third = "";
-	    if(length($value) >= 3){   # length of $value, not of $formname!
-		$third = substr($formname, 2, 1);
-	    }
+	    else {
+		my @cvcs = $i->get_xpath("cvc");
+		foreach my $j (@cvcs) {
+		    my $cvc = $j->{att}->{'name'};
+		    
+		    my @cvcforms = $j->get_xpath("form");
+		    my $no_cvcs = 0;
+		    my $tot_cvcs = 0;
+		    foreach my $k (@cvcforms) {
+		        my $formname = $k->{att}->{'name'}; # sign value
+			
+			#push(@{$formdata{$role}{$k}{$value}},$value);
+		        my @states = $k->get_xpath("state");
+		        my $number = 0;
+		        foreach my $l (@states) {
+		            if (($l->{att}->{'name'} eq "preserved") || ($l->{att}->{'name'} eq "damaged")) { $number = $number + $l->{att}->{'num'}; }
+		        }
+		        if ($number > 0) {
+			    $no_cvcs++;
+			    $tot_cvcs+= $number;
+			    push(@{$alldata{$cvc}},$formname);
+			    
+			    my $first = substr($formname, 0, 1);
 	    
-	    my $fourth = "";
-	    if(length($value) >= 4){   # length of $value, not of $formname!
-		$fourth = substr($formname, 3, 2);
-	    }
-	    
-	    if($value eq "VV"){
-		$value ="CV";
-		if ($first eq "i") {
-		    $first = "j";
+			    my $second = "";
+			    if(length($cvc) >= 2){   # length of $value, not of $formname!
+				$second = substr($formname, 1, 1);
+			       }
+			    my $third = "";
+			    if(length($cvc) >= 3){   # length of $value, not of $formname!
+				$third = substr($formname, 2, 1);
+			    }
+			    my $fourth = "";
+			    if(length($cvc) >= 4){   # length of $value, not of $formname!
+				$fourth = substr($formname, 3, 2);
+			    }
+			    push(@{$sylldata{$cvc}{$first.$second.$third.$fourth}},$formname);
+			    my $cunhex = $signdata{$formname};
+			    #print $cunhex;
+			    push(@{$syllsign{$cvc}{"sign"}{$cunhex}{"value"}},$formname);
+		        }
+#			$sylldata{$k}{"value"}{$formname}{"num"} = $number;
+		    }
+	            $totals{"role"}{$role}{"cvc"}{$cvc}{"total"} = $tot_cvcs;
+		    $totals{"role"}{$role}{"cvc"}{$cvc}{"diff_forms"} = $no_cvcs;
+		    $signcount+= $no_cvcs;
+		    $valuecount+= $tot_cvcs;
+		    
+		    #print p("Role ".$role." total ".$totals{"role"}{$role}{"cvc"}{$cvc}{"total"}." diff ".$totals{"role"}{$role}{"cvc"}{$cvc}{"diff_forms"});
 		}
 	    }
+        }
+    }
 
-# I would like to add the cuneiform code, but no luck so far.
-	    my $cunhex = $signdata{$formname};
-	    print $cunhex;
-	    
-	#    my $expr = "q{v[\@n='".$formname."']}";
-	#    foreach my $cuntemp ($rootCun->findnodes($expr)) {
-	#	my $parent = $cuntemp->parent();
-	#	$cunhex = $parent->{'utf8'}->{att}->{hex};
-	#	print Dumper($cunhex."\n");
-	#    }
-	    
-	    
-	    push(@{$restdata{$value}{$first.$second.$third.$fourth}},$formname);
+    
+    foreach (sort keys %syllsign) {
+	my $i = $_;
+	foreach my $sign (keys %{$syllsign{$i}{"sign"}}) {
+	    #print p({-'font face' => "verdana"}, "print");
+	    my $number = scalar @{$syllsign{$i}{"sign"}{$sign}{"value"}};
+	    if ($number > 1) {  # several values belong to the same sign
+		# signs ending in a labial, dental or velar stop or in a sibilant (except /š/) did not distinguish between voiced, voiceless and emphatic
+		my %temp = ();
+		foreach my $value (@{$syllsign{$i}{"sign"}{$sign}{"value"}}) {
+		#if ($value=~m|^|) # beginning with b/p, etc. - not yet implemented as this is no fixed rule
+		    if ($i eq "VC") {
+		        my $cons = substr($value,1,1);
+			$value =~ s/[bp]/B/;
+			$value =~ s/[gkq]/G/;
+			$value =~ s/[dt\x{1E6D}]/D/;
+			$value =~ s/[z\x{1E63}s]/Z/;
+			#print p($value);
+		    }
+		    if ($i eq "CVC") {
+			my $cons = substr($value,2,1);
+			$cons =~ s/[bp]/B/;
+			$cons =~ s/[gkq]/G/;
+			$cons =~ s/[dt\x{1E6D}]/D/;
+			$cons =~ s/[z\x{1E63}s]/Z/;
+			substr($value, 2, 1) = $cons; 
+			#print p($value);
+		    }
+		    
+		$temp{$value}++;
+		}
+		if (($i eq "VC") || ($i eq "CVC")) { 
+		    if (keys %temp != $number) {
+		        $syllcount{$i} += keys %temp;
+		        #print p($i." ".$syllcount{$i}); }
+			$sylldoubles += keys %temp;
+		    }
+		}
+		
+		
+	    }
+	
 	}
     }
-}
+    
+    # word stats
+    my @words = $root->get_xpath("words");
+    $wordcount = $words[0]->{att}->{count};
+    my @missing = $words[0]->get_xpath('type/total_grapheme[@name="missing"]');
+    $missingwords = $missing[0]->{att}->{num};
+    my @damaged = $words[0]->get_xpath('type/total_grapheme[@name="damaged"]');
+    $damagedwords = $damaged[0]->{att}->{num};
+    my @preserved = $words[0]->get_xpath('type/total_grapheme[@name="preserved"]');
+    $preservedwords = $preserved[0]->{att}->{num};;
+    my $no_present_words = $wordcount - $missingwords;
 
+}      

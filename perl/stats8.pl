@@ -763,7 +763,9 @@ sub doGsv{
 		    }
 		    elsif ($cvc eq "C") {
 			if ($form eq "d") { $role = "semantic"; $cvc = ""; }
+			elsif ($form eq "m") { $role = "semantic"; $cvc = ""; }
 			else { $role = "leftover"; $cvc = ""; }
+			
 		    } # then the value should be x, so unreadable sign, treat as leftover
 		    else { $role = "logo"; $cvc = ""; }
 		}
@@ -941,6 +943,7 @@ sub savebroken{
 		}
 		else {
 		    $langdata{$lang}{$type}{"type"}{$name}{"role"}{$role}{'cvc'}{$cvc}{'form'}{$baseform}{'extform'}{$form}{"state"}{$break}{'num'}++;
+		    $langdata{$lang}{$type}{"type"}{$name}{"role"}{$role}{'cvc'}{$cvc}{'form'}{$baseform}{"state"}{$break}{'num'}++;
 		}
 		$langdata{$lang}{$type}{"type"}{$name}{"role"}{$role}{'cvc'}{$cvc}{"total"}{$break}{'num'}++;
 	    }
@@ -950,6 +953,7 @@ sub savebroken{
 		}
 		else {
 		    $langdata{$lang}{$type}{"type"}{$name}{"role"}{$role}{'form'}{$baseform}{'extform'}{$form}{"state"}{$break}{'num'}++;
+		    $langdata{$lang}{$type}{"type"}{$name}{"role"}{$role}{'form'}{$baseform}{"state"}{$break}{'num'}++;
 		}
 		$langdata{$lang}{$type}{"type"}{$name}{"role"}{$role}{"total"}{$break}{'num'}++;
 	    }
@@ -994,6 +998,9 @@ sub doG{
 	my $form = "";
 	if($i->{att}->{"form"}){
 	    $form = $i->{att}->{"form"};
+	}
+	if ($form=~m|^0|) {
+	    $form = substr($form, 1, length($form)-1);
 	}
 	else {
 	    if ($i->{att}->{"g:type"}) {
