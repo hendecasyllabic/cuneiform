@@ -28,7 +28,7 @@ my %syllcount = ();
 my $sylldoubles = 0;
 
 my @vowels = ("a", "e", "i", "u");
-my @consonants = ("\x{02BE}", "b", "d", "g", "h", "j", "k", "l", "m", "n", "p", "q", "r", "s", "\x{1E63}", "\x{0161}", "t", "\x{1E6D}", "z");
+my @consonants = ("\x{02BE}", "b", "d", "g", "h", "i", "k", "l", "m", "n", "p", "q", "r", "s", "\x{1E63}", "\x{0161}", "t", "\x{1E6D}", "z");
 my @finalconsonants = ("\x{02BE}", "b/p", "d/t/\x{1E6D}", "g/k/q", "h", "l", "m", "n", "r", "\x{0161}", "z/s/\x{1E63}");
 my @tableheaders = ("V", "CV", "VC", "CVC");
 
@@ -60,8 +60,9 @@ print   header({-charset => 'utf-8'}),
 	p('Disregarding the restored signs, '.$signcount.' signs are attested with '.$valuecount.' readings.');
 	
 my $total = $signcount-$sylldoubles;
-print	p('Taking into account that  signs ending in a labial, dental or velar stop or in a sibilant (except /&#353;/) did not distinguish between voiced, voiceless and emphatic,
-	the number of different readings decreases to '.$total.'.');
+print	p('Rule 1: signs ending in a labial, dental or velar stop or in a sibilant (except /&#353;/) did not distinguish between voiced, voiceless and emphatic;'),
+	p('Rule 2: CV signs ending in e/i and CVC signs with e/i-vowel count as one.'),
+	p('Hence, the number of different readings decreases to '.$total.'.');
 
 print	h1('General division of signs'),
 	p('- according to their attestations ');
@@ -131,6 +132,7 @@ foreach my $r (keys %{$totals{"role"}}){
 	foreach my $c (keys %{$totals{"role"}{$r}{"cvc"}}) {
 	    $sumcvc += $totals{"role"}{$r}{"cvc"}{$c}{"diff_forms"};
 	}
+	$sumcvc -= $sylldoubles;
 	$pieroles2 .= " ['Syll (".$sumcvc.")"."',   ".$sumcvc."],";
     }
     
@@ -152,7 +154,7 @@ my $pierolescvc2 = "<div id='container4' style='min-width: 400px; height: 400px;
 $pierolescvc2 .= " var currentdata2b = [";
 my $sumcvc = 0;
 foreach my $c (keys %{$totals{"role"}{"syll"}{"cvc"}}) {
-    my $temp = $totals{"role"}{"syll"}{"cvc"}{$c}{"diff_forms"};
+    my $temp = $totals{"role"}{"syll"}{"cvc"}{$c}{"diff_forms"} - $syllcount{$c};
     $pierolescvc2 .= " ['"."syllabic"." (".$c."; ".$temp.")"."',   ".$temp."],";
 }
 
@@ -606,14 +608,22 @@ sub tables{
     
     foreach (sort keys %syllsign) {
 	my $i = $_;
+	#print p($i);
+	$syllcount{$i} = 0;
 	foreach my $sign (keys %{$syllsign{$i}{"sign"}}) {
 	    #print p({-'font face' => "verdana"}, "print");
 	    my $number = scalar @{$syllsign{$i}{"sign"}{$sign}{"value"}};
+	    #print p('Number '.$number);
 	    if ($number > 1) {  # several values belong to the same sign
 		# signs ending in a labial, dental or velar stop or in a sibilant (except /š/) did not distinguish between voiced, voiceless and emphatic
 		my %temp = ();
 		foreach my $value (@{$syllsign{$i}{"sign"}{$sign}{"value"}}) {
 		#if ($value=~m|^|) # beginning with b/p, etc. - not yet implemented as this is no fixed rule
+		    $value = substr($value,0,length ($i)); # get rid of index numbers
+		    if (($i eq "CV") || ($i eq "CVC")) {
+			$value =~ s/[ie]/I/gsi;
+			#print p($value);
+		    }
 		    if ($i eq "VC") {
 		        my $cons = substr($value,1,1);
 			$value =~ s/[bp]/B/;
@@ -631,15 +641,23 @@ sub tables{
 			substr($value, 2, 1) = $cons; 
 			#print p($value);
 		    }
-		    
+		#print p($value);
 		$temp{$value}++;
 		}
-		if (($i eq "VC") || ($i eq "CVC")) { 
-		    if (keys %temp != $number) {
-		        $syllcount{$i} += keys %temp;
-		        #print p($i." ".$syllcount{$i}); }
-			$sylldoubles += keys %temp;
+		if (($i eq "CV") || ($i eq "VC") || ($i eq "CVC")) {
+		    my $cnt = 0;
+		    foreach my $r (keys %temp) {
+			#print ('el '.$r);
+			$cnt++;
 		    }
+		    #print p('Keys temp '.$cnt);
+		    if ($cnt != $number) {
+			$cnt = $number - $cnt;
+		        $syllcount{$i} += $cnt;
+		        #print p($i." ".$syllcount{$i}); }
+			$sylldoubles += $cnt;
+		    }
+		    #print p('Syllcount '.$syllcount{$i});
 		}
 		
 		
