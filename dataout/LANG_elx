@@ -1,0 +1,46 @@
+<opt>
+  <graphemes count="82">
+    <type name="graphemesD">
+      <type name="preserved" num="8">
+        <form name="" num="8" />
+      </type>
+    </type>
+    <type name="graphemesN">
+      <type name="preserved" num="7">
+        <form name="1(diš)" num="1" />
+        <form name="1(u)" num="2" />
+        <form name="3(u)" num="2" />
+        <form name="6(diš)" num="1" />
+        <form name="7(diš)" num="1" />
+      </type>
+    </type>
+    <type name="graphemesV">
+      <type name="preserved" num="67">
+        <form name="an" num="6" />
+        <form name="aš" num="6" />
+        <form name="bar" num="3" />
+        <form name="be" num="2" />
+        <form name="diš" num="3" />
+        <form name="du" num="1" />
+        <form name="hal" num="4" />
+        <form name="hi" num="1" />
+        <form name="iš" num="2" />
+        <form name="ka₄" num="3" />
+        <form name="ku" num="4" />
+        <form name="ma" num="2" />
+        <form name="man" num="1" />
+        <form name="me" num="1" />
+        <form name="meš" num="6" />
+        <form name="na" num="3" />
+        <form name="pap" num="1" />
+        <form name="ra" num="1" />
+        <form name="u" num="5" />
+        <form name="ul" num="2" />
+        <form name="ut" num="3" />
+        <form name="za" num="3" />
+        <form name="ša₂" num="1" />
+        <form name="še" num="3" />
+      </type>
+    </type>
+  </graphemes>
+</opt>

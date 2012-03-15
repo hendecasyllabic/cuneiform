@@ -1,0 +1,56 @@
+<opt>
+  <graphemes count="6">
+    <type name="graphemesV">
+      <role name="syll">
+        <cvc name="CV">
+          <form name="ma">
+            <state name="preserved" num="1" />
+          </form>
+          <total name="preserved" num="1" />
+        </cvc>
+        <cvc name="CVC">
+          <form name="tum">
+            <state name="preserved" num="1" />
+          </form>
+          <form name="šum">
+            <state name="preserved" num="1" />
+          </form>
+          <total name="preserved" num="2" />
+        </cvc>
+        <cvc name="V">
+          <form name="u₃">
+            <state name="preserved" num="1" />
+          </form>
+          <total name="preserved" num="1" />
+        </cvc>
+        <cvc name="VC">
+          <form name="an">
+            <state name="preserved" num="2" />
+          </form>
+          <total name="preserved" num="2" />
+        </cvc>
+      </role>
+      <total_grapheme name="preserved" num="6" />
+    </type>
+  </graphemes>
+  <words count="4">
+    <type name="words">
+      <role name="word">
+        <form name="an">
+          <state name="preserved" num="1" />
+        </form>
+        <form name="an-tum">
+          <state name="preserved" num="1" />
+        </form>
+        <form name="u₃">
+          <state name="preserved" num="1" />
+        </form>
+        <form name="šum-ma">
+          <state name="preserved" num="1" />
+        </form>
+        <total name="preserved" num="4" />
+      </role>
+      <total_grapheme name="preserved" num="4" />
+    </type>
+  </words>
+</opt>

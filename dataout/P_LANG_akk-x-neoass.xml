@@ -1,0 +1,1092 @@
+<opt>
+  <graphemes count="635">
+    <type name="graphemesD">
+      <total_grapheme name="preserved" num="26" />
+    </type>
+    <type name="graphemesGG">
+      <role name="">
+        <form name="ligature">
+          <state name="preserved" num="15" />
+        </form>
+        <form name="logo">
+          <state name="preserved" num="7" />
+        </form>
+        <total name="preserved" num="22" />
+      </role>
+      <total_grapheme name="preserved" num="22" />
+    </type>
+    <type name="graphemesN">
+      <role name="number">
+        <form name="1">
+          <state name="missing" num="1" />
+          <state name="preserved" num="13" />
+        </form>
+        <form name="10">
+          <state name="preserved" num="2" />
+        </form>
+        <form name="15">
+          <state name="damaged" num="1" />
+        </form>
+        <form name="18">
+          <state name="preserved" num="1" />
+        </form>
+        <form name="2">
+          <state name="preserved" num="2" />
+        </form>
+        <form name="23">
+          <state name="preserved" num="1" />
+        </form>
+        <form name="28">
+          <state name="damaged" num="1" />
+        </form>
+        <form name="3">
+          <state name="damaged" num="1" />
+          <state name="preserved" num="1" />
+        </form>
+        <form name="5">
+          <state name="preserved" num="3" />
+        </form>
+        <form name="6">
+          <state name="preserved" num="1" />
+        </form>
+        <form name="75">
+          <state name="preserved" num="1" />
+        </form>
+        <form name="9">
+          <state name="preserved" num="1" />
+        </form>
+        <form name="90">
+          <state name="preserved" num="1" />
+        </form>
+        <total name="damaged" num="3" />
+        <total name="missing" num="1" />
+        <total name="preserved" num="27" />
+      </role>
+      <total_grapheme name="damaged" num="3" />
+      <total_grapheme name="missing" num="1" />
+      <total_grapheme name="preserved" num="27" />
+    </type>
+    <type name="graphemesS">
+      <role name="logo">
+        <form name="A">
+          <state name="missing" num="1" />
+          <state name="preserved" num="1" />
+        </form>
+        <form name="AD">
+          <state name="damaged" num="1" />
+          <state name="preserved" num="1" />
+        </form>
+        <form name="ANŠE">
+          <extform name="ANŠEd">
+            <state name="preserved" num="1" />
+          </extform>
+          <state name="damaged" num="1" />
+          <state name="preserved" num="6" />
+        </form>
+        <form name="ARAD">
+          <state name="preserved" num="2" />
+        </form>
+        <form name="AŠ">
+          <state name="preserved" num="1" />
+        </form>
+        <form name="BAD₃">
+          <state name="missing" num="1" />
+        </form>
+        <form name="DI">
+          <state name="preserved" num="1" />
+        </form>
+        <form name="DUMU">
+          <state name="damaged" num="1" />
+        </form>
+        <form name="EN">
+          <state name="damaged" num="1" />
+          <state name="missing" num="2" />
+          <state name="preserved" num="5" />
+        </form>
+        <form name="ERIM">
+          <state name="preserved" num="2" />
+        </form>
+        <form name="E₂">
+          <state name="preserved" num="2" />
+        </form>
+        <form name="GABA">
+          <state name="damaged" num="1" />
+        </form>
+        <form name="GIGIR">
+          <state name="damaged" num="1" />
+        </form>
+        <form name="GIŠ">
+          <extform name="GIŠd">
+            <state name="preserved" num="1" />
+          </extform>
+          <state name="preserved" num="3" />
+        </form>
+        <form name="HI">
+          <state name="missing" num="1" />
+          <state name="preserved" num="1" />
+        </form>
+        <form name="ITI">
+          <state name="preserved" num="2" />
+        </form>
+        <form name="KI">
+          <state name="damaged" num="1" />
+        </form>
+        <form name="KUR">
+          <state name="preserved" num="2" />
+        </form>
+        <form name="LUGAL">
+          <state name="damaged" num="2" />
+          <state name="missing" num="1" />
+          <state name="preserved" num="6" />
+        </form>
+        <form name="ME">
+          <state name="preserved" num="3" />
+        </form>
+        <form name="MEŠ">
+          <extform name="MEŠm">
+            <state name="damaged" num="1" />
+            <state name="preserved" num="4" />
+          </extform>
+          <extform name="MEŠmm">
+            <state name="preserved" num="2" />
+          </extform>
+          <state name="damaged" num="2" />
+          <state name="missing" num="3" />
+          <state name="preserved" num="7" />
+        </form>
+        <form name="NAM">
+          <state name="damaged" num="1" />
+          <state name="preserved" num="1" />
+        </form>
+        <form name="NINDA">
+          <extform name="NINDAm">
+            <state name="preserved" num="1" />
+          </extform>
+          <state name="damaged" num="3" />
+          <state name="preserved" num="1" />
+        </form>
+        <form name="PAB">
+          <state name="preserved" num="4" />
+        </form>
+        <form name="RA">
+          <state name="preserved" num="1" />
+        </form>
+        <form name="TA">
+          <extform name="TAvm">
+            <state name="damaged" num="1" />
+            <state name="preserved" num="4" />
+          </extform>
+          <state name="damaged" num="1" />
+          <state name="preserved" num="4" />
+        </form>
+        <form name="UD">
+          <state name="damaged" num="1" />
+        </form>
+        <form name="UDU">
+          <state name="preserved" num="2" />
+        </form>
+        <form name="UGU">
+          <state name="damaged" num="1" />
+          <state name="preserved" num="2" />
+        </form>
+        <form name="URU">
+          <state name="damaged" num="1" />
+          <state name="preserved" num="3" />
+        </form>
+        <form name="UTU">
+          <state name="preserved" num="1" />
+        </form>
+        <form name="ŠA₃">
+          <state name="preserved" num="3" />
+        </form>
+        <total name="damaged" num="19" />
+        <total name="missing" num="9" />
+        <total name="preserved" num="67" />
+      </role>
+      <role name="semantic">
+        <form name="ANŠE">
+          <state name="damaged" num="1" />
+          <state name="preserved" num="2" />
+        </form>
+        <form name="GIŠ">
+          <state name="preserved" num="1" />
+        </form>
+        <form name="KUR">
+          <state name="preserved" num="3" />
+        </form>
+        <form name="LU₂">
+          <extform name="LU₂v">
+            <state name="damaged" num="1" />
+            <state name="missing" num="1" />
+            <state name="preserved" num="1" />
+          </extform>
+          <extform name="LU₂vy">
+            <state name="preserved" num="2" />
+          </extform>
+          <state name="damaged" num="1" />
+          <state name="missing" num="1" />
+          <state name="preserved" num="3" />
+        </form>
+        <form name="URU">
+          <state name="damaged" num="1" />
+          <state name="preserved" num="2" />
+        </form>
+        <total name="damaged" num="3" />
+        <total name="missing" num="1" />
+        <total name="preserved" num="11" />
+      </role>
+      <total_grapheme name="damaged" num="22" />
+      <total_grapheme name="missing" num="10" />
+      <total_grapheme name="preserved" num="78" />
+    </type>
+    <type name="graphemesV">
+      <role name="leftover">
+        <form name="x">
+          <state name="damaged" num="19" />
+          <state name="missing" num="53" />
+        </form>
+        <total name="damaged" num="19" />
+        <total name="missing" num="53" />
+      </role>
+      <role name="logo">
+        <form name="ina">
+          <state name="missing" num="3" />
+          <state name="preserved" num="8" />
+        </form>
+        <total name="missing" num="3" />
+        <total name="preserved" num="8" />
+      </role>
+      <role name="semantic">
+        <form name="d">
+          <state name="preserved" num="1" />
+        </form>
+        <total name="preserved" num="1" />
+      </role>
+      <role name="syll">
+        <cvc name="CV">
+          <form name="ba">
+            <state name="damaged" num="2" />
+          </form>
+          <form name="be">
+            <state name="missing" num="1" />
+            <state name="preserved" num="5" />
+          </form>
+          <form name="bi">
+            <state name="damaged" num="1" />
+            <state name="missing" num="1" />
+            <state name="preserved" num="2" />
+          </form>
+          <form name="bu">
+            <state name="missing" num="1" />
+          </form>
+          <form name="da">
+            <extform name="dad">
+              <state name="preserved" num="1" />
+            </extform>
+            <state name="damaged" num="2" />
+            <state name="preserved" num="1" />
+          </form>
+          <form name="di">
+            <state name="missing" num="1" />
+            <state name="preserved" num="3" />
+          </form>
+          <form name="du">
+            <state name="damaged" num="1" />
+            <state name="preserved" num="1" />
+          </form>
+          <form name="gu">
+            <state name="preserved" num="1" />
+          </form>
+          <form name="ha">
+            <state name="damaged" num="1" />
+            <state name="preserved" num="4" />
+          </form>
+          <form name="hi">
+            <state name="preserved" num="3" />
+          </form>
+          <form name="hu">
+            <state name="damaged" num="3" />
+            <state name="missing" num="1" />
+            <state name="preserved" num="4" />
+          </form>
+          <form name="ia">
+            <state name="damaged" num="1" />
+            <state name="preserved" num="2" />
+          </form>
+          <form name="ia₂">
+            <state name="missing" num="1" />
+          </form>
+          <form name="ka">
+            <state name="damaged" num="3" />
+            <state name="preserved" num="1" />
+          </form>
+          <form name="ki">
+            <state name="damaged" num="6" />
+          </form>
+          <form name="ku">
+            <state name="damaged" num="2" />
+            <state name="preserved" num="5" />
+          </form>
+          <form name="la">
+            <state name="damaged" num="2" />
+            <state name="preserved" num="5" />
+          </form>
+          <form name="li">
+            <extform name="lid">
+              <state name="preserved" num="1" />
+            </extform>
+            <state name="preserved" num="2" />
+          </form>
+          <form name="li₂">
+            <state name="damaged" num="1" />
+            <state name="missing" num="1" />
+            <state name="preserved" num="4" />
+          </form>
+          <form name="lu">
+            <state name="damaged" num="3" />
+            <state name="preserved" num="1" />
+          </form>
+          <form name="ma">
+            <state name="damaged" num="2" />
+            <state name="missing" num="2" />
+            <state name="preserved" num="11" />
+          </form>
+          <form name="me">
+            <state name="damaged" num="1" />
+            <state name="missing" num="1" />
+            <state name="preserved" num="7" />
+          </form>
+          <form name="mi">
+            <state name="preserved" num="2" />
+          </form>
+          <form name="mu">
+            <state name="missing" num="1" />
+            <state name="preserved" num="3" />
+          </form>
+          <form name="na">
+            <extform name="nat">
+              <state name="damaged" num="1" />
+              <state name="preserved" num="6" />
+            </extform>
+            <state name="damaged" num="4" />
+            <state name="preserved" num="9" />
+          </form>
+          <form name="ni">
+            <extform name="nid">
+              <state name="preserved" num="2" />
+            </extform>
+            <state name="damaged" num="4" />
+            <state name="missing" num="1" />
+            <state name="preserved" num="14" />
+          </form>
+          <form name="nu">
+            <state name="missing" num="1" />
+            <state name="preserved" num="12" />
+          </form>
+          <form name="pa">
+            <state name="preserved" num="1" />
+          </form>
+          <form name="pi">
+            <state name="preserved" num="2" />
+          </form>
+          <form name="pu">
+            <state name="preserved" num="2" />
+          </form>
+          <form name="qa">
+            <state name="preserved" num="2" />
+          </form>
+          <form name="qu">
+            <state name="damaged" num="1" />
+            <state name="preserved" num="1" />
+          </form>
+          <form name="ra">
+            <state name="preserved" num="2" />
+          </form>
+          <form name="ri">
+            <state name="preserved" num="4" />
+          </form>
+          <form name="ru">
+            <state name="damaged" num="1" />
+          </form>
+          <form name="sa">
+            <state name="damaged" num="1" />
+            <state name="missing" num="1" />
+          </form>
+          <form name="se">
+            <state name="missing" num="2" />
+          </form>
+          <form name="si">
+            <state name="damaged" num="1" />
+            <state name="preserved" num="1" />
+          </form>
+          <form name="su">
+            <extform name="sut">
+              <state name="preserved" num="2" />
+            </extform>
+            <extform name="suy">
+              <state name="damaged" num="1" />
+              <state name="preserved" num="1" />
+            </extform>
+            <state name="damaged" num="2" />
+            <state name="preserved" num="4" />
+          </form>
+          <form name="ta">
+            <extform name="tad">
+              <state name="preserved" num="1" />
+            </extform>
+            <state name="damaged" num="3" />
+            <state name="missing" num="1" />
+            <state name="preserved" num="4" />
+          </form>
+          <form name="te">
+            <state name="damaged" num="3" />
+            <state name="preserved" num="6" />
+          </form>
+          <form name="ti">
+            <extform name="tit">
+              <state name="preserved" num="1" />
+            </extform>
+            <state name="preserved" num="2" />
+          </form>
+          <form name="tu">
+            <state name="damaged" num="2" />
+            <state name="missing" num="1" />
+          </form>
+          <form name="tu₂">
+            <state name="preserved" num="9" />
+          </form>
+          <form name="za">
+            <state name="damaged" num="2" />
+            <state name="preserved" num="2" />
+          </form>
+          <form name="ša">
+            <extform name="šadm">
+              <state name="preserved" num="6" />
+            </extform>
+            <state name="damaged" num="1" />
+            <state name="preserved" num="6" />
+          </form>
+          <form name="ša₂">
+            <state name="preserved" num="2" />
+          </form>
+          <form name="še">
+            <state name="missing" num="1" />
+          </form>
+          <form name="ši">
+            <state name="preserved" num="4" />
+          </form>
+          <form name="šu">
+            <state name="damaged" num="1" />
+            <state name="preserved" num="3" />
+          </form>
+          <form name="šu₂">
+            <state name="missing" num="2" />
+            <state name="preserved" num="6" />
+          </form>
+          <form name="ṣa">
+            <state name="preserved" num="2" />
+          </form>
+          <form name="ṣi">
+            <state name="preserved" num="1" />
+          </form>
+          <form name="ṭe₃">
+            <state name="missing" num="1" />
+          </form>
+          <form name="ṭi₂">
+            <state name="preserved" num="1" />
+          </form>
+          <form name="ṭu">
+            <state name="preserved" num="1" />
+          </form>
+          <total name="damaged" num="57" />
+          <total name="missing" num="22" />
+          <total name="preserved" num="170" />
+        </cvc>
+        <cvc name="CVC">
+          <form name="bal">
+            <state name="preserved" num="1" />
+          </form>
+          <form name="bar">
+            <state name="damaged" num="1" />
+            <state name="preserved" num="2" />
+          </form>
+          <form name="gab">
+            <state name="damaged" num="1" />
+            <state name="missing" num="1" />
+          </form>
+          <form name="gur₂">
+            <state name="preserved" num="1" />
+          </form>
+          <form name="kan">
+            <state name="missing" num="1" />
+          </form>
+          <form name="lak">
+            <state name="preserved" num="1" />
+          </form>
+          <form name="lim">
+            <state name="damaged" num="1" />
+            <state name="preserved" num="2" />
+          </form>
+          <form name="liš">
+            <extform name="lišd">
+              <state name="preserved" num="2" />
+            </extform>
+            <state name="preserved" num="2" />
+          </form>
+          <form name="mad">
+            <state name="missing" num="1" />
+            <state name="preserved" num="2" />
+          </form>
+          <form name="mar">
+            <state name="damaged" num="1" />
+            <state name="preserved" num="2" />
+          </form>
+          <form name="maš">
+            <state name="preserved" num="1" />
+          </form>
+          <form name="sap">
+            <state name="damaged" num="1" />
+          </form>
+          <form name="tal">
+            <state name="preserved" num="1" />
+          </form>
+          <form name="šib">
+            <state name="damaged" num="1" />
+          </form>
+          <form name="šub">
+            <state name="damaged" num="1" />
+          </form>
+          <form name="šur">
+            <state name="preserved" num="1" />
+          </form>
+          <total name="damaged" num="7" />
+          <total name="missing" num="3" />
+          <total name="preserved" num="16" />
+        </cvc>
+        <cvc name="V">
+          <form name="a">
+            <state name="damaged" num="6" />
+            <state name="missing" num="4" />
+            <state name="preserved" num="30" />
+          </form>
+          <form name="e">
+            <state name="missing" num="1" />
+            <state name="preserved" num="2" />
+          </form>
+          <form name="i">
+            <state name="damaged" num="3" />
+            <state name="missing" num="2" />
+            <state name="preserved" num="5" />
+          </form>
+          <form name="u">
+            <state name="preserved" num="1" />
+          </form>
+          <form name="u₂">
+            <state name="damaged" num="1" />
+            <state name="missing" num="2" />
+            <state name="preserved" num="8" />
+          </form>
+          <total name="damaged" num="10" />
+          <total name="missing" num="9" />
+          <total name="preserved" num="46" />
+        </cvc>
+        <cvc name="VC">
+          <form name="an">
+            <state name="damaged" num="1" />
+            <state name="preserved" num="3" />
+          </form>
+          <form name="at">
+            <state name="preserved" num="1" />
+          </form>
+          <form name="aš">
+            <state name="preserved" num="1" />
+          </form>
+          <form name="ib">
+            <state name="damaged" num="1" />
+          </form>
+          <form name="ik">
+            <state name="preserved" num="1" />
+          </form>
+          <form name="il">
+            <state name="preserved" num="1" />
+          </form>
+          <form name="in">
+            <state name="preserved" num="2" />
+          </form>
+          <form name="iq">
+            <state name="damaged" num="1" />
+            <state name="preserved" num="1" />
+          </form>
+          <form name="ir">
+            <state name="damaged" num="1" />
+          </form>
+          <form name="is">
+            <state name="missing" num="1" />
+            <state name="preserved" num="1" />
+          </form>
+          <form name="it">
+            <state name="missing" num="1" />
+          </form>
+          <form name="ub">
+            <state name="missing" num="1" />
+            <state name="preserved" num="2" />
+          </form>
+          <form name="ur">
+            <state name="missing" num="1" />
+          </form>
+          <form name="ut">
+            <state name="missing" num="1" />
+          </form>
+          <total name="damaged" num="4" />
+          <total name="missing" num="5" />
+          <total name="preserved" num="13" />
+        </cvc>
+      </role>
+      <total_grapheme name="damaged" num="97" />
+      <total_grapheme name="missing" num="95" />
+      <total_grapheme name="preserved" num="254" />
+    </type>
+  </graphemes>
+  <words count="266">
+    <type name="words">
+      <role name="word">
+        <form name="01">
+          <state name="preserved" num="2" />
+        </form>
+        <form name="01-me-23">
+          <state name="preserved" num="1" />
+        </form>
+        <form name="01-me-28">
+          <state name="damaged" num="1" />
+        </form>
+        <form name="02">
+          <state name="preserved" num="1" />
+        </form>
+        <form name="02-lim">
+          <state name="preserved" num="1" />
+        </form>
+        <form name="03">
+          <state name="preserved" num="1" />
+        </form>
+        <form name="03-me">
+          <state name="damaged" num="1" />
+        </form>
+        <form name="05">
+          <state name="preserved" num="1" />
+        </form>
+        <form name="06-me">
+          <state name="preserved" num="1" />
+        </form>
+        <form name="09-me-18">
+          <state name="preserved" num="1" />
+        </form>
+        <form name="15">
+          <state name="damaged" num="1" />
+        </form>
+        <form name="75">
+          <state name="preserved" num="1" />
+        </form>
+        <form name="90">
+          <state name="preserved" num="1" />
+        </form>
+        <form name="ANŠE">
+          <state name="damaged" num="1" />
+          <state name="preserved" num="6" />
+        </form>
+        <form name="ARAD-ka">
+          <state name="damaged" num="1" />
+          <state name="preserved" num="1" />
+        </form>
+        <form name="DI-mu">
+          <state name="preserved" num="1" />
+        </form>
+        <form name="DUMU">
+          <state name="damaged" num="1" />
+        </form>
+        <form name="EN-ia">
+          <state name="damaged" num="2" />
+        </form>
+        <form name="EN-ia₂">
+          <state name="missing" num="1" />
+        </form>
+        <form name="ERIM-MEŠ">
+          <state name="preserved" num="2" />
+        </form>
+        <form name="E₂">
+          <state name="preserved" num="2" />
+        </form>
+        <form name="GABA">
+          <state name="damaged" num="1" />
+        </form>
+        <form name="ITI">
+          <state name="preserved" num="2" />
+        </form>
+        <form name="KUR-aš-šur">
+          <state name="preserved" num="1" />
+        </form>
+        <form name="LUGAL">
+          <state name="damaged" num="2" />
+          <state name="missing" num="1" />
+          <state name="preserved" num="6" />
+        </form>
+        <form name="NINDA-ME">
+          <state name="damaged" num="1" />
+        </form>
+        <form name="NINDA-MEŠ">
+          <state name="damaged" num="2" />
+          <state name="preserved" num="1" />
+        </form>
+        <form name="PAB">
+          <state name="preserved" num="3" />
+        </form>
+        <form name="TA@v">
+          <state name="damaged" num="1" />
+          <state name="preserved" num="4" />
+        </form>
+        <form name="UD-me">
+          <state name="damaged" num="1" />
+        </form>
+        <form name="UDU-HI.A">
+          <state name="preserved" num="1" />
+        </form>
+        <form name="UDU-HI.A-MEŠ">
+          <state name="damaged" num="1" />
+        </form>
+        <form name="UGU">
+          <state name="preserved" num="2" />
+        </form>
+        <form name="UGU-hi">
+          <state name="damaged" num="1" />
+        </form>
+        <form name="URU-ME-šu₂-nu">
+          <state name="preserved" num="1" />
+        </form>
+        <form name="URU-MEŠ">
+          <state name="damaged" num="1" />
+          <state name="preserved" num="1" />
+        </form>
+        <form name="URU-MEŠ-ni">
+          <state name="preserved" num="1" />
+        </form>
+        <form name="a-hi-ši">
+          <state name="preserved" num="1" />
+        </form>
+        <form name="a-ma-qu-ut">
+          <state name="damaged" num="1" />
+        </form>
+        <form name="a-na">
+          <state name="damaged" num="3" />
+          <state name="preserved" num="4" />
+        </form>
+        <form name="a-na-ku">
+          <state name="preserved" num="1" />
+        </form>
+        <form name="a-na-ku-ma">
+          <state name="damaged" num="1" />
+        </form>
+        <form name="a-ni-nu">
+          <state name="damaged" num="1" />
+        </form>
+        <form name="a-sap-ra">
+          <state name="damaged" num="1" />
+        </form>
+        <form name="a-se-me">
+          <state name="missing" num="1" />
+        </form>
+        <form name="a-ta-a">
+          <state name="damaged" num="1" />
+        </form>
+        <form name="an-ni-nu">
+          <state name="damaged" num="1" />
+          <state name="preserved" num="1" />
+        </form>
+        <form name="an-ni-u₂">
+          <state name="preserved" num="2" />
+        </form>
+        <form name="at-tu₂-nu">
+          <state name="preserved" num="1" />
+        </form>
+        <form name="be-li₂">
+          <state name="damaged" num="1" />
+          <state name="missing" num="1" />
+          <state name="preserved" num="4" />
+        </form>
+        <form name="e-pi-šu₂-te">
+          <state name="damaged" num="1" />
+        </form>
+        <form name="e-ta-mar-na-a-ši">
+          <state name="damaged" num="1" />
+        </form>
+        <form name="gab-bi-šu₂-nu">
+          <state name="damaged" num="1" />
+        </form>
+        <form name="gab-bu">
+          <state name="missing" num="1" />
+        </form>
+        <form name="hu-ub-te">
+          <state name="damaged" num="1" />
+        </form>
+        <form name="i-bal-ku-tu">
+          <state name="damaged" num="1" />
+        </form>
+        <form name="i-da-tu-šu">
+          <state name="damaged" num="1" />
+        </form>
+        <form name="i-du-ka-a-ni">
+          <state name="damaged" num="1" />
+        </form>
+        <form name="i-ma-gur₂">
+          <state name="damaged" num="1" />
+        </form>
+        <form name="i-ma-tu₂-hu">
+          <state name="preserved" num="1" />
+        </form>
+        <form name="i-sa-a-hi-ši">
+          <state name="damaged" num="1" />
+        </form>
+        <form name="i-si-ku-nu">
+          <state name="preserved" num="1" />
+        </form>
+        <form name="i-tal-ka">
+          <state name="damaged" num="1" />
+        </form>
+        <form name="i-ša₂-mi">
+          <state name="preserved" num="1" />
+        </form>
+        <form name="i-ši-a-ri">
+          <state name="damaged" num="1" />
+        </form>
+        <form name="in-nu-te">
+          <state name="preserved" num="1" />
+        </form>
+        <form name="ina">
+          <state name="missing" num="3" />
+          <state name="preserved" num="8" />
+        </form>
+        <form name="is-sa-kan">
+          <state name="missing" num="1" />
+        </form>
+        <form name="is-su-hu-u-ni">
+          <state name="preserved" num="1" />
+        </form>
+        <form name="ki-su-tu₂">
+          <state name="damaged" num="4" />
+        </form>
+        <form name="ku-ta-li-ni">
+          <state name="preserved" num="1" />
+        </form>
+        <form name="la">
+          <state name="preserved" num="2" />
+        </form>
+        <form name="la-a">
+          <state name="damaged" num="1" />
+          <state name="preserved" num="3" />
+        </form>
+        <form name="li-in-tu₂-hu">
+          <state name="preserved" num="1" />
+        </form>
+        <form name="liš-pu-ra">
+          <state name="preserved" num="1" />
+        </form>
+        <form name="liš-ṭu-ru">
+          <state name="damaged" num="1" />
+        </form>
+        <form name="lu">
+          <state name="damaged" num="2" />
+        </form>
+        <form name="lu-ša₂-ki-lu">
+          <state name="damaged" num="1" />
+        </form>
+        <form name="ma-a">
+          <state name="damaged" num="1" />
+          <state name="missing" num="1" />
+          <state name="preserved" num="4" />
+        </form>
+        <form name="ma-ri-ṣi">
+          <state name="preserved" num="1" />
+        </form>
+        <form name="mad-bar">
+          <state name="damaged" num="1" />
+          <state name="preserved" num="2" />
+        </form>
+        <form name="mar-di-a-te">
+          <state name="preserved" num="1" />
+        </form>
+        <form name="mar-di-tu₂">
+          <state name="preserved" num="1" />
+        </form>
+        <form name="mu">
+          <state name="preserved" num="1" />
+        </form>
+        <form name="ni-ik-šu-du">
+          <state name="preserved" num="1" />
+        </form>
+        <form name="ni-iq-ṭi₂-ri-ib">
+          <state name="damaged" num="1" />
+        </form>
+        <form name="ni-ir-ti-di-pi">
+          <state name="damaged" num="1" />
+        </form>
+        <form name="ni-it-ta-ha-ṣa">
+          <state name="damaged" num="1" />
+        </form>
+        <form name="ni-ma-ta-ha">
+          <state name="damaged" num="1" />
+        </form>
+        <form name="ni-su-hu-ur">
+          <state name="damaged" num="1" />
+        </form>
+        <form name="ni-ta-lak">
+          <state name="preserved" num="1" />
+        </form>
+        <form name="pa-nu-gu">
+          <state name="preserved" num="1" />
+        </form>
+        <form name="si">
+          <state name="damaged" num="1" />
+        </form>
+        <form name="te">
+          <state name="preserved" num="1" />
+        </form>
+        <form name="u₂-da">
+          <state name="damaged" num="1" />
+          <state name="preserved" num="1" />
+        </form>
+        <form name="u₂-ma-a">
+          <state name="preserved" num="1" />
+        </form>
+        <form name="u₂-se-šib">
+          <state name="damaged" num="1" />
+        </form>
+        <form name="u₂-za-ta-ki">
+          <state name="damaged" num="1" />
+        </form>
+        <form name="u₂-še-ta-qu-u₂-ni">
+          <state name="damaged" num="1" />
+        </form>
+        <form name="x">
+          <state name="damaged" num="4" />
+          <state name="missing" num="34" />
+        </form>
+        <form name="x+x">
+          <state name="preserved" num="13" />
+        </form>
+        <form name="x+x-na">
+          <state name="damaged" num="1" />
+        </form>
+        <form name="x-lim-05-me">
+          <state name="damaged" num="2" />
+        </form>
+        <form name="{1}10-KI-ia">
+          <state name="damaged" num="1" />
+        </form>
+        <form name="{1}10-ha-ti">
+          <state name="damaged" num="1" />
+        </form>
+        <form name="{1}AD-GIŠ">
+          <state name="damaged" num="1" />
+          <state name="preserved" num="1" />
+        </form>
+        <form name="{1}EN-BAD₃">
+          <state name="damaged" num="1" />
+        </form>
+        <form name="{1}EN-GIŠ">
+          <state name="preserved" num="1" />
+        </form>
+        <form name="{1}EN-iq-bi">
+          <state name="damaged" num="1" />
+        </form>
+        <form name="{1}a-mi-ri">
+          <state name="damaged" num="1" />
+        </form>
+        <form name="{1}ni-ba-x">
+          <state name="damaged" num="1" />
+        </form>
+        <form name="{1}{d}UTU-PAB-AŠ">
+          <state name="preserved" num="1" />
+        </form>
+        <form name="{ANŠE}KUR.RA-MEŠ">
+          <state name="preserved" num="1" />
+        </form>
+        <form name="{ANŠE}a-na-qa-te">
+          <state name="preserved" num="1" />
+        </form>
+        <form name="{ANŠE}a-ṣa-pu">
+          <state name="preserved" num="1" />
+        </form>
+        <form name="{GIŠ}GIGIR-MEŠ">
+          <state name="damaged" num="1" />
+        </form>
+        <form name="{KUR}ha-ma-te">
+          <state name="preserved" num="1" />
+        </form>
+        <form name="{KUR}il-la-ba-a-ni">
+          <state name="damaged" num="1" />
+        </form>
+        <form name="{KUR}ku-mu-ha-a.a">
+          <state name="preserved" num="1" />
+        </form>
+        <form name="{LU₂}EN.NAM-ME">
+          <state name="preserved" num="1" />
+        </form>
+        <form name="{LU₂}EN.NAM-MEŠ">
+          <state name="damaged" num="1" />
+        </form>
+        <form name="{LU₂}hu-ub-te">
+          <state name="damaged" num="2" />
+        </form>
+        <form name="{LU₂}za-ku-e">
+          <state name="preserved" num="1" />
+        </form>
+        <form name="{URU}di-maš-qa">
+          <state name="damaged" num="1" />
+        </form>
+        <form name="{URU}hu-za-za">
+          <state name="damaged" num="1" />
+        </form>
+        <form name="{URU}x+x-x-tu">
+          <state name="damaged" num="1" />
+        </form>
+        <form name="ŠA₃">
+          <state name="preserved" num="1" />
+        </form>
+        <form name="ŠA₃-bi">
+          <state name="preserved" num="2" />
+        </form>
+        <form name="ša">
+          <state name="damaged" num="1" />
+          <state name="preserved" num="6" />
+        </form>
+        <form name="šu-na-a.a">
+          <state name="preserved" num="1" />
+        </form>
+        <form name="šu-u₂">
+          <state name="preserved" num="1" />
+        </form>
+        <form name="šub-tu₂">
+          <state name="damaged" num="1" />
+        </form>
+        <form name="šu₂">
+          <state name="preserved" num="1" />
+        </form>
+        <form name="šu₂-nu">
+          <state name="damaged" num="1" />
+          <state name="missing" num="1" />
+          <state name="preserved" num="1" />
+        </form>
+        <form name="šu₂-nu-u₂-ma">
+          <state name="damaged" num="1" />
+        </form>
+        <form name="ṭe₃-mu">
+          <state name="missing" num="1" />
+        </form>
+        <total name="damaged" num="87" />
+        <total name="missing" num="46" />
+        <total name="preserved" num="133" />
+      </role>
+      <total_grapheme name="damaged" num="87" />
+      <total_grapheme name="missing" num="46" />
+      <total_grapheme name="preserved" num="133" />
+    </type>
+  </words>
+</opt>

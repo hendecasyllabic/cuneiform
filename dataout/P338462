@@ -1,0 +1,1737 @@
+<opt name="P338462" period="Neo-Assyrian">
+  <graphemes broken="31" count="31">
+    <type name="graphemesV">
+      <lang name="akk">
+        <type name="all" num="19">
+          <cvc name="CV" num="11">
+            <form name="hu" num="1" />
+            <form name="la" num="1" />
+            <form name="li" num="4" />
+            <form name="ma" num="1" />
+            <form name="mu" num="1" />
+            <form name="su" num="2" />
+            <form name="tu₂" num="1" />
+          </cvc>
+          <cvc name="CVC" num="2">
+            <form name="šal" num="1" />
+            <form name="šir" num="1" />
+          </cvc>
+          <cvc name="V" num="1">
+            <form name="u₂" num="1" />
+          </cvc>
+          <cvc name="VC" num="3">
+            <form name="aq" num="1" />
+            <form name="is" num="2" />
+          </cvc>
+          <form name="aq" num="1" />
+          <form name="hu" num="1" />
+          <form name="is" num="2" />
+          <form name="la" num="1" />
+          <form name="li" num="4" />
+          <form name="ma" num="1" />
+          <form name="mu" num="1" />
+          <form name="su" num="2" />
+          <form name="tu₂" num="1" />
+          <form name="u₂" num="1" />
+          <form name="x" num="2" />
+          <form name="šal" num="1" />
+          <form name="šir" num="1" />
+        </type>
+        <type name="damaged" num="2">
+          <cvc name="CV" num="2">
+            <form name="la" num="1" />
+            <form name="su" num="1" />
+          </cvc>
+          <form name="la" num="1" />
+          <form name="su" num="1" />
+        </type>
+        <type name="missing" num="7">
+          <cvc name="CV" num="4">
+            <form name="li" num="4" />
+          </cvc>
+          <cvc name="CVC" num="1">
+            <form name="šal" num="1" />
+          </cvc>
+          <cvc name="VC" num="2">
+            <form name="is" num="2" />
+          </cvc>
+          <form name="is" num="2" />
+          <form name="li" num="4" />
+          <form name="šal" num="1" />
+        </type>
+        <type name="preserved" num="10">
+          <cvc name="CV" num="5">
+            <form name="hu" num="1" />
+            <form name="ma" num="1" />
+            <form name="mu" num="1" />
+            <form name="su" num="1" />
+            <form name="tu₂" num="1" />
+          </cvc>
+          <cvc name="CVC" num="1">
+            <form name="šir" num="1" />
+          </cvc>
+          <cvc name="V" num="1">
+            <form name="u₂" num="1" />
+          </cvc>
+          <cvc name="VC" num="1">
+            <form name="aq" num="1" />
+          </cvc>
+          <form name="aq" num="1" />
+          <form name="hu" num="1" />
+          <form name="ma" num="1" />
+          <form name="mu" num="1" />
+          <form name="su" num="1" />
+          <form name="tu₂" num="1" />
+          <form name="u₂" num="1" />
+          <form name="x" num="2" />
+          <form name="šir" num="1" />
+        </type>
+      </lang>
+    </type>
+    <type name="graphemesX">
+      <lang name="akk">
+        <type name="all" num="12">
+          <form name="ellipsis" num="12" />
+        </type>
+        <type name="missing" num="12">
+          <form name="ellipsis" num="12" />
+        </type>
+      </lang>
+    </type>
+  </graphemes>
+  <hierarchicalview>
+    <surface columns="1" label="" type="obverse">
+      <column allgraphemes="0" alllines="0" groups="0" lines="0" />
+    </surface>
+    <surface columns="1" label="side a frg.@surface side a" type="surface">
+      <column allgraphemes="0" alllines="6" groups="0" lines="6">
+        <graphemes>
+          <words>
+            <allwordsmissingForms>x</allwordsmissingForms>
+            <graphemeSingles name="graphemesS" />
+            <graphemeSingles name="graphemesV" />
+            <graphemesX>
+              <allgraphemesmissingForms>ellipsis</allgraphemesmissingForms>
+              <graphemes name="type">
+                <graphemesX name="lang">
+                  <akk name="type">
+                    <all num="1">
+                      <form name="ellipsis" num="1" />
+                    </all>
+                    <missing num="1">
+                      <form name="ellipsis" num="1" />
+                    </missing>
+                  </akk>
+                </graphemesX>
+              </graphemes>
+              <inner name="graphemeSingles">
+                <graphemesS></graphemesS>
+                <graphemesV></graphemesV>
+              </inner>
+            </graphemesX>
+            <words name="type">
+              <words name="lang">
+                <akk name="type">
+                  <all num="1">
+                    <form name="x" num="1" />
+                  </all>
+                  <missing num="1">
+                    <form name="x" num="1" />
+                  </missing>
+                </akk>
+              </words>
+            </words>
+          </words>
+          <words>
+            <allwordspreservedForms>x</allwordspreservedForms>
+            <graphemeSingles name="graphemesS" />
+            <graphemeSingles name="graphemesV">
+              <allgraphemespreservedForms>x</allgraphemespreservedForms>
+              <graphemes name="type">
+                <graphemesV name="lang">
+                  <akk name="type">
+                    <all num="1">
+                      <form name="x" num="1" />
+                    </all>
+                    <preserved num="1">
+                      <form name="x" num="1" />
+                    </preserved>
+                  </akk>
+                </graphemesV>
+              </graphemes>
+            </graphemeSingles>
+            <words name="type">
+              <words name="lang">
+                <akk name="type">
+                  <all num="1">
+                    <form name="x" num="1" />
+                  </all>
+                  <preserved num="1">
+                    <form name="x" num="1" />
+                  </preserved>
+                </akk>
+              </words>
+            </words>
+          </words>
+          <words>
+            <allwordsmissingForms>x</allwordsmissingForms>
+            <graphemeSingles name="graphemesS" />
+            <graphemeSingles name="graphemesV" />
+            <graphemesX>
+              <allgraphemesmissingForms>ellipsis</allgraphemesmissingForms>
+              <graphemes name="type">
+                <graphemesX name="lang">
+                  <akk name="type">
+                    <all num="1">
+                      <form name="ellipsis" num="1" />
+                    </all>
+                    <missing num="1">
+                      <form name="ellipsis" num="1" />
+                    </missing>
+                  </akk>
+                </graphemesX>
+              </graphemes>
+              <inner name="graphemeSingles">
+                <graphemesS></graphemesS>
+                <graphemesV></graphemesV>
+              </inner>
+            </graphemesX>
+            <words name="type">
+              <words name="lang">
+                <akk name="type">
+                  <all num="1">
+                    <form name="x" num="1" />
+                  </all>
+                  <missing num="1">
+                    <form name="x" num="1" />
+                  </missing>
+                </akk>
+              </words>
+            </words>
+          </words>
+        </graphemes>
+        <graphemes>
+          <words>
+            <allwordsmissingForms>x</allwordsmissingForms>
+            <graphemeSingles name="graphemesS" />
+            <graphemeSingles name="graphemesV" />
+            <graphemesX>
+              <allgraphemesmissingForms>ellipsis</allgraphemesmissingForms>
+              <graphemes name="type">
+                <graphemesX name="lang">
+                  <akk name="type">
+                    <all num="1">
+                      <form name="ellipsis" num="1" />
+                    </all>
+                    <missing num="1">
+                      <form name="ellipsis" num="1" />
+                    </missing>
+                  </akk>
+                </graphemesX>
+              </graphemes>
+              <inner name="graphemeSingles">
+                <graphemesS></graphemesS>
+                <graphemesV></graphemesV>
+              </inner>
+            </graphemesX>
+            <words name="type">
+              <words name="lang">
+                <akk name="type">
+                  <all num="1">
+                    <form name="x" num="1" />
+                  </all>
+                  <missing num="1">
+                    <form name="x" num="1" />
+                  </missing>
+                </akk>
+              </words>
+            </words>
+          </words>
+          <words>
+            <allwordsdamagedForms>li-is-su-hu</allwordsdamagedForms>
+            <graphemeSingles name="graphemesS" />
+            <graphemeSingles name="graphemesV">
+              <allgraphemesdamagedForms>su</allgraphemesdamagedForms>
+              <allgraphemesmissingForms>li</allgraphemesmissingForms>
+              <allgraphemesmissingForms>is</allgraphemesmissingForms>
+              <allgraphemespreservedForms>hu</allgraphemespreservedForms>
+              <graphemes name="type">
+                <graphemesV name="lang">
+                  <akk name="type">
+                    <all num="4">
+                      <cvc name="CV" num="3">
+                        <form name="hu" num="1" />
+                        <form name="li" num="1" />
+                        <form name="su" num="1" />
+                      </cvc>
+                      <cvc name="VC" num="1">
+                        <form name="is" num="1" />
+                      </cvc>
+                      <form name="hu" num="1" />
+                      <form name="is" num="1" />
+                      <form name="li" num="1" />
+                      <form name="su" num="1" />
+                    </all>
+                    <damaged num="1">
+                      <cvc name="CV" num="1">
+                        <form name="su" num="1" />
+                      </cvc>
+                      <form name="su" num="1" />
+                    </damaged>
+                    <missing num="2">
+                      <cvc name="CV" num="1">
+                        <form name="li" num="1" />
+                      </cvc>
+                      <cvc name="VC" num="1">
+                        <form name="is" num="1" />
+                      </cvc>
+                      <form name="is" num="1" />
+                      <form name="li" num="1" />
+                    </missing>
+                    <preserved num="1">
+                      <cvc name="CV" num="1">
+                        <form name="hu" num="1" />
+                      </cvc>
+                      <form name="hu" num="1" />
+                    </preserved>
+                  </akk>
+                </graphemesV>
+              </graphemes>
+            </graphemeSingles>
+            <words name="type">
+              <words name="lang">
+                <akk name="type">
+                  <all num="1">
+                    <form name="li-is-su-hu" num="1" />
+                  </all>
+                  <damaged num="1">
+                    <form name="li-is-su-hu" num="1" />
+                  </damaged>
+                </akk>
+              </words>
+            </words>
+          </words>
+          <words>
+            <allwordsmissingForms>x</allwordsmissingForms>
+            <graphemeSingles name="graphemesS" />
+            <graphemeSingles name="graphemesV" />
+            <graphemesX>
+              <allgraphemesmissingForms>ellipsis</allgraphemesmissingForms>
+              <graphemes name="type">
+                <graphemesX name="lang">
+                  <akk name="type">
+                    <all num="1">
+                      <form name="ellipsis" num="1" />
+                    </all>
+                    <missing num="1">
+                      <form name="ellipsis" num="1" />
+                    </missing>
+                  </akk>
+                </graphemesX>
+              </graphemes>
+              <inner name="graphemeSingles">
+                <graphemesS></graphemesS>
+                <graphemesV></graphemesV>
+              </inner>
+            </graphemesX>
+            <words name="type">
+              <words name="lang">
+                <akk name="type">
+                  <all num="1">
+                    <form name="x" num="1" />
+                  </all>
+                  <missing num="1">
+                    <form name="x" num="1" />
+                  </missing>
+                </akk>
+              </words>
+            </words>
+          </words>
+        </graphemes>
+        <graphemes>
+          <words>
+            <allwordsmissingForms>x</allwordsmissingForms>
+            <graphemeSingles name="graphemesS" />
+            <graphemeSingles name="graphemesV" />
+            <graphemesX>
+              <allgraphemesmissingForms>ellipsis</allgraphemesmissingForms>
+              <graphemes name="type">
+                <graphemesX name="lang">
+                  <akk name="type">
+                    <all num="1">
+                      <form name="ellipsis" num="1" />
+                    </all>
+                    <missing num="1">
+                      <form name="ellipsis" num="1" />
+                    </missing>
+                  </akk>
+                </graphemesX>
+              </graphemes>
+              <inner name="graphemeSingles">
+                <graphemesS></graphemesS>
+                <graphemesV></graphemesV>
+              </inner>
+            </graphemesX>
+            <words name="type">
+              <words name="lang">
+                <akk name="type">
+                  <all num="1">
+                    <form name="x" num="1" />
+                  </all>
+                  <missing num="1">
+                    <form name="x" num="1" />
+                  </missing>
+                </akk>
+              </words>
+            </words>
+          </words>
+          <words>
+            <allwordsdamagedForms>li-is-su-u₂</allwordsdamagedForms>
+            <graphemeSingles name="graphemesS" />
+            <graphemeSingles name="graphemesV">
+              <allgraphemesmissingForms>li</allgraphemesmissingForms>
+              <allgraphemesmissingForms>is</allgraphemesmissingForms>
+              <allgraphemespreservedForms>su</allgraphemespreservedForms>
+              <allgraphemespreservedForms>u₂</allgraphemespreservedForms>
+              <graphemes name="type">
+                <graphemesV name="lang">
+                  <akk name="type">
+                    <all num="4">
+                      <cvc name="CV" num="2">
+                        <form name="li" num="1" />
+                        <form name="su" num="1" />
+                      </cvc>
+                      <cvc name="V" num="1">
+                        <form name="u₂" num="1" />
+                      </cvc>
+                      <cvc name="VC" num="1">
+                        <form name="is" num="1" />
+                      </cvc>
+                      <form name="is" num="1" />
+                      <form name="li" num="1" />
+                      <form name="su" num="1" />
+                      <form name="u₂" num="1" />
+                    </all>
+                    <missing num="2">
+                      <cvc name="CV" num="1">
+                        <form name="li" num="1" />
+                      </cvc>
+                      <cvc name="VC" num="1">
+                        <form name="is" num="1" />
+                      </cvc>
+                      <form name="is" num="1" />
+                      <form name="li" num="1" />
+                    </missing>
+                    <preserved num="2">
+                      <cvc name="CV" num="1">
+                        <form name="su" num="1" />
+                      </cvc>
+                      <cvc name="V" num="1">
+                        <form name="u₂" num="1" />
+                      </cvc>
+                      <form name="su" num="1" />
+                      <form name="u₂" num="1" />
+                    </preserved>
+                  </akk>
+                </graphemesV>
+              </graphemes>
+            </graphemeSingles>
+            <words name="type">
+              <words name="lang">
+                <akk name="type">
+                  <all num="1">
+                    <form name="li-is-su-u₂" num="1" />
+                  </all>
+                  <damaged num="1">
+                    <form name="li-is-su-u₂" num="1" />
+                  </damaged>
+                </akk>
+              </words>
+            </words>
+          </words>
+          <words>
+            <allwordsmissingForms>x</allwordsmissingForms>
+            <graphemeSingles name="graphemesS" />
+            <graphemeSingles name="graphemesV" />
+            <graphemesX>
+              <allgraphemesmissingForms>ellipsis</allgraphemesmissingForms>
+              <graphemes name="type">
+                <graphemesX name="lang">
+                  <akk name="type">
+                    <all num="1">
+                      <form name="ellipsis" num="1" />
+                    </all>
+                    <missing num="1">
+                      <form name="ellipsis" num="1" />
+                    </missing>
+                  </akk>
+                </graphemesX>
+              </graphemes>
+              <inner name="graphemeSingles">
+                <graphemesS></graphemesS>
+                <graphemesV></graphemesV>
+              </inner>
+            </graphemesX>
+            <words name="type">
+              <words name="lang">
+                <akk name="type">
+                  <all num="1">
+                    <form name="x" num="1" />
+                  </all>
+                  <missing num="1">
+                    <form name="x" num="1" />
+                  </missing>
+                </akk>
+              </words>
+            </words>
+          </words>
+        </graphemes>
+        <graphemes>
+          <words>
+            <allwordsmissingForms>x</allwordsmissingForms>
+            <graphemeSingles name="graphemesS" />
+            <graphemeSingles name="graphemesV" />
+            <graphemesX>
+              <allgraphemesmissingForms>ellipsis</allgraphemesmissingForms>
+              <graphemes name="type">
+                <graphemesX name="lang">
+                  <akk name="type">
+                    <all num="1">
+                      <form name="ellipsis" num="1" />
+                    </all>
+                    <missing num="1">
+                      <form name="ellipsis" num="1" />
+                    </missing>
+                  </akk>
+                </graphemesX>
+              </graphemes>
+              <inner name="graphemeSingles">
+                <graphemesS></graphemesS>
+                <graphemesV></graphemesV>
+              </inner>
+            </graphemesX>
+            <words name="type">
+              <words name="lang">
+                <akk name="type">
+                  <all num="1">
+                    <form name="x" num="1" />
+                  </all>
+                  <missing num="1">
+                    <form name="x" num="1" />
+                  </missing>
+                </akk>
+              </words>
+            </words>
+          </words>
+          <words>
+            <allwordsdamagedForms>li-šal-la-mu</allwordsdamagedForms>
+            <graphemeSingles name="graphemesS" />
+            <graphemeSingles name="graphemesV">
+              <allgraphemesdamagedForms>la</allgraphemesdamagedForms>
+              <allgraphemesmissingForms>li</allgraphemesmissingForms>
+              <allgraphemesmissingForms>šal</allgraphemesmissingForms>
+              <allgraphemespreservedForms>mu</allgraphemespreservedForms>
+              <graphemes name="type">
+                <graphemesV name="lang">
+                  <akk name="type">
+                    <all num="4">
+                      <cvc name="CV" num="3">
+                        <form name="la" num="1" />
+                        <form name="li" num="1" />
+                        <form name="mu" num="1" />
+                      </cvc>
+                      <cvc name="CVC" num="1">
+                        <form name="šal" num="1" />
+                      </cvc>
+                      <form name="la" num="1" />
+                      <form name="li" num="1" />
+                      <form name="mu" num="1" />
+                      <form name="šal" num="1" />
+                    </all>
+                    <damaged num="1">
+                      <cvc name="CV" num="1">
+                        <form name="la" num="1" />
+                      </cvc>
+                      <form name="la" num="1" />
+                    </damaged>
+                    <missing num="2">
+                      <cvc name="CV" num="1">
+                        <form name="li" num="1" />
+                      </cvc>
+                      <cvc name="CVC" num="1">
+                        <form name="šal" num="1" />
+                      </cvc>
+                      <form name="li" num="1" />
+                      <form name="šal" num="1" />
+                    </missing>
+                    <preserved num="1">
+                      <cvc name="CV" num="1">
+                        <form name="mu" num="1" />
+                      </cvc>
+                      <form name="mu" num="1" />
+                    </preserved>
+                  </akk>
+                </graphemesV>
+              </graphemes>
+            </graphemeSingles>
+            <words name="type">
+              <words name="lang">
+                <akk name="type">
+                  <all num="1">
+                    <form name="li-šal-la-mu" num="1" />
+                  </all>
+                  <damaged num="1">
+                    <form name="li-šal-la-mu" num="1" />
+                  </damaged>
+                </akk>
+              </words>
+            </words>
+          </words>
+          <words>
+            <allwordsmissingForms>x</allwordsmissingForms>
+            <graphemeSingles name="graphemesS" />
+            <graphemeSingles name="graphemesV" />
+            <graphemesX>
+              <allgraphemesmissingForms>ellipsis</allgraphemesmissingForms>
+              <graphemes name="type">
+                <graphemesX name="lang">
+                  <akk name="type">
+                    <all num="1">
+                      <form name="ellipsis" num="1" />
+                    </all>
+                    <missing num="1">
+                      <form name="ellipsis" num="1" />
+                    </missing>
+                  </akk>
+                </graphemesX>
+              </graphemes>
+              <inner name="graphemeSingles">
+                <graphemesS></graphemesS>
+                <graphemesV></graphemesV>
+              </inner>
+            </graphemesX>
+            <words name="type">
+              <words name="lang">
+                <akk name="type">
+                  <all num="1">
+                    <form name="x" num="1" />
+                  </all>
+                  <missing num="1">
+                    <form name="x" num="1" />
+                  </missing>
+                </akk>
+              </words>
+            </words>
+          </words>
+        </graphemes>
+        <graphemes>
+          <words>
+            <allwordsmissingForms>x</allwordsmissingForms>
+            <graphemeSingles name="graphemesS" />
+            <graphemeSingles name="graphemesV" />
+            <graphemesX>
+              <allgraphemesmissingForms>ellipsis</allgraphemesmissingForms>
+              <graphemes name="type">
+                <graphemesX name="lang">
+                  <akk name="type">
+                    <all num="1">
+                      <form name="ellipsis" num="1" />
+                    </all>
+                    <missing num="1">
+                      <form name="ellipsis" num="1" />
+                    </missing>
+                  </akk>
+                </graphemesX>
+              </graphemes>
+              <inner name="graphemeSingles">
+                <graphemesS></graphemesS>
+                <graphemesV></graphemesV>
+              </inner>
+            </graphemesX>
+            <words name="type">
+              <words name="lang">
+                <akk name="type">
+                  <all num="1">
+                    <form name="x" num="1" />
+                  </all>
+                  <missing num="1">
+                    <form name="x" num="1" />
+                  </missing>
+                </akk>
+              </words>
+            </words>
+          </words>
+          <words>
+            <allwordspreservedForms>x</allwordspreservedForms>
+            <graphemeSingles name="graphemesS" />
+            <graphemeSingles name="graphemesV">
+              <allgraphemespreservedForms>x</allgraphemespreservedForms>
+              <graphemes name="type">
+                <graphemesV name="lang">
+                  <akk name="type">
+                    <all num="1">
+                      <form name="x" num="1" />
+                    </all>
+                    <preserved num="1">
+                      <form name="x" num="1" />
+                    </preserved>
+                  </akk>
+                </graphemesV>
+              </graphemes>
+            </graphemeSingles>
+            <words name="type">
+              <words name="lang">
+                <akk name="type">
+                  <all num="1">
+                    <form name="x" num="1" />
+                  </all>
+                  <preserved num="1">
+                    <form name="x" num="1" />
+                  </preserved>
+                </akk>
+              </words>
+            </words>
+          </words>
+          <words>
+            <allwordspreservedForms>ma-aq-tu₂</allwordspreservedForms>
+            <graphemeSingles name="graphemesS" />
+            <graphemeSingles name="graphemesV">
+              <allgraphemespreservedForms>ma</allgraphemespreservedForms>
+              <allgraphemespreservedForms>aq</allgraphemespreservedForms>
+              <allgraphemespreservedForms>tu₂</allgraphemespreservedForms>
+              <graphemes name="type">
+                <graphemesV name="lang">
+                  <akk name="type">
+                    <all num="3">
+                      <cvc name="CV" num="2">
+                        <form name="ma" num="1" />
+                        <form name="tu₂" num="1" />
+                      </cvc>
+                      <cvc name="VC" num="1">
+                        <form name="aq" num="1" />
+                      </cvc>
+                      <form name="aq" num="1" />
+                      <form name="ma" num="1" />
+                      <form name="tu₂" num="1" />
+                    </all>
+                    <preserved num="3">
+                      <cvc name="CV" num="2">
+                        <form name="ma" num="1" />
+                        <form name="tu₂" num="1" />
+                      </cvc>
+                      <cvc name="VC" num="1">
+                        <form name="aq" num="1" />
+                      </cvc>
+                      <form name="aq" num="1" />
+                      <form name="ma" num="1" />
+                      <form name="tu₂" num="1" />
+                    </preserved>
+                  </akk>
+                </graphemesV>
+              </graphemes>
+            </graphemeSingles>
+            <words name="type">
+              <words name="lang">
+                <akk name="type">
+                  <all num="1">
+                    <form name="ma-aq-tu₂" num="1" />
+                  </all>
+                  <preserved num="1">
+                    <form name="ma-aq-tu₂" num="1" />
+                  </preserved>
+                </akk>
+              </words>
+            </words>
+          </words>
+          <words>
+            <allwordsmissingForms>x</allwordsmissingForms>
+            <graphemeSingles name="graphemesS" />
+            <graphemeSingles name="graphemesV" />
+            <graphemesX>
+              <allgraphemesmissingForms>ellipsis</allgraphemesmissingForms>
+              <graphemes name="type">
+                <graphemesX name="lang">
+                  <akk name="type">
+                    <all num="1">
+                      <form name="ellipsis" num="1" />
+                    </all>
+                    <missing num="1">
+                      <form name="ellipsis" num="1" />
+                    </missing>
+                  </akk>
+                </graphemesX>
+              </graphemes>
+              <inner name="graphemeSingles">
+                <graphemesS></graphemesS>
+                <graphemesV></graphemesV>
+              </inner>
+            </graphemesX>
+            <words name="type">
+              <words name="lang">
+                <akk name="type">
+                  <all num="1">
+                    <form name="x" num="1" />
+                  </all>
+                  <missing num="1">
+                    <form name="x" num="1" />
+                  </missing>
+                </akk>
+              </words>
+            </words>
+          </words>
+        </graphemes>
+        <graphemes>
+          <words>
+            <allwordsmissingForms>x</allwordsmissingForms>
+            <graphemeSingles name="graphemesS" />
+            <graphemeSingles name="graphemesV" />
+            <graphemesX>
+              <allgraphemesmissingForms>ellipsis</allgraphemesmissingForms>
+              <graphemes name="type">
+                <graphemesX name="lang">
+                  <akk name="type">
+                    <all num="1">
+                      <form name="ellipsis" num="1" />
+                    </all>
+                    <missing num="1">
+                      <form name="ellipsis" num="1" />
+                    </missing>
+                  </akk>
+                </graphemesX>
+              </graphemes>
+              <inner name="graphemeSingles">
+                <graphemesS></graphemesS>
+                <graphemesV></graphemesV>
+              </inner>
+            </graphemesX>
+            <words name="type">
+              <words name="lang">
+                <akk name="type">
+                  <all num="1">
+                    <form name="x" num="1" />
+                  </all>
+                  <missing num="1">
+                    <form name="x" num="1" />
+                  </missing>
+                </akk>
+              </words>
+            </words>
+          </words>
+          <words>
+            <allwordsdamagedForms>li-šir</allwordsdamagedForms>
+            <graphemeSingles name="graphemesS" />
+            <graphemeSingles name="graphemesV">
+              <allgraphemesmissingForms>li</allgraphemesmissingForms>
+              <allgraphemespreservedForms>šir</allgraphemespreservedForms>
+              <graphemes name="type">
+                <graphemesV name="lang">
+                  <akk name="type">
+                    <all num="2">
+                      <cvc name="CV" num="1">
+                        <form name="li" num="1" />
+                      </cvc>
+                      <cvc name="CVC" num="1">
+                        <form name="šir" num="1" />
+                      </cvc>
+                      <form name="li" num="1" />
+                      <form name="šir" num="1" />
+                    </all>
+                    <missing num="1">
+                      <cvc name="CV" num="1">
+                        <form name="li" num="1" />
+                      </cvc>
+                      <form name="li" num="1" />
+                    </missing>
+                    <preserved num="1">
+                      <cvc name="CVC" num="1">
+                        <form name="šir" num="1" />
+                      </cvc>
+                      <form name="šir" num="1" />
+                    </preserved>
+                  </akk>
+                </graphemesV>
+              </graphemes>
+            </graphemeSingles>
+            <words name="type">
+              <words name="lang">
+                <akk name="type">
+                  <all num="1">
+                    <form name="li-šir" num="1" />
+                  </all>
+                  <damaged num="1">
+                    <form name="li-šir" num="1" />
+                  </damaged>
+                </akk>
+              </words>
+            </words>
+          </words>
+          <words>
+            <allwordsmissingForms>x</allwordsmissingForms>
+            <graphemeSingles name="graphemesS" />
+            <graphemeSingles name="graphemesV" />
+            <graphemesX>
+              <allgraphemesmissingForms>ellipsis</allgraphemesmissingForms>
+              <graphemes name="type">
+                <graphemesX name="lang">
+                  <akk name="type">
+                    <all num="1">
+                      <form name="ellipsis" num="1" />
+                    </all>
+                    <missing num="1">
+                      <form name="ellipsis" num="1" />
+                    </missing>
+                  </akk>
+                </graphemesX>
+              </graphemes>
+              <inner name="graphemeSingles">
+                <graphemesS></graphemesS>
+                <graphemesV></graphemesV>
+              </inner>
+            </graphemesX>
+            <words name="type">
+              <words name="lang">
+                <akk name="type">
+                  <all num="1">
+                    <form name="x" num="1" />
+                  </all>
+                  <missing num="1">
+                    <form name="x" num="1" />
+                  </missing>
+                </akk>
+              </words>
+            </words>
+          </words>
+        </graphemes>
+      </column>
+    </surface>
+  </hierarchicalview>
+  <lines count="6">
+    <data allgraphemes="0" alllines="0" groups="0" lines="0" />
+    <data allgraphemes="0" alllines="6" groups="0" lines="6">
+      <graphemes>
+        <words>
+          <allwordsmissingForms>x</allwordsmissingForms>
+          <graphemeSingles name="graphemesS" />
+          <graphemeSingles name="graphemesV" />
+          <graphemesX>
+            <allgraphemesmissingForms>ellipsis</allgraphemesmissingForms>
+            <graphemes name="type">
+              <graphemesX name="lang">
+                <akk name="type">
+                  <all num="1">
+                    <form name="ellipsis" num="1" />
+                  </all>
+                  <missing num="1">
+                    <form name="ellipsis" num="1" />
+                  </missing>
+                </akk>
+              </graphemesX>
+            </graphemes>
+            <inner name="graphemeSingles">
+              <graphemesS></graphemesS>
+              <graphemesV></graphemesV>
+            </inner>
+          </graphemesX>
+          <words name="type">
+            <words name="lang">
+              <akk name="type">
+                <all num="1">
+                  <form name="x" num="1" />
+                </all>
+                <missing num="1">
+                  <form name="x" num="1" />
+                </missing>
+              </akk>
+            </words>
+          </words>
+        </words>
+        <words>
+          <allwordspreservedForms>x</allwordspreservedForms>
+          <graphemeSingles name="graphemesS" />
+          <graphemeSingles name="graphemesV">
+            <allgraphemespreservedForms>x</allgraphemespreservedForms>
+            <graphemes name="type">
+              <graphemesV name="lang">
+                <akk name="type">
+                  <all num="1">
+                    <form name="x" num="1" />
+                  </all>
+                  <preserved num="1">
+                    <form name="x" num="1" />
+                  </preserved>
+                </akk>
+              </graphemesV>
+            </graphemes>
+          </graphemeSingles>
+          <words name="type">
+            <words name="lang">
+              <akk name="type">
+                <all num="1">
+                  <form name="x" num="1" />
+                </all>
+                <preserved num="1">
+                  <form name="x" num="1" />
+                </preserved>
+              </akk>
+            </words>
+          </words>
+        </words>
+        <words>
+          <allwordsmissingForms>x</allwordsmissingForms>
+          <graphemeSingles name="graphemesS" />
+          <graphemeSingles name="graphemesV" />
+          <graphemesX>
+            <allgraphemesmissingForms>ellipsis</allgraphemesmissingForms>
+            <graphemes name="type">
+              <graphemesX name="lang">
+                <akk name="type">
+                  <all num="1">
+                    <form name="ellipsis" num="1" />
+                  </all>
+                  <missing num="1">
+                    <form name="ellipsis" num="1" />
+                  </missing>
+                </akk>
+              </graphemesX>
+            </graphemes>
+            <inner name="graphemeSingles">
+              <graphemesS></graphemesS>
+              <graphemesV></graphemesV>
+            </inner>
+          </graphemesX>
+          <words name="type">
+            <words name="lang">
+              <akk name="type">
+                <all num="1">
+                  <form name="x" num="1" />
+                </all>
+                <missing num="1">
+                  <form name="x" num="1" />
+                </missing>
+              </akk>
+            </words>
+          </words>
+        </words>
+      </graphemes>
+      <graphemes>
+        <words>
+          <allwordsmissingForms>x</allwordsmissingForms>
+          <graphemeSingles name="graphemesS" />
+          <graphemeSingles name="graphemesV" />
+          <graphemesX>
+            <allgraphemesmissingForms>ellipsis</allgraphemesmissingForms>
+            <graphemes name="type">
+              <graphemesX name="lang">
+                <akk name="type">
+                  <all num="1">
+                    <form name="ellipsis" num="1" />
+                  </all>
+                  <missing num="1">
+                    <form name="ellipsis" num="1" />
+                  </missing>
+                </akk>
+              </graphemesX>
+            </graphemes>
+            <inner name="graphemeSingles">
+              <graphemesS></graphemesS>
+              <graphemesV></graphemesV>
+            </inner>
+          </graphemesX>
+          <words name="type">
+            <words name="lang">
+              <akk name="type">
+                <all num="1">
+                  <form name="x" num="1" />
+                </all>
+                <missing num="1">
+                  <form name="x" num="1" />
+                </missing>
+              </akk>
+            </words>
+          </words>
+        </words>
+        <words>
+          <allwordsdamagedForms>li-is-su-hu</allwordsdamagedForms>
+          <graphemeSingles name="graphemesS" />
+          <graphemeSingles name="graphemesV">
+            <allgraphemesdamagedForms>su</allgraphemesdamagedForms>
+            <allgraphemesmissingForms>li</allgraphemesmissingForms>
+            <allgraphemesmissingForms>is</allgraphemesmissingForms>
+            <allgraphemespreservedForms>hu</allgraphemespreservedForms>
+            <graphemes name="type">
+              <graphemesV name="lang">
+                <akk name="type">
+                  <all num="4">
+                    <cvc name="CV" num="3">
+                      <form name="hu" num="1" />
+                      <form name="li" num="1" />
+                      <form name="su" num="1" />
+                    </cvc>
+                    <cvc name="VC" num="1">
+                      <form name="is" num="1" />
+                    </cvc>
+                    <form name="hu" num="1" />
+                    <form name="is" num="1" />
+                    <form name="li" num="1" />
+                    <form name="su" num="1" />
+                  </all>
+                  <damaged num="1">
+                    <cvc name="CV" num="1">
+                      <form name="su" num="1" />
+                    </cvc>
+                    <form name="su" num="1" />
+                  </damaged>
+                  <missing num="2">
+                    <cvc name="CV" num="1">
+                      <form name="li" num="1" />
+                    </cvc>
+                    <cvc name="VC" num="1">
+                      <form name="is" num="1" />
+                    </cvc>
+                    <form name="is" num="1" />
+                    <form name="li" num="1" />
+                  </missing>
+                  <preserved num="1">
+                    <cvc name="CV" num="1">
+                      <form name="hu" num="1" />
+                    </cvc>
+                    <form name="hu" num="1" />
+                  </preserved>
+                </akk>
+              </graphemesV>
+            </graphemes>
+          </graphemeSingles>
+          <words name="type">
+            <words name="lang">
+              <akk name="type">
+                <all num="1">
+                  <form name="li-is-su-hu" num="1" />
+                </all>
+                <damaged num="1">
+                  <form name="li-is-su-hu" num="1" />
+                </damaged>
+              </akk>
+            </words>
+          </words>
+        </words>
+        <words>
+          <allwordsmissingForms>x</allwordsmissingForms>
+          <graphemeSingles name="graphemesS" />
+          <graphemeSingles name="graphemesV" />
+          <graphemesX>
+            <allgraphemesmissingForms>ellipsis</allgraphemesmissingForms>
+            <graphemes name="type">
+              <graphemesX name="lang">
+                <akk name="type">
+                  <all num="1">
+                    <form name="ellipsis" num="1" />
+                  </all>
+                  <missing num="1">
+                    <form name="ellipsis" num="1" />
+                  </missing>
+                </akk>
+              </graphemesX>
+            </graphemes>
+            <inner name="graphemeSingles">
+              <graphemesS></graphemesS>
+              <graphemesV></graphemesV>
+            </inner>
+          </graphemesX>
+          <words name="type">
+            <words name="lang">
+              <akk name="type">
+                <all num="1">
+                  <form name="x" num="1" />
+                </all>
+                <missing num="1">
+                  <form name="x" num="1" />
+                </missing>
+              </akk>
+            </words>
+          </words>
+        </words>
+      </graphemes>
+      <graphemes>
+        <words>
+          <allwordsmissingForms>x</allwordsmissingForms>
+          <graphemeSingles name="graphemesS" />
+          <graphemeSingles name="graphemesV" />
+          <graphemesX>
+            <allgraphemesmissingForms>ellipsis</allgraphemesmissingForms>
+            <graphemes name="type">
+              <graphemesX name="lang">
+                <akk name="type">
+                  <all num="1">
+                    <form name="ellipsis" num="1" />
+                  </all>
+                  <missing num="1">
+                    <form name="ellipsis" num="1" />
+                  </missing>
+                </akk>
+              </graphemesX>
+            </graphemes>
+            <inner name="graphemeSingles">
+              <graphemesS></graphemesS>
+              <graphemesV></graphemesV>
+            </inner>
+          </graphemesX>
+          <words name="type">
+            <words name="lang">
+              <akk name="type">
+                <all num="1">
+                  <form name="x" num="1" />
+                </all>
+                <missing num="1">
+                  <form name="x" num="1" />
+                </missing>
+              </akk>
+            </words>
+          </words>
+        </words>
+        <words>
+          <allwordsdamagedForms>li-is-su-u₂</allwordsdamagedForms>
+          <graphemeSingles name="graphemesS" />
+          <graphemeSingles name="graphemesV">
+            <allgraphemesmissingForms>li</allgraphemesmissingForms>
+            <allgraphemesmissingForms>is</allgraphemesmissingForms>
+            <allgraphemespreservedForms>su</allgraphemespreservedForms>
+            <allgraphemespreservedForms>u₂</allgraphemespreservedForms>
+            <graphemes name="type">
+              <graphemesV name="lang">
+                <akk name="type">
+                  <all num="4">
+                    <cvc name="CV" num="2">
+                      <form name="li" num="1" />
+                      <form name="su" num="1" />
+                    </cvc>
+                    <cvc name="V" num="1">
+                      <form name="u₂" num="1" />
+                    </cvc>
+                    <cvc name="VC" num="1">
+                      <form name="is" num="1" />
+                    </cvc>
+                    <form name="is" num="1" />
+                    <form name="li" num="1" />
+                    <form name="su" num="1" />
+                    <form name="u₂" num="1" />
+                  </all>
+                  <missing num="2">
+                    <cvc name="CV" num="1">
+                      <form name="li" num="1" />
+                    </cvc>
+                    <cvc name="VC" num="1">
+                      <form name="is" num="1" />
+                    </cvc>
+                    <form name="is" num="1" />
+                    <form name="li" num="1" />
+                  </missing>
+                  <preserved num="2">
+                    <cvc name="CV" num="1">
+                      <form name="su" num="1" />
+                    </cvc>
+                    <cvc name="V" num="1">
+                      <form name="u₂" num="1" />
+                    </cvc>
+                    <form name="su" num="1" />
+                    <form name="u₂" num="1" />
+                  </preserved>
+                </akk>
+              </graphemesV>
+            </graphemes>
+          </graphemeSingles>
+          <words name="type">
+            <words name="lang">
+              <akk name="type">
+                <all num="1">
+                  <form name="li-is-su-u₂" num="1" />
+                </all>
+                <damaged num="1">
+                  <form name="li-is-su-u₂" num="1" />
+                </damaged>
+              </akk>
+            </words>
+          </words>
+        </words>
+        <words>
+          <allwordsmissingForms>x</allwordsmissingForms>
+          <graphemeSingles name="graphemesS" />
+          <graphemeSingles name="graphemesV" />
+          <graphemesX>
+            <allgraphemesmissingForms>ellipsis</allgraphemesmissingForms>
+            <graphemes name="type">
+              <graphemesX name="lang">
+                <akk name="type">
+                  <all num="1">
+                    <form name="ellipsis" num="1" />
+                  </all>
+                  <missing num="1">
+                    <form name="ellipsis" num="1" />
+                  </missing>
+                </akk>
+              </graphemesX>
+            </graphemes>
+            <inner name="graphemeSingles">
+              <graphemesS></graphemesS>
+              <graphemesV></graphemesV>
+            </inner>
+          </graphemesX>
+          <words name="type">
+            <words name="lang">
+              <akk name="type">
+                <all num="1">
+                  <form name="x" num="1" />
+                </all>
+                <missing num="1">
+                  <form name="x" num="1" />
+                </missing>
+              </akk>
+            </words>
+          </words>
+        </words>
+      </graphemes>
+      <graphemes>
+        <words>
+          <allwordsmissingForms>x</allwordsmissingForms>
+          <graphemeSingles name="graphemesS" />
+          <graphemeSingles name="graphemesV" />
+          <graphemesX>
+            <allgraphemesmissingForms>ellipsis</allgraphemesmissingForms>
+            <graphemes name="type">
+              <graphemesX name="lang">
+                <akk name="type">
+                  <all num="1">
+                    <form name="ellipsis" num="1" />
+                  </all>
+                  <missing num="1">
+                    <form name="ellipsis" num="1" />
+                  </missing>
+                </akk>
+              </graphemesX>
+            </graphemes>
+            <inner name="graphemeSingles">
+              <graphemesS></graphemesS>
+              <graphemesV></graphemesV>
+            </inner>
+          </graphemesX>
+          <words name="type">
+            <words name="lang">
+              <akk name="type">
+                <all num="1">
+                  <form name="x" num="1" />
+                </all>
+                <missing num="1">
+                  <form name="x" num="1" />
+                </missing>
+              </akk>
+            </words>
+          </words>
+        </words>
+        <words>
+          <allwordsdamagedForms>li-šal-la-mu</allwordsdamagedForms>
+          <graphemeSingles name="graphemesS" />
+          <graphemeSingles name="graphemesV">
+            <allgraphemesdamagedForms>la</allgraphemesdamagedForms>
+            <allgraphemesmissingForms>li</allgraphemesmissingForms>
+            <allgraphemesmissingForms>šal</allgraphemesmissingForms>
+            <allgraphemespreservedForms>mu</allgraphemespreservedForms>
+            <graphemes name="type">
+              <graphemesV name="lang">
+                <akk name="type">
+                  <all num="4">
+                    <cvc name="CV" num="3">
+                      <form name="la" num="1" />
+                      <form name="li" num="1" />
+                      <form name="mu" num="1" />
+                    </cvc>
+                    <cvc name="CVC" num="1">
+                      <form name="šal" num="1" />
+                    </cvc>
+                    <form name="la" num="1" />
+                    <form name="li" num="1" />
+                    <form name="mu" num="1" />
+                    <form name="šal" num="1" />
+                  </all>
+                  <damaged num="1">
+                    <cvc name="CV" num="1">
+                      <form name="la" num="1" />
+                    </cvc>
+                    <form name="la" num="1" />
+                  </damaged>
+                  <missing num="2">
+                    <cvc name="CV" num="1">
+                      <form name="li" num="1" />
+                    </cvc>
+                    <cvc name="CVC" num="1">
+                      <form name="šal" num="1" />
+                    </cvc>
+                    <form name="li" num="1" />
+                    <form name="šal" num="1" />
+                  </missing>
+                  <preserved num="1">
+                    <cvc name="CV" num="1">
+                      <form name="mu" num="1" />
+                    </cvc>
+                    <form name="mu" num="1" />
+                  </preserved>
+                </akk>
+              </graphemesV>
+            </graphemes>
+          </graphemeSingles>
+          <words name="type">
+            <words name="lang">
+              <akk name="type">
+                <all num="1">
+                  <form name="li-šal-la-mu" num="1" />
+                </all>
+                <damaged num="1">
+                  <form name="li-šal-la-mu" num="1" />
+                </damaged>
+              </akk>
+            </words>
+          </words>
+        </words>
+        <words>
+          <allwordsmissingForms>x</allwordsmissingForms>
+          <graphemeSingles name="graphemesS" />
+          <graphemeSingles name="graphemesV" />
+          <graphemesX>
+            <allgraphemesmissingForms>ellipsis</allgraphemesmissingForms>
+            <graphemes name="type">
+              <graphemesX name="lang">
+                <akk name="type">
+                  <all num="1">
+                    <form name="ellipsis" num="1" />
+                  </all>
+                  <missing num="1">
+                    <form name="ellipsis" num="1" />
+                  </missing>
+                </akk>
+              </graphemesX>
+            </graphemes>
+            <inner name="graphemeSingles">
+              <graphemesS></graphemesS>
+              <graphemesV></graphemesV>
+            </inner>
+          </graphemesX>
+          <words name="type">
+            <words name="lang">
+              <akk name="type">
+                <all num="1">
+                  <form name="x" num="1" />
+                </all>
+                <missing num="1">
+                  <form name="x" num="1" />
+                </missing>
+              </akk>
+            </words>
+          </words>
+        </words>
+      </graphemes>
+      <graphemes>
+        <words>
+          <allwordsmissingForms>x</allwordsmissingForms>
+          <graphemeSingles name="graphemesS" />
+          <graphemeSingles name="graphemesV" />
+          <graphemesX>
+            <allgraphemesmissingForms>ellipsis</allgraphemesmissingForms>
+            <graphemes name="type">
+              <graphemesX name="lang">
+                <akk name="type">
+                  <all num="1">
+                    <form name="ellipsis" num="1" />
+                  </all>
+                  <missing num="1">
+                    <form name="ellipsis" num="1" />
+                  </missing>
+                </akk>
+              </graphemesX>
+            </graphemes>
+            <inner name="graphemeSingles">
+              <graphemesS></graphemesS>
+              <graphemesV></graphemesV>
+            </inner>
+          </graphemesX>
+          <words name="type">
+            <words name="lang">
+              <akk name="type">
+                <all num="1">
+                  <form name="x" num="1" />
+                </all>
+                <missing num="1">
+                  <form name="x" num="1" />
+                </missing>
+              </akk>
+            </words>
+          </words>
+        </words>
+        <words>
+          <allwordspreservedForms>x</allwordspreservedForms>
+          <graphemeSingles name="graphemesS" />
+          <graphemeSingles name="graphemesV">
+            <allgraphemespreservedForms>x</allgraphemespreservedForms>
+            <graphemes name="type">
+              <graphemesV name="lang">
+                <akk name="type">
+                  <all num="1">
+                    <form name="x" num="1" />
+                  </all>
+                  <preserved num="1">
+                    <form name="x" num="1" />
+                  </preserved>
+                </akk>
+              </graphemesV>
+            </graphemes>
+          </graphemeSingles>
+          <words name="type">
+            <words name="lang">
+              <akk name="type">
+                <all num="1">
+                  <form name="x" num="1" />
+                </all>
+                <preserved num="1">
+                  <form name="x" num="1" />
+                </preserved>
+              </akk>
+            </words>
+          </words>
+        </words>
+        <words>
+          <allwordspreservedForms>ma-aq-tu₂</allwordspreservedForms>
+          <graphemeSingles name="graphemesS" />
+          <graphemeSingles name="graphemesV">
+            <allgraphemespreservedForms>ma</allgraphemespreservedForms>
+            <allgraphemespreservedForms>aq</allgraphemespreservedForms>
+            <allgraphemespreservedForms>tu₂</allgraphemespreservedForms>
+            <graphemes name="type">
+              <graphemesV name="lang">
+                <akk name="type">
+                  <all num="3">
+                    <cvc name="CV" num="2">
+                      <form name="ma" num="1" />
+                      <form name="tu₂" num="1" />
+                    </cvc>
+                    <cvc name="VC" num="1">
+                      <form name="aq" num="1" />
+                    </cvc>
+                    <form name="aq" num="1" />
+                    <form name="ma" num="1" />
+                    <form name="tu₂" num="1" />
+                  </all>
+                  <preserved num="3">
+                    <cvc name="CV" num="2">
+                      <form name="ma" num="1" />
+                      <form name="tu₂" num="1" />
+                    </cvc>
+                    <cvc name="VC" num="1">
+                      <form name="aq" num="1" />
+                    </cvc>
+                    <form name="aq" num="1" />
+                    <form name="ma" num="1" />
+                    <form name="tu₂" num="1" />
+                  </preserved>
+                </akk>
+              </graphemesV>
+            </graphemes>
+          </graphemeSingles>
+          <words name="type">
+            <words name="lang">
+              <akk name="type">
+                <all num="1">
+                  <form name="ma-aq-tu₂" num="1" />
+                </all>
+                <preserved num="1">
+                  <form name="ma-aq-tu₂" num="1" />
+                </preserved>
+              </akk>
+            </words>
+          </words>
+        </words>
+        <words>
+          <allwordsmissingForms>x</allwordsmissingForms>
+          <graphemeSingles name="graphemesS" />
+          <graphemeSingles name="graphemesV" />
+          <graphemesX>
+            <allgraphemesmissingForms>ellipsis</allgraphemesmissingForms>
+            <graphemes name="type">
+              <graphemesX name="lang">
+                <akk name="type">
+                  <all num="1">
+                    <form name="ellipsis" num="1" />
+                  </all>
+                  <missing num="1">
+                    <form name="ellipsis" num="1" />
+                  </missing>
+                </akk>
+              </graphemesX>
+            </graphemes>
+            <inner name="graphemeSingles">
+              <graphemesS></graphemesS>
+              <graphemesV></graphemesV>
+            </inner>
+          </graphemesX>
+          <words name="type">
+            <words name="lang">
+              <akk name="type">
+                <all num="1">
+                  <form name="x" num="1" />
+                </all>
+                <missing num="1">
+                  <form name="x" num="1" />
+                </missing>
+              </akk>
+            </words>
+          </words>
+        </words>
+      </graphemes>
+      <graphemes>
+        <words>
+          <allwordsmissingForms>x</allwordsmissingForms>
+          <graphemeSingles name="graphemesS" />
+          <graphemeSingles name="graphemesV" />
+          <graphemesX>
+            <allgraphemesmissingForms>ellipsis</allgraphemesmissingForms>
+            <graphemes name="type">
+              <graphemesX name="lang">
+                <akk name="type">
+                  <all num="1">
+                    <form name="ellipsis" num="1" />
+                  </all>
+                  <missing num="1">
+                    <form name="ellipsis" num="1" />
+                  </missing>
+                </akk>
+              </graphemesX>
+            </graphemes>
+            <inner name="graphemeSingles">
+              <graphemesS></graphemesS>
+              <graphemesV></graphemesV>
+            </inner>
+          </graphemesX>
+          <words name="type">
+            <words name="lang">
+              <akk name="type">
+                <all num="1">
+                  <form name="x" num="1" />
+                </all>
+                <missing num="1">
+                  <form name="x" num="1" />
+                </missing>
+              </akk>
+            </words>
+          </words>
+        </words>
+        <words>
+          <allwordsdamagedForms>li-šir</allwordsdamagedForms>
+          <graphemeSingles name="graphemesS" />
+          <graphemeSingles name="graphemesV">
+            <allgraphemesmissingForms>li</allgraphemesmissingForms>
+            <allgraphemespreservedForms>šir</allgraphemespreservedForms>
+            <graphemes name="type">
+              <graphemesV name="lang">
+                <akk name="type">
+                  <all num="2">
+                    <cvc name="CV" num="1">
+                      <form name="li" num="1" />
+                    </cvc>
+                    <cvc name="CVC" num="1">
+                      <form name="šir" num="1" />
+                    </cvc>
+                    <form name="li" num="1" />
+                    <form name="šir" num="1" />
+                  </all>
+                  <missing num="1">
+                    <cvc name="CV" num="1">
+                      <form name="li" num="1" />
+                    </cvc>
+                    <form name="li" num="1" />
+                  </missing>
+                  <preserved num="1">
+                    <cvc name="CVC" num="1">
+                      <form name="šir" num="1" />
+                    </cvc>
+                    <form name="šir" num="1" />
+                  </preserved>
+                </akk>
+              </graphemesV>
+            </graphemes>
+          </graphemeSingles>
+          <words name="type">
+            <words name="lang">
+              <akk name="type">
+                <all num="1">
+                  <form name="li-šir" num="1" />
+                </all>
+                <damaged num="1">
+                  <form name="li-šir" num="1" />
+                </damaged>
+              </akk>
+            </words>
+          </words>
+        </words>
+        <words>
+          <allwordsmissingForms>x</allwordsmissingForms>
+          <graphemeSingles name="graphemesS" />
+          <graphemeSingles name="graphemesV" />
+          <graphemesX>
+            <allgraphemesmissingForms>ellipsis</allgraphemesmissingForms>
+            <graphemes name="type">
+              <graphemesX name="lang">
+                <akk name="type">
+                  <all num="1">
+                    <form name="ellipsis" num="1" />
+                  </all>
+                  <missing num="1">
+                    <form name="ellipsis" num="1" />
+                  </missing>
+                </akk>
+              </graphemesX>
+            </graphemes>
+            <inner name="graphemeSingles">
+              <graphemesS></graphemesS>
+              <graphemesV></graphemesV>
+            </inner>
+          </graphemesX>
+          <words name="type">
+            <words name="lang">
+              <akk name="type">
+                <all num="1">
+                  <form name="x" num="1" />
+                </all>
+                <missing num="1">
+                  <form name="x" num="1" />
+                </missing>
+              </akk>
+            </words>
+          </words>
+        </words>
+      </graphemes>
+    </data>
+  </lines>
+  <words broken="19" count="19">
+    <type name="words">
+      <lang name="akk">
+        <type name="all" num="19">
+          <form name="li-is-su-hu" num="1" />
+          <form name="li-is-su-u₂" num="1" />
+          <form name="li-šal-la-mu" num="1" />
+          <form name="li-šir" num="1" />
+          <form name="ma-aq-tu₂" num="1" />
+          <form name="x" num="14" />
+        </type>
+        <type name="damaged" num="4">
+          <form name="li-is-su-hu" num="1" />
+          <form name="li-is-su-u₂" num="1" />
+          <form name="li-šal-la-mu" num="1" />
+          <form name="li-šir" num="1" />
+        </type>
+        <type name="missing" num="12">
+          <form name="x" num="12" />
+        </type>
+        <type name="preserved" num="3">
+          <form name="ma-aq-tu₂" num="1" />
+          <form name="x" num="2" />
+        </type>
+      </lang>
+    </type>
+  </words>
+</opt>

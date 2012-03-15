@@ -1,0 +1,3116 @@
+<opt name="P002296" period="Uruk III">
+  <graphemes broken="44" count="44">
+    <type name="graphemesC">
+      <lang name="qpc">
+        <type name="all" num="1">
+          <form name="|U₄×1(N57)|" num="1" />
+        </type>
+        <type name="damaged" num="1">
+          <form name="|U₄×1(N57)|" num="1" />
+        </type>
+      </lang>
+    </type>
+    <type name="graphemesN">
+      <lang name="qpc">
+        <type name="all" num="5">
+          <form name="1(N01)" num="3" />
+          <form name="1(N57)" num="1" />
+          <form name="2(N01)" num="1" />
+        </type>
+        <type name="damaged" num="1">
+          <form name="1(N01)" num="1" />
+        </type>
+        <type name="preserved" num="4">
+          <form name="1(N01)" num="2" />
+          <form name="1(N57)" num="1" />
+          <form name="2(N01)" num="1" />
+        </type>
+      </lang>
+    </type>
+    <type name="graphemesS">
+      <lang name="qpc">
+        <type name="all" num="23">
+          <form name="A" num="1" />
+          <form name="AL" num="1" />
+          <form name="BA" num="1" />
+          <form name="ENa" num="2">
+            <baseform name="EN" num="2" />
+          </form>
+          <form name="HI" num="1" />
+          <form name="N01" num="4" />
+          <form name="N57" num="1" />
+          <form name="NESAG₂b" num="1">
+            <baseform name="NESAG₂" num="1" />
+          </form>
+          <form name="NUNUZa1" num="1">
+            <baseform name="NUNUZ" num="1" />
+          </form>
+          <form name="PAPa" num="1">
+            <baseform name="PAP" num="1" />
+          </form>
+          <form name="TUR" num="2" />
+          <form name="UKKINa" num="1">
+            <baseform name="UKKIN" num="1" />
+          </form>
+          <form name="UNUGa" num="1">
+            <baseform name="UNUG" num="1" />
+          </form>
+          <form name="U₄" num="1" />
+          <form name="X" num="4" />
+        </type>
+        <type name="damaged" num="1">
+          <form name="PAPa" num="1">
+            <baseform name="PAP" num="1" />
+          </form>
+        </type>
+        <type name="preserved" num="22">
+          <form name="A" num="1" />
+          <form name="AL" num="1" />
+          <form name="BA" num="1" />
+          <form name="ENa" num="2">
+            <baseform name="EN" num="2" />
+          </form>
+          <form name="HI" num="1" />
+          <form name="N01" num="4" />
+          <form name="N57" num="1" />
+          <form name="NESAG₂b" num="1">
+            <baseform name="NESAG₂" num="1" />
+          </form>
+          <form name="NUNUZa1" num="1">
+            <baseform name="NUNUZ" num="1" />
+          </form>
+          <form name="TUR" num="2" />
+          <form name="UKKINa" num="1">
+            <baseform name="UKKIN" num="1" />
+          </form>
+          <form name="UNUGa" num="1">
+            <baseform name="UNUG" num="1" />
+          </form>
+          <form name="U₄" num="1" />
+          <form name="X" num="4" />
+        </type>
+      </lang>
+    </type>
+    <type name="graphemesX">
+      <lang name="qpc">
+        <type name="all" num="15">
+          <form name="ellipsis" num="15" />
+        </type>
+        <type name="missing" num="15">
+          <form name="ellipsis" num="15" />
+        </type>
+      </lang>
+    </type>
+  </graphemes>
+  <hierarchicalview>
+    <surface columns="3" label="o" type="obverse">
+      <column allgraphemes="0" alllines="3" groups="0" lines="3">
+        <graphemes>
+          <fields type="wp">
+            <words>
+              <allwordsmissingForms>x</allwordsmissingForms>
+              <graphemeSingles name="graphemesS" />
+              <graphemeSingles name="graphemesV" />
+              <graphemesX>
+                <allgraphemesmissingForms>ellipsis</allgraphemesmissingForms>
+                <graphemes name="type">
+                  <graphemesX name="lang">
+                    <qpc name="type">
+                      <all num="1">
+                        <form name="ellipsis" num="1" />
+                      </all>
+                      <missing num="1">
+                        <form name="ellipsis" num="1" />
+                      </missing>
+                    </qpc>
+                  </graphemesX>
+                </graphemes>
+                <inner name="graphemeSingles">
+                  <graphemesS></graphemesS>
+                  <graphemesV></graphemesV>
+                </inner>
+              </graphemesX>
+              <words name="type">
+                <words name="lang">
+                  <qpc name="type">
+                    <all num="1">
+                      <form name="x" num="1" />
+                    </all>
+                    <missing num="1">
+                      <form name="x" num="1" />
+                    </missing>
+                  </qpc>
+                </words>
+              </words>
+            </words>
+          </fields>
+          <fields type="wp">
+            <words>
+              <allwordsmissingForms>x</allwordsmissingForms>
+              <graphemeSingles name="graphemesS" />
+              <graphemeSingles name="graphemesV" />
+              <graphemesX>
+                <allgraphemesmissingForms>ellipsis</allgraphemesmissingForms>
+                <graphemes name="type">
+                  <graphemesX name="lang">
+                    <qpc name="type">
+                      <all num="1">
+                        <form name="ellipsis" num="1" />
+                      </all>
+                      <missing num="1">
+                        <form name="ellipsis" num="1" />
+                      </missing>
+                    </qpc>
+                  </graphemesX>
+                </graphemes>
+                <inner name="graphemeSingles">
+                  <graphemesS></graphemesS>
+                  <graphemesV></graphemesV>
+                </inner>
+              </graphemesX>
+              <words name="type">
+                <words name="lang">
+                  <qpc name="type">
+                    <all num="1">
+                      <form name="x" num="1" />
+                    </all>
+                    <missing num="1">
+                      <form name="x" num="1" />
+                    </missing>
+                  </qpc>
+                </words>
+              </words>
+            </words>
+          </fields>
+        </graphemes>
+        <graphemes>
+          <fields type="wp">
+            <words>
+              <allwordsmissingForms>x</allwordsmissingForms>
+              <graphemeSingles name="graphemesS" />
+              <graphemeSingles name="graphemesV" />
+              <graphemesX>
+                <allgraphemesmissingForms>ellipsis</allgraphemesmissingForms>
+                <graphemes name="type">
+                  <graphemesX name="lang">
+                    <qpc name="type">
+                      <all num="1">
+                        <form name="ellipsis" num="1" />
+                      </all>
+                      <missing num="1">
+                        <form name="ellipsis" num="1" />
+                      </missing>
+                    </qpc>
+                  </graphemesX>
+                </graphemes>
+                <inner name="graphemeSingles">
+                  <graphemesS></graphemesS>
+                  <graphemesV></graphemesV>
+                </inner>
+              </graphemesX>
+              <words name="type">
+                <words name="lang">
+                  <qpc name="type">
+                    <all num="1">
+                      <form name="x" num="1" />
+                    </all>
+                    <missing num="1">
+                      <form name="x" num="1" />
+                    </missing>
+                  </qpc>
+                </words>
+              </words>
+            </words>
+          </fields>
+          <fields type="wp">
+            <words>
+              <allwordsmissingForms>x</allwordsmissingForms>
+              <graphemeSingles name="graphemesS" />
+              <graphemeSingles name="graphemesV" />
+              <graphemesX>
+                <allgraphemesmissingForms>ellipsis</allgraphemesmissingForms>
+                <graphemes name="type">
+                  <graphemesX name="lang">
+                    <qpc name="type">
+                      <all num="1">
+                        <form name="ellipsis" num="1" />
+                      </all>
+                      <missing num="1">
+                        <form name="ellipsis" num="1" />
+                      </missing>
+                    </qpc>
+                  </graphemesX>
+                </graphemes>
+                <inner name="graphemeSingles">
+                  <graphemesS></graphemesS>
+                  <graphemesV></graphemesV>
+                </inner>
+              </graphemesX>
+              <words name="type">
+                <words name="lang">
+                  <qpc name="type">
+                    <all num="1">
+                      <form name="x" num="1" />
+                    </all>
+                    <missing num="1">
+                      <form name="x" num="1" />
+                    </missing>
+                  </qpc>
+                </words>
+              </words>
+            </words>
+            <words>
+              <allwordspreservedForms>X</allwordspreservedForms>
+              <graphemeSingles name="graphemesS">
+                <allgraphemespreservedForms>X</allgraphemespreservedForms>
+                <graphemes name="type">
+                  <graphemesS name="lang">
+                    <qpc name="type">
+                      <all num="1">
+                        <form name="X" num="1" />
+                      </all>
+                      <preserved num="1">
+                        <form name="X" num="1" />
+                      </preserved>
+                    </qpc>
+                  </graphemesS>
+                </graphemes>
+              </graphemeSingles>
+              <graphemeSingles name="graphemesV" />
+              <words name="type">
+                <words name="lang">
+                  <qpc name="type">
+                    <all num="1">
+                      <form name="X" num="1" />
+                    </all>
+                    <preserved num="1">
+                      <form name="X" num="1" />
+                    </preserved>
+                  </qpc>
+                </words>
+              </words>
+            </words>
+          </fields>
+        </graphemes>
+        <graphemes>
+          <fields type="wp">
+            <words>
+              <allwordsmissingForms>x</allwordsmissingForms>
+              <graphemeSingles name="graphemesS" />
+              <graphemeSingles name="graphemesV" />
+              <graphemesX>
+                <allgraphemesmissingForms>ellipsis</allgraphemesmissingForms>
+                <graphemes name="type">
+                  <graphemesX name="lang">
+                    <qpc name="type">
+                      <all num="1">
+                        <form name="ellipsis" num="1" />
+                      </all>
+                      <missing num="1">
+                        <form name="ellipsis" num="1" />
+                      </missing>
+                    </qpc>
+                  </graphemesX>
+                </graphemes>
+                <inner name="graphemeSingles">
+                  <graphemesS></graphemesS>
+                  <graphemesV></graphemesV>
+                </inner>
+              </graphemesX>
+              <words name="type">
+                <words name="lang">
+                  <qpc name="type">
+                    <all num="1">
+                      <form name="x" num="1" />
+                    </all>
+                    <missing num="1">
+                      <form name="x" num="1" />
+                    </missing>
+                  </qpc>
+                </words>
+              </words>
+            </words>
+          </fields>
+          <fields type="wp">
+            <words>
+              <allwordsmissingForms>x</allwordsmissingForms>
+              <graphemeSingles name="graphemesS" />
+              <graphemeSingles name="graphemesV" />
+              <graphemesX>
+                <allgraphemesmissingForms>ellipsis</allgraphemesmissingForms>
+                <graphemes name="type">
+                  <graphemesX name="lang">
+                    <qpc name="type">
+                      <all num="1">
+                        <form name="ellipsis" num="1" />
+                      </all>
+                      <missing num="1">
+                        <form name="ellipsis" num="1" />
+                      </missing>
+                    </qpc>
+                  </graphemesX>
+                </graphemes>
+                <inner name="graphemeSingles">
+                  <graphemesS></graphemesS>
+                  <graphemesV></graphemesV>
+                </inner>
+              </graphemesX>
+              <words name="type">
+                <words name="lang">
+                  <qpc name="type">
+                    <all num="1">
+                      <form name="x" num="1" />
+                    </all>
+                    <missing num="1">
+                      <form name="x" num="1" />
+                    </missing>
+                  </qpc>
+                </words>
+              </words>
+            </words>
+            <words>
+              <allwordspreservedForms>X</allwordspreservedForms>
+              <graphemeSingles name="graphemesS">
+                <allgraphemespreservedForms>X</allgraphemespreservedForms>
+                <graphemes name="type">
+                  <graphemesS name="lang">
+                    <qpc name="type">
+                      <all num="1">
+                        <form name="X" num="1" />
+                      </all>
+                      <preserved num="1">
+                        <form name="X" num="1" />
+                      </preserved>
+                    </qpc>
+                  </graphemesS>
+                </graphemes>
+              </graphemeSingles>
+              <graphemeSingles name="graphemesV" />
+              <words name="type">
+                <words name="lang">
+                  <qpc name="type">
+                    <all num="1">
+                      <form name="X" num="1" />
+                    </all>
+                    <preserved num="1">
+                      <form name="X" num="1" />
+                    </preserved>
+                  </qpc>
+                </words>
+              </words>
+            </words>
+          </fields>
+        </graphemes>
+      </column>
+      <column allgraphemes="0" alllines="10" groups="0" lines="10">
+        <graphemes>
+          <fields type="wp">
+            <words>
+              <allwordspreservedForms>UKKIN</allwordspreservedForms>
+              <graphemeSingles name="graphemesS">
+                <allgraphemespreservedBaseForms>UKKINa</allgraphemespreservedBaseForms>
+                <allgraphemespreservedForms>UKKINa</allgraphemespreservedForms>
+                <graphemes name="type">
+                  <graphemesS name="lang">
+                    <qpc name="type">
+                      <all num="1">
+                        <form name="UKKINa" num="1">
+                          <baseform name="UKKIN" num="1" />
+                        </form>
+                      </all>
+                      <preserved num="1">
+                        <form name="UKKINa" num="1">
+                          <baseform name="UKKIN" num="1" />
+                        </form>
+                      </preserved>
+                    </qpc>
+                  </graphemesS>
+                </graphemes>
+              </graphemeSingles>
+              <graphemeSingles name="graphemesV" />
+              <words name="type">
+                <words name="lang">
+                  <qpc name="type">
+                    <all num="1">
+                      <form name="UKKIN" num="1" />
+                    </all>
+                    <preserved num="1">
+                      <form name="UKKIN" num="1" />
+                    </preserved>
+                  </qpc>
+                </words>
+              </words>
+            </words>
+          </fields>
+        </graphemes>
+        <graphemes>
+          <fields type="wp">
+            <words>
+              <allwordspreservedForms>1(N01)</allwordspreservedForms>
+              <graphemeSingles name="graphemesS" />
+              <graphemeSingles name="graphemesV" />
+              <graphemesN>
+                <allgraphemespreservedForms>1(N01)</allgraphemespreservedForms>
+                <graphemes name="type">
+                  <graphemesN name="lang">
+                    <qpc name="type">
+                      <all num="1">
+                        <form name="1(N01)" num="1" />
+                      </all>
+                      <preserved num="1">
+                        <form name="1(N01)" num="1" />
+                      </preserved>
+                    </qpc>
+                  </graphemesN>
+                </graphemes>
+                <inner name="graphemeSingles">
+                  <graphemesS>
+                    <allgraphemespreservedForms>N01</allgraphemespreservedForms>
+                    <graphemes name="type">
+                      <graphemesS name="lang">
+                        <qpc name="type">
+                          <all num="1">
+                            <form name="N01" num="1" />
+                          </all>
+                          <preserved num="1">
+                            <form name="N01" num="1" />
+                          </preserved>
+                        </qpc>
+                      </graphemesS>
+                    </graphemes>
+                  </graphemesS>
+                  <graphemesV></graphemesV>
+                </inner>
+              </graphemesN>
+              <words name="type">
+                <words name="lang">
+                  <qpc name="type">
+                    <all num="1">
+                      <form name="1(N01)" num="1" />
+                    </all>
+                    <preserved num="1">
+                      <form name="1(N01)" num="1" />
+                    </preserved>
+                  </qpc>
+                </words>
+              </words>
+            </words>
+          </fields>
+          <fields type="wp">
+            <words>
+              <allwordspreservedForms>AL</allwordspreservedForms>
+              <graphemeSingles name="graphemesS">
+                <allgraphemespreservedForms>AL</allgraphemespreservedForms>
+                <graphemes name="type">
+                  <graphemesS name="lang">
+                    <qpc name="type">
+                      <all num="1">
+                        <form name="AL" num="1" />
+                      </all>
+                      <preserved num="1">
+                        <form name="AL" num="1" />
+                      </preserved>
+                    </qpc>
+                  </graphemesS>
+                </graphemes>
+              </graphemeSingles>
+              <graphemeSingles name="graphemesV" />
+              <words name="type">
+                <words name="lang">
+                  <qpc name="type">
+                    <all num="1">
+                      <form name="AL" num="1" />
+                    </all>
+                    <preserved num="1">
+                      <form name="AL" num="1" />
+                    </preserved>
+                  </qpc>
+                </words>
+              </words>
+            </words>
+          </fields>
+        </graphemes>
+        <graphemes>
+          <fields type="wp">
+            <alignmentgrp form="PAP_X_x">
+              <words>
+                <allwordsdamagedForms>PAP</allwordsdamagedForms>
+                <graphemeSingles name="graphemesS">
+                  <allgraphemesdamagedBaseForms>PAPa</allgraphemesdamagedBaseForms>
+                  <allgraphemesdamagedForms>PAPa</allgraphemesdamagedForms>
+                  <graphemes name="type">
+                    <graphemesS name="lang">
+                      <qpc name="type">
+                        <all num="1">
+                          <form name="PAPa" num="1">
+                            <baseform name="PAP" num="1" />
+                          </form>
+                        </all>
+                        <damaged num="1">
+                          <form name="PAPa" num="1">
+                            <baseform name="PAP" num="1" />
+                          </form>
+                        </damaged>
+                      </qpc>
+                    </graphemesS>
+                  </graphemes>
+                </graphemeSingles>
+                <graphemeSingles name="graphemesV" />
+                <words name="type">
+                  <words name="lang">
+                    <qpc name="type">
+                      <all num="1">
+                        <form name="PAP" num="1" />
+                      </all>
+                      <damaged num="1">
+                        <form name="PAP" num="1" />
+                      </damaged>
+                    </qpc>
+                  </words>
+                </words>
+              </words>
+              <words>
+                <allwordspreservedForms>X</allwordspreservedForms>
+                <graphemeSingles name="graphemesS">
+                  <allgraphemespreservedForms>X</allgraphemespreservedForms>
+                  <graphemes name="type">
+                    <graphemesS name="lang">
+                      <qpc name="type">
+                        <all num="1">
+                          <form name="X" num="1" />
+                        </all>
+                        <preserved num="1">
+                          <form name="X" num="1" />
+                        </preserved>
+                      </qpc>
+                    </graphemesS>
+                  </graphemes>
+                </graphemeSingles>
+                <graphemeSingles name="graphemesV" />
+                <words name="type">
+                  <words name="lang">
+                    <qpc name="type">
+                      <all num="1">
+                        <form name="X" num="1" />
+                      </all>
+                      <preserved num="1">
+                        <form name="X" num="1" />
+                      </preserved>
+                    </qpc>
+                  </words>
+                </words>
+              </words>
+              <words>
+                <allwordsmissingForms>x</allwordsmissingForms>
+                <graphemeSingles name="graphemesS" />
+                <graphemeSingles name="graphemesV" />
+                <graphemesX>
+                  <allgraphemesmissingForms>ellipsis</allgraphemesmissingForms>
+                  <graphemes name="type">
+                    <graphemesX name="lang">
+                      <qpc name="type">
+                        <all num="1">
+                          <form name="ellipsis" num="1" />
+                        </all>
+                        <missing num="1">
+                          <form name="ellipsis" num="1" />
+                        </missing>
+                      </qpc>
+                    </graphemesX>
+                  </graphemes>
+                  <inner name="graphemeSingles">
+                    <graphemesS></graphemesS>
+                    <graphemesV></graphemesV>
+                  </inner>
+                </graphemesX>
+                <words name="type">
+                  <words name="lang">
+                    <qpc name="type">
+                      <all num="1">
+                        <form name="x" num="1" />
+                      </all>
+                      <missing num="1">
+                        <form name="x" num="1" />
+                      </missing>
+                    </qpc>
+                  </words>
+                </words>
+              </words>
+            </alignmentgrp>
+          </fields>
+        </graphemes>
+        <graphemes>
+          <fields type="wp">
+            <words>
+              <allwordspreservedForms>2(N01)</allwordspreservedForms>
+              <graphemeSingles name="graphemesS" />
+              <graphemeSingles name="graphemesV" />
+              <graphemesN>
+                <allgraphemespreservedForms>2(N01)</allgraphemespreservedForms>
+                <graphemes name="type">
+                  <graphemesN name="lang">
+                    <qpc name="type">
+                      <all num="1">
+                        <form name="2(N01)" num="1" />
+                      </all>
+                      <preserved num="1">
+                        <form name="2(N01)" num="1" />
+                      </preserved>
+                    </qpc>
+                  </graphemesN>
+                </graphemes>
+                <inner name="graphemeSingles">
+                  <graphemesS>
+                    <allgraphemespreservedForms>N01</allgraphemespreservedForms>
+                    <graphemes name="type">
+                      <graphemesS name="lang">
+                        <qpc name="type">
+                          <all num="1">
+                            <form name="N01" num="1" />
+                          </all>
+                          <preserved num="1">
+                            <form name="N01" num="1" />
+                          </preserved>
+                        </qpc>
+                      </graphemesS>
+                    </graphemes>
+                  </graphemesS>
+                  <graphemesV></graphemesV>
+                </inner>
+              </graphemesN>
+              <words name="type">
+                <words name="lang">
+                  <qpc name="type">
+                    <all num="1">
+                      <form name="2(N01)" num="1" />
+                    </all>
+                    <preserved num="1">
+                      <form name="2(N01)" num="1" />
+                    </preserved>
+                  </qpc>
+                </words>
+              </words>
+            </words>
+          </fields>
+          <fields type="wp">
+            <words>
+              <allwordspreservedForms>EN</allwordspreservedForms>
+              <graphemeSingles name="graphemesS">
+                <allgraphemespreservedBaseForms>ENa</allgraphemespreservedBaseForms>
+                <allgraphemespreservedForms>ENa</allgraphemespreservedForms>
+                <graphemes name="type">
+                  <graphemesS name="lang">
+                    <qpc name="type">
+                      <all num="1">
+                        <form name="ENa" num="1">
+                          <baseform name="EN" num="1" />
+                        </form>
+                      </all>
+                      <preserved num="1">
+                        <form name="ENa" num="1">
+                          <baseform name="EN" num="1" />
+                        </form>
+                      </preserved>
+                    </qpc>
+                  </graphemesS>
+                </graphemes>
+              </graphemeSingles>
+              <graphemeSingles name="graphemesV" />
+              <words name="type">
+                <words name="lang">
+                  <qpc name="type">
+                    <all num="1">
+                      <form name="EN" num="1" />
+                    </all>
+                    <preserved num="1">
+                      <form name="EN" num="1" />
+                    </preserved>
+                  </qpc>
+                </words>
+              </words>
+            </words>
+            <words>
+              <allwordspreservedForms>TUR</allwordspreservedForms>
+              <graphemeSingles name="graphemesS">
+                <allgraphemespreservedForms>TUR</allgraphemespreservedForms>
+                <graphemes name="type">
+                  <graphemesS name="lang">
+                    <qpc name="type">
+                      <all num="1">
+                        <form name="TUR" num="1" />
+                      </all>
+                      <preserved num="1">
+                        <form name="TUR" num="1" />
+                      </preserved>
+                    </qpc>
+                  </graphemesS>
+                </graphemes>
+              </graphemeSingles>
+              <graphemeSingles name="graphemesV" />
+              <words name="type">
+                <words name="lang">
+                  <qpc name="type">
+                    <all num="1">
+                      <form name="TUR" num="1" />
+                    </all>
+                    <preserved num="1">
+                      <form name="TUR" num="1" />
+                    </preserved>
+                  </qpc>
+                </words>
+              </words>
+            </words>
+          </fields>
+        </graphemes>
+        <graphemes>
+          <fields type="wp">
+            <alignmentgrp form="NESAG₂_BA">
+              <words>
+                <allwordspreservedForms>NESAG₂</allwordspreservedForms>
+                <graphemeSingles name="graphemesS">
+                  <allgraphemespreservedBaseForms>NESAG₂b</allgraphemespreservedBaseForms>
+                  <allgraphemespreservedForms>NESAG₂b</allgraphemespreservedForms>
+                  <graphemes name="type">
+                    <graphemesS name="lang">
+                      <qpc name="type">
+                        <all num="1">
+                          <form name="NESAG₂b" num="1">
+                            <baseform name="NESAG₂" num="1" />
+                          </form>
+                        </all>
+                        <preserved num="1">
+                          <form name="NESAG₂b" num="1">
+                            <baseform name="NESAG₂" num="1" />
+                          </form>
+                        </preserved>
+                      </qpc>
+                    </graphemesS>
+                  </graphemes>
+                </graphemeSingles>
+                <graphemeSingles name="graphemesV" />
+                <words name="type">
+                  <words name="lang">
+                    <qpc name="type">
+                      <all num="1">
+                        <form name="NESAG₂" num="1" />
+                      </all>
+                      <preserved num="1">
+                        <form name="NESAG₂" num="1" />
+                      </preserved>
+                    </qpc>
+                  </words>
+                </words>
+              </words>
+              <words>
+                <allwordspreservedForms>BA</allwordspreservedForms>
+                <graphemeSingles name="graphemesS">
+                  <allgraphemespreservedForms>BA</allgraphemespreservedForms>
+                  <graphemes name="type">
+                    <graphemesS name="lang">
+                      <qpc name="type">
+                        <all num="1">
+                          <form name="BA" num="1" />
+                        </all>
+                        <preserved num="1">
+                          <form name="BA" num="1" />
+                        </preserved>
+                      </qpc>
+                    </graphemesS>
+                  </graphemes>
+                </graphemeSingles>
+                <graphemeSingles name="graphemesV" />
+                <words name="type">
+                  <words name="lang">
+                    <qpc name="type">
+                      <all num="1">
+                        <form name="BA" num="1" />
+                      </all>
+                      <preserved num="1">
+                        <form name="BA" num="1" />
+                      </preserved>
+                    </qpc>
+                  </words>
+                </words>
+              </words>
+            </alignmentgrp>
+          </fields>
+        </graphemes>
+        <graphemes>
+          <fields type="wp">
+            <alignmentgrp form="A_NUNUZ">
+              <words>
+                <allwordspreservedForms>A</allwordspreservedForms>
+                <graphemeSingles name="graphemesS">
+                  <allgraphemespreservedForms>A</allgraphemespreservedForms>
+                  <graphemes name="type">
+                    <graphemesS name="lang">
+                      <qpc name="type">
+                        <all num="1">
+                          <form name="A" num="1" />
+                        </all>
+                        <preserved num="1">
+                          <form name="A" num="1" />
+                        </preserved>
+                      </qpc>
+                    </graphemesS>
+                  </graphemes>
+                </graphemeSingles>
+                <graphemeSingles name="graphemesV" />
+                <words name="type">
+                  <words name="lang">
+                    <qpc name="type">
+                      <all num="1">
+                        <form name="A" num="1" />
+                      </all>
+                      <preserved num="1">
+                        <form name="A" num="1" />
+                      </preserved>
+                    </qpc>
+                  </words>
+                </words>
+              </words>
+              <words>
+                <allwordspreservedForms>NUNUZ</allwordspreservedForms>
+                <graphemeSingles name="graphemesS">
+                  <allgraphemespreservedBaseForms>NUNUZa1</allgraphemespreservedBaseForms>
+                  <allgraphemespreservedForms>NUNUZa1</allgraphemespreservedForms>
+                  <graphemes name="type">
+                    <graphemesS name="lang">
+                      <qpc name="type">
+                        <all num="1">
+                          <form name="NUNUZa1" num="1">
+                            <baseform name="NUNUZ" num="1" />
+                          </form>
+                        </all>
+                        <preserved num="1">
+                          <form name="NUNUZa1" num="1">
+                            <baseform name="NUNUZ" num="1" />
+                          </form>
+                        </preserved>
+                      </qpc>
+                    </graphemesS>
+                  </graphemes>
+                </graphemeSingles>
+                <graphemeSingles name="graphemesV" />
+                <words name="type">
+                  <words name="lang">
+                    <qpc name="type">
+                      <all num="1">
+                        <form name="NUNUZ" num="1" />
+                      </all>
+                      <preserved num="1">
+                        <form name="NUNUZ" num="1" />
+                      </preserved>
+                    </qpc>
+                  </words>
+                </words>
+              </words>
+            </alignmentgrp>
+          </fields>
+        </graphemes>
+        <graphemes>
+          <fields type="wp">
+            <words>
+              <allwordsmissingForms>x</allwordsmissingForms>
+              <graphemeSingles name="graphemesS" />
+              <graphemeSingles name="graphemesV" />
+              <graphemesX>
+                <allgraphemesmissingForms>ellipsis</allgraphemesmissingForms>
+                <graphemes name="type">
+                  <graphemesX name="lang">
+                    <qpc name="type">
+                      <all num="1">
+                        <form name="ellipsis" num="1" />
+                      </all>
+                      <missing num="1">
+                        <form name="ellipsis" num="1" />
+                      </missing>
+                    </qpc>
+                  </graphemesX>
+                </graphemes>
+                <inner name="graphemeSingles">
+                  <graphemesS></graphemesS>
+                  <graphemesV></graphemesV>
+                </inner>
+              </graphemesX>
+              <words name="type">
+                <words name="lang">
+                  <qpc name="type">
+                    <all num="1">
+                      <form name="x" num="1" />
+                    </all>
+                    <missing num="1">
+                      <form name="x" num="1" />
+                    </missing>
+                  </qpc>
+                </words>
+              </words>
+            </words>
+          </fields>
+          <fields type="wp">
+            <words>
+              <allwordsmissingForms>x</allwordsmissingForms>
+              <graphemeSingles name="graphemesS" />
+              <graphemeSingles name="graphemesV" />
+              <graphemesX>
+                <allgraphemesmissingForms>ellipsis</allgraphemesmissingForms>
+                <graphemes name="type">
+                  <graphemesX name="lang">
+                    <qpc name="type">
+                      <all num="1">
+                        <form name="ellipsis" num="1" />
+                      </all>
+                      <missing num="1">
+                        <form name="ellipsis" num="1" />
+                      </missing>
+                    </qpc>
+                  </graphemesX>
+                </graphemes>
+                <inner name="graphemeSingles">
+                  <graphemesS></graphemesS>
+                  <graphemesV></graphemesV>
+                </inner>
+              </graphemesX>
+              <words name="type">
+                <words name="lang">
+                  <qpc name="type">
+                    <all num="1">
+                      <form name="x" num="1" />
+                    </all>
+                    <missing num="1">
+                      <form name="x" num="1" />
+                    </missing>
+                  </qpc>
+                </words>
+              </words>
+            </words>
+            <words>
+              <allwordspreservedForms>TUR</allwordspreservedForms>
+              <graphemeSingles name="graphemesS">
+                <allgraphemespreservedForms>TUR</allgraphemespreservedForms>
+                <graphemes name="type">
+                  <graphemesS name="lang">
+                    <qpc name="type">
+                      <all num="1">
+                        <form name="TUR" num="1" />
+                      </all>
+                      <preserved num="1">
+                        <form name="TUR" num="1" />
+                      </preserved>
+                    </qpc>
+                  </graphemesS>
+                </graphemes>
+              </graphemeSingles>
+              <graphemeSingles name="graphemesV" />
+              <words name="type">
+                <words name="lang">
+                  <qpc name="type">
+                    <all num="1">
+                      <form name="TUR" num="1" />
+                    </all>
+                    <preserved num="1">
+                      <form name="TUR" num="1" />
+                    </preserved>
+                  </qpc>
+                </words>
+              </words>
+            </words>
+          </fields>
+        </graphemes>
+        <graphemes>
+          <fields type="wp">
+            <alignmentgrp form="EN_UNUG_HI">
+              <words>
+                <allwordspreservedForms>EN</allwordspreservedForms>
+                <graphemeSingles name="graphemesS">
+                  <allgraphemespreservedBaseForms>ENa</allgraphemespreservedBaseForms>
+                  <allgraphemespreservedForms>ENa</allgraphemespreservedForms>
+                  <graphemes name="type">
+                    <graphemesS name="lang">
+                      <qpc name="type">
+                        <all num="1">
+                          <form name="ENa" num="1">
+                            <baseform name="EN" num="1" />
+                          </form>
+                        </all>
+                        <preserved num="1">
+                          <form name="ENa" num="1">
+                            <baseform name="EN" num="1" />
+                          </form>
+                        </preserved>
+                      </qpc>
+                    </graphemesS>
+                  </graphemes>
+                </graphemeSingles>
+                <graphemeSingles name="graphemesV" />
+                <words name="type">
+                  <words name="lang">
+                    <qpc name="type">
+                      <all num="1">
+                        <form name="EN" num="1" />
+                      </all>
+                      <preserved num="1">
+                        <form name="EN" num="1" />
+                      </preserved>
+                    </qpc>
+                  </words>
+                </words>
+              </words>
+              <words>
+                <allwordspreservedForms>UNUG</allwordspreservedForms>
+                <graphemeSingles name="graphemesS">
+                  <allgraphemespreservedBaseForms>UNUGa</allgraphemespreservedBaseForms>
+                  <allgraphemespreservedForms>UNUGa</allgraphemespreservedForms>
+                  <graphemes name="type">
+                    <graphemesS name="lang">
+                      <qpc name="type">
+                        <all num="1">
+                          <form name="UNUGa" num="1">
+                            <baseform name="UNUG" num="1" />
+                          </form>
+                        </all>
+                        <preserved num="1">
+                          <form name="UNUGa" num="1">
+                            <baseform name="UNUG" num="1" />
+                          </form>
+                        </preserved>
+                      </qpc>
+                    </graphemesS>
+                  </graphemes>
+                </graphemeSingles>
+                <graphemeSingles name="graphemesV" />
+                <words name="type">
+                  <words name="lang">
+                    <qpc name="type">
+                      <all num="1">
+                        <form name="UNUG" num="1" />
+                      </all>
+                      <preserved num="1">
+                        <form name="UNUG" num="1" />
+                      </preserved>
+                    </qpc>
+                  </words>
+                </words>
+              </words>
+              <words>
+                <allwordspreservedForms>HI</allwordspreservedForms>
+                <graphemeSingles name="graphemesS">
+                  <allgraphemespreservedForms>HI</allgraphemespreservedForms>
+                  <graphemes name="type">
+                    <graphemesS name="lang">
+                      <qpc name="type">
+                        <all num="1">
+                          <form name="HI" num="1" />
+                        </all>
+                        <preserved num="1">
+                          <form name="HI" num="1" />
+                        </preserved>
+                      </qpc>
+                    </graphemesS>
+                  </graphemes>
+                </graphemeSingles>
+                <graphemeSingles name="graphemesV" />
+                <words name="type">
+                  <words name="lang">
+                    <qpc name="type">
+                      <all num="1">
+                        <form name="HI" num="1" />
+                      </all>
+                      <preserved num="1">
+                        <form name="HI" num="1" />
+                      </preserved>
+                    </qpc>
+                  </words>
+                </words>
+              </words>
+            </alignmentgrp>
+          </fields>
+        </graphemes>
+        <graphemes>
+          <fields type="wp">
+            <words>
+              <allwordsmissingForms>x</allwordsmissingForms>
+              <graphemeSingles name="graphemesS" />
+              <graphemeSingles name="graphemesV" />
+              <graphemesX>
+                <allgraphemesmissingForms>ellipsis</allgraphemesmissingForms>
+                <graphemes name="type">
+                  <graphemesX name="lang">
+                    <qpc name="type">
+                      <all num="1">
+                        <form name="ellipsis" num="1" />
+                      </all>
+                      <missing num="1">
+                        <form name="ellipsis" num="1" />
+                      </missing>
+                    </qpc>
+                  </graphemesX>
+                </graphemes>
+                <inner name="graphemeSingles">
+                  <graphemesS></graphemesS>
+                  <graphemesV></graphemesV>
+                </inner>
+              </graphemesX>
+              <words name="type">
+                <words name="lang">
+                  <qpc name="type">
+                    <all num="1">
+                      <form name="x" num="1" />
+                    </all>
+                    <missing num="1">
+                      <form name="x" num="1" />
+                    </missing>
+                  </qpc>
+                </words>
+              </words>
+            </words>
+          </fields>
+          <fields type="wp">
+            <words>
+              <allwordsmissingForms>x</allwordsmissingForms>
+              <graphemeSingles name="graphemesS" />
+              <graphemeSingles name="graphemesV" />
+              <graphemesX>
+                <allgraphemesmissingForms>ellipsis</allgraphemesmissingForms>
+                <graphemes name="type">
+                  <graphemesX name="lang">
+                    <qpc name="type">
+                      <all num="1">
+                        <form name="ellipsis" num="1" />
+                      </all>
+                      <missing num="1">
+                        <form name="ellipsis" num="1" />
+                      </missing>
+                    </qpc>
+                  </graphemesX>
+                </graphemes>
+                <inner name="graphemeSingles">
+                  <graphemesS></graphemesS>
+                  <graphemesV></graphemesV>
+                </inner>
+              </graphemesX>
+              <words name="type">
+                <words name="lang">
+                  <qpc name="type">
+                    <all num="1">
+                      <form name="x" num="1" />
+                    </all>
+                    <missing num="1">
+                      <form name="x" num="1" />
+                    </missing>
+                  </qpc>
+                </words>
+              </words>
+            </words>
+          </fields>
+        </graphemes>
+        <graphemes>
+          <fields type="wp">
+            <words>
+              <allwordsmissingForms>x</allwordsmissingForms>
+              <graphemeSingles name="graphemesS" />
+              <graphemeSingles name="graphemesV" />
+              <graphemesX>
+                <allgraphemesmissingForms>ellipsis</allgraphemesmissingForms>
+                <graphemes name="type">
+                  <graphemesX name="lang">
+                    <qpc name="type">
+                      <all num="1">
+                        <form name="ellipsis" num="1" />
+                      </all>
+                      <missing num="1">
+                        <form name="ellipsis" num="1" />
+                      </missing>
+                    </qpc>
+                  </graphemesX>
+                </graphemes>
+                <inner name="graphemeSingles">
+                  <graphemesS></graphemesS>
+                  <graphemesV></graphemesV>
+                </inner>
+              </graphemesX>
+              <words name="type">
+                <words name="lang">
+                  <qpc name="type">
+                    <all num="1">
+                      <form name="x" num="1" />
+                    </all>
+                    <missing num="1">
+                      <form name="x" num="1" />
+                    </missing>
+                  </qpc>
+                </words>
+              </words>
+            </words>
+          </fields>
+        </graphemes>
+      </column>
+      <column allgraphemes="0" alllines="2" groups="0" lines="2">
+        <graphemes>
+          <fields type="wp">
+            <words>
+              <allwordspreservedForms>1(N01)</allwordspreservedForms>
+              <graphemeSingles name="graphemesS" />
+              <graphemeSingles name="graphemesV" />
+              <graphemesN>
+                <allgraphemespreservedForms>1(N01)</allgraphemespreservedForms>
+                <graphemes name="type">
+                  <graphemesN name="lang">
+                    <qpc name="type">
+                      <all num="1">
+                        <form name="1(N01)" num="1" />
+                      </all>
+                      <preserved num="1">
+                        <form name="1(N01)" num="1" />
+                      </preserved>
+                    </qpc>
+                  </graphemesN>
+                </graphemes>
+                <inner name="graphemeSingles">
+                  <graphemesS>
+                    <allgraphemespreservedForms>N01</allgraphemespreservedForms>
+                    <graphemes name="type">
+                      <graphemesS name="lang">
+                        <qpc name="type">
+                          <all num="1">
+                            <form name="N01" num="1" />
+                          </all>
+                          <preserved num="1">
+                            <form name="N01" num="1" />
+                          </preserved>
+                        </qpc>
+                      </graphemesS>
+                    </graphemes>
+                  </graphemesS>
+                  <graphemesV></graphemesV>
+                </inner>
+              </graphemesN>
+              <words name="type">
+                <words name="lang">
+                  <qpc name="type">
+                    <all num="1">
+                      <form name="1(N01)" num="1" />
+                    </all>
+                    <preserved num="1">
+                      <form name="1(N01)" num="1" />
+                    </preserved>
+                  </qpc>
+                </words>
+              </words>
+            </words>
+          </fields>
+          <fields type="wp">
+            <words>
+              <allwordsdamagedForms>|U₄×1(N57)|</allwordsdamagedForms>
+              <graphemeSingles name="graphemesS" />
+              <graphemeSingles name="graphemesV" />
+              <graphemesC>
+                <data>
+                  <allgraphemesdamagedForms>|U₄×1(N57)|</allgraphemesdamagedForms>
+                  <graphemes name="type">
+                    <graphemesC name="lang">
+                      <qpc name="type">
+                        <all num="1">
+                          <form name="|U₄×1(N57)|" num="1" />
+                        </all>
+                        <damaged num="1">
+                          <form name="|U₄×1(N57)|" num="1" />
+                        </damaged>
+                      </qpc>
+                    </graphemesC>
+                  </graphemes>
+                </data>
+                <inner name="graphemeSingles">
+                  <graphemesS>
+                    <allgraphemespreservedForms>U₄</allgraphemespreservedForms>
+                    <graphemes name="type">
+                      <graphemesS name="lang">
+                        <qpc name="type">
+                          <all num="1">
+                            <form name="U₄" num="1" />
+                          </all>
+                          <preserved num="1">
+                            <form name="U₄" num="1" />
+                          </preserved>
+                        </qpc>
+                      </graphemesS>
+                    </graphemes>
+                  </graphemesS>
+                  <graphemesV></graphemesV>
+                </inner>
+                <inner name="graphemesN">
+                  <allgraphemespreservedForms>1(N57)</allgraphemespreservedForms>
+                  <graphemes name="type">
+                    <graphemesN name="lang">
+                      <qpc name="type">
+                        <all num="1">
+                          <form name="1(N57)" num="1" />
+                        </all>
+                        <preserved num="1">
+                          <form name="1(N57)" num="1" />
+                        </preserved>
+                      </qpc>
+                    </graphemesN>
+                  </graphemes>
+                  <inner name="graphemeSingles">
+                    <graphemesS>
+                      <allgraphemespreservedForms>N57</allgraphemespreservedForms>
+                      <graphemes name="type">
+                        <graphemesS name="lang">
+                          <qpc name="type">
+                            <all num="1">
+                              <form name="N57" num="1" />
+                            </all>
+                            <preserved num="1">
+                              <form name="N57" num="1" />
+                            </preserved>
+                          </qpc>
+                        </graphemesS>
+                      </graphemes>
+                    </graphemesS>
+                    <graphemesV></graphemesV>
+                  </inner>
+                </inner>
+              </graphemesC>
+              <words name="type">
+                <words name="lang">
+                  <qpc name="type">
+                    <all num="1">
+                      <form name="|U₄×1(N57)|" num="1" />
+                    </all>
+                    <damaged num="1">
+                      <form name="|U₄×1(N57)|" num="1" />
+                    </damaged>
+                  </qpc>
+                </words>
+              </words>
+            </words>
+            <words>
+              <allwordspreservedForms>X</allwordspreservedForms>
+              <graphemeSingles name="graphemesS">
+                <allgraphemespreservedForms>X</allgraphemespreservedForms>
+                <graphemes name="type">
+                  <graphemesS name="lang">
+                    <qpc name="type">
+                      <all num="1">
+                        <form name="X" num="1" />
+                      </all>
+                      <preserved num="1">
+                        <form name="X" num="1" />
+                      </preserved>
+                    </qpc>
+                  </graphemesS>
+                </graphemes>
+              </graphemeSingles>
+              <graphemeSingles name="graphemesV" />
+              <words name="type">
+                <words name="lang">
+                  <qpc name="type">
+                    <all num="1">
+                      <form name="X" num="1" />
+                    </all>
+                    <preserved num="1">
+                      <form name="X" num="1" />
+                    </preserved>
+                  </qpc>
+                </words>
+              </words>
+            </words>
+            <words>
+              <allwordsmissingForms>x</allwordsmissingForms>
+              <graphemeSingles name="graphemesS" />
+              <graphemeSingles name="graphemesV" />
+              <graphemesX>
+                <allgraphemesmissingForms>ellipsis</allgraphemesmissingForms>
+                <graphemes name="type">
+                  <graphemesX name="lang">
+                    <qpc name="type">
+                      <all num="1">
+                        <form name="ellipsis" num="1" />
+                      </all>
+                      <missing num="1">
+                        <form name="ellipsis" num="1" />
+                      </missing>
+                    </qpc>
+                  </graphemesX>
+                </graphemes>
+                <inner name="graphemeSingles">
+                  <graphemesS></graphemesS>
+                  <graphemesV></graphemesV>
+                </inner>
+              </graphemesX>
+              <words name="type">
+                <words name="lang">
+                  <qpc name="type">
+                    <all num="1">
+                      <form name="x" num="1" />
+                    </all>
+                    <missing num="1">
+                      <form name="x" num="1" />
+                    </missing>
+                  </qpc>
+                </words>
+              </words>
+            </words>
+          </fields>
+        </graphemes>
+        <graphemes>
+          <fields type="wp">
+            <words>
+              <allwordsdamagedForms>1(N01)</allwordsdamagedForms>
+              <graphemeSingles name="graphemesS" />
+              <graphemeSingles name="graphemesV" />
+              <graphemesN>
+                <allgraphemesdamagedForms>1(N01)</allgraphemesdamagedForms>
+                <graphemes name="type">
+                  <graphemesN name="lang">
+                    <qpc name="type">
+                      <all num="1">
+                        <form name="1(N01)" num="1" />
+                      </all>
+                      <damaged num="1">
+                        <form name="1(N01)" num="1" />
+                      </damaged>
+                    </qpc>
+                  </graphemesN>
+                </graphemes>
+                <inner name="graphemeSingles">
+                  <graphemesS>
+                    <allgraphemespreservedForms>N01</allgraphemespreservedForms>
+                    <graphemes name="type">
+                      <graphemesS name="lang">
+                        <qpc name="type">
+                          <all num="1">
+                            <form name="N01" num="1" />
+                          </all>
+                          <preserved num="1">
+                            <form name="N01" num="1" />
+                          </preserved>
+                        </qpc>
+                      </graphemesS>
+                    </graphemes>
+                  </graphemesS>
+                  <graphemesV></graphemesV>
+                </inner>
+              </graphemesN>
+              <words name="type">
+                <words name="lang">
+                  <qpc name="type">
+                    <all num="1">
+                      <form name="1(N01)" num="1" />
+                    </all>
+                    <damaged num="1">
+                      <form name="1(N01)" num="1" />
+                    </damaged>
+                  </qpc>
+                </words>
+              </words>
+            </words>
+            <words>
+              <allwordsmissingForms>x</allwordsmissingForms>
+              <graphemeSingles name="graphemesS" />
+              <graphemeSingles name="graphemesV" />
+              <graphemesX>
+                <allgraphemesmissingForms>ellipsis</allgraphemesmissingForms>
+                <graphemes name="type">
+                  <graphemesX name="lang">
+                    <qpc name="type">
+                      <all num="1">
+                        <form name="ellipsis" num="1" />
+                      </all>
+                      <missing num="1">
+                        <form name="ellipsis" num="1" />
+                      </missing>
+                    </qpc>
+                  </graphemesX>
+                </graphemes>
+                <inner name="graphemeSingles">
+                  <graphemesS></graphemesS>
+                  <graphemesV></graphemesV>
+                </inner>
+              </graphemesX>
+              <words name="type">
+                <words name="lang">
+                  <qpc name="type">
+                    <all num="1">
+                      <form name="x" num="1" />
+                    </all>
+                    <missing num="1">
+                      <form name="x" num="1" />
+                    </missing>
+                  </qpc>
+                </words>
+              </words>
+            </words>
+          </fields>
+          <fields type="wp">
+            <words>
+              <allwordsmissingForms>x</allwordsmissingForms>
+              <graphemeSingles name="graphemesS" />
+              <graphemeSingles name="graphemesV" />
+              <graphemesX>
+                <allgraphemesmissingForms>ellipsis</allgraphemesmissingForms>
+                <graphemes name="type">
+                  <graphemesX name="lang">
+                    <qpc name="type">
+                      <all num="1">
+                        <form name="ellipsis" num="1" />
+                      </all>
+                      <missing num="1">
+                        <form name="ellipsis" num="1" />
+                      </missing>
+                    </qpc>
+                  </graphemesX>
+                </graphemes>
+                <inner name="graphemeSingles">
+                  <graphemesS></graphemesS>
+                  <graphemesV></graphemesV>
+                </inner>
+              </graphemesX>
+              <words name="type">
+                <words name="lang">
+                  <qpc name="type">
+                    <all num="1">
+                      <form name="x" num="1" />
+                    </all>
+                    <missing num="1">
+                      <form name="x" num="1" />
+                    </missing>
+                  </qpc>
+                </words>
+              </words>
+            </words>
+          </fields>
+        </graphemes>
+      </column>
+    </surface>
+  </hierarchicalview>
+  <lines count="15">
+    <data allgraphemes="0" alllines="3" groups="0" lines="3">
+      <graphemes>
+        <fields type="wp">
+          <words>
+            <allwordsmissingForms>x</allwordsmissingForms>
+            <graphemeSingles name="graphemesS" />
+            <graphemeSingles name="graphemesV" />
+            <graphemesX>
+              <allgraphemesmissingForms>ellipsis</allgraphemesmissingForms>
+              <graphemes name="type">
+                <graphemesX name="lang">
+                  <qpc name="type">
+                    <all num="1">
+                      <form name="ellipsis" num="1" />
+                    </all>
+                    <missing num="1">
+                      <form name="ellipsis" num="1" />
+                    </missing>
+                  </qpc>
+                </graphemesX>
+              </graphemes>
+              <inner name="graphemeSingles">
+                <graphemesS></graphemesS>
+                <graphemesV></graphemesV>
+              </inner>
+            </graphemesX>
+            <words name="type">
+              <words name="lang">
+                <qpc name="type">
+                  <all num="1">
+                    <form name="x" num="1" />
+                  </all>
+                  <missing num="1">
+                    <form name="x" num="1" />
+                  </missing>
+                </qpc>
+              </words>
+            </words>
+          </words>
+        </fields>
+        <fields type="wp">
+          <words>
+            <allwordsmissingForms>x</allwordsmissingForms>
+            <graphemeSingles name="graphemesS" />
+            <graphemeSingles name="graphemesV" />
+            <graphemesX>
+              <allgraphemesmissingForms>ellipsis</allgraphemesmissingForms>
+              <graphemes name="type">
+                <graphemesX name="lang">
+                  <qpc name="type">
+                    <all num="1">
+                      <form name="ellipsis" num="1" />
+                    </all>
+                    <missing num="1">
+                      <form name="ellipsis" num="1" />
+                    </missing>
+                  </qpc>
+                </graphemesX>
+              </graphemes>
+              <inner name="graphemeSingles">
+                <graphemesS></graphemesS>
+                <graphemesV></graphemesV>
+              </inner>
+            </graphemesX>
+            <words name="type">
+              <words name="lang">
+                <qpc name="type">
+                  <all num="1">
+                    <form name="x" num="1" />
+                  </all>
+                  <missing num="1">
+                    <form name="x" num="1" />
+                  </missing>
+                </qpc>
+              </words>
+            </words>
+          </words>
+        </fields>
+      </graphemes>
+      <graphemes>
+        <fields type="wp">
+          <words>
+            <allwordsmissingForms>x</allwordsmissingForms>
+            <graphemeSingles name="graphemesS" />
+            <graphemeSingles name="graphemesV" />
+            <graphemesX>
+              <allgraphemesmissingForms>ellipsis</allgraphemesmissingForms>
+              <graphemes name="type">
+                <graphemesX name="lang">
+                  <qpc name="type">
+                    <all num="1">
+                      <form name="ellipsis" num="1" />
+                    </all>
+                    <missing num="1">
+                      <form name="ellipsis" num="1" />
+                    </missing>
+                  </qpc>
+                </graphemesX>
+              </graphemes>
+              <inner name="graphemeSingles">
+                <graphemesS></graphemesS>
+                <graphemesV></graphemesV>
+              </inner>
+            </graphemesX>
+            <words name="type">
+              <words name="lang">
+                <qpc name="type">
+                  <all num="1">
+                    <form name="x" num="1" />
+                  </all>
+                  <missing num="1">
+                    <form name="x" num="1" />
+                  </missing>
+                </qpc>
+              </words>
+            </words>
+          </words>
+        </fields>
+        <fields type="wp">
+          <words>
+            <allwordsmissingForms>x</allwordsmissingForms>
+            <graphemeSingles name="graphemesS" />
+            <graphemeSingles name="graphemesV" />
+            <graphemesX>
+              <allgraphemesmissingForms>ellipsis</allgraphemesmissingForms>
+              <graphemes name="type">
+                <graphemesX name="lang">
+                  <qpc name="type">
+                    <all num="1">
+                      <form name="ellipsis" num="1" />
+                    </all>
+                    <missing num="1">
+                      <form name="ellipsis" num="1" />
+                    </missing>
+                  </qpc>
+                </graphemesX>
+              </graphemes>
+              <inner name="graphemeSingles">
+                <graphemesS></graphemesS>
+                <graphemesV></graphemesV>
+              </inner>
+            </graphemesX>
+            <words name="type">
+              <words name="lang">
+                <qpc name="type">
+                  <all num="1">
+                    <form name="x" num="1" />
+                  </all>
+                  <missing num="1">
+                    <form name="x" num="1" />
+                  </missing>
+                </qpc>
+              </words>
+            </words>
+          </words>
+          <words>
+            <allwordspreservedForms>X</allwordspreservedForms>
+            <graphemeSingles name="graphemesS">
+              <allgraphemespreservedForms>X</allgraphemespreservedForms>
+              <graphemes name="type">
+                <graphemesS name="lang">
+                  <qpc name="type">
+                    <all num="1">
+                      <form name="X" num="1" />
+                    </all>
+                    <preserved num="1">
+                      <form name="X" num="1" />
+                    </preserved>
+                  </qpc>
+                </graphemesS>
+              </graphemes>
+            </graphemeSingles>
+            <graphemeSingles name="graphemesV" />
+            <words name="type">
+              <words name="lang">
+                <qpc name="type">
+                  <all num="1">
+                    <form name="X" num="1" />
+                  </all>
+                  <preserved num="1">
+                    <form name="X" num="1" />
+                  </preserved>
+                </qpc>
+              </words>
+            </words>
+          </words>
+        </fields>
+      </graphemes>
+      <graphemes>
+        <fields type="wp">
+          <words>
+            <allwordsmissingForms>x</allwordsmissingForms>
+            <graphemeSingles name="graphemesS" />
+            <graphemeSingles name="graphemesV" />
+            <graphemesX>
+              <allgraphemesmissingForms>ellipsis</allgraphemesmissingForms>
+              <graphemes name="type">
+                <graphemesX name="lang">
+                  <qpc name="type">
+                    <all num="1">
+                      <form name="ellipsis" num="1" />
+                    </all>
+                    <missing num="1">
+                      <form name="ellipsis" num="1" />
+                    </missing>
+                  </qpc>
+                </graphemesX>
+              </graphemes>
+              <inner name="graphemeSingles">
+                <graphemesS></graphemesS>
+                <graphemesV></graphemesV>
+              </inner>
+            </graphemesX>
+            <words name="type">
+              <words name="lang">
+                <qpc name="type">
+                  <all num="1">
+                    <form name="x" num="1" />
+                  </all>
+                  <missing num="1">
+                    <form name="x" num="1" />
+                  </missing>
+                </qpc>
+              </words>
+            </words>
+          </words>
+        </fields>
+        <fields type="wp">
+          <words>
+            <allwordsmissingForms>x</allwordsmissingForms>
+            <graphemeSingles name="graphemesS" />
+            <graphemeSingles name="graphemesV" />
+            <graphemesX>
+              <allgraphemesmissingForms>ellipsis</allgraphemesmissingForms>
+              <graphemes name="type">
+                <graphemesX name="lang">
+                  <qpc name="type">
+                    <all num="1">
+                      <form name="ellipsis" num="1" />
+                    </all>
+                    <missing num="1">
+                      <form name="ellipsis" num="1" />
+                    </missing>
+                  </qpc>
+                </graphemesX>
+              </graphemes>
+              <inner name="graphemeSingles">
+                <graphemesS></graphemesS>
+                <graphemesV></graphemesV>
+              </inner>
+            </graphemesX>
+            <words name="type">
+              <words name="lang">
+                <qpc name="type">
+                  <all num="1">
+                    <form name="x" num="1" />
+                  </all>
+                  <missing num="1">
+                    <form name="x" num="1" />
+                  </missing>
+                </qpc>
+              </words>
+            </words>
+          </words>
+          <words>
+            <allwordspreservedForms>X</allwordspreservedForms>
+            <graphemeSingles name="graphemesS">
+              <allgraphemespreservedForms>X</allgraphemespreservedForms>
+              <graphemes name="type">
+                <graphemesS name="lang">
+                  <qpc name="type">
+                    <all num="1">
+                      <form name="X" num="1" />
+                    </all>
+                    <preserved num="1">
+                      <form name="X" num="1" />
+                    </preserved>
+                  </qpc>
+                </graphemesS>
+              </graphemes>
+            </graphemeSingles>
+            <graphemeSingles name="graphemesV" />
+            <words name="type">
+              <words name="lang">
+                <qpc name="type">
+                  <all num="1">
+                    <form name="X" num="1" />
+                  </all>
+                  <preserved num="1">
+                    <form name="X" num="1" />
+                  </preserved>
+                </qpc>
+              </words>
+            </words>
+          </words>
+        </fields>
+      </graphemes>
+    </data>
+    <data allgraphemes="0" alllines="10" groups="0" lines="10">
+      <graphemes>
+        <fields type="wp">
+          <words>
+            <allwordspreservedForms>UKKIN</allwordspreservedForms>
+            <graphemeSingles name="graphemesS">
+              <allgraphemespreservedBaseForms>UKKINa</allgraphemespreservedBaseForms>
+              <allgraphemespreservedForms>UKKINa</allgraphemespreservedForms>
+              <graphemes name="type">
+                <graphemesS name="lang">
+                  <qpc name="type">
+                    <all num="1">
+                      <form name="UKKINa" num="1">
+                        <baseform name="UKKIN" num="1" />
+                      </form>
+                    </all>
+                    <preserved num="1">
+                      <form name="UKKINa" num="1">
+                        <baseform name="UKKIN" num="1" />
+                      </form>
+                    </preserved>
+                  </qpc>
+                </graphemesS>
+              </graphemes>
+            </graphemeSingles>
+            <graphemeSingles name="graphemesV" />
+            <words name="type">
+              <words name="lang">
+                <qpc name="type">
+                  <all num="1">
+                    <form name="UKKIN" num="1" />
+                  </all>
+                  <preserved num="1">
+                    <form name="UKKIN" num="1" />
+                  </preserved>
+                </qpc>
+              </words>
+            </words>
+          </words>
+        </fields>
+      </graphemes>
+      <graphemes>
+        <fields type="wp">
+          <words>
+            <allwordspreservedForms>1(N01)</allwordspreservedForms>
+            <graphemeSingles name="graphemesS" />
+            <graphemeSingles name="graphemesV" />
+            <graphemesN>
+              <allgraphemespreservedForms>1(N01)</allgraphemespreservedForms>
+              <graphemes name="type">
+                <graphemesN name="lang">
+                  <qpc name="type">
+                    <all num="1">
+                      <form name="1(N01)" num="1" />
+                    </all>
+                    <preserved num="1">
+                      <form name="1(N01)" num="1" />
+                    </preserved>
+                  </qpc>
+                </graphemesN>
+              </graphemes>
+              <inner name="graphemeSingles">
+                <graphemesS>
+                  <allgraphemespreservedForms>N01</allgraphemespreservedForms>
+                  <graphemes name="type">
+                    <graphemesS name="lang">
+                      <qpc name="type">
+                        <all num="1">
+                          <form name="N01" num="1" />
+                        </all>
+                        <preserved num="1">
+                          <form name="N01" num="1" />
+                        </preserved>
+                      </qpc>
+                    </graphemesS>
+                  </graphemes>
+                </graphemesS>
+                <graphemesV></graphemesV>
+              </inner>
+            </graphemesN>
+            <words name="type">
+              <words name="lang">
+                <qpc name="type">
+                  <all num="1">
+                    <form name="1(N01)" num="1" />
+                  </all>
+                  <preserved num="1">
+                    <form name="1(N01)" num="1" />
+                  </preserved>
+                </qpc>
+              </words>
+            </words>
+          </words>
+        </fields>
+        <fields type="wp">
+          <words>
+            <allwordspreservedForms>AL</allwordspreservedForms>
+            <graphemeSingles name="graphemesS">
+              <allgraphemespreservedForms>AL</allgraphemespreservedForms>
+              <graphemes name="type">
+                <graphemesS name="lang">
+                  <qpc name="type">
+                    <all num="1">
+                      <form name="AL" num="1" />
+                    </all>
+                    <preserved num="1">
+                      <form name="AL" num="1" />
+                    </preserved>
+                  </qpc>
+                </graphemesS>
+              </graphemes>
+            </graphemeSingles>
+            <graphemeSingles name="graphemesV" />
+            <words name="type">
+              <words name="lang">
+                <qpc name="type">
+                  <all num="1">
+                    <form name="AL" num="1" />
+                  </all>
+                  <preserved num="1">
+                    <form name="AL" num="1" />
+                  </preserved>
+                </qpc>
+              </words>
+            </words>
+          </words>
+        </fields>
+      </graphemes>
+      <graphemes>
+        <fields type="wp">
+          <alignmentgrp form="PAP_X_x">
+            <words>
+              <allwordsdamagedForms>PAP</allwordsdamagedForms>
+              <graphemeSingles name="graphemesS">
+                <allgraphemesdamagedBaseForms>PAPa</allgraphemesdamagedBaseForms>
+                <allgraphemesdamagedForms>PAPa</allgraphemesdamagedForms>
+                <graphemes name="type">
+                  <graphemesS name="lang">
+                    <qpc name="type">
+                      <all num="1">
+                        <form name="PAPa" num="1">
+                          <baseform name="PAP" num="1" />
+                        </form>
+                      </all>
+                      <damaged num="1">
+                        <form name="PAPa" num="1">
+                          <baseform name="PAP" num="1" />
+                        </form>
+                      </damaged>
+                    </qpc>
+                  </graphemesS>
+                </graphemes>
+              </graphemeSingles>
+              <graphemeSingles name="graphemesV" />
+              <words name="type">
+                <words name="lang">
+                  <qpc name="type">
+                    <all num="1">
+                      <form name="PAP" num="1" />
+                    </all>
+                    <damaged num="1">
+                      <form name="PAP" num="1" />
+                    </damaged>
+                  </qpc>
+                </words>
+              </words>
+            </words>
+            <words>
+              <allwordspreservedForms>X</allwordspreservedForms>
+              <graphemeSingles name="graphemesS">
+                <allgraphemespreservedForms>X</allgraphemespreservedForms>
+                <graphemes name="type">
+                  <graphemesS name="lang">
+                    <qpc name="type">
+                      <all num="1">
+                        <form name="X" num="1" />
+                      </all>
+                      <preserved num="1">
+                        <form name="X" num="1" />
+                      </preserved>
+                    </qpc>
+                  </graphemesS>
+                </graphemes>
+              </graphemeSingles>
+              <graphemeSingles name="graphemesV" />
+              <words name="type">
+                <words name="lang">
+                  <qpc name="type">
+                    <all num="1">
+                      <form name="X" num="1" />
+                    </all>
+                    <preserved num="1">
+                      <form name="X" num="1" />
+                    </preserved>
+                  </qpc>
+                </words>
+              </words>
+            </words>
+            <words>
+              <allwordsmissingForms>x</allwordsmissingForms>
+              <graphemeSingles name="graphemesS" />
+              <graphemeSingles name="graphemesV" />
+              <graphemesX>
+                <allgraphemesmissingForms>ellipsis</allgraphemesmissingForms>
+                <graphemes name="type">
+                  <graphemesX name="lang">
+                    <qpc name="type">
+                      <all num="1">
+                        <form name="ellipsis" num="1" />
+                      </all>
+                      <missing num="1">
+                        <form name="ellipsis" num="1" />
+                      </missing>
+                    </qpc>
+                  </graphemesX>
+                </graphemes>
+                <inner name="graphemeSingles">
+                  <graphemesS></graphemesS>
+                  <graphemesV></graphemesV>
+                </inner>
+              </graphemesX>
+              <words name="type">
+                <words name="lang">
+                  <qpc name="type">
+                    <all num="1">
+                      <form name="x" num="1" />
+                    </all>
+                    <missing num="1">
+                      <form name="x" num="1" />
+                    </missing>
+                  </qpc>
+                </words>
+              </words>
+            </words>
+          </alignmentgrp>
+        </fields>
+      </graphemes>
+      <graphemes>
+        <fields type="wp">
+          <words>
+            <allwordspreservedForms>2(N01)</allwordspreservedForms>
+            <graphemeSingles name="graphemesS" />
+            <graphemeSingles name="graphemesV" />
+            <graphemesN>
+              <allgraphemespreservedForms>2(N01)</allgraphemespreservedForms>
+              <graphemes name="type">
+                <graphemesN name="lang">
+                  <qpc name="type">
+                    <all num="1">
+                      <form name="2(N01)" num="1" />
+                    </all>
+                    <preserved num="1">
+                      <form name="2(N01)" num="1" />
+                    </preserved>
+                  </qpc>
+                </graphemesN>
+              </graphemes>
+              <inner name="graphemeSingles">
+                <graphemesS>
+                  <allgraphemespreservedForms>N01</allgraphemespreservedForms>
+                  <graphemes name="type">
+                    <graphemesS name="lang">
+                      <qpc name="type">
+                        <all num="1">
+                          <form name="N01" num="1" />
+                        </all>
+                        <preserved num="1">
+                          <form name="N01" num="1" />
+                        </preserved>
+                      </qpc>
+                    </graphemesS>
+                  </graphemes>
+                </graphemesS>
+                <graphemesV></graphemesV>
+              </inner>
+            </graphemesN>
+            <words name="type">
+              <words name="lang">
+                <qpc name="type">
+                  <all num="1">
+                    <form name="2(N01)" num="1" />
+                  </all>
+                  <preserved num="1">
+                    <form name="2(N01)" num="1" />
+                  </preserved>
+                </qpc>
+              </words>
+            </words>
+          </words>
+        </fields>
+        <fields type="wp">
+          <words>
+            <allwordspreservedForms>EN</allwordspreservedForms>
+            <graphemeSingles name="graphemesS">
+              <allgraphemespreservedBaseForms>ENa</allgraphemespreservedBaseForms>
+              <allgraphemespreservedForms>ENa</allgraphemespreservedForms>
+              <graphemes name="type">
+                <graphemesS name="lang">
+                  <qpc name="type">
+                    <all num="1">
+                      <form name="ENa" num="1">
+                        <baseform name="EN" num="1" />
+                      </form>
+                    </all>
+                    <preserved num="1">
+                      <form name="ENa" num="1">
+                        <baseform name="EN" num="1" />
+                      </form>
+                    </preserved>
+                  </qpc>
+                </graphemesS>
+              </graphemes>
+            </graphemeSingles>
+            <graphemeSingles name="graphemesV" />
+            <words name="type">
+              <words name="lang">
+                <qpc name="type">
+                  <all num="1">
+                    <form name="EN" num="1" />
+                  </all>
+                  <preserved num="1">
+                    <form name="EN" num="1" />
+                  </preserved>
+                </qpc>
+              </words>
+            </words>
+          </words>
+          <words>
+            <allwordspreservedForms>TUR</allwordspreservedForms>
+            <graphemeSingles name="graphemesS">
+              <allgraphemespreservedForms>TUR</allgraphemespreservedForms>
+              <graphemes name="type">
+                <graphemesS name="lang">
+                  <qpc name="type">
+                    <all num="1">
+                      <form name="TUR" num="1" />
+                    </all>
+                    <preserved num="1">
+                      <form name="TUR" num="1" />
+                    </preserved>
+                  </qpc>
+                </graphemesS>
+              </graphemes>
+            </graphemeSingles>
+            <graphemeSingles name="graphemesV" />
+            <words name="type">
+              <words name="lang">
+                <qpc name="type">
+                  <all num="1">
+                    <form name="TUR" num="1" />
+                  </all>
+                  <preserved num="1">
+                    <form name="TUR" num="1" />
+                  </preserved>
+                </qpc>
+              </words>
+            </words>
+          </words>
+        </fields>
+      </graphemes>
+      <graphemes>
+        <fields type="wp">
+          <alignmentgrp form="NESAG₂_BA">
+            <words>
+              <allwordspreservedForms>NESAG₂</allwordspreservedForms>
+              <graphemeSingles name="graphemesS">
+                <allgraphemespreservedBaseForms>NESAG₂b</allgraphemespreservedBaseForms>
+                <allgraphemespreservedForms>NESAG₂b</allgraphemespreservedForms>
+                <graphemes name="type">
+                  <graphemesS name="lang">
+                    <qpc name="type">
+                      <all num="1">
+                        <form name="NESAG₂b" num="1">
+                          <baseform name="NESAG₂" num="1" />
+                        </form>
+                      </all>
+                      <preserved num="1">
+                        <form name="NESAG₂b" num="1">
+                          <baseform name="NESAG₂" num="1" />
+                        </form>
+                      </preserved>
+                    </qpc>
+                  </graphemesS>
+                </graphemes>
+              </graphemeSingles>
+              <graphemeSingles name="graphemesV" />
+              <words name="type">
+                <words name="lang">
+                  <qpc name="type">
+                    <all num="1">
+                      <form name="NESAG₂" num="1" />
+                    </all>
+                    <preserved num="1">
+                      <form name="NESAG₂" num="1" />
+                    </preserved>
+                  </qpc>
+                </words>
+              </words>
+            </words>
+            <words>
+              <allwordspreservedForms>BA</allwordspreservedForms>
+              <graphemeSingles name="graphemesS">
+                <allgraphemespreservedForms>BA</allgraphemespreservedForms>
+                <graphemes name="type">
+                  <graphemesS name="lang">
+                    <qpc name="type">
+                      <all num="1">
+                        <form name="BA" num="1" />
+                      </all>
+                      <preserved num="1">
+                        <form name="BA" num="1" />
+                      </preserved>
+                    </qpc>
+                  </graphemesS>
+                </graphemes>
+              </graphemeSingles>
+              <graphemeSingles name="graphemesV" />
+              <words name="type">
+                <words name="lang">
+                  <qpc name="type">
+                    <all num="1">
+                      <form name="BA" num="1" />
+                    </all>
+                    <preserved num="1">
+                      <form name="BA" num="1" />
+                    </preserved>
+                  </qpc>
+                </words>
+              </words>
+            </words>
+          </alignmentgrp>
+        </fields>
+      </graphemes>
+      <graphemes>
+        <fields type="wp">
+          <alignmentgrp form="A_NUNUZ">
+            <words>
+              <allwordspreservedForms>A</allwordspreservedForms>
+              <graphemeSingles name="graphemesS">
+                <allgraphemespreservedForms>A</allgraphemespreservedForms>
+                <graphemes name="type">
+                  <graphemesS name="lang">
+                    <qpc name="type">
+                      <all num="1">
+                        <form name="A" num="1" />
+                      </all>
+                      <preserved num="1">
+                        <form name="A" num="1" />
+                      </preserved>
+                    </qpc>
+                  </graphemesS>
+                </graphemes>
+              </graphemeSingles>
+              <graphemeSingles name="graphemesV" />
+              <words name="type">
+                <words name="lang">
+                  <qpc name="type">
+                    <all num="1">
+                      <form name="A" num="1" />
+                    </all>
+                    <preserved num="1">
+                      <form name="A" num="1" />
+                    </preserved>
+                  </qpc>
+                </words>
+              </words>
+            </words>
+            <words>
+              <allwordspreservedForms>NUNUZ</allwordspreservedForms>
+              <graphemeSingles name="graphemesS">
+                <allgraphemespreservedBaseForms>NUNUZa1</allgraphemespreservedBaseForms>
+                <allgraphemespreservedForms>NUNUZa1</allgraphemespreservedForms>
+                <graphemes name="type">
+                  <graphemesS name="lang">
+                    <qpc name="type">
+                      <all num="1">
+                        <form name="NUNUZa1" num="1">
+                          <baseform name="NUNUZ" num="1" />
+                        </form>
+                      </all>
+                      <preserved num="1">
+                        <form name="NUNUZa1" num="1">
+                          <baseform name="NUNUZ" num="1" />
+                        </form>
+                      </preserved>
+                    </qpc>
+                  </graphemesS>
+                </graphemes>
+              </graphemeSingles>
+              <graphemeSingles name="graphemesV" />
+              <words name="type">
+                <words name="lang">
+                  <qpc name="type">
+                    <all num="1">
+                      <form name="NUNUZ" num="1" />
+                    </all>
+                    <preserved num="1">
+                      <form name="NUNUZ" num="1" />
+                    </preserved>
+                  </qpc>
+                </words>
+              </words>
+            </words>
+          </alignmentgrp>
+        </fields>
+      </graphemes>
+      <graphemes>
+        <fields type="wp">
+          <words>
+            <allwordsmissingForms>x</allwordsmissingForms>
+            <graphemeSingles name="graphemesS" />
+            <graphemeSingles name="graphemesV" />
+            <graphemesX>
+              <allgraphemesmissingForms>ellipsis</allgraphemesmissingForms>
+              <graphemes name="type">
+                <graphemesX name="lang">
+                  <qpc name="type">
+                    <all num="1">
+                      <form name="ellipsis" num="1" />
+                    </all>
+                    <missing num="1">
+                      <form name="ellipsis" num="1" />
+                    </missing>
+                  </qpc>
+                </graphemesX>
+              </graphemes>
+              <inner name="graphemeSingles">
+                <graphemesS></graphemesS>
+                <graphemesV></graphemesV>
+              </inner>
+            </graphemesX>
+            <words name="type">
+              <words name="lang">
+                <qpc name="type">
+                  <all num="1">
+                    <form name="x" num="1" />
+                  </all>
+                  <missing num="1">
+                    <form name="x" num="1" />
+                  </missing>
+                </qpc>
+              </words>
+            </words>
+          </words>
+        </fields>
+        <fields type="wp">
+          <words>
+            <allwordsmissingForms>x</allwordsmissingForms>
+            <graphemeSingles name="graphemesS" />
+            <graphemeSingles name="graphemesV" />
+            <graphemesX>
+              <allgraphemesmissingForms>ellipsis</allgraphemesmissingForms>
+              <graphemes name="type">
+                <graphemesX name="lang">
+                  <qpc name="type">
+                    <all num="1">
+                      <form name="ellipsis" num="1" />
+                    </all>
+                    <missing num="1">
+                      <form name="ellipsis" num="1" />
+                    </missing>
+                  </qpc>
+                </graphemesX>
+              </graphemes>
+              <inner name="graphemeSingles">
+                <graphemesS></graphemesS>
+                <graphemesV></graphemesV>
+              </inner>
+            </graphemesX>
+            <words name="type">
+              <words name="lang">
+                <qpc name="type">
+                  <all num="1">
+                    <form name="x" num="1" />
+                  </all>
+                  <missing num="1">
+                    <form name="x" num="1" />
+                  </missing>
+                </qpc>
+              </words>
+            </words>
+          </words>
+          <words>
+            <allwordspreservedForms>TUR</allwordspreservedForms>
+            <graphemeSingles name="graphemesS">
+              <allgraphemespreservedForms>TUR</allgraphemespreservedForms>
+              <graphemes name="type">
+                <graphemesS name="lang">
+                  <qpc name="type">
+                    <all num="1">
+                      <form name="TUR" num="1" />
+                    </all>
+                    <preserved num="1">
+                      <form name="TUR" num="1" />
+                    </preserved>
+                  </qpc>
+                </graphemesS>
+              </graphemes>
+            </graphemeSingles>
+            <graphemeSingles name="graphemesV" />
+            <words name="type">
+              <words name="lang">
+                <qpc name="type">
+                  <all num="1">
+                    <form name="TUR" num="1" />
+                  </all>
+                  <preserved num="1">
+                    <form name="TUR" num="1" />
+                  </preserved>
+                </qpc>
+              </words>
+            </words>
+          </words>
+        </fields>
+      </graphemes>
+      <graphemes>
+        <fields type="wp">
+          <alignmentgrp form="EN_UNUG_HI">
+            <words>
+              <allwordspreservedForms>EN</allwordspreservedForms>
+              <graphemeSingles name="graphemesS">
+                <allgraphemespreservedBaseForms>ENa</allgraphemespreservedBaseForms>
+                <allgraphemespreservedForms>ENa</allgraphemespreservedForms>
+                <graphemes name="type">
+                  <graphemesS name="lang">
+                    <qpc name="type">
+                      <all num="1">
+                        <form name="ENa" num="1">
+                          <baseform name="EN" num="1" />
+                        </form>
+                      </all>
+                      <preserved num="1">
+                        <form name="ENa" num="1">
+                          <baseform name="EN" num="1" />
+                        </form>
+                      </preserved>
+                    </qpc>
+                  </graphemesS>
+                </graphemes>
+              </graphemeSingles>
+              <graphemeSingles name="graphemesV" />
+              <words name="type">
+                <words name="lang">
+                  <qpc name="type">
+                    <all num="1">
+                      <form name="EN" num="1" />
+                    </all>
+                    <preserved num="1">
+                      <form name="EN" num="1" />
+                    </preserved>
+                  </qpc>
+                </words>
+              </words>
+            </words>
+            <words>
+              <allwordspreservedForms>UNUG</allwordspreservedForms>
+              <graphemeSingles name="graphemesS">
+                <allgraphemespreservedBaseForms>UNUGa</allgraphemespreservedBaseForms>
+                <allgraphemespreservedForms>UNUGa</allgraphemespreservedForms>
+                <graphemes name="type">
+                  <graphemesS name="lang">
+                    <qpc name="type">
+                      <all num="1">
+                        <form name="UNUGa" num="1">
+                          <baseform name="UNUG" num="1" />
+                        </form>
+                      </all>
+                      <preserved num="1">
+                        <form name="UNUGa" num="1">
+                          <baseform name="UNUG" num="1" />
+                        </form>
+                      </preserved>
+                    </qpc>
+                  </graphemesS>
+                </graphemes>
+              </graphemeSingles>
+              <graphemeSingles name="graphemesV" />
+              <words name="type">
+                <words name="lang">
+                  <qpc name="type">
+                    <all num="1">
+                      <form name="UNUG" num="1" />
+                    </all>
+                    <preserved num="1">
+                      <form name="UNUG" num="1" />
+                    </preserved>
+                  </qpc>
+                </words>
+              </words>
+            </words>
+            <words>
+              <allwordspreservedForms>HI</allwordspreservedForms>
+              <graphemeSingles name="graphemesS">
+                <allgraphemespreservedForms>HI</allgraphemespreservedForms>
+                <graphemes name="type">
+                  <graphemesS name="lang">
+                    <qpc name="type">
+                      <all num="1">
+                        <form name="HI" num="1" />
+                      </all>
+                      <preserved num="1">
+                        <form name="HI" num="1" />
+                      </preserved>
+                    </qpc>
+                  </graphemesS>
+                </graphemes>
+              </graphemeSingles>
+              <graphemeSingles name="graphemesV" />
+              <words name="type">
+                <words name="lang">
+                  <qpc name="type">
+                    <all num="1">
+                      <form name="HI" num="1" />
+                    </all>
+                    <preserved num="1">
+                      <form name="HI" num="1" />
+                    </preserved>
+                  </qpc>
+                </words>
+              </words>
+            </words>
+          </alignmentgrp>
+        </fields>
+      </graphemes>
+      <graphemes>
+        <fields type="wp">
+          <words>
+            <allwordsmissingForms>x</allwordsmissingForms>
+            <graphemeSingles name="graphemesS" />
+            <graphemeSingles name="graphemesV" />
+            <graphemesX>
+              <allgraphemesmissingForms>ellipsis</allgraphemesmissingForms>
+              <graphemes name="type">
+                <graphemesX name="lang">
+                  <qpc name="type">
+                    <all num="1">
+                      <form name="ellipsis" num="1" />
+                    </all>
+                    <missing num="1">
+                      <form name="ellipsis" num="1" />
+                    </missing>
+                  </qpc>
+                </graphemesX>
+              </graphemes>
+              <inner name="graphemeSingles">
+                <graphemesS></graphemesS>
+                <graphemesV></graphemesV>
+              </inner>
+            </graphemesX>
+            <words name="type">
+              <words name="lang">
+                <qpc name="type">
+                  <all num="1">
+                    <form name="x" num="1" />
+                  </all>
+                  <missing num="1">
+                    <form name="x" num="1" />
+                  </missing>
+                </qpc>
+              </words>
+            </words>
+          </words>
+        </fields>
+        <fields type="wp">
+          <words>
+            <allwordsmissingForms>x</allwordsmissingForms>
+            <graphemeSingles name="graphemesS" />
+            <graphemeSingles name="graphemesV" />
+            <graphemesX>
+              <allgraphemesmissingForms>ellipsis</allgraphemesmissingForms>
+              <graphemes name="type">
+                <graphemesX name="lang">
+                  <qpc name="type">
+                    <all num="1">
+                      <form name="ellipsis" num="1" />
+                    </all>
+                    <missing num="1">
+                      <form name="ellipsis" num="1" />
+                    </missing>
+                  </qpc>
+                </graphemesX>
+              </graphemes>
+              <inner name="graphemeSingles">
+                <graphemesS></graphemesS>
+                <graphemesV></graphemesV>
+              </inner>
+            </graphemesX>
+            <words name="type">
+              <words name="lang">
+                <qpc name="type">
+                  <all num="1">
+                    <form name="x" num="1" />
+                  </all>
+                  <missing num="1">
+                    <form name="x" num="1" />
+                  </missing>
+                </qpc>
+              </words>
+            </words>
+          </words>
+        </fields>
+      </graphemes>
+      <graphemes>
+        <fields type="wp">
+          <words>
+            <allwordsmissingForms>x</allwordsmissingForms>
+            <graphemeSingles name="graphemesS" />
+            <graphemeSingles name="graphemesV" />
+            <graphemesX>
+              <allgraphemesmissingForms>ellipsis</allgraphemesmissingForms>
+              <graphemes name="type">
+                <graphemesX name="lang">
+                  <qpc name="type">
+                    <all num="1">
+                      <form name="ellipsis" num="1" />
+                    </all>
+                    <missing num="1">
+                      <form name="ellipsis" num="1" />
+                    </missing>
+                  </qpc>
+                </graphemesX>
+              </graphemes>
+              <inner name="graphemeSingles">
+                <graphemesS></graphemesS>
+                <graphemesV></graphemesV>
+              </inner>
+            </graphemesX>
+            <words name="type">
+              <words name="lang">
+                <qpc name="type">
+                  <all num="1">
+                    <form name="x" num="1" />
+                  </all>
+                  <missing num="1">
+                    <form name="x" num="1" />
+                  </missing>
+                </qpc>
+              </words>
+            </words>
+          </words>
+        </fields>
+      </graphemes>
+    </data>
+    <data allgraphemes="0" alllines="2" groups="0" lines="2">
+      <graphemes>
+        <fields type="wp">
+          <words>
+            <allwordspreservedForms>1(N01)</allwordspreservedForms>
+            <graphemeSingles name="graphemesS" />
+            <graphemeSingles name="graphemesV" />
+            <graphemesN>
+              <allgraphemespreservedForms>1(N01)</allgraphemespreservedForms>
+              <graphemes name="type">
+                <graphemesN name="lang">
+                  <qpc name="type">
+                    <all num="1">
+                      <form name="1(N01)" num="1" />
+                    </all>
+                    <preserved num="1">
+                      <form name="1(N01)" num="1" />
+                    </preserved>
+                  </qpc>
+                </graphemesN>
+              </graphemes>
+              <inner name="graphemeSingles">
+                <graphemesS>
+                  <allgraphemespreservedForms>N01</allgraphemespreservedForms>
+                  <graphemes name="type">
+                    <graphemesS name="lang">
+                      <qpc name="type">
+                        <all num="1">
+                          <form name="N01" num="1" />
+                        </all>
+                        <preserved num="1">
+                          <form name="N01" num="1" />
+                        </preserved>
+                      </qpc>
+                    </graphemesS>
+                  </graphemes>
+                </graphemesS>
+                <graphemesV></graphemesV>
+              </inner>
+            </graphemesN>
+            <words name="type">
+              <words name="lang">
+                <qpc name="type">
+                  <all num="1">
+                    <form name="1(N01)" num="1" />
+                  </all>
+                  <preserved num="1">
+                    <form name="1(N01)" num="1" />
+                  </preserved>
+                </qpc>
+              </words>
+            </words>
+          </words>
+        </fields>
+        <fields type="wp">
+          <words>
+            <allwordsdamagedForms>|U₄×1(N57)|</allwordsdamagedForms>
+            <graphemeSingles name="graphemesS" />
+            <graphemeSingles name="graphemesV" />
+            <graphemesC>
+              <data>
+                <allgraphemesdamagedForms>|U₄×1(N57)|</allgraphemesdamagedForms>
+                <graphemes name="type">
+                  <graphemesC name="lang">
+                    <qpc name="type">
+                      <all num="1">
+                        <form name="|U₄×1(N57)|" num="1" />
+                      </all>
+                      <damaged num="1">
+                        <form name="|U₄×1(N57)|" num="1" />
+                      </damaged>
+                    </qpc>
+                  </graphemesC>
+                </graphemes>
+              </data>
+              <inner name="graphemeSingles">
+                <graphemesS>
+                  <allgraphemespreservedForms>U₄</allgraphemespreservedForms>
+                  <graphemes name="type">
+                    <graphemesS name="lang">
+                      <qpc name="type">
+                        <all num="1">
+                          <form name="U₄" num="1" />
+                        </all>
+                        <preserved num="1">
+                          <form name="U₄" num="1" />
+                        </preserved>
+                      </qpc>
+                    </graphemesS>
+                  </graphemes>
+                </graphemesS>
+                <graphemesV></graphemesV>
+              </inner>
+              <inner name="graphemesN">
+                <allgraphemespreservedForms>1(N57)</allgraphemespreservedForms>
+                <graphemes name="type">
+                  <graphemesN name="lang">
+                    <qpc name="type">
+                      <all num="1">
+                        <form name="1(N57)" num="1" />
+                      </all>
+                      <preserved num="1">
+                        <form name="1(N57)" num="1" />
+                      </preserved>
+                    </qpc>
+                  </graphemesN>
+                </graphemes>
+                <inner name="graphemeSingles">
+                  <graphemesS>
+                    <allgraphemespreservedForms>N57</allgraphemespreservedForms>
+                    <graphemes name="type">
+                      <graphemesS name="lang">
+                        <qpc name="type">
+                          <all num="1">
+                            <form name="N57" num="1" />
+                          </all>
+                          <preserved num="1">
+                            <form name="N57" num="1" />
+                          </preserved>
+                        </qpc>
+                      </graphemesS>
+                    </graphemes>
+                  </graphemesS>
+                  <graphemesV></graphemesV>
+                </inner>
+              </inner>
+            </graphemesC>
+            <words name="type">
+              <words name="lang">
+                <qpc name="type">
+                  <all num="1">
+                    <form name="|U₄×1(N57)|" num="1" />
+                  </all>
+                  <damaged num="1">
+                    <form name="|U₄×1(N57)|" num="1" />
+                  </damaged>
+                </qpc>
+              </words>
+            </words>
+          </words>
+          <words>
+            <allwordspreservedForms>X</allwordspreservedForms>
+            <graphemeSingles name="graphemesS">
+              <allgraphemespreservedForms>X</allgraphemespreservedForms>
+              <graphemes name="type">
+                <graphemesS name="lang">
+                  <qpc name="type">
+                    <all num="1">
+                      <form name="X" num="1" />
+                    </all>
+                    <preserved num="1">
+                      <form name="X" num="1" />
+                    </preserved>
+                  </qpc>
+                </graphemesS>
+              </graphemes>
+            </graphemeSingles>
+            <graphemeSingles name="graphemesV" />
+            <words name="type">
+              <words name="lang">
+                <qpc name="type">
+                  <all num="1">
+                    <form name="X" num="1" />
+                  </all>
+                  <preserved num="1">
+                    <form name="X" num="1" />
+                  </preserved>
+                </qpc>
+              </words>
+            </words>
+          </words>
+          <words>
+            <allwordsmissingForms>x</allwordsmissingForms>
+            <graphemeSingles name="graphemesS" />
+            <graphemeSingles name="graphemesV" />
+            <graphemesX>
+              <allgraphemesmissingForms>ellipsis</allgraphemesmissingForms>
+              <graphemes name="type">
+                <graphemesX name="lang">
+                  <qpc name="type">
+                    <all num="1">
+                      <form name="ellipsis" num="1" />
+                    </all>
+                    <missing num="1">
+                      <form name="ellipsis" num="1" />
+                    </missing>
+                  </qpc>
+                </graphemesX>
+              </graphemes>
+              <inner name="graphemeSingles">
+                <graphemesS></graphemesS>
+                <graphemesV></graphemesV>
+              </inner>
+            </graphemesX>
+            <words name="type">
+              <words name="lang">
+                <qpc name="type">
+                  <all num="1">
+                    <form name="x" num="1" />
+                  </all>
+                  <missing num="1">
+                    <form name="x" num="1" />
+                  </missing>
+                </qpc>
+              </words>
+            </words>
+          </words>
+        </fields>
+      </graphemes>
+      <graphemes>
+        <fields type="wp">
+          <words>
+            <allwordsdamagedForms>1(N01)</allwordsdamagedForms>
+            <graphemeSingles name="graphemesS" />
+            <graphemeSingles name="graphemesV" />
+            <graphemesN>
+              <allgraphemesdamagedForms>1(N01)</allgraphemesdamagedForms>
+              <graphemes name="type">
+                <graphemesN name="lang">
+                  <qpc name="type">
+                    <all num="1">
+                      <form name="1(N01)" num="1" />
+                    </all>
+                    <damaged num="1">
+                      <form name="1(N01)" num="1" />
+                    </damaged>
+                  </qpc>
+                </graphemesN>
+              </graphemes>
+              <inner name="graphemeSingles">
+                <graphemesS>
+                  <allgraphemespreservedForms>N01</allgraphemespreservedForms>
+                  <graphemes name="type">
+                    <graphemesS name="lang">
+                      <qpc name="type">
+                        <all num="1">
+                          <form name="N01" num="1" />
+                        </all>
+                        <preserved num="1">
+                          <form name="N01" num="1" />
+                        </preserved>
+                      </qpc>
+                    </graphemesS>
+                  </graphemes>
+                </graphemesS>
+                <graphemesV></graphemesV>
+              </inner>
+            </graphemesN>
+            <words name="type">
+              <words name="lang">
+                <qpc name="type">
+                  <all num="1">
+                    <form name="1(N01)" num="1" />
+                  </all>
+                  <damaged num="1">
+                    <form name="1(N01)" num="1" />
+                  </damaged>
+                </qpc>
+              </words>
+            </words>
+          </words>
+          <words>
+            <allwordsmissingForms>x</allwordsmissingForms>
+            <graphemeSingles name="graphemesS" />
+            <graphemeSingles name="graphemesV" />
+            <graphemesX>
+              <allgraphemesmissingForms>ellipsis</allgraphemesmissingForms>
+              <graphemes name="type">
+                <graphemesX name="lang">
+                  <qpc name="type">
+                    <all num="1">
+                      <form name="ellipsis" num="1" />
+                    </all>
+                    <missing num="1">
+                      <form name="ellipsis" num="1" />
+                    </missing>
+                  </qpc>
+                </graphemesX>
+              </graphemes>
+              <inner name="graphemeSingles">
+                <graphemesS></graphemesS>
+                <graphemesV></graphemesV>
+              </inner>
+            </graphemesX>
+            <words name="type">
+              <words name="lang">
+                <qpc name="type">
+                  <all num="1">
+                    <form name="x" num="1" />
+                  </all>
+                  <missing num="1">
+                    <form name="x" num="1" />
+                  </missing>
+                </qpc>
+              </words>
+            </words>
+          </words>
+        </fields>
+        <fields type="wp">
+          <words>
+            <allwordsmissingForms>x</allwordsmissingForms>
+            <graphemeSingles name="graphemesS" />
+            <graphemeSingles name="graphemesV" />
+            <graphemesX>
+              <allgraphemesmissingForms>ellipsis</allgraphemesmissingForms>
+              <graphemes name="type">
+                <graphemesX name="lang">
+                  <qpc name="type">
+                    <all num="1">
+                      <form name="ellipsis" num="1" />
+                    </all>
+                    <missing num="1">
+                      <form name="ellipsis" num="1" />
+                    </missing>
+                  </qpc>
+                </graphemesX>
+              </graphemes>
+              <inner name="graphemeSingles">
+                <graphemesS></graphemesS>
+                <graphemesV></graphemesV>
+              </inner>
+            </graphemesX>
+            <words name="type">
+              <words name="lang">
+                <qpc name="type">
+                  <all num="1">
+                    <form name="x" num="1" />
+                  </all>
+                  <missing num="1">
+                    <form name="x" num="1" />
+                  </missing>
+                </qpc>
+              </words>
+            </words>
+          </words>
+        </fields>
+      </graphemes>
+    </data>
+  </lines>
+  <words broken="37" count="37">
+    <type name="words">
+      <lang name="qpc">
+        <type name="all" num="37">
+          <form name="1(N01)" num="3" />
+          <form name="2(N01)" num="1" />
+          <form name="A" num="1" />
+          <form name="AL" num="1" />
+          <form name="BA" num="1" />
+          <form name="EN" num="2" />
+          <form name="HI" num="1" />
+          <form name="NESAG₂" num="1" />
+          <form name="NUNUZ" num="1" />
+          <form name="PAP" num="1" />
+          <form name="TUR" num="2" />
+          <form name="UKKIN" num="1" />
+          <form name="UNUG" num="1" />
+          <form name="X" num="4" />
+          <form name="x" num="15" />
+          <form name="|U₄×1(N57)|" num="1" />
+        </type>
+        <type name="damaged" num="3">
+          <form name="1(N01)" num="1" />
+          <form name="PAP" num="1" />
+          <form name="|U₄×1(N57)|" num="1" />
+        </type>
+        <type name="missing" num="15">
+          <form name="x" num="15" />
+        </type>
+        <type name="preserved" num="19">
+          <form name="1(N01)" num="2" />
+          <form name="2(N01)" num="1" />
+          <form name="A" num="1" />
+          <form name="AL" num="1" />
+          <form name="BA" num="1" />
+          <form name="EN" num="2" />
+          <form name="HI" num="1" />
+          <form name="NESAG₂" num="1" />
+          <form name="NUNUZ" num="1" />
+          <form name="TUR" num="2" />
+          <form name="UKKIN" num="1" />
+          <form name="UNUG" num="1" />
+          <form name="X" num="4" />
+        </type>
+      </lang>
+    </type>
+  </words>
+</opt>

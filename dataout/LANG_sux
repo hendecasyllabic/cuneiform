@@ -1,0 +1,726 @@
+<opt>
+  <graphemes count="2043">
+    <type name="graphemesC">
+      <type name="damaged" num="5">
+        <form name="|DUB×U|" num="1" />
+        <form name="|KA×X|" num="3" />
+        <form name="|ŠA₃×GIŠ|" num="1" />
+      </type>
+      <type name="missing" num="31">
+        <form name="|" num="1" />
+        <form name="|(KASKAL.DU.BAD)&amp;(KASKAL.DU.BAD)|" num="1" />
+        <form name="|(KASKAL.LAGAB)&amp;(KASKAL.LAGAB)|" num="1" />
+        <form name="|(KASKAL.X)&amp;(KASKAL.X)|" num="1" />
+        <form name="|AŠ₂.U|" num="1" />
+        <form name="|GAD.TAK₄|" num="1" />
+        <form name="|HI×(GAL.MIN)|" num="1" />
+        <form name="|HI×BAD|" num="1" />
+        <form name="|HI×GAD|" num="1" />
+        <form name="|HI×X|" num="1" />
+        <form name="|KASKAL.KUR|" num="1" />
+        <form name="|LAL₂.X|" num="2" />
+        <form name="|LAL₂×DU|" num="1" />
+        <form name="|LAL₂×GIŠGAL|" num="1" />
+        <form name="|LAL₂×HAL|" num="1" />
+        <form name="|LAL₂×SAR|" num="1" />
+        <form name="|LAL₂×X|" num="1" />
+        <form name="|MAŠ.MIN₃|" num="1" />
+        <form name="|MAŠ.U|" num="1" />
+        <form name="|NUNUZ.AB₂×NE|" num="1" />
+        <form name="|NUNUZ.AB₂×SIG₇|" num="1" />
+        <form name="|PA.IŠ|" num="1" />
+        <form name="|PA.LU|" num="1" />
+        <form name="|PA.X|" num="1" />
+        <form name="|PAP.E|" num="1" />
+        <form name="|PAP.IGI@g|" num="1" />
+        <form name="|UM.ME|" num="1" />
+        <form name="|ŠU₂.AN.HI×GAD.KI|" num="1" />
+        <form name="|ŠU₂.AN|" num="1" />
+        <form name="|ŠU₂.NE|" num="1" />
+      </type>
+      <type name="preserved" num="73">
+        <form name="|" num="3" />
+        <form name="|AH+ME|" num="1" />
+        <form name="|DIŠ&amp;DIŠ.DIŠ|" num="1" />
+        <form name="|DIŠ&amp;DIŠ|" num="1" />
+        <form name="|HI.KASKAL|" num="1" />
+        <form name="|HI×(GAL.MIN)|" num="1" />
+        <form name="|HI×AŠ₂|" num="1" />
+        <form name="|HI×NUN.ME.U|" num="1" />
+        <form name="|HI×NUN.ME|" num="1" />
+        <form name="|HI×NUN|" num="1" />
+        <form name="|HI×ŠE|" num="1" />
+        <form name="|IGI.DU|" num="1" />
+        <form name="|IGI.ERIN₂|" num="1" />
+        <form name="|IGI.E₂|" num="1" />
+        <form name="|IGI.RU|" num="1" />
+        <form name="|KASKAL.HI|" num="1" />
+        <form name="|KUR@KUR|" num="2" />
+        <form name="|LAL₂.X|" num="2" />
+        <form name="|LUGAL%LUGAL|" num="1" />
+        <form name="|LU₂%LU₂|" num="1" />
+        <form name="|LU₂.GAM|" num="1" />
+        <form name="|LU₂.KAM|" num="2" />
+        <form name="|NUN%NUN.LAGAR&amp;LAGAR|" num="1" />
+        <form name="|NUN%NUN|" num="1" />
+        <form name="|NUN&amp;NUN|" num="1" />
+        <form name="|NUN.KI|" num="1" />
+        <form name="|NUN.LA.GA₂×GAR|" num="2" />
+        <form name="|NUN.LA.GA₂×UŠ|" num="1" />
+        <form name="|NUN.LAGAR|" num="1" />
+        <form name="|NUN.ŠE|" num="1" />
+        <form name="|NUNUZ.AB₂|" num="1" />
+        <form name="|NUNUZ.AB₂×AŠGAB|" num="1" />
+        <form name="|NUNUZ.AB₂×X|" num="2" />
+        <form name="|PA.X|" num="1" />
+        <form name="|TUM.EŠ|" num="1" />
+        <form name="|TUM.KAD₃|" num="1" />
+        <form name="|TUM.UD|" num="1" />
+        <form name="|TUM.ŠU₂|" num="1" />
+        <form name="|U+DIŠ|" num="1" />
+        <form name="|UR%UR|" num="1" />
+        <form name="|UR&amp;UR|" num="1" />
+        <form name="|URU×X|" num="7" />
+        <form name="|UR₂×AL|" num="3" />
+        <form name="|UR₂×HA|" num="1" />
+        <form name="|UR₂×U₂.AŠ|" num="1" />
+        <form name="|X×GAR|" num="1" />
+        <form name="|ŠA₃×A|" num="3" />
+        <form name="|ŠA₃×BAD|" num="3" />
+        <form name="|ŠA₃×NE|" num="2" />
+        <form name="|ŠA₃×TUR|" num="1" />
+        <form name="|ŠA₃×U|" num="1" />
+        <form name="|ŠA₃×ŠU₂|" num="2" />
+      </type>
+    </type>
+    <type name="graphemesD">
+      <type name="preserved" num="46">
+        <form name="" num="46" />
+      </type>
+    </type>
+    <type name="graphemesGG">
+      <type name="preserved" num="10">
+        <form name="" num="10" />
+      </type>
+    </type>
+    <type name="graphemesN">
+      <type name="missing" num="1">
+        <form name="4(U@g)" num="1" />
+      </type>
+      <type name="preserved" num="14">
+        <form name="2(DIŠ)" num="1" />
+        <form name="3(DIŠ)" num="1" />
+        <form name="4(DIŠ)" num="2" />
+        <form name="4(DIŠ@k)" num="2" />
+        <form name="5(DIŠ)" num="2" />
+        <form name="5(U@g)" num="2" />
+        <form name="6(DIŠ)" num="1" />
+        <form name="7(DIŠ)" num="1" />
+        <form name="8(DIŠ)" num="1" />
+        <form name="9(DIŠ)" num="1" />
+      </type>
+    </type>
+    <type name="graphemesQ">
+      <type name="preserved" num="28">
+        <form name="bakₓ(4(DIŠ@k))" num="1" />
+        <form name="bakₓ(|" num="1" />
+        <form name="baniaₓ(X)" num="1" />
+        <form name="buriaₓ(5(U@g))" num="1" />
+        <form name="eriₓ(X)" num="1" />
+        <form name="gagaₓ(|NUN.LA.GA₂×GAR|)" num="1" />
+        <form name="kamaₓ(|LU₂.KAM|)" num="1" />
+        <form name="kišliₓ(|ŠA₃×A|)" num="1" />
+        <form name="laʾuₓ(|LAL₂.X|)" num="2" />
+        <form name="nanamₓ(|ŠA₃×BAD|)" num="1" />
+        <form name="nanamₓ(|ŠA₃×NE|)" num="1" />
+        <form name="nunuzₓ(SAL)" num="1" />
+        <form name="suhušₓ(|UR₂×AL|)" num="1" />
+        <form name="sumₓ(ZIB@k)" num="1" />
+        <form name="uburaₓ(AŠ@45)" num="1" />
+        <form name="ukitₓ(DIŠ)" num="1" />
+        <form name="uliₓ(DIŠ@135)" num="1" />
+        <form name="upaₓ(AŠ@z)" num="1" />
+        <form name="upilaₓ(AŠ@225)" num="1" />
+        <form name="usagₓ(|NUNUZ.AB₂×X|)" num="1" />
+        <form name="utaqaₓ(AŠ@225)" num="1" />
+        <form name="uzalagₓ(AŠ@k)" num="1" />
+        <form name="uzaraₓ(AŠ@t)" num="1" />
+        <form name="ušₓ(|PA.X|)" num="1" />
+        <form name="šargalminₓ(|HI×(GAL.MIN)|)" num="1" />
+        <form name="šaₓ(|ŠA₃×ŠU₂|)" num="1" />
+        <form name="šuhušₓ(|UR₂×AL|)" num="1" />
+      </type>
+    </type>
+    <type name="graphemesS">
+      <type name="damaged" num="51">
+        <form name="" num="21" />
+        <form name="AR" num="1" />
+        <form name="AŠ₂" num="1" />
+        <form name="BAR" num="1" />
+        <form name="DUB" num="4" />
+        <form name="MA" num="1" />
+        <form name="NUNUZ" num="1" />
+        <form name="URU" num="12" />
+        <form name="X" num="7" />
+        <form name="ŠE" num="2" />
+      </type>
+      <type name="missing" num="34">
+        <form name="" num="16" />
+        <form name="AŠ₂" num="1" />
+        <form name="DIN" num="1" />
+        <form name="GUL" num="2" />
+        <form name="IGI@g" num="1" />
+        <form name="IGIg" num="1">
+          <baseform name="IGIg" num="1" />
+        </form>
+        <form name="IM" num="4" />
+        <form name="KASKAL" num="1" />
+        <form name="MAŠ" num="1" />
+        <form name="PA" num="2" />
+        <form name="PAP" num="1" />
+        <form name="SILA₃" num="1" />
+        <form name="TAR" num="1" />
+        <form name="ŠU₂" num="1" />
+      </type>
+      <type name="preserved" num="785">
+        <form name="" num="281" />
+        <form name="A" num="8" />
+        <form name="AB₂" num="10" />
+        <form name="AH" num="2" />
+        <form name="AL" num="6" />
+        <form name="AN" num="2" />
+        <form name="AŠ" num="2" />
+        <form name="AŠ225" num="6">
+          <baseform name="AŠ225" num="6" />
+        </form>
+        <form name="AŠ45" num="3">
+          <baseform name="AŠ45" num="3" />
+        </form>
+        <form name="AŠ@225" num="4" />
+        <form name="AŠ@45" num="2" />
+        <form name="AŠ@k" num="2" />
+        <form name="AŠ@t" num="2" />
+        <form name="AŠ@z" num="2" />
+        <form name="AŠGAB" num="2" />
+        <form name="AŠk" num="3">
+          <baseform name="AŠk" num="3" />
+        </form>
+        <form name="AŠt" num="3">
+          <baseform name="AŠt" num="3" />
+        </form>
+        <form name="AŠz" num="3">
+          <baseform name="AŠz" num="3" />
+        </form>
+        <form name="AŠ₂" num="4" />
+        <form name="BAD" num="9" />
+        <form name="BAR" num="2" />
+        <form name="DI" num="6" />
+        <form name="DIŠ" num="27" />
+        <form name="DIŠ135" num="3">
+          <baseform name="DIŠ135" num="3" />
+        </form>
+        <form name="DIŠ@135" num="2" />
+        <form name="DIŠk" num="2">
+          <baseform name="DIŠk" num="2" />
+        </form>
+        <form name="DU" num="5" />
+        <form name="DUB" num="2" />
+        <form name="E" num="1" />
+        <form name="EN" num="1" />
+        <form name="ERIM" num="1" />
+        <form name="ERIN₂" num="2" />
+        <form name="EŠ" num="2" />
+        <form name="E₂" num="2" />
+        <form name="GAD" num="4" />
+        <form name="GAL" num="1" />
+        <form name="GAM" num="2" />
+        <form name="GAR" num="6" />
+        <form name="GA₂" num="6" />
+        <form name="GIŠ" num="2" />
+        <form name="GIŠGAL" num="1" />
+        <form name="HA" num="2" />
+        <form name="HAL" num="1" />
+        <form name="HI" num="21" />
+        <form name="IGI" num="10" />
+        <form name="IGI@g" num="1" />
+        <form name="IGIg" num="1">
+          <baseform name="IGIg" num="1" />
+        </form>
+        <form name="IM" num="2" />
+        <form name="IR" num="2" />
+        <form name="IŠ" num="1" />
+        <form name="KA" num="3" />
+        <form name="KAD₃" num="2" />
+        <form name="KAM" num="4" />
+        <form name="KASKAL" num="5" />
+        <form name="KI" num="3" />
+        <form name="KUR" num="10" />
+        <form name="LA" num="6" />
+        <form name="LAGAR" num="6" />
+        <form name="LAL₂" num="11" />
+        <form name="LI" num="1" />
+        <form name="LIŠ" num="1" />
+        <form name="LU" num="1" />
+        <form name="LUGAL" num="5" />
+        <form name="LU₂" num="13" />
+        <form name="LU₂@t" num="1" />
+        <form name="LU₂t" num="1">
+          <baseform name="LU₂t" num="1" />
+        </form>
+        <form name="MAN" num="1" />
+        <form name="MAŠ" num="2" />
+        <form name="ME" num="8" />
+        <form name="MIN₃" num="1" />
+        <form name="MUNUS" num="1" />
+        <form name="NE" num="7" />
+        <form name="NUN" num="32" />
+        <form name="NUN@t" num="1" />
+        <form name="NUNUZ" num="10" />
+        <form name="NUNt" num="1">
+          <baseform name="NUNt" num="1" />
+        </form>
+        <form name="PA" num="5" />
+        <form name="PAP" num="2" />
+        <form name="PI" num="1" />
+        <form name="RU" num="2" />
+        <form name="SAL" num="4" />
+        <form name="SAR" num="1" />
+        <form name="SI" num="1" />
+        <form name="SIG₇" num="2" />
+        <form name="TAB" num="1" />
+        <form name="TAK₄" num="1" />
+        <form name="TUM" num="9" />
+        <form name="TUR" num="3" />
+        <form name="U" num="10" />
+        <form name="UD" num="3" />
+        <form name="UM" num="1" />
+        <form name="UR" num="10" />
+        <form name="UR@s" num="1" />
+        <form name="URU" num="2" />
+        <form name="URs" num="1">
+          <baseform name="URs" num="1" />
+        </form>
+        <form name="UR₂" num="11" />
+        <form name="Ug" num="2">
+          <baseform name="Ug" num="2" />
+        </form>
+        <form name="UŠ" num="2" />
+        <form name="U₂" num="2" />
+        <form name="X" num="43" />
+        <form name="ZA@t" num="1" />
+        <form name="ZAt" num="1">
+          <baseform name="ZAt" num="1" />
+        </form>
+        <form name="ZI" num="1" />
+        <form name="ZIB" num="2" />
+        <form name="ZIB@k" num="2" />
+        <form name="ZIBk" num="3">
+          <baseform name="ZIBk" num="3" />
+        </form>
+        <form name="ZU" num="2" />
+        <form name="ŠA₃" num="25" />
+        <form name="ŠE" num="3" />
+        <form name="ŠID" num="1" />
+        <form name="ŠU₂" num="10" />
+      </type>
+    </type>
+    <type name="graphemesV">
+      <type name="damaged" num="81">
+        <form name="a" num="1" />
+        <form name="ad" num="1" />
+        <form name="ag" num="1" />
+        <form name="alba₂" num="1" />
+        <form name="ama" num="1" />
+        <form name="ap" num="1" />
+        <form name="bi" num="3" />
+        <form name="d" num="8" />
+        <form name="da" num="1" />
+        <form name="e" num="1" />
+        <form name="en" num="1" />
+        <form name="en₂" num="1" />
+        <form name="e₃" num="1" />
+        <form name="ga" num="2" />
+        <form name="ha" num="7" />
+        <form name="he₂" num="4" />
+        <form name="hu" num="1" />
+        <form name="i" num="2" />
+        <form name="il" num="1" />
+        <form name="ilba₂" num="1" />
+        <form name="ilha" num="1" />
+        <form name="il₂" num="1" />
+        <form name="inim" num="1" />
+        <form name="iš" num="2" />
+        <form name="ke" num="1" />
+        <form name="kud" num="1" />
+        <form name="lugal" num="1" />
+        <form name="ma" num="2" />
+        <form name="mar" num="1" />
+        <form name="me" num="1" />
+        <form name="mi" num="1" />
+        <form name="na" num="1" />
+        <form name="ra" num="1" />
+        <form name="ru" num="1" />
+        <form name="sag" num="1" />
+        <form name="silim" num="1" />
+        <form name="tu" num="2" />
+        <form name="tukul" num="1" />
+        <form name="tur₅" num="1" />
+        <form name="ur₃" num="1" />
+        <form name="usu" num="1" />
+        <form name="x" num="9" />
+        <form name="zu" num="1" />
+        <form name="ŋal₂" num="1" />
+        <form name="ŋu₁₀" num="2" />
+        <form name="šah₂" num="1" />
+        <form name="še₃" num="1" />
+        <form name="ši" num="2" />
+      </type>
+      <type name="missing" num="109">
+        <form name="a" num="3" />
+        <form name="al" num="2" />
+        <form name="ar" num="1" />
+        <form name="at" num="1" />
+        <form name="aš" num="1" />
+        <form name="ba" num="2" />
+        <form name="bar" num="1" />
+        <form name="bi" num="1" />
+        <form name="d" num="12" />
+        <form name="da" num="3" />
+        <form name="de" num="1" />
+        <form name="diŋir" num="1" />
+        <form name="du" num="1" />
+        <form name="e" num="1" />
+        <form name="eg" num="1" />
+        <form name="en" num="1" />
+        <form name="en₂" num="1" />
+        <form name="ga" num="3" />
+        <form name="gal" num="1" />
+        <form name="gar" num="1" />
+        <form name="gu" num="3" />
+        <form name="gur" num="1" />
+        <form name="gur₄" num="1" />
+        <form name="gu₂" num="1" />
+        <form name="hu" num="1" />
+        <form name="hur" num="1" />
+        <form name="i" num="2" />
+        <form name="ig" num="1" />
+        <form name="igi" num="1" />
+        <form name="il" num="2" />
+        <form name="ir" num="1" />
+        <form name="iš" num="1" />
+        <form name="kalag" num="1" />
+        <form name="ki" num="2" />
+        <form name="ku" num="2" />
+        <form name="li" num="2" />
+        <form name="luh" num="1" />
+        <form name="ma" num="1" />
+        <form name="me" num="1" />
+        <form name="min" num="1" />
+        <form name="mu" num="2" />
+        <form name="munus" num="4" />
+        <form name="ni" num="2" />
+        <form name="nin" num="1" />
+        <form name="pi" num="1" />
+        <form name="ra" num="1" />
+        <form name="sa" num="1" />
+        <form name="sag" num="1" />
+        <form name="sar" num="1" />
+        <form name="si" num="1" />
+        <form name="su" num="1" />
+        <form name="ta" num="1" />
+        <form name="tu" num="1" />
+        <form name="u" num="2" />
+        <form name="ug" num="1" />
+        <form name="uh" num="1" />
+        <form name="ul" num="1" />
+        <form name="um" num="1" />
+        <form name="u₂" num="3" />
+        <form name="x" num="10" />
+        <form name="zi" num="1" />
+        <form name="ŋeš" num="1" />
+        <form name="šar" num="2" />
+        <form name="še" num="1" />
+        <form name="še₃" num="1" />
+      </type>
+      <type name="preserved" num="721">
+        <form name="a" num="14" />
+        <form name="ab" num="1" />
+        <form name="ad" num="1" />
+        <form name="adamin₄" num="1" />
+        <form name="ad₄" num="1" />
+        <form name="ad₆" num="1" />
+        <form name="ag" num="1" />
+        <form name="agargara" num="1" />
+        <form name="ak" num="3" />
+        <form name="akar" num="1" />
+        <form name="al" num="3" />
+        <form name="alha" num="1" />
+        <form name="am" num="1" />
+        <form name="ama" num="2" />
+        <form name="am₃" num="1" />
+        <form name="an" num="7" />
+        <form name="anubu" num="1" />
+        <form name="ar" num="1" />
+        <form name="ašta" num="1" />
+        <form name="aš₂" num="6" />
+        <form name="aš₃" num="1" />
+        <form name="a₂" num="2" />
+        <form name="ba" num="18" />
+        <form name="bakₓ" num="4" />
+        <form name="baliha" num="1" />
+        <form name="baneš" num="1" />
+        <form name="bania" num="1" />
+        <form name="baniaₓ" num="2" />
+        <form name="banlimmu" num="1" />
+        <form name="banmin" num="1" />
+        <form name="bar" num="3" />
+        <form name="be" num="1" />
+        <form name="bi" num="1" />
+        <form name="bir" num="3" />
+        <form name="bu" num="4" />
+        <form name="bur" num="1" />
+        <form name="buriaₓ" num="2" />
+        <form name="d" num="40" />
+        <form name="da" num="12" />
+        <form name="dam" num="2" />
+        <form name="danna₂" num="1" />
+        <form name="di" num="6" />
+        <form name="din" num="1" />
+        <form name="diŋir" num="2" />
+        <form name="diš" num="1" />
+        <form name="du" num="2" />
+        <form name="dub" num="2" />
+        <form name="dug₃" num="1" />
+        <form name="dul₉" num="1" />
+        <form name="e" num="7" />
+        <form name="egir" num="2" />
+        <form name="el" num="1" />
+        <form name="ellat" num="1" />
+        <form name="emaš" num="1" />
+        <form name="en" num="7" />
+        <form name="en₂" num="1" />
+        <form name="er" num="1" />
+        <form name="erim" num="1" />
+        <form name="erim₇" num="2" />
+        <form name="erin₉" num="2" />
+        <form name="eriₓ" num="2" />
+        <form name="eš" num="2" />
+        <form name="eš₅" num="2" />
+        <form name="eš₆" num="3" />
+        <form name="ga" num="6" />
+        <form name="gada" num="1" />
+        <form name="gagaₓ" num="2" />
+        <form name="gal" num="2" />
+        <form name="gi" num="3" />
+        <form name="gidim₂" num="1" />
+        <form name="gin₃" num="1" />
+        <form name="gir" num="1" />
+        <form name="gu" num="7" />
+        <form name="gub" num="2" />
+        <form name="gudibir₂" num="1" />
+        <form name="gudu₄" num="1" />
+        <form name="gug₅" num="1" />
+        <form name="gul" num="1" />
+        <form name="gurud" num="1" />
+        <form name="ha" num="2" />
+        <form name="hab" num="1" />
+        <form name="habrud" num="2" />
+        <form name="hal" num="2" />
+        <form name="halba₅" num="1" />
+        <form name="halbi₄" num="1" />
+        <form name="haš₂" num="1" />
+        <form name="he₂" num="3" />
+        <form name="hi" num="3" />
+        <form name="hu" num="1" />
+        <form name="huš" num="2" />
+        <form name="i" num="6" />
+        <form name="ia" num="4" />
+        <form name="ia₃" num="2" />
+        <form name="ib" num="1" />
+        <form name="ib₂" num="2" />
+        <form name="ig" num="2" />
+        <form name="igi" num="3" />
+        <form name="igištu" num="1" />
+        <form name="il" num="3" />
+        <form name="ilimmu" num="1" />
+        <form name="im" num="3" />
+        <form name="imin" num="1" />
+        <form name="in" num="1" />
+        <form name="inana" num="2" />
+        <form name="inbir" num="1" />
+        <form name="inim" num="3" />
+        <form name="ir" num="1" />
+        <form name="it" num="1" />
+        <form name="iš" num="3" />
+        <form name="ka" num="8" />
+        <form name="kad₆" num="1" />
+        <form name="kamaₓ" num="2" />
+        <form name="kar₂" num="2" />
+        <form name="keš₃" num="1" />
+        <form name="ke₄" num="1" />
+        <form name="ki" num="13" />
+        <form name="kiši₁₃" num="1" />
+        <form name="kiši₁₅" num="1" />
+        <form name="kišliₓ" num="2" />
+        <form name="ku" num="3" />
+        <form name="kug" num="2" />
+        <form name="kur" num="1" />
+        <form name="kur₂" num="1" />
+        <form name="ku₅" num="1" />
+        <form name="la" num="6" />
+        <form name="lag" num="1" />
+        <form name="lahtan₄" num="1" />
+        <form name="lam" num="1" />
+        <form name="lamhu" num="1" />
+        <form name="lamma" num="1" />
+        <form name="laʾuₓ" num="4" />
+        <form name="la₂" num="1" />
+        <form name="li" num="11" />
+        <form name="lil₅" num="1" />
+        <form name="lil₈" num="1" />
+        <form name="limmu₅" num="2" />
+        <form name="lirum₈" num="1" />
+        <form name="liš" num="1" />
+        <form name="lu" num="2" />
+        <form name="lugal" num="4" />
+        <form name="lugud" num="1" />
+        <form name="luhša" num="1" />
+        <form name="lu₂" num="3" />
+        <form name="ma" num="12" />
+        <form name="mar" num="1" />
+        <form name="maš" num="1" />
+        <form name="mašmin" num="1" />
+        <form name="me" num="3" />
+        <form name="mi" num="5" />
+        <form name="mina" num="3" />
+        <form name="min₃" num="2" />
+        <form name="mu" num="4" />
+        <form name="na" num="9" />
+        <form name="nam" num="2" />
+        <form name="nanamₓ" num="4" />
+        <form name="ni" num="5" />
+        <form name="nigida" num="5" />
+        <form name="nin" num="1" />
+        <form name="nir" num="3" />
+        <form name="nisagga" num="1" />
+        <form name="ni₂" num="1" />
+        <form name="nu" num="15" />
+        <form name="nun" num="1" />
+        <form name="nunuz" num="1" />
+        <form name="nunuzₓ" num="2" />
+        <form name="pa" num="6" />
+        <form name="pagra₃" num="1" />
+        <form name="pap" num="1" />
+        <form name="pa₅" num="1" />
+        <form name="pa₆" num="1" />
+        <form name="pe" num="1" />
+        <form name="peš" num="2" />
+        <form name="peš₁₃" num="1" />
+        <form name="peš₄" num="1" />
+        <form name="pihu₆" num="1" />
+        <form name="qa" num="1" />
+        <form name="qu" num="1" />
+        <form name="ra" num="6" />
+        <form name="rammanu" num="1" />
+        <form name="rašu" num="1" />
+        <form name="ri" num="5" />
+        <form name="ru" num="4" />
+        <form name="sa" num="4" />
+        <form name="samag" num="1" />
+        <form name="saman₅" num="1" />
+        <form name="saŋ" num="6" />
+        <form name="si" num="6" />
+        <form name="sig₃" num="1" />
+        <form name="sig₅" num="1" />
+        <form name="siki" num="5" />
+        <form name="sila₃" num="1" />
+        <form name="silim" num="4" />
+        <form name="sipa" num="1" />
+        <form name="su" num="1" />
+        <form name="suhušₓ" num="2" />
+        <form name="sukud" num="1" />
+        <form name="sumug" num="1" />
+        <form name="sumₓ" num="2" />
+        <form name="ta" num="3" />
+        <form name="tab" num="1" />
+        <form name="tab₄" num="1" />
+        <form name="teš₂" num="2" />
+        <form name="ti" num="6" />
+        <form name="tu" num="5" />
+        <form name="tur₃" num="1" />
+        <form name="tu₄" num="3" />
+        <form name="tu₇" num="1" />
+        <form name="u" num="9" />
+        <form name="ubi₂" num="1" />
+        <form name="uburaₓ" num="2" />
+        <form name="ud" num="5" />
+        <form name="ugur₂" num="1" />
+        <form name="uh" num="1" />
+        <form name="ukitₓ" num="2" />
+        <form name="uku₂" num="1" />
+        <form name="ul" num="1" />
+        <form name="uliₓ" num="2" />
+        <form name="um" num="1" />
+        <form name="ummeda" num="1" />
+        <form name="upaₓ" num="2" />
+        <form name="upilaₓ" num="2" />
+        <form name="ur" num="14" />
+        <form name="urbingu" num="1" />
+        <form name="urta" num="1" />
+        <form name="ur₂" num="1" />
+        <form name="ur₅" num="1" />
+        <form name="usagₓ" num="2" />
+        <form name="usar" num="1" />
+        <form name="ussu" num="1" />
+        <form name="utaqaₓ" num="2" />
+        <form name="uzalagₓ" num="2" />
+        <form name="uzaraₓ" num="2" />
+        <form name="uš" num="3" />
+        <form name="ušbar" num="1" />
+        <form name="ušₓ" num="2" />
+        <form name="u₂" num="21" />
+        <form name="u₃" num="1" />
+        <form name="x" num="1" />
+        <form name="za" num="2" />
+        <form name="zi" num="4" />
+        <form name="zib" num="1" />
+        <form name="zib₂" num="1" />
+        <form name="zid" num="2" />
+        <form name="zil" num="1" />
+        <form name="zu" num="2" />
+        <form name="ŋal₂" num="2" />
+        <form name="ŋa₂" num="2" />
+        <form name="ŋeš" num="17" />
+        <form name="ŋe₂₆" num="1" />
+        <form name="ŋu₁₀" num="9" />
+        <form name="ša" num="1" />
+        <form name="šahan" num="1" />
+        <form name="šahan₃" num="1" />
+        <form name="šargad" num="1" />
+        <form name="šargalminₓ" num="2" />
+        <form name="ša₁₀" num="2" />
+        <form name="ša₂" num="3" />
+        <form name="šaₓ" num="2" />
+        <form name="še" num="4" />
+        <form name="šeg₇" num="1" />
+        <form name="ši" num="3" />
+        <form name="šu" num="3" />
+        <form name="šub" num="1" />
+        <form name="šubtum₄" num="1" />
+        <form name="šud₄" num="1" />
+        <form name="šuhušₓ" num="2" />
+        <form name="šu₁₁" num="1" />
+        <form name="šu₂" num="2" />
+        <form name="ṭu" num="2" />
+      </type>
+    </type>
+    <type name="graphemesX">
+      <type name="missing" num="52">
+        <form name="" num="52" />
+      </type>
+      <type name="preserved" num="2">
+        <form name="" num="2" />
+      </type>
+    </type>
+  </graphemes>
+</opt>

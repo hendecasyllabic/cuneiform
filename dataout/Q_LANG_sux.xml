@@ -1,0 +1,286 @@
+<opt>
+  <graphemes count="84">
+    <type name="graphemesD">
+      <total_grapheme name="preserved" num="2" />
+    </type>
+    <type name="graphemesS">
+      <role name="syll">
+        <form name="EN">
+          <state name="preserved" num="1" />
+        </form>
+        <form name="GAL">
+          <state name="preserved" num="1" />
+        </form>
+        <form name="IM">
+          <state name="preserved" num="2" />
+        </form>
+        <form name="MA">
+          <state name="damaged" num="1" />
+        </form>
+        <form name="X">
+          <state name="preserved" num="9" />
+        </form>
+        <form name="ZI">
+          <state name="preserved" num="1" />
+        </form>
+        <total name="damaged" num="1" />
+        <total name="preserved" num="14" />
+      </role>
+      <total_grapheme name="damaged" num="1" />
+      <total_grapheme name="preserved" num="14" />
+    </type>
+    <type name="graphemesV">
+      <role name="semantic">
+        <form name="d">
+          <state name="preserved" num="2" />
+        </form>
+        <total name="preserved" num="2" />
+      </role>
+      <role name="syll">
+        <form name="a">
+          <state name="preserved" num="3" />
+        </form>
+        <form name="ama">
+          <state name="preserved" num="1" />
+        </form>
+        <form name="am₃">
+          <state name="preserved" num="1" />
+        </form>
+        <form name="a₂">
+          <state name="preserved" num="1" />
+        </form>
+        <form name="ba">
+          <state name="preserved" num="1" />
+        </form>
+        <form name="da">
+          <state name="preserved" num="1" />
+        </form>
+        <form name="di">
+          <state name="preserved" num="2" />
+        </form>
+        <form name="dub">
+          <state name="preserved" num="2" />
+        </form>
+        <form name="e">
+          <state name="preserved" num="2" />
+        </form>
+        <form name="en">
+          <state name="damaged" num="1" />
+          <state name="preserved" num="4" />
+        </form>
+        <form name="er">
+          <state name="preserved" num="1" />
+        </form>
+        <form name="ga">
+          <state name="preserved" num="1" />
+        </form>
+        <form name="gal">
+          <state name="preserved" num="1" />
+        </form>
+        <form name="he₂">
+          <state name="preserved" num="1" />
+        </form>
+        <form name="hi">
+          <state name="preserved" num="1" />
+        </form>
+        <form name="huš">
+          <state name="preserved" num="1" />
+        </form>
+        <form name="inim">
+          <state name="preserved" num="1" />
+        </form>
+        <form name="ki">
+          <state name="preserved" num="1" />
+        </form>
+        <form name="kug">
+          <state name="preserved" num="2" />
+        </form>
+        <form name="lamma">
+          <state name="preserved" num="1" />
+        </form>
+        <form name="lu₂">
+          <state name="preserved" num="3" />
+        </form>
+        <form name="me">
+          <state name="preserved" num="2" />
+        </form>
+        <form name="nam">
+          <state name="preserved" num="1" />
+        </form>
+        <form name="nir">
+          <state name="preserved" num="1" />
+        </form>
+        <form name="nu">
+          <state name="preserved" num="1" />
+        </form>
+        <form name="nun">
+          <state name="preserved" num="1" />
+        </form>
+        <form name="saŋ">
+          <state name="preserved" num="5" />
+        </form>
+        <form name="ud">
+          <state name="preserved" num="1" />
+        </form>
+        <form name="ur">
+          <state name="preserved" num="6" />
+        </form>
+        <form name="ur₃">
+          <state name="damaged" num="1" />
+        </form>
+        <form name="u₂">
+          <state name="preserved" num="1" />
+        </form>
+        <form name="zid">
+          <state name="preserved" num="1" />
+        </form>
+        <form name="zu">
+          <state name="preserved" num="1" />
+        </form>
+        <form name="ŋal₂">
+          <state name="preserved" num="2" />
+        </form>
+        <form name="ŋa₂">
+          <state name="preserved" num="1" />
+        </form>
+        <form name="ŋe₂₆">
+          <state name="preserved" num="1" />
+        </form>
+        <form name="ŋu₁₀">
+          <state name="preserved" num="1" />
+        </form>
+        <form name="še">
+          <state name="preserved" num="1" />
+        </form>
+        <total name="damaged" num="2" />
+        <total name="preserved" num="59" />
+      </role>
+      <total_grapheme name="damaged" num="2" />
+      <total_grapheme name="preserved" num="61" />
+    </type>
+    <type name="graphemesX">
+      <role name="">
+        <form name="ellipsis">
+          <state name="missing" num="4" />
+        </form>
+        <total name="missing" num="4" />
+      </role>
+      <total_grapheme name="missing" num="4" />
+    </type>
+  </graphemes>
+  <words count="56">
+    <type name="words">
+      <role name="word">
+        <form name="EN">
+          <state name="preserved" num="1" />
+        </form>
+        <form name="GAL">
+          <state name="preserved" num="1" />
+        </form>
+        <form name="IM">
+          <state name="preserved" num="2" />
+        </form>
+        <form name="MA">
+          <state name="damaged" num="1" />
+        </form>
+        <form name="X">
+          <state name="preserved" num="9" />
+        </form>
+        <form name="ZI">
+          <state name="preserved" num="1" />
+        </form>
+        <form name="ama-da">
+          <state name="preserved" num="1" />
+        </form>
+        <form name="a₂-ŋal₂">
+          <state name="preserved" num="1" />
+        </form>
+        <form name="di">
+          <state name="preserved" num="2" />
+        </form>
+        <form name="dub">
+          <state name="preserved" num="2" />
+        </form>
+        <form name="en">
+          <state name="damaged" num="1" />
+          <state name="preserved" num="4" />
+        </form>
+        <form name="gal-e">
+          <state name="preserved" num="1" />
+        </form>
+        <form name="hi-a">
+          <state name="preserved" num="1" />
+        </form>
+        <form name="huš">
+          <state name="preserved" num="1" />
+        </form>
+        <form name="inim">
+          <state name="preserved" num="1" />
+        </form>
+        <form name="ki-ur₃">
+          <state name="damaged" num="1" />
+        </form>
+        <form name="kug-kug-ga">
+          <state name="preserved" num="1" />
+        </form>
+        <form name="lu₂">
+          <state name="preserved" num="1" />
+        </form>
+        <form name="lu₂-lu₂">
+          <state name="preserved" num="1" />
+        </form>
+        <form name="me">
+          <state name="preserved" num="1" />
+        </form>
+        <form name="nam-he₂-a">
+          <state name="preserved" num="1" />
+        </form>
+        <form name="nir-ŋal₂">
+          <state name="preserved" num="1" />
+        </form>
+        <form name="nu-me-a">
+          <state name="preserved" num="1" />
+        </form>
+        <form name="nun">
+          <state name="preserved" num="1" />
+        </form>
+        <form name="ud">
+          <state name="preserved" num="1" />
+        </form>
+        <form name="ur">
+          <state name="preserved" num="1" />
+        </form>
+        <form name="ur-saŋ">
+          <state name="preserved" num="5" />
+        </form>
+        <form name="x">
+          <state name="missing" num="4" />
+        </form>
+        <form name="zu">
+          <state name="preserved" num="1" />
+        </form>
+        <form name="{d}ba-u₂-ŋu₁₀">
+          <state name="preserved" num="1" />
+        </form>
+        <form name="{d}lamma">
+          <state name="preserved" num="1" />
+        </form>
+        <form name="ŋa₂-am₃">
+          <state name="preserved" num="1" />
+        </form>
+        <form name="ŋe₂₆-e">
+          <state name="preserved" num="1" />
+        </form>
+        <form name="še-er-zid">
+          <state name="preserved" num="1" />
+        </form>
+        <total name="damaged" num="3" />
+        <total name="missing" num="4" />
+        <total name="preserved" num="49" />
+      </role>
+      <total_grapheme name="damaged" num="3" />
+      <total_grapheme name="missing" num="4" />
+      <total_grapheme name="preserved" num="49" />
+    </type>
+  </words>
+</opt>
