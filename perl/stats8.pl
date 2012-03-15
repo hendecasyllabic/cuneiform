@@ -1,8 +1,8 @@
 #!/usr/bin/perl -w
 use warnings;
 use strict;
-
-use CGI::Carp qw(fatalsToBrowser);
+use Carp ();
+local $SIG{__WARN__} = \&Carp::cluck;
 use Data::Dumper;
 use XML::Twig;
 use XML::Simple;
@@ -98,9 +98,9 @@ sub general_stats{
             my $shortname = $1;
 	    $output{$shortname} = ();
 	    &outputtext("\nShortName: ". $shortname);
-            if($shortname=~m|^P|gsi){
-                &doPstats($filename, $shortname);
-            }
+	    if($shortname=~m|^P|gsi){
+		&doPstats($filename, $shortname);
+	    }
 	}
     }
 
@@ -269,9 +269,6 @@ sub doPstats{
 		    $broken = 1;
 		    %nonx = ();
 		}
-		if(!defined $alldata{'column'}){
-		    $alldata{'column'} = ();
-		}
 		$ccount++;
 		#&outputtext("\n Number of lines for surface ".$count."  column ".$ccount." :");
 		$linedata = &doLineData($j, \%localdata);
@@ -300,12 +297,16 @@ sub doPstats{
 #    do I need to push the broken value deeper into teh code to change the counts at doLineData
 
 # TODO add nonx into lines as well... maybe
-	    if($linedata ne ""){
+	    if($linedata ne "" && defined($linedata)){
 		if($broken){
 		    push (@{$alldata{'brokencolumn'}}, $linedata);
 		}
 		else{
+		    if(!defined $alldata{'column'}){
+			@{$alldata{'column'}} = ();
+		    }
 		    push (@{$alldata{'column'}}, $linedata);
+		    
 		}
 	    }
 	}
@@ -714,6 +715,10 @@ sub doGsv{
 	    my $baseform = "";
 	    if($xpath eq "g:s" || $xpath eq "g:v"){
 		$baseform = $i->findvalue("g:b");
+		if($i->{att}->{"form"} && $i->{att}->{"form"} eq "TA\@v"){
+		print "\n Not sure what is wrong with this...\ng:s form ".$i->{att}->{"form"};
+		print "\ng:b value ".$baseform;
+		}
 	    }
 	    
 #	TODO: There is still a problem with the detection of the following baseform - no idea why PRIORITY (P224395)
@@ -1054,7 +1059,7 @@ sub writetofile{
     &makefile($startpath); #pass to function
     my $destinationdir = $startpath;
     print $destinationdir."/".$shortname;
-    if(defined $data){
+    if(defined $data && $data ne ""){
     #    create a file called the shortname - allows sub sectioning of error messages
 	&outputtext("\n");
 	open(SUBFILE2, ">".$destinationdir."/".$shortname) or die "Couldn't open: $!";
