@@ -9,6 +9,7 @@ use XML::Simple;
 use utf8;
 binmode STDOUT, ":utf8";
 
+my %localdata = ();
 my %perioddata = ();
 my %langdata = ();
 
@@ -140,6 +141,16 @@ sub doQstats{
     $twigObj->parsefile( $filename);
     my $root = $twigObj->root;
     $twigObj->purge;
+    
+    my $twigObjXmd = XML::Twig->new(
+                                 twig_roots => { 'cat' => 1 }
+                                 );
+    my $xmdfile = $filename;
+    $xmdfile=~s|(\.\w*)$|.xmd|;
+    $twigObjXmd->parsefile($xmdfile);
+    my $rootxmd = $twigObjXmd->root;
+    $twigObjXmd->purge;
+    
 #            for Q texts
     my @divs = $root->get_xpath('div');
     my $dsize = scalar @divs;
@@ -147,10 +158,13 @@ sub doQstats{
     my $dcount = 0;
     $output{$shortname}{"div"} = ();
     
-    my %localdata = ();
-    $localdata{"period"} = "";
-    #TODO get period
+    for (keys %localdata)
+    {
+        delete $localdata{$_};
+    }
     
+    #$localdata{"period"} = "";
+    &getMetaData($root, $rootxmd);
     
     foreach my $i (@divs){
         $dcount++;
@@ -192,12 +206,12 @@ sub doQstats{
 }
 
 sub doPstats{
-   my $filename = shift;
+    my $filename = shift;
     my $shortname = shift;
     my $sumlines = 0;
     my $sumgraphemes =0;
     my $twigObj = XML::Twig->new(
-                                 twig_roots => { 'object' => 1, 'mds' => 1 }
+                                 twig_roots => { 'protocols' => 1, 'object' => 1, 'mds' => 1 }
                                  );
     my $twigObjXmd = XML::Twig->new(
                                  twig_roots => { 'cat' => 1 }
@@ -210,26 +224,34 @@ sub doPstats{
     my $rootxmd = $twigObjXmd->root;
     $twigObj->purge;
     $twigObjXmd->purge;
-    my %localdata = ();
-    $localdata{"period"} = "";
 
-    #get period
-    my @mfields = $root->get_xpath('mds/m');
-    foreach my $i (@mfields){
-	if($i->{att}->{k} eq "period"){
-	    $localdata{"period"} = $i->text;
-	    if(!defined $perioddata{$localdata{"period"}}){
-		$perioddata{$localdata{"period"}} = ();
-	    }
-	}
-	#<m k="period">Hellenistic</m>
+#    my %localdata = ();
+    for (keys %localdata)
+    {
+        delete $localdata{$_};
     }
-    if($localdata{"period"} eq ""){
-	my @period = $rootxmd->get_xpath('cat/period');
-	foreach my $i (@period){
-	    print $i->text;
-	}
-    }
+
+    &getMetaData($root, $rootxmd, %localdata);
+    
+#    $localdata{"period"} = "";
+#
+#    #get period
+#    my @mfields = $root->get_xpath('mds/m');
+#    foreach my $i (@mfields){
+#	if($i->{att}->{k} eq "period"){
+#	    $localdata{"period"} = $i->text;
+#	    if(!defined $perioddata{$localdata{"period"}}){
+#		$perioddata{$localdata{"period"}} = ();
+#	    }
+#	}
+#	#<m k="period">Hellenistic</m>
+#    }
+#    if($localdata{"period"} eq ""){
+#	my @period = $rootxmd->get_xpath('cat/period');
+#	foreach my $i (@period){
+#	    print $i->text;
+#	}
+#    }
     
 #   for P texts
     my @surfaces = $root->get_xpath('object/surface');
@@ -330,6 +352,103 @@ sub doPstats{
      
     
     
+}
+
+
+sub getMetaData{
+    my $root = shift;
+    my $rootxmd = shift;
+    
+    $localdata{"period"} = ""; $localdata{"genre"} = ""; $localdata{"subgenre"} = ""; $localdata{"provenience"} = ""; $localdata{"designation"} = "";
+    $localdata{"language"} = ""; $localdata{"script"} = ""; $localdata{"writer"} = "";
+    
+    #get designation, provenience/provenance, period [date], genre, subgenre, language, script
+    
+    my @mfields = $root->get_xpath('mds/m');
+    # mds in xtf-file has 4 fields: period, genre, subgenre and provenience
+    foreach my $i (@mfields){
+	if($i->{att}->{k} eq "period"){   #<m k="period">Hellenistic</m>
+	    $localdata{"period"} = $i->text;
+	    if(!defined $perioddata{$localdata{"period"}}){
+		$perioddata{$localdata{"period"}} = ();
+	    }
+	}
+	if($i->{att}->{k} eq "genre"){   #<m k="genre">administrative letter</m>
+	    $localdata{"genre"} = $i->text;
+	}
+	if($i->{att}->{k} eq "subgenre"){   
+	    $localdata{"subgenre"} = $i->text;
+	}
+	if($i->{att}->{k} eq "provenience"){   
+	    $localdata{"provenience"} = $i->text;
+	}
+    }
+    
+    # these fields are not always filled in even if the information is known, hence we may need to check the metadatafile.
+    
+    $localdata{"designation"} = $rootxmd->findvalue('cat/designation');
+    
+    if($localdata{"period"} eq ""){
+	$localdata{"period"} = $rootxmd->findvalue('cat/period');
+
+	# no period in SAAo, but <date c="1000000"/> [Neo-Assyrian]
+	if($localdata{"period"} eq ""){
+	    my @date = $rootxmd->get_xpath('cat/date');
+	    foreach my $i (@date) {
+		my $temp = $i->{att}->{c};
+		#print $temp;
+		if($temp eq "1000000"){   # Q: Other codes ???
+		    $localdata{"period"} = "Neo-Assyrian";  
+		}
+	    }
+	}
+    }
+    
+    if ($localdata{"genre"} eq ""){
+	$localdata{"genre"} = $rootxmd->findvalue('cat/genre');
+    }
+    
+    if ($localdata{"subgenre"} eq ""){
+	$localdata{"subgenre"} = $rootxmd->findvalue('cat/subgenre');
+    }
+    
+    if ($localdata{"provenience"} eq ""){
+	$localdata{"provenience"} = $rootxmd->findvalue('cat/provenience');
+	if ($localdata{"provenience"} eq ""){
+	    $localdata{"provenience"} = $rootxmd->findvalue('cat/provenance');
+	}
+    }
+    
+    $localdata{"language"} = $rootxmd->findvalue('cat/language');
+    if ($localdata{"language"} eq "") {
+	my @protocols = $root->get_xpath('protocols/protocol');
+	 # Q: what are the other options? ***
+	foreach my $i (@protocols) {
+	    if ($i->{att}->{type} eq "atf") {
+		my $temp = $i->text;
+		if ($temp eq "lang na") {
+		    $localdata{"language"} = "Neo-Assyrian";
+		}
+		elsif ($temp eq "lang nb") {
+		    $localdata{"language"} = "Neo-Babylonian";
+		}
+	    }
+	}
+    }
+    # in SAA not given in metadata, but in xtf-file under
+#        <protocols scope="text">
+#		<protocol type="project">saao/saa10</protocol>
+#		<protocol type="atf">lang nb</protocol>
+#		<protocol type="key">file=SAA10/LAS_NB.saa</protocol>
+#		<protocol type="key">musno=K 00552</protocol>
+#		<protocol type="key">cdli=ABL 0255</protocol>
+#		<protocol type="key">writer=A@aredu</protocol>
+#		<protocol type="key">L=B</protocol>
+#	</protocols>
+    
+    $localdata{"script"} = $rootxmd->findvalue('cat/script');
+    
+    $localdata{"writer"} = $rootxmd->findvalue('cat/ancient_author'); # SAA; Q: Greta - how about colophons?
 }
 
 #loop over each line and find some stats
@@ -715,10 +834,10 @@ sub doGsv{
 	    my $baseform = "";
 	    if($xpath eq "g:s" || $xpath eq "g:v"){
 		$baseform = $i->findvalue("g:b");
-		if($i->{att}->{"form"} && $i->{att}->{"form"} eq "TA\@v"){
-		print "\n Not sure what is wrong with this...\ng:s form ".$i->{att}->{"form"};
-		print "\ng:b value ".$baseform;
-		}
+		#if($i->{att}->{"form"} && $i->{att}->{"form"} eq "TA\@v"){
+		#print "\n Not sure what is wrong with this...\ng:s form ".$i->{att}->{"form"};
+		#print "\ng:b value ".$baseform;
+		#}
 	    }
 	    
 #	TODO: There is still a problem with the detection of the following baseform - no idea why PRIORITY (P224395)
@@ -947,7 +1066,7 @@ sub savebroken{
 		    $langdata{$lang}{$type}{"type"}{$name}{"role"}{$role}{'cvc'}{$cvc}{'form'}{$form}{"state"}{$break}{'num'}++;
 		}
 		else {
-		    $langdata{$lang}{$type}{"type"}{$name}{"role"}{$role}{'cvc'}{$cvc}{'form'}{$baseform}{'extform'}{$form}{"state"}{$break}{'num'}++;
+		    $langdata{$lang}{$type}{"type"}{$name}{"role"}{$role}{'cvc'}{$cvc}{'form'}{$baseform}{'modform'}{$form}{"state"}{$break}{'num'}++;
 		    $langdata{$lang}{$type}{"type"}{$name}{"role"}{$role}{'cvc'}{$cvc}{'form'}{$baseform}{"state"}{$break}{'num'}++;
 		}
 		$langdata{$lang}{$type}{"type"}{$name}{"role"}{$role}{'cvc'}{$cvc}{"total"}{$break}{'num'}++;
@@ -957,7 +1076,7 @@ sub savebroken{
 		    $langdata{$lang}{$type}{"type"}{$name}{"role"}{$role}{'form'}{$form}{"state"}{$break}{'num'}++;
 		}
 		else {
-		    $langdata{$lang}{$type}{"type"}{$name}{"role"}{$role}{'form'}{$baseform}{'extform'}{$form}{"state"}{$break}{'num'}++;
+		    $langdata{$lang}{$type}{"type"}{$name}{"role"}{$role}{'form'}{$baseform}{'modform'}{$form}{"state"}{$break}{'num'}++;
 		    $langdata{$lang}{$type}{"type"}{$name}{"role"}{$role}{'form'}{$baseform}{"state"}{$break}{'num'}++;
 		}
 		$langdata{$lang}{$type}{"type"}{$name}{"role"}{$role}{"total"}{$break}{'num'}++;
@@ -970,7 +1089,7 @@ sub savebroken{
 	    else {
 	    #print ("\n Baseform :".$baseform." of form ".$form);
 	        $langdata{$lang}{$type}{"type"}{$name}{"role"}{$role}{'form'}{$baseform}{"state"}{$break}{'num'}++;
-	        $langdata{$lang}{$type}{"type"}{$name}{"role"}{$role}{'form'}{$baseform}{'extform'}{$form}{"state"}{$break}{'num'}++;
+	        $langdata{$lang}{$type}{"type"}{$name}{"role"}{$role}{'form'}{$baseform}{'modform'}{$form}{"state"}{$break}{'num'}++;
 	    }
 	    $langdata{$lang}{$type}{"type"}{$name}{"role"}{$role}{"total"}{$break}{'num'}++;
 	}
