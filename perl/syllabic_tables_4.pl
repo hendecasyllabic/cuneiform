@@ -69,30 +69,65 @@ print	h1('General division of signs'),
 
 my $pieroles = "<div id='container1' style='min-width: 400px; height: 400px; margin: 0 auto'></div><script>";
 $pieroles .= " var currentdata1 = [";
+
+my %donut = ();
 foreach my $r (keys %{$totals{"role"}}){
     my $sum = 0;
-    if ($r ne "syll") {
-	$sum = $totals{"role"}{$r}{"total"};
-	$pieroles .= " ['".$r." (".$sum.")"."',   ".$sum."],";
+    if($totals{"role"}{$r}{"total"}){ $sum = $totals{"role"}{$r}{"total"};}
+    if($r eq "logo" || $r eq "semantic"){
+	$donut{"logograms"}{$r} = $sum;
+    }
+    elsif ($r ne "syll") {
+	$donut{$r}{$r} = $sum;
     }
     else {
 	my $sumcvc = 0;
 	foreach my $c (keys %{$totals{"role"}{$r}{"cvc"}}) {
 	    $sumcvc += $totals{"role"}{$r}{"cvc"}{$c}{"total"};
+	    
+	$donut{$r}{$c} = $totals{"role"}{$r}{"cvc"}{$c}{"total"};
 	}
-	$pieroles .= " ['Syll (".$sumcvc.")"."',   ".$sumcvc."],";
+	#$donut{$r}{$r} = $sumcvc;
     }
-    
 }
-$pieroles = substr($pieroles,0,length($pieroles)-1);
+
+my $count =0;
+my @output;
+my @firstcatnames;
+foreach my $t (keys %donut){
+    my $totalsum= 0;
+    push(@firstcatnames,$t);
+    my @catnames;
+    my @catdata;
+    foreach my $bit (keys %{$donut{$t}}){
+	$totalsum = $totalsum + $donut{$t}{$bit};
+	if($bit ne ""){
+	    push(@catnames,$bit);
+	    push(@catdata,$donut{$t}{$bit});
+	}
+    }
+    my $writeme = "{   y: ".$totalsum.",";
+    $writeme .= "      color: colors[".$count."],";
+    $writeme .= "          drilldown: {";
+    $writeme .= "                   name: '".$t."',";
+    $writeme .= "                   categories: ['".join("','",@catnames)."'],";
+    $writeme .= "                   data: [".join(",",@catdata)."],";
+    $writeme .= "                   color: colors[".$count."]";
+    $writeme .= "      }";
+    $writeme .= "  }";
+    
+    push(@output,$writeme);
+    $count++;
+}
+$pieroles .= join(",",@output);
+
 $pieroles .= " ]";
 
 $pieroles .= "; \$(document).ready(function() {";
-$pieroles .= "   var alldata1 = pieoptions;";
-$pieroles .= "   alldata1.chart.renderTo = 'container1';"; 
-$pieroles .= "   alldata1.title.text = 'Distribution across corpus (attestations)';";
-$pieroles .= "   alldata1.series[0].data = currentdata1;";
-$pieroles .= "	chart1 = new Highcharts.Chart(alldata1);";
+
+my $catlist = join("','",@firstcatnames);
+$pieroles .= " makeDonut(currentdata1,'Distribution across corpus (attestations)','title2', ['".$catlist."'],'container1');";
+
 $pieroles .= "});</script>";
 
 print $pieroles;
@@ -101,7 +136,7 @@ my $pierolescvc = "<div id='container2' style='min-width: 400px; height: 400px; 
 $pierolescvc .= " var currentdata1b = [";
 foreach my $c (keys %{$totals{"role"}{"syll"}{"cvc"}}) {
     my $temp = $totals{"role"}{"syll"}{"cvc"}{$c}{"total"};
-    $pierolescvc .= " ['syllabic (".$c."; ".$temp.")',   ".$temp."],";
+    $pierolescvc .= " ['syllabic (".$c."; ".$temp.")',   ".$temp."],\n";
 }
 $pierolescvc = substr($pierolescvc,0,length($pierolescvc)-1);
 $pierolescvc .= " ]";
@@ -124,7 +159,7 @@ $pieroles2 .= " var currentdata2 = [";
 foreach my $r (keys %{$totals{"role"}}){
     my $sum = 0;
     if ($r ne "syll") {
-	$sum = $totals{"role"}{$r}{"diff_forms"};
+	$sum = $totals{"role"}{$r}{"diff_forms"}?$totals{"role"}{$r}{"diff_forms"}:0;
 	$pieroles2 .= " ['".$r." (".$sum.")"."',   ".$sum."],";
     }
     else {
@@ -139,6 +174,7 @@ foreach my $r (keys %{$totals{"role"}}){
 }
 $pieroles2 = substr($pieroles2,0,length($pieroles2)-1);
 $pieroles2 .= " ]";
+
 
 $pieroles2 .= "; \$(document).ready(function() {";
 $pieroles2 .= "   var alldata2 = pieoptions;";
@@ -670,11 +706,16 @@ sub tables{
     my @words = $root->get_xpath("words");
     $wordcount = $words[0]->{att}->{count};
     my @missing = $words[0]->get_xpath('type/total_grapheme[@name="missing"]');
-    $missingwords = $missing[0]->{att}->{num};
+    $missingwords = $missing[0]->{att}->{num}?$missing[0]->{att}->{num}:0;
     my @damaged = $words[0]->get_xpath('type/total_grapheme[@name="damaged"]');
-    $damagedwords = $damaged[0]->{att}->{num};
+    $damagedwords = $damaged[0]->{att}->{num}?$damaged[0]->{att}->{num}:0;
     my @preserved = $words[0]->get_xpath('type/total_grapheme[@name="preserved"]');
-    $preservedwords = $preserved[0]->{att}->{num};;
-    my $no_present_words = $wordcount - $missingwords;
+    
+    $preservedwords = $preserved[0]->{att}->{num}?$preserved[0]->{att}->{num}:0;
+    
+    my $no_present_words = $wordcount;
+    if($missingwords){
+	$no_present_words = $wordcount - $missingwords;
+    }
 
 }      
