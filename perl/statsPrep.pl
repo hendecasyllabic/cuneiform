@@ -4,7 +4,7 @@ use strict;
 use Carp ();
 local $SIG{__WARN__} = \&Carp::cluck;
 use Data::Dumper;
-use XML::Twig;
+use XML::Twig::XPath;
 use XML::Simple;
 use utf8;
 binmode STDOUT, ":utf8";
@@ -46,7 +46,6 @@ sub general_stats{
         my $filename = $_;
         if($filename=~m|/([^/]*).${ext}$|){
             my $shortname = $1;
-#	    $output{$shortname} = ();
 	    &outputtext("\nShortName: ". $shortname);
             if($shortname=~m|^Q|gsi){
                 &doQstats($filename, $shortname);
@@ -102,8 +101,14 @@ sub doQstats{
     my $twigObj = XML::Twig->new();
     $twigObj->parsefile($filename);
     my $root = $twigObj->root;
-    $PQroot = $root;
     $twigObj->purge;
+    
+    my $twigPQObj = XML::Twig->new(
+                                 twig_roots => { 'xcl' => 1 }
+                                 );
+    $twigPQObj->parsefile($filename);
+    $PQroot = $twigPQObj->root;
+    $twigPQObj->purge;
     
     # .xmd, metadata-file
     my $twigObjXmd = XML::Twig->new(
@@ -234,8 +239,17 @@ sub doPstats{
                                  );
     $twigObj->parsefile($filename);
     my $root = $twigObj->root;
-    $PQroot = $root;
     $twigObj->purge;
+    
+    
+    my $twigPQObj = XML::Twig->new(
+                                 twig_roots => { 'xcl' => 1 }
+                                 );
+    $twigPQObj->parsefile($filename);
+    $PQroot = $twigPQObj->root;
+    $twigPQObj->purge;
+    
+    
     
     # .xmd, metadata-file
     my $twigObjXmd = XML::Twig->new(
@@ -250,7 +264,7 @@ sub doPstats{
 
     for (keys %PQdata){
         delete $PQdata{$_};
-        }
+    }
 
     &getMetaData($root, $rootxmd);
     
@@ -607,15 +621,25 @@ sub dographemeData{
 	        $form = $word->{att}->{"form"};
 	    }
 	    my $wordid = $word->{att}->{"xml:id"};
-	    my $tempvalue = '/xtf:transliteration//xcl:l[@ref="'.$wordid.'"]/xff:f'; # problem here  /xtf:transliteration//xcl:l[@ref=$wordid]/xff:f/@cf
-	    my $cf = ""; my $pofs = ""; my $epos = "";	    
+	    my $tempvalue = '//l[@ref="'.$wordid.'"]/xff:f'; # problem here  /xtf:transliteration//xcl:l[@ref=$wordid]/xff:f/@cf
+	    my $cf = ""; my $pofs = ""; my $epos = "";
+            
+
+                # xtf-file
+            print "\n".$tempvalue."\n";
 	    my @wordref = $PQroot->get_xpath($tempvalue);  # DOES NOT WORK YET *** PRIORITY WHY WHY WHY?
+            #my @wordref = $PQroot->get_xpath('//l[@ref="Q000003.1.1"]/xff:f');
+            
+            
 	    for (@wordref) {
-	
-		$cf = $_->{att}->{"cf"};
-		$pofs = $_->{att}->{"pos"};
-		$epos = $_->{att}->{"epos"};
-		print $cf;
+                my $item = $_;
+                if($item->{att}->{"cf"}){
+                    $cf = $item->{att}->{"cf"};
+                    $pofs = $item->{att}->{"pos"};
+                    $epos = $item->{att}->{"epos"};
+                    print $cf;
+                }
+                
 	    }
 	    
 	    #&outputtext("\nWord: ". $form."; lang: ".$lang);
@@ -1025,7 +1049,8 @@ sub saveData{
     
     $localdata->{"lang"}{$lang}{$type}{"type"}{$name}{"total_grapheme"}{$name}{$break}{'num'}++;
 	
-    if ($form ne "") {
+    #APRIL TODO: abstract this bit into it's own function perios/lang/
+    if ($form ne "") { 
 	if ($lang=~m|^akk|) {
 	    if($cvc ne ""){
 		if ($pos eq "") {
@@ -1098,56 +1123,7 @@ sub saveData{
     }
 	
     $localdata->{"lang"}{$lang}{$type}{'count'}++;
-   
-#    $singledata->{$type}{"type"}{$name}{"lang"}{$lang}{"type"}{'all'}{'num'}++;
-#    #$output{$type}{"type"}{$name}{"lang"}{$lang}{"type"}{'all'}{'num'}++;
-#    $localdata->{$type}{"type"}{$name}{"lang"}{$lang}{"type"}{'all'}{'num'}++;
-#    
-#    $singledata->{$type}{"type"}{$name}{"lang"}{$lang}{"type"}{'all'}{'form'}{$form}{'num'}++;
-##    $output{$type}{"type"}{$name}{"lang"}{$lang}{"type"}{'all'}{'form'}{$form}{'num'}++;
-#    $localdata->{$type}{"type"}{$name}{"lang"}{$lang}{"type"}{'all'}{'form'}{$form}{'num'}++;
-#    
-#    if($baseform ne ""){
-#	$singledata->{$type}{"type"}{$name}{"lang"}{$lang}{"type"}{'all'}{'form'}{$form}{'baseform'}{$baseform}{'num'}++;
-##	$output{$type}{"type"}{$name}{"lang"}{$lang}{"type"}{'all'}{'form'}{$form}{'baseform'}{$baseform}{'num'}++;
-#	$localdata->{$type}{"type"}{$name}{"lang"}{$lang}{"type"}{'all'}{'form'}{$form}{'baseform'}{$baseform}{'num'}++;
-#    }
-#    
-#    $localdata->{$type}{"type"}{$name}{"lang"}{$lang}{"type"}{$break}{'num'}++;
-#    $singledata->{$type}{"type"}{$name}{"lang"}{$lang}{"type"}{$break}{'num'}++;
-##    $output{$type}{"type"}{$name}{"lang"}{$lang}{"type"}{$break}{'num'}++;
-#    
-#    $singledata->{$type}{"type"}{$name}{"lang"}{$lang}{"type"}{$break}{'form'}{$form}{'num'}++;
-##    $output{$type}{"type"}{$name}{"lang"}{$lang}{"type"}{$break}{'form'}{$form}{'num'}++;
-#    $localdata->{$type}{"type"}{$name}{"lang"}{$lang}{"type"}{$break}{'form'}{$form}{'num'}++;
-#    
-#    if($baseform ne ""){
-#	$singledata->{$type}{"type"}{$name}{"lang"}{$lang}{"type"}{$break}{'form'}{$form}{'baseform'}{$baseform}{'num'}++;
-##	$output{$type}{"type"}{$name}{"lang"}{$lang}{"type"}{$break}{'form'}{$form}{'baseform'}{$baseform}{'num'}++;
-#	$localdata->{$type}{"type"}{$name}{"lang"}{$lang}{"type"}{$break}{'form'}{$form}{'baseform'}{$baseform}{'num'}++;
-#    }
-#    
-#    # TODO: find out which ones are phonetic complements
-#    
-#    if($cvc ne ""){
-#	$singledata->{$type}{"type"}{$name}{"lang"}{$lang}{"type"}{'all'}{'cvc'}{$cvc}{'num'}++;
-##	$output{$type}{"type"}{$name}{"lang"}{$lang}{"type"}{'all'}{'cvc'}{$cvc}{'num'}++;
-#	$localdata->{$type}{"type"}{$name}{"lang"}{$lang}{"type"}{'all'}{'cvc'}{$cvc}{'num'}++;
-#	
-#	$singledata->{$type}{"type"}{$name}{"lang"}{$lang}{"type"}{'all'}{'cvc'}{$cvc}{'form'}{$form}{'num'}++;
-##	$output{$type}{"type"}{$name}{"lang"}{$lang}{"type"}{'all'}{'cvc'}{$cvc}{'form'}{$form}{'num'}++;
-#	$localdata->{$type}{"type"}{$name}{"lang"}{$lang}{"type"}{'all'}{'cvc'}{$cvc}{'form'}{$form}{'num'}++;
-#	
-#	$singledata->{$type}{"type"}{$name}{"lang"}{$lang}{"type"}{$break}{'cvc'}{$cvc}{'num'}++;
-##	$output{$type}{"type"}{$name}{"lang"}{$lang}{"type"}{$break}{'cvc'}{$cvc}{'num'}++;
-#	$localdata->{$type}{"type"}{$name}{"lang"}{$lang}{"type"}{$break}{'cvc'}{$cvc}{'num'}++;
-#	
-#	$singledata->{$type}{"type"}{$name}{"lang"}{$lang}{"type"}{$break}{'cvc'}{$cvc}{'form'}{$form}{'num'}++;
-##	$output{$type}{"type"}{$name}{"lang"}{$lang}{"type"}{$break}{'cvc'}{$cvc}{'form'}{$form}{'num'}++;
-#	$localdata->{$type}{"type"}{$name}{"lang"}{$lang}{"type"}{$break}{'cvc'}{$cvc}{'form'}{$form}{'num'}++;
-#    }
-    
-    
+ 
     # for period-file
     if($localdata->{"period"}){
 	$perioddata{$localdata->{"period"}}{"lang"}{$lang}{$type}{"type"}{$name}{"total_grapheme"}{$name}{$break}{'num'}++;
