@@ -648,6 +648,36 @@ sub dographemeData{
 	    my $condition = 0;  # missing (2), damaged (1), preserved (0)
 	    # how about marking preserved signs somehow, so that we immediately know how many of each are preserved ***
 	    # pofs = part-of-speech (pos is used already for position)
+            
+#APRIL TODO THINK ABOUT THIS:::     do we mark in determinatives and phonetic complements in the array or have separate arrays for each
+           my %a_withd = {
+                "preseverd" => [[1,0,1],[1],["d",0,1]],
+                "damaged" => [[1,0,"x"],["x",0,1]],
+                "missing" => [[1,0,1],[0,1]]
+           };
+           
+           my %a_positions_preserverd = {
+            "pos1"=>["ssdf"=>4,"sadf"=>6],
+            "pos2"=>["ssdf"=>4,"sadf"=>6],
+            "pos3"=>["ssdf"=>4,"iuy"=>6],
+            "iddy"=>["a"=>6]
+           };
+           my %a_positions_damaged = {
+            "pos1"=>["ssdf"=>4,"sadf"=>6],
+            "pos2"=>["ssdf"=>4,"sadf"=>6],
+            "pos3"=>["ssdf"=>4,"iuy"=>6],
+            "iddy"=>["a"=>6]
+           };
+           my %a_positions_missing = {
+            "pos1"=>["ssdf"=>4,"sadf"=>6],
+            "pos2"=>["ssdf"=>4,"sadf"=>6],
+            "pos3"=>["ssdf"=>4,"iuy"=>6],
+            "iddy"=>["a"=>6]
+           };
+#           per text,all texts
+           
+           
+            
 	    foreach my $i (@children) {
 		my $break = "";
 		if ($i->{att}->{"g:break"}) {
