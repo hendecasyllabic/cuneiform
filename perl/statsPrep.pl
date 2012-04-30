@@ -650,30 +650,30 @@ sub dographemeData{
 	    # pofs = part-of-speech (pos is used already for position)
             
 #APRIL TODO THINK ABOUT THIS:::     do we mark in determinatives and phonetic complements in the array or have separate arrays for each
-           my %a_withd = {
-                "preseverd" => [[1,0,1],[1],["d",0,1]],
-                "damaged" => [[1,0,"x"],["x",0,1]],
-                "missing" => [[1,0,1],[0,1]]
-           };
-           
-           my %a_positions_preserverd = {
-            "pos1"=>["ssdf"=>4,"sadf"=>6],
-            "pos2"=>["ssdf"=>4,"sadf"=>6],
-            "pos3"=>["ssdf"=>4,"iuy"=>6],
-            "iddy"=>["a"=>6]
-           };
-           my %a_positions_damaged = {
-            "pos1"=>["ssdf"=>4,"sadf"=>6],
-            "pos2"=>["ssdf"=>4,"sadf"=>6],
-            "pos3"=>["ssdf"=>4,"iuy"=>6],
-            "iddy"=>["a"=>6]
-           };
-           my %a_positions_missing = {
-            "pos1"=>["ssdf"=>4,"sadf"=>6],
-            "pos2"=>["ssdf"=>4,"sadf"=>6],
-            "pos3"=>["ssdf"=>4,"iuy"=>6],
-            "iddy"=>["a"=>6]
-           };
+           #my %a_withd = {
+           #     "preseverd" => [[1,0,1],[1],["d",0,1]],
+           #     "damaged" => [[1,0,"x"],["x",0,1]],
+           #     "missing" => [[1,0,1],[0,1]]
+           #};
+           #
+           #my %a_positions_preserverd = {
+           # "pos1"=>["ssdf"=>4,"sadf"=>6],
+           # "pos2"=>["ssdf"=>4,"sadf"=>6],
+           # "pos3"=>["ssdf"=>4,"iuy"=>6],
+           # "iddy"=>["a"=>6]
+           #};
+           #my %a_positions_damaged = {
+           # "pos1"=>["ssdf"=>4,"sadf"=>6],
+           # "pos2"=>["ssdf"=>4,"sadf"=>6],
+           # "pos3"=>["ssdf"=>4,"iuy"=>6],
+           # "iddy"=>["a"=>6]
+           #};
+           #my %a_positions_missing = {
+           # "pos1"=>["ssdf"=>4,"sadf"=>6],
+           # "pos2"=>["ssdf"=>4,"sadf"=>6],
+           # "pos3"=>["ssdf"=>4,"iuy"=>6],
+           # "iddy"=>["a"=>6]
+           #};
 #           per text,all texts
            
            
@@ -1003,49 +1003,40 @@ sub saveWord{
     $localdata->{$type}{'count'}++;
     $localdata->{$type}{"state"}{$break}{'num'}++;
     
-    $localdata->{"lang"}{$lang}{$type}{"type"}{$name}{"total_grapheme"}{$name}{$break}{'num'}++;
-	
-    if ($form ne "") {
-	if ($cf ne "") {
-	    $localdata->{"lang"}{$lang}{$type}{"type"}{$name}{'form'}{$form}{'cf'}{$cf}{'pofs'}{$pofs}{'epos'}{$epos}{"state"}{$break}{'num'}++; }
-	else { $localdata->{"lang"}{$lang}{$type}{"type"}{$name}{'form'}{$form}{"state"}{$break}{'num'}++; }
-	$localdata->{"lang"}{$lang}{$type}{"type"}{$name}{"total"}{$break}{'num'}++;
-    }
-	
-    $localdata->{"lang"}{$lang}{$type}{'count'}++;
+    abstractdata2(\%{$localdata->{"lang"}{$lang}{$type}},$form,$cf,$pofs,$break,$epos,$name);
     
     if($localdata->{"period"}){
-	$perioddata{$localdata->{"period"}}{"lang"}{$lang}{$type}{"type"}{$name}{"total_grapheme"}{$name}{$break}{'num'}++;
-	
-	if ($form ne "") {
-	    if ($cf ne "") {
-	        $perioddata{$localdata->{"period"}}{"lang"}{$lang}{$type}{"type"}{$name}{'form'}{$form}{'cf'}{$cf}{'pofs'}{$pofs}{'epos'}{$epos}{"state"}{$break}{'num'}++;
-	        }
-	    else {
-	        $perioddata{$localdata->{"period"}}{"lang"}{$lang}{$type}{"type"}{$name}{'form'}{$form}{"state"}{$break}{'num'}++;
-	    }
-	    $perioddata{$localdata->{"period"}}{"lang"}{$lang}{$type}{"type"}{$name}{"total"}{$break}{'num'}++;
-	}
-	
-	$perioddata{$localdata->{"period"}}{"lang"}{$lang}{$type}{'count'}++;
-	}
+	abstractdata2(\%{$perioddata{$localdata->{"period"}}{"lang"}{$lang}{$type}},$form,$cf,$pofs,$break,$epos,$name);
+    }
     
     if($lang){
-	$langdata{$lang}{$type}{"type"}{$name}{"total_grapheme"}{$name}{$break}{'num'}++;
-	
-	if ($form ne "") {
-	    if ($cf ne "") {
-	        $langdata{$lang}{$type}{"type"}{$name}{'form'}{$form}{'cf'}{$cf}{'pofs'}{$pofs}{'epos'}{$epos}{"state"}{$break}{'num'}++;
-	        }
-	    else {
-	        $langdata{$lang}{$type}{"type"}{$name}{'form'}{$form}{"state"}{$break}{'num'}++;
-	    }
-	    $langdata{$lang}{$type}{"type"}{$name}{"total"}{$break}{'num'}++;
-	}
-	
-	$langdata{$lang}{$type}{'count'}++;
-	}
+	abstractdata2(\%{$langdata{$lang}{$type}},$form,$cf,$pofs,$break,$epos,$name);
+    }
 }
+
+sub abstractdata2{
+    my $data = shift;
+    my $form = shift;
+    my $cf = shift;
+    my $pofs = shift;
+    my $break = shift;
+    my $epos = shift;
+    my $name = shift;
+    
+    $data->{"type"}{$name}{"total_grapheme"}{$name}{$break}{'num'}++;
+    if ($form ne "") {
+	if ($cf ne "") {
+	    $data->{"type"}{$name}{'form'}{$form}{'cf'}{$cf}{'pofs'}{$pofs}{'epos'}{$epos}{"state"}{$break}{'num'}++;
+	    }
+	else {
+	    $data->{"type"}{$name}{'form'}{$form}{"state"}{$break}{'num'}++;
+	}
+	$data->{"type"}{$name}{"total"}{$break}{'num'}++;
+    }
+    $data->{'count'}++;
+}
+
+
 
 sub saveData{
     my $name = shift;
@@ -1079,158 +1070,70 @@ sub saveData{
     
     $localdata->{"lang"}{$lang}{$type}{"type"}{$name}{"total_grapheme"}{$name}{$break}{'num'}++;
 	
-    #APRIL TODO: abstract this bit into it's own function perios/lang/
     if ($form ne "") { 
 	if ($lang=~m|^akk|) {
 	    if($cvc ne ""){
 		if ($pos eq "") {
-		    if ($baseform eq "") {
-			$localdata->{"lang"}{$lang}{$type}{"type"}{$name}{"role"}{$role}{'cvc'}{$cvc}{'form'}{$form}{"state"}{$break}{'num'}++; 
-		    }
-		    else {
-			$localdata->{"lang"}{$lang}{$type}{"type"}{$name}{"role"}{$role}{"pos"}{$pos}{'cvc'}{$cvc}{'form'}{$baseform}{'modform'}{$form}{"state"}{$break}{'num'}++;
-			$localdata->{"lang"}{$lang}{$type}{"type"}{$name}{"role"}{$role}{"pos"}{$pos}{'cvc'}{$cvc}{'form'}{$baseform}{"state"}{$break}{'num'}++;
-		    }
-		    $localdata->{"lang"}{$lang}{$type}{"type"}{$name}{"role"}{$role}{'cvc'}{$cvc}{"total"}{$break}{'num'}++;
+		    abstractdata(\%{$localdata->{"lang"}{$lang}{$type}{"type"}{$name}{"role"}{$role}{'cvc'}{$cvc}},$baseform,$break,$form);
 		}
 		else {
-		    if ($baseform eq "") {
-			$localdata->{"lang"}{$lang}{$type}{"type"}{$name}{"role"}{$role}{"pos"}{$pos}{'cvc'}{$cvc}{'form'}{$form}{"state"}{$break}{'num'}++; }
-		    else {
-			$localdata->{"lang"}{$lang}{$type}{"type"}{$name}{"role"}{$role}{"pos"}{$pos}{'cvc'}{$cvc}{'form'}{$baseform}{'modform'}{$form}{"state"}{$break}{'num'}++;
-			$localdata->{"lang"}{$lang}{$type}{"type"}{$name}{"role"}{$role}{"pos"}{$pos}{'cvc'}{$cvc}{'form'}{$baseform}{"state"}{$break}{'num'}++;
-		    }
-		    $localdata->{"lang"}{$lang}{$type}{"type"}{$name}{"role"}{$role}{"pos"}{$pos}{'cvc'}{$cvc}{"total"}{$break}{'num'}++;
+		    abstractdata(\%{$localdata->{"lang"}{$lang}{$type}{"type"}{$name}{"role"}{$role}{"pos"}{$pos}{'cvc'}{$cvc}},$baseform,$break,$form);
 		}
 	    }
 	    else {
 		if ($pos eq "") {
-		    if ($baseform eq "") {
-		        $localdata->{"lang"}{$lang}{$type}{"type"}{$name}{"role"}{$role}{'form'}{$form}{"state"}{$break}{'num'}++;
-		    }
-		    else {
-		        $localdata->{"lang"}{$lang}{$type}{"type"}{$name}{"role"}{$role}{'form'}{$baseform}{'modform'}{$form}{"state"}{$break}{'num'}++;
-		        $localdata->{"lang"}{$lang}{$type}{"type"}{$name}{"role"}{$role}{'form'}{$baseform}{"state"}{$break}{'num'}++;
-		    }
-		    $localdata->{"lang"}{$lang}{$type}{"type"}{$name}{"role"}{$role}{"total"}{$break}{'num'}++;
+		    abstractdata(\%{$localdata->{"lang"}{$lang}{$type}{"type"}{$name}{"role"}{$role}},$baseform,$break,$form);
 		}
 		else {
-		    if ($baseform eq "") {
-		        $localdata->{"lang"}{$lang}{$type}{"type"}{$name}{"role"}{$role}{"pos"}{$pos}{'form'}{$form}{"state"}{$break}{'num'}++;
-		    }
-		    else {
-		        $localdata->{"lang"}{$lang}{$type}{"type"}{$name}{"role"}{$role}{"pos"}{$pos}{'form'}{$baseform}{'modform'}{$form}{"state"}{$break}{'num'}++;
-		        $localdata->{"lang"}{$lang}{$type}{"type"}{$name}{"role"}{$role}{"pos"}{$pos}{'form'}{$baseform}{"state"}{$break}{'num'}++;
-		    }
-		    $localdata->{"lang"}{$lang}{$type}{"type"}{$name}{"role"}{$role}{"pos"}{$pos}{"total"}{$break}{'num'}++;
+		    abstractdata(\%{$localdata->{"lang"}{$lang}{$type}{"type"}{$name}{"role"}{$role}{"pos"}{$pos}},$baseform,$break,$form);
 		}
 	    }
 	}
 	else {
 	    if ($pos eq "") {
-		if($baseform eq ""){
-		    $localdata->{"lang"}{$lang}{$type}{"type"}{$name}{"role"}{$role}{'form'}{$form}{"state"}{$break}{'num'}++;
-		}
-		else {
-	    #print ("\n Baseform :".$baseform." of form ".$form);
-		    $localdata->{"lang"}{$lang}{$type}{"type"}{$name}{"role"}{$role}{'form'}{$baseform}{"state"}{$break}{'num'}++;
-		    $localdata->{"lang"}{$lang}{$type}{"type"}{$name}{"role"}{$role}{'form'}{$baseform}{'modform'}{$form}{"state"}{$break}{'num'}++;
-		}
-		$localdata->{"lang"}{$lang}{$type}{"type"}{$name}{"role"}{$role}{"total"}{$break}{'num'}++;
+		abstractdata(\%{$localdata->{"lang"}{$lang}{$type}{"type"}{$name}{"role"}{$role}},$baseform,$break,$form);
 	    }
 	    else {
-		if($baseform eq ""){
-		    $localdata->{"lang"}{$lang}{$type}{"type"}{$name}{"role"}{$role}{"pos"}{$pos}{'form'}{$form}{"state"}{$break}{'num'}++;
-		}
-		else {
-	    #print ("\n Baseform :".$baseform." of form ".$form);
-		    $localdata->{"lang"}{$lang}{$type}{"type"}{$name}{"role"}{$role}{"pos"}{$pos}{'form'}{$baseform}{"state"}{$break}{'num'}++;
-		    $localdata->{"lang"}{$lang}{$type}{"type"}{$name}{"role"}{$role}{"pos"}{$pos}{'form'}{$baseform}{'modform'}{$form}{"state"}{$break}{'num'}++;
-		}
-		$localdata->{"lang"}{$lang}{$type}{"type"}{$name}{"role"}{$role}{"pos"}{$pos}{"total"}{$break}{'num'}++;
+		abstractdata(\%{$localdata->{"lang"}{$lang}{$type}{"type"}{$name}{"role"}{$role}{"pos"}{$pos}},$baseform,$break,$form);
 	    }
 	}
     }
-	
+    
     $localdata->{"lang"}{$lang}{$type}{'count'}++;
  
     # for period-file
     if($localdata->{"period"}){
 	$perioddata{$localdata->{"period"}}{"lang"}{$lang}{$type}{"type"}{$name}{"total_grapheme"}{$name}{$break}{'num'}++;
 	
-    if ($form ne "") {
-	if ($pos eq "") {
-	    if ($lang=~m|^akk|) {
-		if($cvc ne ""){ 
-		   if ($baseform eq "") {
-		        $perioddata{$localdata->{"period"}}{"lang"}{$lang}{$type}{"type"}{$name}{"role"}{$role}{'cvc'}{$cvc}{'form'}{$form}{"state"}{$break}{'num'}++;
+	if ($form ne "") {
+	    if ($pos eq "") {
+		if ($lang=~m|^akk|) {
+		    if($cvc ne ""){ 
+			abstractdata(\%{$perioddata{$localdata->{"period"}}{"lang"}{$lang}{$type}{"type"}{$name}{"role"}{$role}{'cvc'}{$cvc}},$baseform,$break,$form);
 		    }
 		    else {
-		        $perioddata{$localdata->{"period"}}{"lang"}{$lang}{$type}{"type"}{$name}{"role"}{$role}{'cvc'}{$cvc}{'form'}{$baseform}{'modform'}{$form}{"state"}{$break}{'num'}++;
-		        $perioddata{$localdata->{"period"}}{"lang"}{$lang}{$type}{"type"}{$name}{"role"}{$role}{'cvc'}{$cvc}{'form'}{$baseform}{"state"}{$break}{'num'}++;
+			abstractdata(\%{$perioddata{$localdata->{"period"}}{"lang"}{$lang}{$type}{"type"}{$name}{"role"}{$role}},$baseform,$break,$form);
 		    }
-		    $perioddata{$localdata->{"period"}}{"lang"}{$lang}{$type}{"type"}{$name}{"role"}{$role}{'cvc'}{$cvc}{"total"}{$break}{'num'}++;
 		}
 		else {
-		    if ($baseform eq "") {
-		        $perioddata{$localdata->{"period"}}{"lang"}{$lang}{$type}{"type"}{$name}{"role"}{$role}{'form'}{$form}{"state"}{$break}{'num'}++;
-		    }
-		    else {
-		        $perioddata{$localdata->{"period"}}{"lang"}{$lang}{$type}{"type"}{$name}{"role"}{$role}{'form'}{$baseform}{'modform'}{$form}{"state"}{$break}{'num'}++;
-		        $perioddata{$localdata->{"period"}}{"lang"}{$lang}{$type}{"type"}{$name}{"role"}{$role}{'form'}{$baseform}{"state"}{$break}{'num'}++;
-		    }
-		    $perioddata{$localdata->{"period"}}{"lang"}{$lang}{$type}{"type"}{$name}{"role"}{$role}{"total"}{$break}{'num'}++;
+		    abstractdata(\%{$perioddata{$localdata->{"period"}}{"lang"}{$lang}{$type}{"type"}{$name}{"role"}{$role}},$baseform,$break,$form);
 		}
 	    }
 	    else {
-	        if($baseform eq ""){
-	            $perioddata{$localdata->{"period"}}{"lang"}{$lang}{$type}{"type"}{$name}{"role"}{$role}{'form'}{$form}{"state"}{$break}{'num'}++;
-	        }
-	        else {
-	        #print ("\n Baseform :".$baseform." of form ".$form);
-	            $perioddata{$localdata->{"period"}}{"lang"}{$lang}{$type}{"type"}{$name}{"role"}{$role}{'form'}{$baseform}{"state"}{$break}{'num'}++;
-	            $perioddata{$localdata->{"period"}}{"lang"}{$lang}{$type}{"type"}{$name}{"role"}{$role}{'form'}{$baseform}{'modform'}{$form}{"state"}{$break}{'num'}++;
-	        }
-	        $perioddata{$localdata->{"period"}}{"lang"}{$lang}{$type}{"type"}{$name}{"role"}{$role}{"total"}{$break}{'num'}++;
-	    }
-	}
-	else {
-	    if ($lang=~m|^akk|) {
-		if($cvc ne ""){ 
-		   if ($baseform eq "") {
-		        $perioddata{$localdata->{"period"}}{"lang"}{$lang}{$type}{"type"}{$name}{"role"}{$role}{"pos"}{$pos}{'cvc'}{$cvc}{'form'}{$form}{"state"}{$break}{'num'}++;
+		if ($lang=~m|^akk|) {
+		    if($cvc ne ""){ 
+			abstractdata(\%{$perioddata{$localdata->{"period"}}{"lang"}{$lang}{$type}{"type"}{$name}{"role"}{$role}{"pos"}{$pos}{'cvc'}{$cvc}},$baseform,$break,$form);
 		    }
 		    else {
-		        $perioddata{$localdata->{"period"}}{"lang"}{$lang}{$type}{"type"}{$name}{"role"}{$role}{"pos"}{$pos}{'cvc'}{$cvc}{'form'}{$baseform}{'modform'}{$form}{"state"}{$break}{'num'}++;
-		        $perioddata{$localdata->{"period"}}{"lang"}{$lang}{$type}{"type"}{$name}{"role"}{$role}{"pos"}{$pos}{'cvc'}{$cvc}{'form'}{$baseform}{"state"}{$break}{'num'}++;
+			abstractdata(\%{$perioddata{$localdata->{"period"}}{"lang"}{$lang}{$type}{"type"}{$name}{"role"}{$role}{"pos"}{$pos}},$baseform,$break,$form);
 		    }
-		    $perioddata{$localdata->{"period"}}{"lang"}{$lang}{$type}{"type"}{$name}{"role"}{$role}{"pos"}{$pos}{'cvc'}{$cvc}{"total"}{$break}{'num'}++;
 		}
 		else {
-		    if ($baseform eq "") {
-		        $perioddata{$localdata->{"period"}}{"lang"}{$lang}{$type}{"type"}{$name}{"role"}{$role}{"pos"}{$pos}{'form'}{$form}{"state"}{$break}{'num'}++;
-		    }
-		    else {
-		        $perioddata{$localdata->{"period"}}{"lang"}{$lang}{$type}{"type"}{$name}{"role"}{$role}{"pos"}{$pos}{'form'}{$baseform}{'modform'}{$form}{"state"}{$break}{'num'}++;
-		        $perioddata{$localdata->{"period"}}{"lang"}{$lang}{$type}{"type"}{$name}{"role"}{$role}{"pos"}{$pos}{'form'}{$baseform}{"state"}{$break}{'num'}++;
-		    }
-		    $perioddata{$localdata->{"period"}}{"lang"}{$lang}{$type}{"type"}{$name}{"role"}{$role}{"pos"}{$pos}{"total"}{$break}{'num'}++;
+		    abstractdata(\%{$perioddata{$localdata->{"period"}}{"lang"}{$lang}{$type}{"type"}{$name}{"role"}{$role}{"pos"}{$pos}},$baseform,$break,$form);
 		}
 	    }
-	    else {
-	        if($baseform eq ""){
-	            $perioddata{$localdata->{"period"}}{"lang"}{$lang}{$type}{"type"}{$name}{"role"}{$role}{"pos"}{$pos}{'form'}{$form}{"state"}{$break}{'num'}++;
-	        }
-	        else {
-	        #print ("\n Baseform :".$baseform." of form ".$form);
-	            $perioddata{$localdata->{"period"}}{"lang"}{$lang}{$type}{"type"}{$name}{"role"}{$role}{"pos"}{$pos}{'form'}{$baseform}{"state"}{$break}{'num'}++;
-	            $perioddata{$localdata->{"period"}}{"lang"}{$lang}{$type}{"type"}{$name}{"role"}{$role}{"pos"}{$pos}{'form'}{$baseform}{'modform'}{$form}{"state"}{$break}{'num'}++;
-	        }
-	        $perioddata{$localdata->{"period"}}{"lang"}{$lang}{$type}{"type"}{$name}{"role"}{$role}{"pos"}{$pos}{"total"}{$break}{'num'}++;
-	    }
+	    $perioddata{$localdata->{"period"}}{"lang"}{$lang}{$type}{'count'}++;
 	}
-	$perioddata{$localdata->{"period"}}{"lang"}{$lang}{$type}{'count'}++;
-    }
     
     }
     
@@ -1244,77 +1147,49 @@ sub saveData{
 	    if ($pos eq "") {
 		if ($lang=~m|^akk|) {
 		    if($cvc ne ""){ 
-		        if ($baseform eq "") {
-			    $langdata{$lang}{$type}{"type"}{$name}{"role"}{$role}{'cvc'}{$cvc}{'form'}{$form}{"state"}{$break}{'num'}++;
-		        }
-		        else {
-		            $langdata{$lang}{$type}{"type"}{$name}{"role"}{$role}{'cvc'}{$cvc}{'form'}{$baseform}{'modform'}{$form}{"state"}{$break}{'num'}++;
-		            $langdata{$lang}{$type}{"type"}{$name}{"role"}{$role}{'cvc'}{$cvc}{'form'}{$baseform}{"state"}{$break}{'num'}++;
-		        }
-		        $langdata{$lang}{$type}{"type"}{$name}{"role"}{$role}{'cvc'}{$cvc}{"total"}{$break}{'num'}++;
+			abstractdata(\%{$langdata{$lang}{$type}{"type"}{$name}{"role"}{$role}{'cvc'}{$cvc}},$baseform,$break,$form);
 		    }
 		    else {
-		        if ($baseform eq "") {
-		            $langdata{$lang}{$type}{"type"}{$name}{"role"}{$role}{'form'}{$form}{"state"}{$break}{'num'}++;
-		        }
-		        else {
-		            $langdata{$lang}{$type}{"type"}{$name}{"role"}{$role}{'form'}{$baseform}{'modform'}{$form}{"state"}{$break}{'num'}++;
-		            $langdata{$lang}{$type}{"type"}{$name}{"role"}{$role}{'form'}{$baseform}{"state"}{$break}{'num'}++;
-		        }
-		        $langdata{$lang}{$type}{"type"}{$name}{"role"}{$role}{"total"}{$break}{'num'}++;
+			abstractdata(\%{$langdata{$lang}{$type}{"type"}{$name}{"role"}{$role}},$baseform,$break,$form);
 		    }
 		}
 		else {
-		    if($baseform eq ""){
-		        $langdata{$lang}{$type}{"type"}{$name}{"role"}{$role}{'form'}{$form}{"state"}{$break}{'num'}++;
-		    }
-		    else {
-		        #print ("\n Baseform :".$baseform." of form ".$form);
-		        $langdata{$lang}{$type}{"type"}{$name}{"role"}{$role}{'form'}{$baseform}{"state"}{$break}{'num'}++;
-			$langdata{$lang}{$type}{"type"}{$name}{"role"}{$role}{'form'}{$baseform}{'modform'}{$form}{"state"}{$break}{'num'}++;
-		    }
-		    $langdata{$lang}{$type}{"type"}{$name}{"role"}{$role}{"total"}{$break}{'num'}++;
+		    abstractdata(\%{$langdata{$lang}{$type}{"type"}{$name}{"role"}{$role}},$baseform,$break,$form);
 		}
 		$langdata{$lang}{$type}{'count'}++;
 	    }
 	    else {
 		if ($lang=~m|^akk|) {
-		    if($cvc ne ""){ 
-		        if ($baseform eq "") {
-			    $langdata{$lang}{$type}{"type"}{$name}{"role"}{$role}{"pos"}{$pos}{'cvc'}{$cvc}{'form'}{$form}{"state"}{$break}{'num'}++;
-		        }
-		        else {
-		            $langdata{$lang}{$type}{"type"}{$name}{"role"}{$role}{"pos"}{$pos}{'cvc'}{$cvc}{'form'}{$baseform}{'modform'}{$form}{"state"}{$break}{'num'}++;
-		            $langdata{$lang}{$type}{"type"}{$name}{"role"}{$role}{"pos"}{$pos}{'cvc'}{$cvc}{'form'}{$baseform}{"state"}{$break}{'num'}++;
-		        }
-		        $langdata{$lang}{$type}{"type"}{$name}{"role"}{$role}{"pos"}{$pos}{'cvc'}{$cvc}{"total"}{$break}{'num'}++;
+		    if($cvc ne ""){
+			abstractdata(\%{$langdata{$lang}{$type}{"type"}{$name}{"role"}{$role}{"pos"}{$pos}{'cvc'}{$cvc}},$baseform,$break,$form);
 		    }
 		    else {
-		        if ($baseform eq "") {
-		            $langdata{$lang}{$type}{"type"}{$name}{"role"}{$role}{"pos"}{$pos}{'form'}{$form}{"state"}{$break}{'num'}++;
-		        }
-		        else {
-		            $langdata{$lang}{$type}{"type"}{$name}{"role"}{$role}{"pos"}{$pos}{'form'}{$baseform}{'modform'}{$form}{"state"}{$break}{'num'}++;
-		            $langdata{$lang}{$type}{"type"}{$name}{"role"}{$role}{"pos"}{$pos}{'form'}{$baseform}{"state"}{$break}{'num'}++;
-		        }
-		        $langdata{$lang}{$type}{"type"}{$name}{"role"}{$role}{"pos"}{$pos}{"total"}{$break}{'num'}++;
+			abstractdata(\%{$langdata{$lang}{$type}{"type"}{$name}{"role"}{$role}{"pos"}{$pos}},$baseform,$break,$form);
 		    }
 		}
 		else {
-		    if($baseform eq ""){
-		        $langdata{$lang}{$type}{"type"}{$name}{"role"}{$role}{"pos"}{$pos}{'form'}{$form}{"state"}{$break}{'num'}++;
-		    }
-		    else {
-		        #print ("\n Baseform :".$baseform." of form ".$form);
-		        $langdata{$lang}{$type}{"type"}{$name}{"role"}{$role}{"pos"}{$pos}{'form'}{$baseform}{"state"}{$break}{'num'}++;
-			$langdata{$lang}{$type}{"type"}{$name}{"role"}{$role}{"pos"}{$pos}{'form'}{$baseform}{'modform'}{$form}{"state"}{$break}{'num'}++;
-		    }
-		    $langdata{$lang}{$type}{"type"}{$name}{"role"}{$role}{"pos"}{$pos}{"total"}{$break}{'num'}++;
+		    abstractdata(\%{$langdata{$lang}{$type}{"type"}{$name}{"role"}{$role}{"pos"}{$pos}},$baseform,$break,$form);
 		}
 		$langdata{$lang}{$type}{'count'}++;
 	    }
 	}
     }
+}
+
+sub abstractdata{
+    my $data = shift;
+    my $baseform = shift;
+    my $break = shift;
+    my $form = shift;
+    if($baseform eq ""){
+	$data->{'form'}{$form}{"state"}{$break}{'num'}++;
+    }
+    else {
+	#print ("\n Baseform :".$baseform." of form ".$form);
+	$data->{'form'}{$baseform}{"state"}{$break}{'num'}++;
+	$data->{'form'}{$baseform}{'modform'}{$form}{"state"}{$break}{'num'}++;
+    }
+    $data->{"total"}{$break}{'num'}++;
 }
 
 
