@@ -441,7 +441,7 @@ sub getMetaData{  # find core metadata fields
     $PQdata{"language"} = $rootxmd->findvalue('cat/language');
     if ($PQdata{"language"} eq "") {
 	my @protocols = $root->get_xpath('protocols/protocol');
-	 # Q: what are the other options? ***
+	 # Q: what are the other options? *** maybe obsolete with new L2?
 	foreach my $i (@protocols) {
 	    if ($i->{att}->{type} eq "atf") {
 		my $temp = $i->text;
@@ -579,7 +579,7 @@ sub dographemeData{
 	push(@{ $graphemearraytemp{'alignmentgrp'} }, $temp);
     }
     
-    #split graphemes
+    #split words 
     
 #    TODO  words can be split over 2 lines. if they are split the lines always ready l-r
 #    g:w ....  g:swc take the form from g:w not g:swc and only use swc to delve deeper into the word
@@ -626,8 +626,8 @@ sub dographemeData{
             
 
                 # xtf-file
-            print "\n".$tempvalue."\n";
-	    my @wordref = $PQroot->get_xpath($tempvalue);  # DOES NOT WORK YET *** PRIORITY WHY WHY WHY?
+            #print "\n".$tempvalue."\n";
+	    my @wordref = $PQroot->get_xpath($tempvalue); 
             #my @wordref = $PQroot->get_xpath('//l[@ref="Q000003.1.1"]/xff:f');
             
             
@@ -637,10 +637,28 @@ sub dographemeData{
                     $cf = $item->{att}->{"cf"};
                     $pofs = $item->{att}->{"pos"};
                     $epos = $item->{att}->{"epos"};
-                    print $cf;
+                    #print $cf;
                 }
                 
 	    }
+	    
+	    if (($pofs eq "") && ($form ne "")) { # check if PN or not (rough classification)
+		if ($form =~ /(^\{1\})|(^\{m\})/) {
+		    $pofs = "PN";
+		}
+	    }
+	    
+	    if ($pofs eq "RN") {
+		$pofs = "PN";  # no use to distinguish royal and other personal names in this analysis, I think
+	    }
+	    
+	    if (($pofs eq "") && ($form ne "")) { # check if DN or not
+		if ($form =~ /(^\{d\})/) {
+		    $pofs = "DN";
+		}
+	    }
+	    
+	    # one could roughly classify geographical names (with {ki}, {kur}, {uru/iri}, {id2}), but I'm not sure how useful this would be
 	    
 	    #&outputtext("\nWord: ". $form."; lang: ".$lang);
 	    my @children = $word->children();
@@ -691,8 +709,12 @@ sub dographemeData{
 	    elsif ($condition == (2*$no_children))
 		{ $state = "missing"; }
 	    
-	    saveWord($name,$lang,$form,$localdata,$state,$temp,"words",$cf, $pofs, $epos);
-	    #saveData($name,"word","",$lang,$form,"","",0,$localdata,$state,$temp,"words");
+	    if ($pofs ne "PN") {
+		saveWord($lang,$form,$localdata,$state,$temp,"words",$cf, $pofs, $epos);
+	    }
+	    else {
+		saveWord($lang,$form,$localdata,$state,$temp,"PN",$cf, $pofs, $epos);
+	    }
 	    
 	    push(@{ $graphemearraytemp{'words'} }, $temp);
 	}
@@ -790,10 +812,10 @@ sub doInsideGrapheme{
     #g:gg contain g:s,n,x,c,v
     # Greta: ? extra information needed to pass on to datafiles ?
     my @graphemesGG = $root->get_xpath('g:gg');
-    my $gtemp = &doG("graphemesGG",$lang,\@graphemesGG, $localdata, "", "");
-    if (scalar keys %$gtemp){
-	$singledata{"graphemesGG"}{"data"} = $gtemp;
-    }
+#    my $gtemp = &doG("graphemesGG",$lang,\@graphemesGG, $localdata, "", "");
+#    if (scalar keys %$gtemp){
+#	$singledata{"graphemesGG"}{"data"} = $gtemp;
+#    }
     foreach my $i (@graphemesGG){
 	my $temp = &doInsideGrapheme($i, $localdata, $lang, "", "");
 	if (scalar keys %$temp){
@@ -805,10 +827,10 @@ sub doInsideGrapheme{
     my @graphemesD = $root->get_xpath('g:d');
     # QUESTION: should $role and $pos be determined before going to doG ?
     #$singledata{"graphemesD"}{"data"} = &doG("graphemesD",$lang,\@graphemesD, $localdata, $role, $pos);
-    my $dtemp = &doG("graphemesD",$lang,\@graphemesD, $localdata, $role, $pos);
-    if (scalar keys %$dtemp){
-	$singledata{"graphemesD"}{"data"} = $dtemp;
-    }
+#    my $dtemp = &doG("graphemesD",$lang,\@graphemesD, $localdata, $role, $pos);
+#    if (scalar keys %$dtemp){
+#	$singledata{"graphemesD"}{"data"} = $dtemp;
+#    }
     foreach my $i (@graphemesD){
 	$role = $i->{att}->{"g:role"};
 	$pos = $i->{att}->{"g:pos"};
@@ -850,7 +872,6 @@ sub doGSingles{
     $singledata{"graphemesS"} = &doGsv("graphemesS",$lang,$root,"g:s", $localdata, $role, $pos);
     $singledata{"graphemesV"} = &doGsv("graphemesV",$lang,$root,"g:v", $localdata, $role, $pos);
     
-    #TODO glue B+M together with the S or V that is above it and do not consider separately
     #$singledata{"graphemesB"} = &doGsv("graphemesB",$lang,$root,"g:b", $localdata);
     #$singledata{"graphemesM"} = &doGsv("graphemesM",$lang,$root,"g:m", $localdata);
     return \%singledata;
@@ -984,8 +1005,7 @@ sub doGsv{
 }
 
 sub saveWord{
-    
-    my $name = shift;
+#    my $name = shift;
     my $lang = shift;
     my $form = shift;
     my $localdata = shift;
@@ -1003,14 +1023,14 @@ sub saveWord{
     $localdata->{$type}{'count'}++;
     $localdata->{$type}{"state"}{$break}{'num'}++;
     
-    abstractdata2(\%{$localdata->{"lang"}{$lang}{$type}},$form,$cf,$pofs,$break,$epos,$name);
+    abstractdata2(\%{$localdata->{"lang"}{$lang}{$type}},$form,$cf,$pofs,$break,$epos,$type);
     
     if($localdata->{"period"}){
-	abstractdata2(\%{$perioddata{$localdata->{"period"}}{"lang"}{$lang}{$type}},$form,$cf,$pofs,$break,$epos,$name);
+	abstractdata2(\%{$perioddata{$localdata->{"period"}}{"lang"}{$lang}{$type}},$form,$cf,$pofs,$break,$epos,$type);
     }
     
     if($lang){
-	abstractdata2(\%{$langdata{$lang}{$type}},$form,$cf,$pofs,$break,$epos,$name);
+	abstractdata2(\%{$langdata{$lang}{$type}},$form,$cf,$pofs,$break,$epos,$type);
     }
 }
 
@@ -1021,17 +1041,20 @@ sub abstractdata2{
     my $pofs = shift;
     my $break = shift;
     my $epos = shift;
-    my $name = shift;
+#    my $name = shift;
+    my $type = shift;
+
+    my $totaltype = "total_".$type;
     
-    $data->{"type"}{$name}{"total_grapheme"}{$name}{$break}{'num'}++;
+    $data->{"type"}{$type}{$totaltype}{$type}{$break}{'num'}++;
     if ($form ne "") {
 	if ($cf ne "") {
-	    $data->{"type"}{$name}{'form'}{$form}{'cf'}{$cf}{'pofs'}{$pofs}{'epos'}{$epos}{"state"}{$break}{'num'}++;
+	    $data->{"type"}{$type}{'form'}{$form}{'cf'}{$cf}{'pofs'}{$pofs}{'epos'}{$epos}{"state"}{$break}{'num'}++;
 	    }
 	else {
-	    $data->{"type"}{$name}{'form'}{$form}{"state"}{$break}{'num'}++;
+	    $data->{"type"}{$type}{'form'}{$form}{"state"}{$break}{'num'}++;
 	}
-	$data->{"type"}{$name}{"total"}{$break}{'num'}++;
+	$data->{"type"}{$type}{"total"}{$break}{'num'}++;
     }
     $data->{'count'}++;
 }
