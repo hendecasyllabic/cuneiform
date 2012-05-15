@@ -9,12 +9,11 @@ use XML::Simple;
 use utf8;
 binmode STDOUT, ":utf8";
 
-# please commit and push this time!
-
 my $PQroot = "";
 my %PQdata = ();  # data per text
 my %perioddata = (); # data per period
 my %langdata = ();   # data per language
+my %corpusdata = (); # overview of selected metadata per corpus
 
 #my %output = ();
 my %config;
@@ -63,6 +62,8 @@ sub general_stats{
     foreach my $lang (keys %langdata){
 	&writetofile("Q_LANG_".$lang,$langdata{$lang});
     }
+
+#    &writetofile("Q_CORPUS", \%corpusdata);    
     
 # P-files
 # empty hashes and restart for P-files
@@ -90,6 +91,8 @@ sub general_stats{
     foreach my $lang (keys %langdata){
 	&writetofile("P_LANG_".$lang,$langdata{$lang});
     }
+    
+    &writetofile("CORPUS_META", \%corpusdata);
 }
 
 #TODO make this better
@@ -128,7 +131,7 @@ sub doQstats{
         delete $PQdata{$_};
     }
     
-    &getMetaData($root, $rootxmd);
+    &getMetaData($root, $rootxmd, $shortname);
     
     my @divs = $root->get_xpath('div');
     my $dsize = scalar @divs;
@@ -268,7 +271,7 @@ sub doPstats{
         delete $PQdata{$_};
     }
 
-    &getMetaData($root, $rootxmd);
+    &getMetaData($root, $rootxmd, $shortname);
     
 #   P texts: divided into surfaces, (columns), lines, linegroups and nonx [*** NOTE: headers and milestones are not included at present - maybe useful when comparing sign use within rituals [incantation and ritual instructions]]
 #   get general stats, graphemes, groups and words
@@ -377,10 +380,13 @@ sub doPstats{
 sub getMetaData{  # find core metadata fields 
     my $root = shift;
     my $rootxmd = shift;
+    my $PQnumber = shift;
     
     $PQdata{"period"} = ""; $PQdata{"genre"} = ""; $PQdata{"subgenre"} = ""; $PQdata{"provenience"} = ""; $PQdata{"designation"} = "";
-    $PQdata{"language"} = ""; $PQdata{"script"} = ""; $PQdata{"writer"} = ""; $PQdata{"object"} = "";
+    $PQdata{"language"} = ""; $PQdata{"script"} = ""; $PQdata{"writer"} = ""; $PQdata{"object"} = ""; $PQdata{"project"} = "";
     
+    my $project = "unspecified"; my $genre = "unspecified"; my $provenance = "unspecified"; my $period = "unspecified"; my $language = "unspecified";
+        
     #get designation, provenience/provenance, period [date], genre, subgenre, language, script
     
     my @mfields = $root->get_xpath('mds/m');
@@ -441,18 +447,20 @@ sub getMetaData{  # find core metadata fields
     }
     
     $PQdata{"language"} = $rootxmd->findvalue('cat/language');
-    if ($PQdata{"language"} eq "") {
-	my @protocols = $root->get_xpath('protocols/protocol');
+    my @protocols = $root->get_xpath('protocols/protocol');
 	 # Q: what are the other options? *** maybe obsolete with new L2?
-	foreach my $i (@protocols) {
-	    if ($i->{att}->{type} eq "atf") {
+    foreach my $i (@protocols) {
+	if (($PQdata{"language"} eq "") && ($i->{att}->{type} eq "atf")) {
 		my $temp = $i->text;
 		if ($temp eq "lang na") { $PQdata{"language"} = "Neo-Assyrian"; }
 		elsif ($temp eq "lang nb") { $PQdata{"language"} = "Neo-Babylonian"; }
 		elsif ($temp eq "lang akk") { $PQdata{"language"} = "Standard Babylonian"; }
 	    }
+	if ($i->{att}->{type} eq "project") {
+	    $PQdata{"project"} = $i->text;
 	}
     }
+
     # in SAA not given in metadata, but in xtf-file under
 #        <protocols scope="text">
 #		<protocol type="project">saao/saa10</protocol>
@@ -467,6 +475,26 @@ sub getMetaData{  # find core metadata fields
     $PQdata{"script"} = $rootxmd->findvalue('cat/script');
     
     $PQdata{"writer"} = $rootxmd->findvalue('cat/ancient_author'); # SAA; Q: Greta - how about colophons?
+    
+    # allow for quick metadata search on PQ-number, period, provenance, genre, language
+    
+    my $PorQ = "";
+    if ($PQnumber=~m|^Q|gsi) { $PorQ = "Q"; }
+    elsif ($PQnumber=~m|^P|gsi) { $PorQ = "P"; }
+    
+    if ($PQdata{"project"} ne "") { $project = $PQdata{"project"}; }
+    if ($PQdata{"genre"} ne "") { $genre = $PQdata{"genre"}; }
+    if ($PQdata{"provenience"} ne "") { $provenance = $PQdata{"provenience"}; }
+    if ($PQdata{"period"} ne "") { $period = $PQdata{"period"}; }
+    if ($PQdata{"language"} ne "") { $language = $PQdata{"language"}; }
+    #print $project . " " . $genre . " " . $provenance . " " . $period . " " . $language . "\n";
+    
+    if (!defined $corpusdata{"corpus"}) { $corpusdata{"corpus"} = (); }
+
+    push(@{$corpusdata{"corpus"}{$project}{"genre"}{$genre}{$PorQ}}, $PQnumber);
+    push(@{$corpusdata{"corpus"}{$project}{"period"}{$period}{$PorQ}}, $PQnumber);
+    push(@{$corpusdata{"corpus"}{$project}{"language"}{$language}{$PorQ}}, $PQnumber);
+    push(@{$corpusdata{"corpus"}{$project}{"provenance"}{$provenance}{$PorQ}}, $PQnumber);
 }
 
 #loop over each line and find some stats
