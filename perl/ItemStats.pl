@@ -183,8 +183,6 @@ sub doPstats{
 #   P texts: divided into surfaces, (columns), lines, linegroups and nonx [*** NOTE: headers and milestones are not included at present - maybe useful when comparing sign use within rituals [incantation and ritual instructions]]
 #   get general stats, graphemes, groups and words
 
-
-
 #    my @surfaces = $root->get_xpath('object/surface');
 #    my $size = scalar @surfaces;
 #    
@@ -387,7 +385,7 @@ sub getStructureData{
     my $root = shift;
     my $PorQ = shift;
     my %linedata = ();
-    my %localdata = ();
+    my $localdata = {};
     
     # P-texts: surfaces, columns, divisions [milestones], lines
     # Q-texts: divisions, lines
@@ -398,12 +396,13 @@ sub getStructureData{
 	my $scope = $n->{att}->{scope}?$n->{att}->{scope}:"";
 	my $state = $n->{att}->{state}?$n->{att}->{state}:"";
 	my $text = $n->text;
-	$localdata{'extent'} = $extent;
-	$localdata{'scope'} = $scope;
-	$localdata{'state'} = $state;
-	$localdata{'text'} = $text;
+	$localdata->{'extent'} = $extent;
+	$localdata->{'scope'} = $scope;
+	$localdata->{'state'} = $state;
+	$localdata->{'text'} = $text;
 	
-	push(@{$linedata{"nonx"}}, \%localdata);
+	push(@{$linedata{"nonx"}}, $localdata);
+	$localdata = {};
     }
 
     my @surfaces = $root->get_xpath('object/surface');
@@ -414,14 +413,14 @@ sub getStructureData{
 	    $linedata{"no_surfaces"} = $no_surfaces;
 	}
 
-	$localdata{'type'} = $i->{att}->{type}?$i->{att}->{type}:"";    
-	$localdata{'label'} = $i->{att}->{label}?$i->{att}->{label}:"";
-	print ("\n".$localdata{'type'}." ".$localdata{'label'});
+	$localdata = &getStructureData($i, $PorQ);
+	$localdata->{'type'} = $i->{att}->{type}?$i->{att}->{type}:"";    
+	$localdata->{'label'} = $i->{att}->{label}?$i->{att}->{label}:"";
+#	print ("\n".$localdata->{'type'}." ".$localdata->{'label'});
 
-	$localdata{'data'} = &getStructureData($i, $PorQ);
-	
-        push(@{$linedata{"surface"}}, \%localdata);
-}
+        push(@{$linedata{"surface"}}, $localdata);
+	$localdata = {};
+    }
 #    
 #    my @columns = $root->get_xpath('column');
 #    foreach my $j (@columns) {
