@@ -11,8 +11,6 @@ binmode STDOUT, ":utf8";
 
 my $PQroot = "";
 my %PQdata = ();  # data per text
-#my %perioddata = (); # data per period
-#my %langdata = ();   # data per language
 my %corpusdata = (); # overview of selected metadata per corpus
 
 my %config;
@@ -75,7 +73,7 @@ sub doQstats{
     
     # xtf-file
     my $twigObj = XML::Twig->new(
-				 twig_roots => { 'protocols' => 1, 'mds' => 1 }  
+				 twig_roots => { 'composite' => 1, 'protocols' => 1, 'mds' => 1 }  
 				 );
     $twigObj->parsefile($filename);
     my $root = $twigObj->root;
@@ -106,35 +104,13 @@ sub doQstats{
     
     &getMetaData($root, $rootxmd, $shortname, "Q");
 
-    if (!defined $PQdata{"structure"}) { $PQdata{"structure"} = (); }
+    if (!defined $PQdata{"01_Structure"}) { $PQdata{"01_Structure"} = (); }
     
-    push(@{$PQdata{"structure"}}, &getStructureData($root, "Q"));
-    
-#    my @divs = $root->get_xpath('div');
-#    my $dsize = scalar @divs;
-#    my $dcount = 0;
-#    
-#    $PQdata{"structure"} = ();
-#
-#    foreach my $i (@divs){
-#	$dcount++;
-#	my $linedata = "";
-#	my %statdata = ();
-#	$statdata{'type'}=$i->{att}->{'type'};
-#	$statdata{'n'}=$i->{att}->{'n'};
-#	
-#	$linedata = &doLineData($i, \%PQdata);
-#	if($linedata ne "" && defined($linedata)){
-#	    push (@{$statdata{'div'}}, $linedata);
-#	}
-#	
-#	push (@{$PQdata{"structure"}{"div"}}, \%statdata);
-#    }
-#    my $linedata = "";
-#    $linedata = &doLineData($root, \%PQdata);
-#    if($linedata ne "" && defined($linedata)){
-#	push (@{$PQdata{"structure"}{notInDiv}}, $linedata);
-#    }
+    push(@{$PQdata{"01_Structure"}}, &getStructureData($root, "Q"));
+
+    &checkPQdataStructure;
+
+# add no_lines to higher levels ?? TODO    
     
     &writetofile($shortname, \%PQdata);
 }
@@ -176,80 +152,11 @@ sub doPstats{
 
     &getMetaData($root, $rootxmd, $shortname, "P");
 
-    if (!defined $PQdata{"structure"}) { $PQdata{"structure"} = (); }
+    if (!defined $PQdata{"01_Structure"}) { $PQdata{"01_Structure"} = (); }
     
-    push(@{$PQdata{"structure"}}, &getStructureData($root, "P"));
-    
-#   P texts: divided into surfaces, (columns), lines, linegroups and nonx [*** NOTE: headers and milestones are not included at present - maybe useful when comparing sign use within rituals [incantation and ritual instructions]]
-#   get general stats, graphemes, groups and words
-
-#    my @surfaces = $root->get_xpath('object/surface');
-#    my $size = scalar @surfaces;
-#    
-#    my $count = 0;
-#    foreach my $i (@surfaces){
-#	if(!defined $PQdata{"structure"}{"surface"}){
-#	    $PQdata{"structure"}{"surface"} = ();
-#	}
-#        $count++;
-#	
-#        my @columns = $i->get_xpath('column');
-#        my $csize = scalar @columns;
-#	my %statdata = ("type","","label","","columns",0);
-#        my $ccount = 0;
-#    
-#	my @children = $i->children();
-#	my %nonx = ();
-#	my $broken = 0;
-#	my $linedata = "";
-#	for ( @children ) {
-#	    my $j = $_;
-#	    my $type = $j->tag;
-#	    if($type eq "column"){
-#		if( $nonx{"extent"} && $nonx{"extent"} eq "start"){ # broken at the start.
-#		    $broken = 1;
-#		    %nonx = ();
-#		}
-#		$ccount++;
-#		$linedata = &doLineData($j, \%PQdata);
-#	    }
-#	    elsif($type eq "nonx"){
-#		$nonx{"state"} = $_->{att}->{"state"}; # don't think this is useful
-#		$nonx{"extent"} = $_->{att}->{"extent"}; # need to output this exactly as is.
-#		$nonx{"scope"} = $_->{att}->{"scope"};
-#		
-#		if( $nonx{"extent"} && $nonx{"extent"} eq "rest"){
-##		    broken at the end.
-#		    $broken = 1;
-#		    %nonx = ();
-#		}
-##		extent =
-##		scope can be lines or columns
-##      <brokencolumn allgraphemes="0" totalLines="3" brokenline="" groups="0" lines="3">
-##TODO cf. P338326, P348776  **P345960 - has them within the columns?
-##add in a field for count of known broken lines - which are occasionally mentioned in the nonx
-##		also nonx can have a lot of different stuff in extent.
-##	if extent == end || rest then applies to the column above else (probably) - greta to CONFIRM
-#            #<nonx xml:id="P348776.3" strict="1" extent="rest" scope="column" state="missing">start of column broken</nonx>
-#	    }
-#	    
-#    #TODO	    nonX to work out missing lines vs perserved lines - will this work
-##    do I need to push the broken value deeper into teh code to change the counts at doLineData
-#
-## TODO add nonx into lines as well... maybe
-#	    if($linedata ne "" && defined($linedata)){
-#		push (@{$statdata{'column'}}, $linedata);
-#	    }
-#	}
-#	
-#        my @nonx = $i->get_xpath('nonx');
-#
-#	$statdata{'type'}=$i->{att}->{type}?$i->{att}->{type}:"";
-#	$statdata{'label'}=$i->{att}->{label}?$i->{att}->{label}:"";
-#	$statdata{'columns'}=$ccount;
-#	
-#	push (@{$PQdata{"structure"}{"surface"}}, \%statdata);
-#    }
+    push(@{$PQdata{"01_Structure"}}, &getStructureData($root, "P"));
+# add no_lines to higher levels here??? TODO
+    &checkPQdataStructure;
 
     &writetofile($shortname,\%PQdata);
 }
@@ -302,7 +209,7 @@ sub getMetaData{  # find core metadata fields and add them to each itemfile [$PQ
 	    my @date = $rootxmd->get_xpath('cat/date');
 	    foreach my $i (@date) {
 		my $temp = $i->{att}->{c};
-		if($temp eq "1000000"){   # Q: Other codes ??? [ask Steve]
+		if($temp eq "1000000"){   # Q: Other codes ??? [ask Steve ***]
 		    $PQdata{"period"} = "Neo-Assyrian";  
 		}
 	    }
@@ -327,13 +234,30 @@ sub getMetaData{  # find core metadata fields and add them to each itemfile [$PQ
     $PQdata{"language"} = $rootxmd->findvalue('cat/language');
     
     my @protocols = $root->get_xpath('protocols/protocol');
-	 # Q: what are the other options? *** maybe obsolete with new L2? [ask Steve, check Oracc]
+	 # http://oracc.museum.upenn.edu/doc/builder/l2/languages/#Language_codes
     foreach my $i (@protocols) {
 	if (($PQdata{"language"} eq "") && ($i->{att}->{type} eq "atf")) {
 		my $temp = $i->text;
+		if (($temp eq "lang a") || ($temp eq "lang akk")) { $PQdata{"language"} = "Akkadian"; }
+		if ($temp eq "lang eakk") { $PQdata{"language"} = "Early Akkadian"; } # For pre-Sargonic Akkadian
+		if ($temp eq "lang oakk") { $PQdata{"language"} = "Old Akkadian"; }
+		if ($temp eq "lang ur3akk") { $PQdata{"language"} = "Ur III Akkadian"; }
+		if ($temp eq "lang oa") { $PQdata{"language"} = "Old Assyrian"; }
+		if ($temp eq "lang ob") { $PQdata{"language"} = "Old Babylonian"; }
+		if ($temp eq "lang ma") { $PQdata{"language"} = "Middle Assyrian"; }
+		if ($temp eq "lang mb") { $PQdata{"language"} = "Middle Babylonian"; }
 		if ($temp eq "lang na") { $PQdata{"language"} = "Neo-Assyrian"; }
-		elsif ($temp eq "lang nb") { $PQdata{"language"} = "Neo-Babylonian"; }
-		elsif ($temp eq "lang akk") { $PQdata{"language"} = "Standard Babylonian"; }
+		if ($temp eq "lang nb") { $PQdata{"language"} = "Neo-Babylonian"; }
+		if ($temp eq "lang sb") { $PQdata{"language"} = "Standard Babylonian"; }
+		if ($temp eq "lang ca") { $PQdata{"language"} = "Conventional Akkadian"; } # The artificial form of Akkadian used in lemmatisation Citation Forms.
+		
+		if ($temp eq "lang n") { $PQdata{"language"} = "normalised"; } # Used in lexical lists and restorations; try to avoid wherever possible.
+		if ($temp eq "lang g") { $PQdata{"language"} = "transliterated (graphemic) Akkadian"; } # Only for use when switching from normalised Akkadian.
+		if (($temp eq "lang h") || ($temp eq "lang hit")) { $PQdata{"language"} = "Hittite"; }
+		if (($temp eq "lang s") || ($temp eq "lang sux") || ($temp eq "lang eg")) { $PQdata{"language"} = "Sumerian"; } # The abbreviation eg stands for Emegir (main-dialect Sumerian)
+		if (($temp eq "lang e") || ($temp eq "lang es")) { $PQdata{"language"} = "Emesal"; }
+		if ($temp eq "lang sy") { $PQdata{"language"} = "Syllabic"; }
+		if ($temp eq "lang u") { $PQdata{"language"} = "Udgalnun"; }
 	    }
 	if ($i->{att}->{type} eq "project") {
 	    $PQdata{"project"} = $i->text;
@@ -384,7 +308,7 @@ sub getMetaData{  # find core metadata fields and add them to each itemfile [$PQ
 sub getStructureData{
     my $root = shift;
     my $PorQ = shift;
-    my %linedata = ();
+    my %structdata = ();
     my $localdata = {};
     
     # P-texts: surfaces, columns, divisions [milestones], lines
@@ -392,180 +316,669 @@ sub getStructureData{
 
     my @nonxes = $root->get_xpath('nonx');
     foreach my $n (@nonxes) {
-	my $extent = $n->{att}->{extent}?$n->{att}->{extent}:"";
-	my $scope = $n->{att}->{scope}?$n->{att}->{scope}:"";
-	my $state = $n->{att}->{state}?$n->{att}->{state}:"";
-	my $text = $n->text;
-	$localdata->{'extent'} = $extent;
-	$localdata->{'scope'} = $scope;
-	$localdata->{'state'} = $state;
-	$localdata->{'text'} = $text;
+	$localdata->{'extent'} = $n->{att}->{extent}?$n->{att}->{extent}:"";
+	$localdata->{'scope'} = $n->{att}->{scope}?$n->{att}->{scope}:"";
+	$localdata->{'state'} = $n->{att}->{state}?$n->{att}->{state}:"";
+	$localdata->{'text'} = $n->text;
 	
-	push(@{$linedata{"nonx"}}, $localdata);
+	push(@{$structdata{"nonx"}}, $localdata);
 	$localdata = {};
     }
 
     my @surfaces = $root->get_xpath('object/surface');
     my $no_surfaces = scalar @surfaces;
-    foreach my $i (@surfaces) {
-	if(!defined $linedata{"surface"}){
-	    $linedata{"surface"} = ();
-	    $linedata{"no_surfaces"} = $no_surfaces;
+    foreach my $s (@surfaces) {
+	if (!defined $structdata{"surface"}) {
+	    $structdata{"surface"} = ();
+	    $structdata{"no_surfaces"} = $no_surfaces;
 	}
 
-	$localdata = &getStructureData($i, $PorQ);
-	$localdata->{'type'} = $i->{att}->{type}?$i->{att}->{type}:"";    
-	$localdata->{'label'} = $i->{att}->{label}?$i->{att}->{label}:"";
-#	print ("\n".$localdata->{'type'}." ".$localdata->{'label'});
+	$localdata = &getStructureData($s, $PorQ);
+	$localdata->{'type'} = $s->{att}->{type}?$s->{att}->{type}:"";    
+	$localdata->{'label'} = $s->{att}->{label}?$s->{att}->{label}:"";
 
-        push(@{$linedata{"surface"}}, $localdata);
+        push(@{$structdata{"surface"}}, $localdata);
 	$localdata = {};
     }
-#    
-#    my @columns = $root->get_xpath('column');
-#    foreach my $j (@columns) {
-#	if(!defined $localdata{"column"}){
-#	    $localdata{"column"} = ();
-#	}
-#	
-#	my $no_columns = scalar @columns;
-#	$localdata{'columns'} = $no_columns;
-#	
-#	my $temp = &getStructureData($j, $localdata{"column"}, $PorQ);
-#	push (@{$localdata{"column"}}, $temp);
-#    }
-#    
-#    my @divs = $root->get_xpath('div');
-#    foreach my $k (@divs) {
-#	if(!defined $localdata{"div"}){
-#	    $localdata{"div"} = ();
-#	}
-#	
-#	my $temp = &getStructureData($k, $localdata{"div"}, $PorQ);
-#	push (@{$localdata{"div"}}, $temp);
-#    }
-#    
-#    my @linegroups = $root->get_xpath('lg');
-#    foreach my $lg (@linegroups) {
-#	# fill in
-#    }
-#    
-#    my @lines = $root->get_xpath('l');
-#    foreach my $l (@lines) {
-#	my $graphemearray = &dographemeData($l, $localdata{'l'});
-#	push(@{$localdata{'l'}}, $graphemearray);
-#    }
+    
+    my @columns = $root->get_xpath('column');
+    my $no_columns = scalar @columns;
+    foreach my $c (@columns) {
+	if (!defined $structdata{"column"}) {
+	    $structdata{"column"} = ();
+	    $structdata{"no_columns"} = $no_columns;
+	}
+	
+	$localdata = &getStructureData($c, $PorQ);
+	my $col = $c->{att}->{n}; $localdata->{'no'} = $col;
+	
+        push(@{$structdata{"column"}}, $localdata);
+	$localdata = {};
+    }
+    
+    my @divs = $root->get_xpath('div');
+    my $no_divs = scalar @divs;
+    foreach my $d (@divs) {
+	if (!defined $structdata{"div"}) {
+	    $structdata{"div"} = ();
+	    $structdata{"no_divs"} = $no_divs;
+	}
+	
+	$localdata = &getStructureData($d, $PorQ);
+	$localdata->{'type'} = $d->{att}->{type}?$d->{att}->{type}:"";    
+	$localdata->{'n'} = $d->{att}->{n}?$d->{att}->{n}:"";
+	
+	push (@{$structdata{"div"}}, $localdata);
+	$localdata = {};
+    }
+    
+    my @linegroups = $root->get_xpath('lg');
+    my $no_lgs = scalar @linegroups;
+    if ($no_lgs != 0) { $structdata{'no_lgs'} += $no_lgs; }
+    
+    #The second line in a linegroup doesn't get its own line number; however, the line is physical in the case of bilinguals and glosses.
+    
+    #Glosslines (Gloss Underneath Stream, GUS): 2 lines (one with normal text, one with gloss), both lines lemmed, both lines physical
+    #Bilingual: 2 lines (one in standard language, one in other language), both lines lemmed, both lines physical
+    
+    #Linearized Grapheme Stream (LGS): order on tablet, no words, just signs, not lemmed; this is actually the physical line, whereas l is interpretation
+    #Normalized Transliteration Stream (NTS): not a physical line, nts lines are interpretations; if present the lemmatization is given here
+    
+    foreach my $lg (@linegroups) {
+	my @speciallines = $lg->get_xpath('l');
+	my $type = ""; my $label = "";
+	foreach my $j (@speciallines) { # check type of lg
+	    if ($type eq "") {
+		if ($j->{att}->{"type"}) { $type = $j->{att}->{"type"}; }
+	    }
+	    if ($label eq "") {
+		if ($j->{att}->{"label"}) { $label = $j->{att}->{"label"}; }
+	    }
+	}
+
+	# if bil or gus -> 2 lines, read both with &getLineData
+	if (($type eq "gus") || ($type eq "bil")) {
+	    $structdata{'no_lines'} += scalar @speciallines; 
+	    my $number = 0;
+	    foreach my $j (@speciallines) {
+		$number++;
+		$localdata = &getLineData($j);
+		$localdata->{"type"} = $type;
+		$localdata->{"label"} = $label." (".$number.")";
+		push (@{$structdata{"line"}}, $localdata);
+		$localdata = {};
+	    }
+	}
+	elsif ($type eq "lgs") { #disregard l line *** still to be implemented *** still has to go through getLineData TODO
+	    $localdata->{"type"} = $type;
+	    $localdata->{"label"} = $label;
+	    push (@{$structdata{"line"}}, $localdata);
+	    $structdata{'no_lines'}++;
+	    $localdata = {};
+	}
+	else { # check anew *** still has to go through getLineData TODO
+	    $localdata->{"type"} = $type;
+	    $localdata->{"label"} = $label;
+	    push (@{$structdata{"line"}}, $localdata);
+	    $structdata{'no_lines'}++;
+	    $localdata = {};
+	    # still to be implemented
+	}
+    }
+   
+    my @lines = $root->get_xpath('l');
+    my $no_lines = scalar @lines;
+    if ($no_lines != 0) {
+	$structdata{'no_lines'} += $no_lines;
+	#add this total also to the levels above (up to level 01_Structure; below opt)
+	# how can I address these levels??? ask Chris *** TODO - or elsewhere?
+    }
+    foreach my $l (@lines) {
+	if (!defined $structdata{"line"}) {
+	    $structdata{"line"} = ();
+	}
+	
+	$localdata = &getLineData($l);
+	$localdata->{"label"} = $l->{att}->{"label"};
+	push (@{$structdata{"line"}}, $localdata);
+	$localdata = {};
+    }
+    return \%structdata;
+}
+
+sub getLineData {
+    my $root = shift;
+    my %linedata = ();
+    my $localdata = {};
+    
+    # cells, fields, alignment groups, l.inner
+    my $sumgraphemes =0;
+    
+    my @cells = $root->get_xpath('c');
+    foreach my $c (@cells){
+	$localdata = &getLineData($c);
+	$localdata->{"span"} = $c->{att}->{"span"};
+	push(@{$linedata{'cells'}}, $localdata);
+	$localdata = {};
+    }
+    
+    my @fields = $root->get_xpath('f');
+    foreach my $f (@fields){
+	$localdata = &getLineData($f);
+	$localdata->{"type"} = $f->{att}->{"type"};
+	push(@{$linedata{'fields'}}, $localdata);
+	$localdata = {};
+    }
+    
+    my @alignmentgrp = $root->get_xpath('ag');
+    foreach my $ag (@alignmentgrp) {
+	$localdata = &getLineData($ag);
+	$localdata->{"form"} = $ag->{att}->{"form"};
+	push(@{$linedata{'alignmentgroup'}}, $localdata);
+	$localdata = {};
+    }
+   
+    # l.inner
+    # l.inner = words, normwords??, surro??, gloss?? TODO
+        
+    my @nonw = $root->get_xpath('g:nonw');
+    my $no_nonw = scalar @nonw;
+    foreach my $nw (@nonw) {
+	$localdata->{"type"} = $nw->{att}->{"type"}; # what are the options? check Oracc. *** TODO
+#	print "\nNonw ".$localdata->{"type"};
+	my $sign = "";
+	
+	if ($nw->get_xpath('g:p')) {
+	    $sign = ($nw->get_xpath('g:p'))[0]->{att}->{"g:type"};
+	}
+
+	if ($nw->get_xpath('g:v')) {
+	    $sign = ($nw->get_xpath('g:v'))[0]->text;
+	}
+
+	$localdata->{"sign"} = $sign;
+	
+	push (@{$linedata{'nonw'}}, $localdata);
+	# saveSign/Word?
+	$localdata = {};
+    }
+    
+    # get the nonw-signs also in the other list [not just under structure]
+
+    # Words: g:w; g:w sword.head; g:swc sword.cont; g:nonw; g:x
+    # split words: (1st part) g:w headform; (2nd part) g:swc
+    # find no_words, no_signs per line, no_nonwords; preserved, damaged, missing
+    # plus track words, signs, etc.
+    my @words = $root->get_xpath('g:w');
+    foreach my $word (@words) {
+	$linedata{'words'}++;
+	if ($word->{att}->{headform}) { # beginning of split word TODO
+	    
+	}
+	elsif ($word->{att}->{"form"} ne "o"){ # words with form="o" are not words at all and shouldn't be considered (e.g. SAA 1 10 o 18 = P 334195)
+	 # normal words
+	    # analyse words - save word, with all extra information; save signs with position etc.
+	    #print "\nAnalyse ". $word->{att}->{"form"};
+	    $localdata = &analyseWord($word);
+	}
+	#push (@{$linedata{'words'}}, $localdata); TODO
+	$localdata = {};
+    }
+    
+    my @splitends = $root->get_xpath('g:swc');
+    my $no_split = scalar @splitends;
+    if ($no_split > 0) {
+	foreach my $split (@splitends) { # end of split word - not counted extra in wordcount TODO
+	    
+	}
+    }
+    
+    my @xes = $root->get_xpath('g:x');
+    foreach my $x (@xes) {
+	# save and count TODO
+    }
     
     return \%linedata;
 }
 
-#loop over each line and find some stats
-sub doLineData{
-    my $root = shift;
-    my $localdata = shift;
-    my %linearray = ();
-    my @linegroups = $root->get_xpath('lg');
-    my $lgsize = scalar @linegroups;
-    #&outputtext("\n Number of group lines ".$lgsize);
-    my $dcount = 0;
-    my $sumlines = 0;
-    
-    foreach my $i (@linegroups){ # still think about linegroups (GUS, BIL, NTS, LGS) ***
-	my @speciallines = $i->get_xpath('l');
-	my $type = "";
-	foreach my $j (@speciallines) {
-	    if ($type eq "") {
-		if ($j->{att}->{"type"}) {
-		    $type = $j->{att}->{"type"};
+sub checkPQdataStructure{
+
+    while (my ($k, $v) = each $PQdata{"01_Structure"}[0] ) {
+        #print "\nkey: $k, value: $v.\n";
+	if ($k eq "surface") {
+	    while (my ($k2, $v2) = each $PQdata{"01_Structure"}[0]->{$k}) { 
+		print "\nkey2: $k2, value: $v2.\n";
+		while (my ($k3, $v3) = each $PQdata{"01_Structure"}[0]->{$k}[$k2]) { # column?
+		    print "\nkey3: $k3, value: $v3.\n";
+		#    if ($k3 eq "column") {
+		#	while (my ($k4, $v4) = each $PQdata{"01_Structure"}[0]->{$k}[$k2]->[$k3]) { # how do I get there??? HIER
+		#	    print "\nkey4: $k4, value: $v4.\n";
+		#	}
+		#    }
 		}
 	    }
+	    
 	}
-	#print ("\n lg type ".$type."\n");
-	if (($type eq "gus") || ($type eq "bil")) {
-	    my $temp = &doLineData($i,$localdata);
-	    $sumlines = &addLines($sumlines, $temp);
-	    push(@{ $linearray{'linegroups'} }, $temp);
-	}
-	elsif ($type eq "lgs") { #disregard l line *** still to be implemented
-	    my $temp = &doLineData($i,$localdata);
-	    $sumlines = &addLines($sumlines, $temp);
-	    push(@{ $linearray{'linegroups'} }, $temp);
-	}
-	else { # check anew
-	    my $temp = &doLineData($i,$localdata);
-	    $sumlines = &addLines($sumlines, $temp);
-	    push(@{ $linearray{'linegroups'} }, $temp);
-	}
-    }
-    
-    my @lines = $root->get_xpath('l');
-    my $lsize = scalar @lines;
-    
-    my $sumgraphemes = 0;
-    foreach my $i (@lines){
-	if (($i->{att}->{"type"}) && ($i->{att}->{"type"} eq "nts")) {
-	    # then something to think about
-	}
-	else {
-	    my $graphemearray = &dographemeData($i, $localdata);
-	    push(@{ $linearray{'graphemes'} }, $graphemearray);
-	}
+	
     }
 
-    my $total = $sumlines + $lsize;
-    #&outputtext("\n Total Number of lines within Groups ".$sumlines);
-    #&outputtext("\n Number of lines not in groups ".$lsize);
-    #&outputtext("\n Total Number of lines ".$total);
-    $linearray{'lines'} = $lsize;
-    $linearray{'lineGroups'} = $lgsize;
-    $linearray{'totalLines'} = $total;
-    $linearray{'allgraphemes'} = $sumgraphemes; # always 0 ***, doesn't work yet
+#    for my $i (keys %PQdata){
+#	#print "\n Keys ".$i;
+#	if ($i eq "01_Structure") {
+#	    foreach my $j (keys $PQdata{$i}[0]) {
+#		
+#		if ($j eq "surface") {
+#		    foreach my $k (keys $PQdata{$i}[0]->{$j}) {
+#			
+#			my $no_lines = $PQdata{$i}[0]->{$j}[$k]###->{"no_lines"};
+#			print "\n keys ".$k." no of lines ".$no_lines;
+#		    }
+#		    #print "hoera surface";}
+#		}
+#	    }
+#	    
+#	}
+#    }
+    print "\n";
     
-    if(!defined $localdata->{"totalLines"}){
-	$localdata->{"totalLines"} = ();
-    }
-    if(!defined $localdata->{'lines'}){
-	$localdata->{'lines'} = ();
-    }
-    if(!defined $localdata->{'lines'}{'count'}){
-	$localdata->{'lines'}{'count'}=0;
-    }
-
-    $localdata->{'lines'}{'count'} = $localdata->{'lines'}{'count'} + $lsize;
+#    foreach my $sign (keys %{$PQdata{$i}{"sign"}}) {
+#    
+#    if ($PQdata{"01_Structure"}['surface']) {
+#	
+#	print "column found\n";
+#	if ($PQdata{"01_Structure"}['surface']->{'column'}) {  # hier
+#	    print "hoera";
+#	}
+#	
+#    }
     
-    push (@{$localdata->{'lines'}{'data'}}, {%linearray});
+    #print Dumper(%PQdata);
     
-    #print  XMLout($graphemearray);
-    return \%linearray;
 }
 
-sub dographemeData{
+
+sub analyseWord{
+    my $word = shift;
+    my %worddata = ();
+    
+# return data as number of words, number of signs etc.
+# save data as words, signs, etc. in PQdata{"words"} and PQdata{"signs"}
+    my $lang = $word->{att}->{'xml:lang'};
+    my $form = "";
+    if ($word->{att}->{"form"}){ $form = $word->{att}->{"form"}; }
+#    print "\n".$form;
+    my $wordid = $word->{att}->{"xml:id"};
+    my $tempvalue = '//l[@ref="'.$wordid.'"]/xff:f'; # /xtf:transliteration//xcl:l[@ref=$wordid]/xff:f/@cf
+    my $cf = ""; my $pofs = ""; my $epos = "";
+            
+    # xtf-file
+    #print "\n".$tempvalue."\n";
+    my @wordref = $PQroot->get_xpath($tempvalue); 
+    foreach my $item (@wordref) {
+        if($item->{att}->{"cf"}){  # word is lemmatized
+            $cf = $item->{att}->{"cf"};
+            $pofs = $item->{att}->{"pos"}; # pofs = part-of-speech (pos is used already for position)
+            $epos = $item->{att}->{"epos"};
+            #print $cf;
+        }
+    }
+    
+    my $wordtype = $pofs;
+    # PERSONAL and ROYAL NAMES
+    if ($wordtype eq "RN") { $wordtype = "PersonalNames"; } 
+    
+    # http://oracc.museum.upenn.edu/doc/builder/linganno/QPN/
+    # GEOGRAPHICAL DATA: GN, WATERCOURSE, ETHNIC (GENTILICS), AGRICULTURAL, FIELD, QUARTER, SETTLEMENT, LINE, TEMPLE 
+    if (($wordtype eq "GN") || ($wordtype eq "WN") || ($wordtype eq "EN") || ($wordtype eq "AN") || ($wordtype eq "FN") || ($wordtype eq "QN") || ($wordtype eq "SN") || ($wordtype eq "LN") || ($wordtype eq "TN")) {
+	$wordtype = "Geography"
+    }
+    
+    # DIVINE and CELESTIAL NAMES
+    if (($wordtype eq "DN") || ($wordtype eq "CN")) {
+	$wordtype = "DivineCelestial"; 
+    }
+    
+    # mul2 and id2 may not work - use of special coding ?? check ***
+    # ROUGH CLASSIFICATION IF NOT LEMMATIZED
+    if (($wordtype eq "") && ($form ne "")) { # can these be given in capital letters???
+	my $formsmall = lc ($form);
+	if ($formsmall =~ /(^\{1\})|(^\{m\})/) { $wordtype = "PersonalNames"; }
+	if (($formsmall =~ /(^\{d\})/) || ($formsmall =~ /(^\{mul\})/) || ($formsmall =~ /(^\{mul2\})/)) { $wordtype = "DivineCelestial"; }  
+	if (($formsmall =~ /(\{ki\})/) || ($wordtype =~ /(\{kur\})/) || ($form =~ /(\{uru\})/) || ($form =~ /(\{iri\})/) || ($form =~ /(\{id2\})/))  { $pofs = "Geography"; }
+    }    
+
+    if (($wordtype ne "PersonalNames") && ($wordtype ne "DivineCelestial") && ($wordtype ne "Geography")) { $wordtype = "OtherWords"; }
+    
+    # how about marking preserved signs somehow, so that we immediately know how many of each are preserved ***
+    # make temporary array of each word including information about determinative [det]/phonetic [phon], syllabic [syll], logographic [logo], logographic suffixes [logosuff]
+    # e.g. {mul}[dil]-<bat> becomes my @arrayWord = (
+#    						{ "pos" => "prebegin",
+#                                                 "type" => "det",
+#						  "value" => "mul",
+#						  "state" => "preserved"
+#						},    
+#    						{ "pos" => "begin",
+#                                                 "type" => "syll",
+#						  "value" => "dil",
+#						  "state" => "missing"
+#						},    
+#    						{ "pos" => "end",
+#                                                  "type" => "syll",
+#						  "value" => "bat",
+#						  "state" => "damaged"
+#						}
+#    						)
+    
+    #my $writtenWord = ""; my $condition = 0;# missing (2), damaged (1), preserved (0)
+    my @arrayWord = ();
+    
+    my @children = $word->children();
+    my $no_children = scalar @children;
+    my $position = 0; my $temp = {}; my $localdata = {};
+    foreach my $i (@children) { # check each element of a word
+	#print "\nSplit: ".$i->text;
+	$position++;
+	$temp = &splitWord ($i, $position);
+	push (@{$localdata->{"word"}}, $temp);
+	$temp = {};
+    }
+    
+    push (@{\@arrayWord}, $localdata->{"word"});
+    #print "\n";
+    #print Dumper(@arrayWord);
+
+# fill in worddata TODO
+
+    return \%worddata;
+}
+
+sub splitWord {
+    my $root = shift;
+    my $position = shift;
+    my $type = shift || "";
+    my $prepost = shift || "";
+    my $break = shift || "preserved";
+    my $delim = shift || "";
+    my $group = shift || "";
+    
+    my $localdata = {};
+    my $splitdata = ();
+    my $tag = $root->tag;
+    
+    my $value = "";
+    my $base = "";
+    
+    # http://oracc.museum.upenn.edu/ns/gdl/1.0/grapheme.rnc.html
+    
+    # Single elements: g:x (missing), g:n (number), g:v (small letters), g:s (capital)
+    if (($tag eq "g:x") || ($tag eq "g:n") || ($tag eq "g:v") || ($tag eq "g:s")) {
+	$localdata = {};
+	if ($root->{att}->{form}) {
+	    $value = $root->{att}->{form};
+	    if ($root->{att}->{"g:b"}) {
+		$base = $root->{att}->{"g:b"};
+	    }
+	}  
+	elsif ($root->text) { $value = $root->text; }
+
+	if ($root->{att}->{"g:delim"}) { $delim = $root->{att}->{"g:delim"}; }
+	if ($root->{att}->{"g:break"}) { $break = $root->{att}->{"g:break"}; }
+	
+	$localdata->{"pos"} = $position; $localdata->{"tag"} = $tag; $localdata->{"value"} = $value; $localdata->{"state"} = $break;
+	if ($base ne "") { $localdata->{"base"} = $base; }
+	if ($prepost ne "") { $localdata->{"prePost"} = $prepost; }
+	if ($type ne "") { $localdata->{"type"} = $type; }
+	if ($delim ne "") { $localdata->{"delim"} = $delim; }
+	if ($group ne "") { $localdata->{"group"} = $group; }
+
+	$splitdata->{$position} = $localdata;
+    }
+
+    # Determinatives and phonetic complements: g:d with g:role and g:pos
+    if ($tag eq "g:d") {
+	my @det_elements = $root->children();
+	$type = $root->{att}->{"g:role"};
+	$prepost = $root->{att}->{"g:pos"};
+	my $temp = ();
+	foreach my $j (@det_elements) {
+	    $localdata = &splitWord($j, $position, $type, $prepost);
+	    push (@{$temp}, $localdata);
+	    $position++; $localdata = {};
+	}
+	return $temp;
+    }
+    
+    # Compounds: g:c { form? , g.meta , c.model , mods* }
+    # and: g:g { g.meta , c.model , mods* }
+    # -> n | s | c | (g,mods*) | q
+    #	    <g:c form="|BAD×DIŠ@t|" xml:id="Q000003.12.2.0" g:status="ok">
+#                <g:s>BAD</g:s>
+#                <g:o g:type="containing"/> 
+#                <g:s form="DIŠ@t">
+#                    <g:b>DIŠ</g:b>
+#                    <g:m>t</g:m>
+#                </g:s>
+#            </g:c>
+
+#	    <g:c form="|EN.PAP.IGI@g.NUN.ME.EZEN×KASKAL|">
+#                    <g:s>EN</g:s>
+#                    <g:o g:type="beside"/>
+#                    <g:s>PAP</g:s>
+#                    <g:o g:type="beside"/>
+#                    <g:s form="IGI@g">
+#                        <g:b>IGI</g:b>
+#                        <g:m>g</g:m>
+#                    </g:s>
+#                    <g:o g:type="beside"/>
+#                    <g:s>NUN</g:s>
+#                    <g:o g:type="beside"/>
+#                    <g:s>ME</g:s>
+#                    <g:o g:type="beside"/>
+#                    <g:s>EZEN</g:s>
+#                    <g:o g:type="containing"/>
+#                    <g:s>KASKAL</g:s>
+#                </g:c>
+
+#	g:g ??   
+#	    <g:c form="|(SAL.TUG..).PAP.IGI@g.ME.EZEN×KASKAL|">
+#                    <g:g>
+#                        <g:s>SAL</g:s>
+#                        <g:o g:type="beside"/>
+#                        <g:s g:accented="TÚG">TUG..</g:s>
+#                    </g:g>
+#                    <g:o g:type="beside"/>
+#                    <g:s>PAP</g:s>
+#                    <g:o g:type="beside"/>
+#                    <g:s form="IGI@g">
+#                        <g:b>IGI</g:b>
+#                        <g:m>g</g:m>
+#                    </g:s>
+#                    <g:o g:type="beside"/>
+#                    <g:s>ME</g:s>
+#                    <g:o g:type="beside"/>
+#                    <g:s>EZEN</g:s>
+#                    <g:o g:type="containing"/>
+#                    <g:s>KASKAL</g:s>
+#                </g:c>
+	    
+#	    <g:c form="|MUŠ&amp;KAK&amp;MUŠ|" xml:id="Q000003.121.1.0" g:status="ok">
+#                    <g:s>MUŠ</g:s>
+#                    <g:o g:type="above"/>
+#                    <g:s>KAK</g:s>
+#                    <g:o g:type="above"/>
+#                    <g:s>MUŠ</g:s>
+#                </g:c>
+
+    if (($tag eq "g:c") || ($tag eq "g:g")) {
+	my @c_elements = $root->children();
+	if ($root->{att}->{"g:delim"}) { $delim = $root->{att}->{"g:delim"}; }
+	if ($root->{att}->{"g:break"}) { $break = $root->{att}->{"g:break"}; }
+
+	my $temp = ();
+	foreach my $c (@c_elements) { # elements with "containing" !! g:o
+	    if ($c->tag eq "g:o") {
+		my $punct = "";
+		my $type = $c->{att}->{"g:type"};
+		if ($type eq "beside") { $punct = "."; }
+		elsif ($type eq "containing") { $punct = "x"; }
+		elsif ($type eq "above") { $punct = "&amp;"; }  # other types = joining, reordered, crossing, opposing; how marked ??
+		$localdata->{"combo"} = $type;
+		$localdata->{"delim"} = $punct;
+		}
+	    else {
+		$localdata = &splitWord($c, $position, "", "", $break, $delim);
+		$position++; 
+	    }
+	    push (@{$temp}, $localdata);
+	    $localdata = {};
+	}
+	&listCombos($root);
+	return $temp;
+    }
+    
+    # Qualified graphemes: g:q { form? , g.meta , (v|s|c) , (s|c|n) }
+    # 2 parts: interpretation and sign combination
+    # g:q -> take $value = form ["NERGALx(|U.GUR|)"]; $type = type of first element [g:s]
+	    # <g:q form="NERGALx(|U.GUR|)" xml:id="P363524.30.1.1" g:status="ok"> # unicode lower x
+              #  <g:s>NERGALx</g:s>
+              #  <g:c form="|U.GUR|">
+              #    <g:s>U</g:s>
+              #    <g:o g:type="beside"/>
+              #    <g:s>GUR</g:s>
+              #  </g:c>
+              #</g:q>
+    if ($tag eq "g:q") {
+        my $firstpart = $root->getFirstChild();
+	if ($firstpart->{att}->{"g:delim"}) { $delim = $firstpart->{att}->{"g:delim"}; }
+	if ($firstpart->{att}->{"g:break"}) { $break = $firstpart->{att}->{"g:break"}; }
+	$localdata = &splitWord($firstpart, $position, "", "", $delim, $break);
+	
+	my $secondpart = $firstpart->getNextSibling();
+	&listCombos($root);
+	
+	return $localdata;
+    }
+    
+    # Groups: g:gg
+    # http://oracc.museum.upenn.edu/ns/gdl/1.0/words.rnc.html
+#    group = element g:gg {
+#			attribute g:type { 
+#					"correction" | "alternation" | "group" | "reordering" | "ligature" | "implicit-ligature" | "logo" | "numword"
+#			} ,
+#	    g.meta , (group | grapheme)+   }
+
+# g:gg -> all elements matter; type of gg may matter 
+#	    <g:gg g:type="correction" g:status="ok" g:hc="1">
+#              <g:v g:accented="ù" g:utf8=" xml:id="P338566.6.2.0" g:break="damaged" g:remarked="1" g:ho="1">u...</g:v>
+#              <g:c form="|DI.LU|" g:utf8="">
+#                <g:s>DI</g:s>
+#                <g:o g:type="beside"/>
+#                <g:s>LU</g:s>
+#              </g:c>
+#            </g:gg>
+
+#	    <g:gg g:type="reordering">
+#                <g:v xml:id="Q000003.13.1.0" g:status="ok" g:delim=":">en</g:v>
+#                <g:s xml:id="Q000003.13.1.1" g:status="ok">IB</g:s>
+#            </g:gg>
+
+#	    <g:gg g:type="logo">
+#              <g:s xml:id="P338566.6.4.0" g:status="ok" g:role="logo" g:logolang="sux" g:delim=".">IGI</g:s>
+#              <g:s xml:id="P338566.6.4.1" g:status="ok" g:role="logo" g:logolang="sux">IGI</g:s>
+#              <g:d g:role="phonetic" g:pos="post">
+#                <g:v g:utf8="" xml:id="P338566.6.4.2" g:status="ok">mar</g:v>
+#              </g:d>
+#            </g:gg>
+
+#	gg within gg!
+#	    <g:gg g:type="logo">
+#                <g:s g:accented="..." xml:id="P363524.24.4.0" g:status="ok" g:role="logo" g:logolang="sux" g:delim=".">E...</g:s>
+#                <g:s xml:id="P363524.24.4.1" g:status="ok" g:role="logo" g:logolang="sux" g:delim=".">I</g:s>
+#                <g:s g:accented="..." xml:id="P363524.24.4.2" g:status="ok" g:role="logo" g:logolang="sux" g:delim=".">BI...</g:s>
+#                <g:d g:role="semantic" g:pos="pre">
+#                  <g:v xml:id="P363524.24.4.3" g:status="ok">d</g:v>
+#                </g:d>
+#                <g:gg g:type="correction" g:status="ok">
+#                  <g:c form="|A.NUM|" xml:id="P363524.24.4.4" g:remarked="1" g:role="logo" g:logolang="sux">
+#                    <g:s>A</g:s>
+#                    <g:o g:type="beside"/>
+#                    <g:s>NUM</g:s>
+#                  </g:c>
+#                  <g:s>RU</g:s>
+#                </g:gg>
+#              </g:gg>
+
+    if ($tag eq "g:gg") { # "correction" | "alternation" | "group" | "reordering" | "ligature" | "implicit-ligature" | "logo" | "numword"
+	my @gg_elements = $root->children();
+	$group = $root->{att}->{"g:type"}; 
+	if ($root->{att}->{"g:delim"}) { $delim = $root->{att}->{"g:delim"}; }
+	if ($root->{att}->{"g:break"}) { $break = $root->{att}->{"g:break"}; }
+	my $temp = ();
+	if ($group eq "correction") { # only first element matters - how about other groupings??? (not in my test-examples)
+	    my $gg = $root->getFirstChild();
+	    $localdata = &splitWord($gg, $position, "", "", $break, $delim, $group);
+	    push (@{$temp}, $localdata);
+	    $position++; $localdata = {};
+	}
+	else { # good for "logo", "reordering"
+	    foreach my $gg (@gg_elements) {
+	        $localdata = &splitWord($gg, $position, "", "", $break, $delim, $group);
+	        push (@{$temp}, $localdata);
+	        $position++; $localdata = {};
+	    }
+	}
+	&listCombos($root);
+	return $temp;
+    }
+    
+    return $splitdata;
+}
+   
+
+sub listCombos { # TODO
+    my $root = shift;
+}
+
+sub saveWord { # TODO, LANGUAGE-dependent
+    my $lang = shift;
+    my $form = shift;
+    my $break = shift;
+    my $wordtype = shift;
+    my $cf = shift;
+    my $pofs = shift;
+    my $epos = shift;
+    my $writtenWord = shift;
+    
+    if($lang eq "") { $lang = "noLang"; }
+    
+    my $totaltype = "total_".$wordtype;
+    $PQdata{"03_Words"}{$wordtype}{$totaltype}{$wordtype}{'count'}++;
+    $PQdata{"03_Words"}{$wordtype}{$totaltype}{$wordtype}{$break}{'num'}++;
+    if ($form ne "") {
+	if ($cf ne "") {
+	    $PQdata{"03_Words"}{$wordtype}{'form'}{$form}{'cf'}{$cf}{'pofs'}{$pofs}{'epos'}{$epos}{"state"}{$break}{'num'}++;
+	    if ($break eq "damaged") { $PQdata{"03_Words"}{$wordtype}{'form'}{$form}{'cf'}{$cf}{'pofs'}{$pofs}{'epos'}{$epos}{"state"}{$break}{"written"}{$writtenWord}{'num'}++; }
+	    }
+	else {
+	    $PQdata{"03_Words"}{$wordtype}{'form'}{$form}{"state"}{$break}{'num'}++;
+	    if ($break eq "damaged") { $PQdata{"03_Words"}{$wordtype}{'form'}{$form}{"state"}{$break}{"written"}{$writtenWord}{'num'}++; }
+	}
+    }
+    $PQdata{'count'}++;
+}
+
+sub saveSign { # TODO, LANGUAGE-dependent
+    my @arrayWord = shift;
+}
+
+
+sub dographemeData{ # DELETE
     my $root = shift;
     my $localdata = shift;
     my %graphemearraytemp = ();
     
     my $sumgraphemes =0;
-    my @cells = $root->get_xpath('c');
-    my @fields = $root->get_xpath('f');
-    my @alignmentgrp = $root->get_xpath('ag');
     
-    foreach my $i (@cells){
-	my $temp = &dographemeData($i,$localdata);
-	#$sumgraphemes = &addgraphemes($sumgraphemes,$temp);
-	push(@{ $graphemearraytemp{'cells'} }, $temp);
-    }
-    foreach my $i (@fields){
-	my $temp = &dographemeData($i,$localdata);
-	#$sumgraphemes = &addgraphemes($sumgraphemes,$temp);
-	$temp->{"type"} = $i->{att}->{"type"};
-	push(@{ $graphemearraytemp{'fields'} }, $temp);
-    }
-    foreach my $i (@alignmentgrp){
-	my $temp = &dographemeData($i,$localdata);
-	#$sumgraphemes = &addgraphemes($sumgraphemes,$temp);
-	$temp->{"form"} = $i->{att}->{"form"};
-	push(@{ $graphemearraytemp{'alignmentgrp'} }, $temp);
-    }
     
     #split words 
     
@@ -604,56 +1017,9 @@ sub dographemeData{
 	if ($word->{att}->{"form"} ne "o"){ # words with form="o" are not words at all and shouldn't be considered (e.g. SAA 1 10 o 18 = P 334195).
 	    $lang = $word->{att}->{'xml:lang'};
 	    my $temp = &doInsideGrapheme($word, $localdata, $lang);
-	    my $form = "";
-	    if ($word->{att}->{"form"}){
-	        $form = $word->{att}->{"form"};
-	    }
-	    my $wordid = $word->{att}->{"xml:id"};
-	    my $tempvalue = '//l[@ref="'.$wordid.'"]/xff:f'; # problem here  /xtf:transliteration//xcl:l[@ref=$wordid]/xff:f/@cf
-	    my $cf = ""; my $pofs = ""; my $epos = "";
-            
-
-                # xtf-file
-            #print "\n".$tempvalue."\n";
-	    my @wordref = $PQroot->get_xpath($tempvalue); 
-            #my @wordref = $PQroot->get_xpath('//l[@ref="Q000003.1.1"]/xff:f');
-            
-            
-	    for (@wordref) {
-                my $item = $_;
-                if($item->{att}->{"cf"}){
-                    $cf = $item->{att}->{"cf"};
-                    $pofs = $item->{att}->{"pos"};
-                    $epos = $item->{att}->{"epos"};
-                    #print $cf;
-                }
-                
-	    }
-	    
-	    if (($pofs eq "") && ($form ne "")) { # check if PN or not (rough classification)
-		if ($form =~ /(^\{1\})|(^\{m\})/) {
-		    $pofs = "PN";
-		}
-	    }
-	    
-	    if ($pofs eq "RN") {
-		$pofs = "PN";  # no use to distinguish royal and other personal names in this analysis, I think
-	    }
-	    
-	    if (($pofs eq "") && ($form ne "")) { # check if DN or not
-		if ($form =~ /(^\{d\})/) {
-		    $pofs = "DN";
-		}
-	    }
-	    
-	    # one could roughly classify geographical names (with {ki}, {kur}, {uru/iri}, {id2}), but I'm not sure how useful this would be
 	    
 	    #&outputtext("\nWord: ". $form."; lang: ".$lang);
-	    my @children = $word->children();
-	    my $no_children = scalar @children;
-	    my $condition = 0;  # missing (2), damaged (1), preserved (0)
-	    # how about marking preserved signs somehow, so that we immediately know how many of each are preserved ***
-	    # pofs = part-of-speech (pos is used already for position)
+	    
             
 #APRIL TODO THINK ABOUT THIS:::     do we mark in determinatives and phonetic complements in the array or have separate arrays for each
            #my %a_withd = {
@@ -684,49 +1050,15 @@ sub dographemeData{
            
            
             
-	    foreach my $i (@children) {
-		my $break = "";
-		if ($i->{att}->{"g:break"}) {
-		    $break = $i->{att}->{"g:break"};
-		}
-		if ($break eq "missing") { $condition = $condition + 2; }
-		elsif ($break eq "damaged") { $condition++; }
-	    }
-	    my $state = "damaged";
-	    if ($condition == 0) { $state = "preserved"; }
-	    elsif ($condition == (2*$no_children))
-		{ $state = "missing"; }
 	    
-	    if ($pofs ne "PN") {
-		saveWord($lang,$form,$localdata,$state,$temp,"words",$cf, $pofs, $epos);
-	    }
-	    else {
-		saveWord($lang,$form,$localdata,$state,$temp,"PN",$cf, $pofs, $epos);
-	    }
-	    
-	    push(@{ $graphemearraytemp{'words'} }, $temp);
 	}
     }
     
-    my $total = $sumgraphemes + $graphemesize;
-    
-    if(!defined $localdata->{'words'}){
-	$localdata->{'words'} = ();
-    }
-    if(!defined $localdata->{'words'}{'count'}){
-	$localdata->{'words'}{'count'}=0;
-    }
-
-    #&outputtext("\n Total Number of graphemes within Line ".$sumgraphemes);
-    #&outputtext("\n Number of graphemes not in sub groups ".$graphemesize);
-    #&outputtext("\n Total Number of lines ".$total);
-    #$graphemearray->{'grapheme'} = $graphemesize;
-    #$graphemearray->{'allgraphemes'} = $total;
     return \%graphemearraytemp;
 }
 
 
-sub doInsideGrapheme{
+sub doInsideGrapheme{ # DELETE
     my $root = shift;  # word or sign
     my $localdata = shift;
     my $lang = shift; 
@@ -826,27 +1158,9 @@ sub doInsideGrapheme{
 	}
     };#can be 1st and last
     
-    
-# in this subroutine there is no section for @graphemesV and these values are correctly gathered;
-# the values for @graphemesS, however, are wrong. Hope deleting this helps. Bit better, not yet totally fixed though.
-#    my @graphemesS = $root->get_xpath('g:s');
-#    my $stemp = &doG("graphemesS",$lang,\@graphemesS, $localdata, $role, $pos);
-#    if (scalar keys %$stemp){
-#	$singledata{"graphemesS"}{"data"} = $stemp;
-#    }
-#    foreach my $i (@graphemesS){
-#	if (($role eq "") && ($i->{att}->{"g:role"})) {
-#	    $role = $i->{att}->{"g:role"};
-#	}
-#	my $temp = &doInsideGrapheme($i, $localdata, $lang, $role, $pos);
-#	if (scalar keys %$temp){
-#	    push @{ $singledata{"graphemesS"}{"inner"} } , $temp;
-#	}
-#    };#can have things inside
-    
     return \%singledata;
 }
-sub doGSingles{
+sub doGSingles{ # DELETE
     my $lang = shift;
     my $root = shift;
     my $localdata = shift;
@@ -861,7 +1175,7 @@ sub doGSingles{
     return \%singledata;
 }
 
-sub doGsv{ 
+sub doGsv{  # DELETE
     my $name = shift;
     my $lang = shift;
     my $root = shift;
@@ -988,64 +1302,9 @@ sub doGsv{
     return \%singledata;
 }
 
-sub saveWord{
-#    my $name = shift;
-    my $lang = shift;
-    my $form = shift;
-    my $localdata = shift;
-    my $break = shift;
-    my $singledata = shift;
-    my $type = shift;
-    my $cf = shift;
-    my $pofs = shift;
-    my $epos = shift;
-    
-    if($lang eq ""){
-	$lang = "noLang";
-    }
-    
-    $localdata->{$type}{'count'}++;
-    $localdata->{$type}{"state"}{$break}{'num'}++;
-    
-    abstractdata2(\%{$localdata->{"lang"}{$lang}{$type}},$form,$cf,$pofs,$break,$epos,$type);
-    
-#    if($localdata->{"period"}){
-#	abstractdata2(\%{$perioddata{$localdata->{"period"}}{"lang"}{$lang}{$type}},$form,$cf,$pofs,$break,$epos,$type);
-#    }
-#    
-#    if($lang){
-#	abstractdata2(\%{$langdata{$lang}{$type}},$form,$cf,$pofs,$break,$epos,$type);
-#    }
-}
-
-sub abstractdata2{
-    my $data = shift;
-    my $form = shift;
-    my $cf = shift;
-    my $pofs = shift;
-    my $break = shift;
-    my $epos = shift;
-#    my $name = shift;
-    my $type = shift;
-
-    my $totaltype = "total_".$type;
-    
-    $data->{"type"}{$type}{$totaltype}{$type}{$break}{'num'}++;
-    if ($form ne "") {
-	if ($cf ne "") {
-	    $data->{"type"}{$type}{'form'}{$form}{'cf'}{$cf}{'pofs'}{$pofs}{'epos'}{$epos}{"state"}{$break}{'num'}++;
-	    }
-	else {
-	    $data->{"type"}{$type}{'form'}{$form}{"state"}{$break}{'num'}++;
-	}
-	$data->{"type"}{$type}{"total"}{$break}{'num'}++;
-    }
-    $data->{'count'}++;
-}
 
 
-
-sub saveData{
+sub saveData{ #DELETE
     my $name = shift;
     my $role = shift;
     my $pos = shift;
@@ -1183,7 +1442,7 @@ sub saveData{
 #    }
 }
 
-sub abstractdata{
+sub abstractdata{ # DELETE
     my $data = shift;
     my $baseform = shift;
     my $break = shift;
@@ -1200,7 +1459,7 @@ sub abstractdata{
 }
 
 
-sub doG{
+sub doG{ # DELETE
     my $name = shift;
     my $lang = shift;
     my $root = shift;
@@ -1235,7 +1494,7 @@ sub doG{
 
 
 #abstracted so it can become more complex if the Line gets more complex
-sub addLines{
+sub addLines{ # DELETE
     my $data = shift;
     my $adddata = shift;
     return $data + $adddata->{"totalLines"};
@@ -1288,7 +1547,7 @@ sub writetoerror{
     close(SUBFILE2);
 }
 #iterate over folder
-sub traverseDir{
+sub traverseDir{  # TODO: check if this works over directory structure
     my $path = shift; # filepath to start the search
     my $dirname = shift; #directory to start the search
     my $typename = shift; # parameter used in the global hash %config to save info
