@@ -110,8 +110,6 @@ sub doQstats{
 
     &checkPQdataStructure;
 
-# add no_lines to higher levels ?? TODO    
-    
     &writetofile($shortname, \%PQdata);
 }
 
@@ -155,7 +153,7 @@ sub doPstats{
     if (!defined $PQdata{"01_Structure"}) { $PQdata{"01_Structure"} = (); }
     
     push(@{$PQdata{"01_Structure"}}, &getStructureData($root, "P"));
-# add no_lines to higher levels here??? TODO
+
     &checkPQdataStructure;
 
     &writetofile($shortname,\%PQdata);
@@ -310,8 +308,9 @@ sub getStructureData{
     my $PorQ = shift;
     my %structdata = ();
     my $localdata = {};
+    my $label = "";
     
-    # P-texts: surfaces, columns, divisions [milestones], lines
+    # P-texts: surfaces, columns, divisions [milestones], lines # CHECK ORACC: what happens now with milestones/colophons ???
     # Q-texts: divisions, lines
 
     my @nonxes = $root->get_xpath('nonx');
@@ -367,7 +366,7 @@ sub getStructureData{
 	$localdata = &getStructureData($d, $PorQ);
 	$localdata->{'type'} = $d->{att}->{type}?$d->{att}->{type}:"";    
 	$localdata->{'n'} = $d->{att}->{n}?$d->{att}->{n}:"";
-	
+
 	push (@{$structdata{"div"}}, $localdata);
 	$localdata = {};
     }
@@ -386,7 +385,7 @@ sub getStructureData{
     
     foreach my $lg (@linegroups) {
 	my @speciallines = $lg->get_xpath('l');
-	my $type = ""; my $label = "";
+	my $type = ""; $label = ""; 
 	foreach my $j (@speciallines) { # check type of lg
 	    if ($type eq "") {
 		if ($j->{att}->{"type"}) { $type = $j->{att}->{"type"}; }
@@ -402,9 +401,10 @@ sub getStructureData{
 	    my $number = 0;
 	    foreach my $j (@speciallines) {
 		$number++;
-		$localdata = &getLineData($j);
+		my $speciallabel = $label." (".$number.")";
+		$localdata = &getLineData($j, $speciallabel);
 		$localdata->{"type"} = $type;
-		$localdata->{"label"} = $label." (".$number.")";
+		$localdata->{"label"} = $speciallabel;
 		push (@{$structdata{"line"}}, $localdata);
 		$localdata = {};
 	    }
@@ -416,7 +416,7 @@ sub getStructureData{
 	    $structdata{'no_lines'}++;
 	    $localdata = {};
 	}
-	else { # check anew *** still has to go through getLineData TODO
+	else { # nts check anew *** still has to go through getLineData TODO
 	    $localdata->{"type"} = $type;
 	    $localdata->{"label"} = $label;
 	    push (@{$structdata{"line"}}, $localdata);
@@ -430,16 +430,16 @@ sub getStructureData{
     my $no_lines = scalar @lines;
     if ($no_lines != 0) {
 	$structdata{'no_lines'} += $no_lines;
-	#add this total also to the levels above (up to level 01_Structure; below opt)
-	# how can I address these levels??? ask Chris *** TODO - or elsewhere?
+	
     }
     foreach my $l (@lines) {
 	if (!defined $structdata{"line"}) {
 	    $structdata{"line"} = ();
 	}
 	
-	$localdata = &getLineData($l);
-	$localdata->{"label"} = $l->{att}->{"label"};
+	$label = $l->{att}->{"label"};
+	$localdata = &getLineData($l, $label);
+	$localdata->{"label"} = $label;
 	push (@{$structdata{"line"}}, $localdata);
 	$localdata = {};
     }
@@ -448,6 +448,7 @@ sub getStructureData{
 
 sub getLineData {
     my $root = shift;
+    my $label = shift;
     my %linedata = ();
     my $localdata = {};
     
@@ -456,7 +457,7 @@ sub getLineData {
     
     my @cells = $root->get_xpath('c');
     foreach my $c (@cells){
-	$localdata = &getLineData($c);
+	$localdata = &getLineData($c, $label);
 	$localdata->{"span"} = $c->{att}->{"span"};
 	push(@{$linedata{'cells'}}, $localdata);
 	$localdata = {};
@@ -464,7 +465,7 @@ sub getLineData {
     
     my @fields = $root->get_xpath('f');
     foreach my $f (@fields){
-	$localdata = &getLineData($f);
+	$localdata = &getLineData($f, $label);
 	$localdata->{"type"} = $f->{att}->{"type"};
 	push(@{$linedata{'fields'}}, $localdata);
 	$localdata = {};
@@ -472,34 +473,33 @@ sub getLineData {
     
     my @alignmentgrp = $root->get_xpath('ag');
     foreach my $ag (@alignmentgrp) {
-	$localdata = &getLineData($ag);
+	$localdata = &getLineData($ag, $label); 
 	$localdata->{"form"} = $ag->{att}->{"form"};
 	push(@{$linedata{'alignmentgroup'}}, $localdata);
 	$localdata = {};
     }
    
     # l.inner
-    # l.inner = words, normwords??, surro??, gloss?? TODO
+    # l.inner = words, normwords??, surro??, gloss?? *** CHECK ORACC: FILES with examples of these?
         
     my @nonw = $root->get_xpath('g:nonw');
     my $no_nonw = scalar @nonw;
     foreach my $nw (@nonw) {
-	$localdata->{"type"} = $nw->{att}->{"type"}; # what are the options? check Oracc. *** TODO
-#	print "\nNonw ".$localdata->{"type"};
+	$localdata->{"type"} = $nw->{att}->{"type"}; # "comment" | "dollar" | "excised" | "punct" | "vari" *** CHECK ORACC: FILES with examples of these? (I've only found "punct" so far)
 	my $sign = "";
 	
-	if ($nw->get_xpath('g:p')) {
+	if ($nw->get_xpath('g:p')) {  # punctuation
 	    $sign = ($nw->get_xpath('g:p'))[0]->{att}->{"g:type"};
 	}
 
-	if ($nw->get_xpath('g:v')) {
+	if ($nw->get_xpath('g:v')) {  # does this actually happen?
 	    $sign = ($nw->get_xpath('g:v'))[0]->text;
 	}
 
 	$localdata->{"sign"} = $sign;
 	
 	push (@{$linedata{'nonw'}}, $localdata);
-	# saveSign/Word?
+	# saveSign # TODO
 	$localdata = {};
     }
     
@@ -511,17 +511,27 @@ sub getLineData {
     # plus track words, signs, etc.
     my @words = $root->get_xpath('g:w');
     foreach my $word (@words) {
-	$linedata{'words'}++;
-	if ($word->{att}->{headform}) { # beginning of split word TODO
-	    
+	my @children = $word->children(); my $no_children = scalar @children;
+	my $tag = $children[0]->tag;
+	if (($tag eq "g:x") && ($no_children == 1)) { # I don't want to count an ellipsis as 1 word [could be more or (even) less]
+		if ($children[0]->{att}->{"g:type"}) { $localdata->{"kind"} = $children[0]->{att}->{"g:type"}; }
+		if ($children[0]->{att}->{"g:break"}) { $localdata->{"state"} = $children[0]->{att}->{"g:break"}; }
+		push (@{$linedata{'x'}}, $localdata);
+	    }
+	else  {
+	    $linedata{'words'}++;
+	    if ($word->{att}->{headform}) { # beginning of split word
+		$localdata = &analyseWord($word, $label, "splithead");
+		$localdata->{"split"}++;
+	    }
+	    elsif ($word->{att}->{"form"} ne "o"){ # words with form="o" are not words at all and shouldn't be considered (e.g. SAA 1 10 o 18 = P 334195)
+		# normal words
+		# analyse words - collect all sign information (position, kind, delim, state)
+		#print "\nAnalyse ". $word->{att}->{"form"};
+		$localdata = &analyseWord($word, $label);
+	    }
+	#push (@{$linedata{'words'}}, $localdata); TODO	# statistical data
 	}
-	elsif ($word->{att}->{"form"} ne "o"){ # words with form="o" are not words at all and shouldn't be considered (e.g. SAA 1 10 o 18 = P 334195)
-	 # normal words
-	    # analyse words - save word, with all extra information; save signs with position etc.
-	    #print "\nAnalyse ". $word->{att}->{"form"};
-	    $localdata = &analyseWord($word);
-	}
-	#push (@{$linedata{'words'}}, $localdata); TODO
 	$localdata = {};
     }
     
@@ -529,76 +539,72 @@ sub getLineData {
     my $no_split = scalar @splitends;
     if ($no_split > 0) {
 	foreach my $split (@splitends) { # end of split word - not counted extra in wordcount TODO
-	    
+	    # use headref
+	    $localdata = &analyseWord($split, $label, "splitend"); #-> needs to get the form it belongs to
+	    $localdata->{"split"}++;
 	}
+	#push (@{$linedata{'words'}}, $localdata); TODO	# statistical data
+	$localdata = {};
     }
     
     my @xes = $root->get_xpath('g:x');
     foreach my $x (@xes) {
-	# save and count TODO
+	$localdata->{"kind"} = $x->{att}->{"g:type"}; 	# "disambig" | "empty" | "newline" | "user" | "ellipsis" | "word-absent" | "word-broken" | "word-linecont"
+	# *** CHECK ORACC: FILES with examples of these? (I've only found "ellipsis" so far)
+	if ($x->{att}->{"g:break"}) { $localdata->{"state"} = $x->{att}->{"g:break"}; }
+	push (@{$linedata{'x'}}, $localdata);
+	$localdata = {};
     }
     
     return \%linedata;
 }
 
 sub checkPQdataStructure{
-
-    while (my ($k, $v) = each $PQdata{"01_Structure"}[0] ) {
-        #print "\nkey: $k, value: $v.\n";
-	if ($k eq "surface") {
-	    while (my ($k2, $v2) = each $PQdata{"01_Structure"}[0]->{$k}) { 
-		print "\nkey2: $k2, value: $v2.\n";
-		while (my ($k3, $v3) = each $PQdata{"01_Structure"}[0]->{$k}[$k2]) { # column?
-		    print "\nkey3: $k3, value: $v3.\n";
-		#    if ($k3 eq "column") {
-		#	while (my ($k4, $v4) = each $PQdata{"01_Structure"}[0]->{$k}[$k2]->[$k3]) { # how do I get there??? HIER
-		#	    print "\nkey4: $k4, value: $v4.\n";
-		#	}
-		#    }
+    my $no_surfaces = 0; my $no_columns = 0; 
+    if ($PQdata{"01_Structure"}[0]{"no_surfaces"}) {
+	$no_surfaces = $PQdata{"01_Structure"}[0]{"no_surfaces"};
+	my $cnt = 0; my $no_lines_surface = 0;
+	while ($cnt < $no_surfaces) {
+	    if ($PQdata{"01_Structure"}[0]{"surface"}[$cnt]{"no_columns"}) {
+		$no_columns = $PQdata{"01_Structure"}[0]{"surface"}[$cnt]{"no_columns"};
+		my $cnt2 = 0; my $no_lines = 0;
+		while ($cnt2 < $no_columns) {
+		    if ($PQdata{"01_Structure"}[0]{"surface"}[$cnt]{"column"}[$cnt2]{"no_lines"}) {
+			$no_lines += $PQdata{"01_Structure"}[0]{"surface"}[$cnt]{"column"}[$cnt2]{"no_lines"};
+		    }
+		    $cnt2++;
 		}
+		$PQdata{"01_Structure"}[0]{"surface"}[$cnt]{"no_lines"} = $no_lines;
+		$no_lines_surface += $no_lines;
 	    }
-	    
+	    $cnt++;
+	    $PQdata{"01_Structure"}[0]{"no_lines"} = $no_lines_surface;
 	}
-	
     }
-
-#    for my $i (keys %PQdata){
-#	#print "\n Keys ".$i;
-#	if ($i eq "01_Structure") {
-#	    foreach my $j (keys $PQdata{$i}[0]) {
-#		
-#		if ($j eq "surface") {
-#		    foreach my $k (keys $PQdata{$i}[0]->{$j}) {
-#			
-#			my $no_lines = $PQdata{$i}[0]->{$j}[$k]###->{"no_lines"};
-#			print "\n keys ".$k." no of lines ".$no_lines;
-#		    }
-#		    #print "hoera surface";}
-#		}
-#	    }
-#	    
-#	}
-#    }
-    print "\n";
     
-#    foreach my $sign (keys %{$PQdata{$i}{"sign"}}) {
-#    
-#    if ($PQdata{"01_Structure"}['surface']) {
-#	
-#	print "column found\n";
-#	if ($PQdata{"01_Structure"}['surface']->{'column'}) {  # hier
-#	    print "hoera";
-#	}
-#	
-#    }
-    
-    #print Dumper(%PQdata);
-    
+    my $no_divs = 0;
+    if ($PQdata{"01_Structure"}[0]{"no_divs"}) {
+	$no_divs = $PQdata{"01_Structure"}[0]{"no_divs"};
+	my $cnt = 0; my $no_lines_div = 0;
+	while ($cnt < $no_divs) {
+	    if ($PQdata{"01_Structure"}[0]{"div"}[$cnt]{"no_lines"}) {
+		$no_lines_div += $PQdata{"01_Structure"}[0]{"div"}[$cnt]{"no_lines"}
+	    }
+	    $cnt++;
+	}
+	if ($PQdata{"01_Structure"}[0]{"no_lines"}) {
+	    $PQdata{"01_Structure"}[0]{"no_lines"} += $no_lines_div;
+	}
+	else {
+	    $PQdata{"01_Structure"}[0]{"no_lines"} = $no_lines_div;
+	}
+    }
 }
-
 
 sub analyseWord{
     my $word = shift;
+    my $label = shift;
+    my $split = shift || "";
     my %worddata = ();
     
 # return data as number of words, number of signs etc.
@@ -606,7 +612,7 @@ sub analyseWord{
     my $lang = $word->{att}->{'xml:lang'};
     my $form = "";
     if ($word->{att}->{"form"}){ $form = $word->{att}->{"form"}; }
-#    print "\n".$form;
+    #print "\n".$form;
     my $wordid = $word->{att}->{"xml:id"};
     my $tempvalue = '//l[@ref="'.$wordid.'"]/xff:f'; # /xtf:transliteration//xcl:l[@ref=$wordid]/xff:f/@cf
     my $cf = ""; my $pofs = ""; my $epos = "";
@@ -651,43 +657,88 @@ sub analyseWord{
     
     # how about marking preserved signs somehow, so that we immediately know how many of each are preserved ***
     # make temporary array of each word including information about determinative [det]/phonetic [phon], syllabic [syll], logographic [logo], logographic suffixes [logosuff]
-    # e.g. {mul}[dil]-<bat> becomes my @arrayWord = (
-#    						{ "pos" => "prebegin",
-#                                                 "type" => "det",
-#						  "value" => "mul",
-#						  "state" => "preserved"
-#						},    
-#    						{ "pos" => "begin",
-#                                                 "type" => "syll",
-#						  "value" => "dil",
-#						  "state" => "missing"
-#						},    
-#    						{ "pos" => "end",
-#                                                  "type" => "syll",
-#						  "value" => "bat",
-#						  "state" => "damaged"
-#						}
-#    						)
+    # 
+#Split: d
+#
+#Split: AMARUTU
+#$VAR1 = [
+#          [
+#            {
+#              '1' => {
+#                       'value' => 'd',
+#                       'type' => 'semantic',
+#                       'tag' => 'g:v',
+#                       'pos' => 1,
+#                       'prePost' => 'pre',
+#                       'state' => 'damaged'
+#                     }
+#            }
+#          ],
+#          [
+#            {
+#              '2' => {
+#                       'group' => 'logo',
+#                       'value' => 'AMAR',
+#                       'tag' => 'g:s',
+#                       'pos' => 2,
+#                       'delim' => '.',
+#                       'state' => 'damaged'
+#                     }
+#            },
+#            {
+#              '3' => {
+#                       'group' => 'logo',
+#                       'value' => 'UTU',
+#                       'tag' => 'g:s',
+#                       'pos' => 3,
+#                       'state' => 'damaged'
+#                     }
+#            }
+#          ]
+#        ];
+#    
     
-    #my $writtenWord = ""; my $condition = 0;# missing (2), damaged (1), preserved (0)
     my @arrayWord = ();
     
     my @children = $word->children();
     my $no_children = scalar @children;
-    my $position = 0; my $temp = {}; my $localdata = {};
+    my $position = 0; my $temp = {}; my $localdata = {}; my $cnt = 0;
     foreach my $i (@children) { # check each element of a word
-	#print "\nSplit: ".$i->text;
+	print "\nSplit: ".$i->text."\n";
 	$position++;
 	$temp = &splitWord ($i, $position);
 	push (@{$localdata->{"word"}}, $temp);
+	#push (@{$arrayWord[$cnt]}, $temp);
+	$cnt++;
 	$temp = {};
     }
     
     push (@{\@arrayWord}, $localdata->{"word"});
-    #print "\n";
-    #print Dumper(@arrayWord);
+    print Dumper(@arrayWord);
+    
+    # try to go through @arrayWord and make the writtenWord; also determine the condition of the word
+    my $writtenWord = ""; my $condition = 0;# missing (2), damaged (1), preserved (0)
+#    my $no_array_els = scalar @arrayWord; $cnt = 0;		FIX THIS - ask CHRIS
+#    while ($cnt < $no_array_els) {
+#	print "\n";
+#	my $pos = 1; # how do I get these values ??? TODO
+#	if ($arrayWord[$cnt][0]{"1"}) { print $arrayWord[$cnt][0]{"1"}{"value"}; }
+#	if ($arrayWord[$cnt][0]{"1"}{"delim"}) { print $arrayWord[$cnt][0]{"1"}{"delim"}; }
+#	$cnt++;
+#    }
+    
+    my $break;
+    if ($condition == 0) { $break = "preserved"; }
+    elsif ($condition == 1) { $break = "damaged"; }
+    elsif ($condition == 2) { $break = "missing"; }
+    # save the relevant data into \%worddata: probably only statistical information
+    
+    # saveWord
+    &saveWord($lang, $form, $break, $wordtype, $cf, $pofs, $epos, $writtenWord, $label, $split);
 
-# fill in worddata TODO
+    # saveSign
+
+# fill in worddata: number of preserved signs, etc. TODO
 
     return \%worddata;
 }
@@ -939,7 +990,7 @@ sub listCombos { # TODO
     my $root = shift;
 }
 
-sub saveWord { # TODO, LANGUAGE-dependent
+sub saveWord { 
     my $lang = shift;
     my $form = shift;
     my $break = shift;
@@ -947,24 +998,50 @@ sub saveWord { # TODO, LANGUAGE-dependent
     my $cf = shift;
     my $pofs = shift;
     my $epos = shift;
-    my $writtenWord = shift;
+    my $writtenWord = shift;  # TODO: add line number
+    my $label = shift;
+    my $split = shift;
     
     if($lang eq "") { $lang = "noLang"; }
     
     my $totaltype = "total_".$wordtype;
-    $PQdata{"03_Words"}{$wordtype}{$totaltype}{$wordtype}{'count'}++;
-    $PQdata{"03_Words"}{$wordtype}{$totaltype}{$wordtype}{$break}{'num'}++;
+    $PQdata{"03_Words"}{$lang}{$wordtype}{$totaltype}{'count'}++;
+    $PQdata{"03_Words"}{$lang}{$wordtype}{$totaltype}{$break}{'num'}++;
     if ($form ne "") {
-	if ($cf ne "") {
-	    $PQdata{"03_Words"}{$wordtype}{'form'}{$form}{'cf'}{$cf}{'pofs'}{$pofs}{'epos'}{$epos}{"state"}{$break}{'num'}++;
-	    if ($break eq "damaged") { $PQdata{"03_Words"}{$wordtype}{'form'}{$form}{'cf'}{$cf}{'pofs'}{$pofs}{'epos'}{$epos}{"state"}{$break}{"written"}{$writtenWord}{'num'}++; }
+	if ($cf ne "") {  # what happens when a word has different cfs? or is not always lemmatized?
+	    $PQdata{"03_Words"}{$lang}{$wordtype}{'form'}{$form}{'cf'} = $cf;
+	    $PQdata{"03_Words"}{$lang}{$wordtype}{'form'}{$form}{'pofs'} = $pofs;
+	    $PQdata{"03_Words"}{$lang}{$wordtype}{'form'}{$form}{'epos'} = $epos;
+	    if ($split ne "") {
+		$PQdata{"03_Words"}{$lang}{$wordtype}{'form'}{$form}{$split}++;
+	    }
+	    $PQdata{"03_Words"}{$lang}{$wordtype}{'form'}{$form}{'state'}{$break}{'num'}++;
+	    if ($break eq "damaged") {
+		$PQdata{"03_Words"}{$lang}{$wordtype}{'form'}{$form}{'state'}{$break}{'writtenform'}{$writtenWord}{'num'}++;
+		push (@{$PQdata{"03_Words"}{$lang}{$wordtype}{'form'}{$form}{'state'}{$break}{'writtenform'}{$writtenWord}{'line'}}, $label);
+		}
+	    else {
+		push (@{$PQdata{"03_Words"}{$lang}{$wordtype}{'form'}{$form}{'state'}{$break}{'line'}}, $label);
+	    }
+	    
+	    #$PQdata{"03_Words"}{$lang}{$wordtype}{'form'}{$form}{'cf'}{$cf}{'pofs'}{$pofs}{'epos'}{$epos}{"state"}{$break}{'num'}++;
+	    #if ($break eq "damaged") { $PQdata{"03_Words"}{$lang}{$wordtype}{'form'}{$form}{'cf'}{$cf}{'pofs'}{$pofs}{'epos'}{$epos}{"state"}{$break}{"written"}{$writtenWord}{'num'}++; }
 	    }
 	else {
-	    $PQdata{"03_Words"}{$wordtype}{'form'}{$form}{"state"}{$break}{'num'}++;
-	    if ($break eq "damaged") { $PQdata{"03_Words"}{$wordtype}{'form'}{$form}{"state"}{$break}{"written"}{$writtenWord}{'num'}++; }
+	    $PQdata{"03_Words"}{$lang}{$wordtype}{'form'}{$form}{'state'}{$break}{'num'}++;
+    	    if ($split ne "") {
+		$PQdata{"03_Words"}{$lang}{$wordtype}{'form'}{$form}{$split}++;
+	    }
+	    if ($break eq "damaged") {
+		$PQdata{"03_Words"}{$lang}{$wordtype}{'form'}{$form}{'state'}{$break}{"writtenform"}{$writtenWord}{'num'}++;
+		push (@{$PQdata{"03_Words"}{$lang}{$wordtype}{'form'}{$form}{'state'}{$break}{"writtenform"}{$writtenWord}{'line'}}, $label);
+	    }
+	    else {
+		push (@{$PQdata{"03_Words"}{$lang}{$wordtype}{'form'}{$form}{'state'}{$break}{'line'}}, $label);
+	    }
 	}
     }
-    $PQdata{'count'}++;
+    $PQdata{"03_Words"}{'count'}++;
 }
 
 sub saveSign { # TODO, LANGUAGE-dependent
