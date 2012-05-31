@@ -27,6 +27,8 @@ my $outputtype="text";
 my $resultspath = "..";
 my $resultsfolder = "/dataoutNEW";
 
+my @testthing = ();
+
 &ItemStats();
 
 sub ItemStats{    
@@ -701,19 +703,64 @@ sub analyseWord{
     my @arrayWord = ();
     
     my @children = $word->children();
+    
+    @testthing= ();
     my $no_children = scalar @children;
     my $position = 0; my $temp = {}; my $localdata = {}; my $cnt = 0;
     foreach my $i (@children) { # check each element of a word
 	print "\nSplit: ".$i->text."\n";
 	$position++;
-	$temp = &splitWord ($i, $position);
-	push (@{$localdata->{"word"}}, $temp);
+	&splitWord (\@testthing, $i, $position);
 	#push (@{$arrayWord[$cnt]}, $temp);
 	$cnt++;
 	$temp = {};
     }
+    my $testword = "";
+    my $lastdelim = "";
+    my $lastend = "";
+    foreach(@testthing){
+	my $thing = $_;
+	my $startbit = "";
+	my $endbit = "";
+	my $value = $thing->{'value'};
+	#print Dumper $thing;
+	if($thing->{"type"} && ( $thing->{"type"} eq "semantic" || $thing->{"type"} eq "phonetic") ){
+#	    value gets {}
+	    $value = "{".$value."}";
+	}
+	if($thing->{"state"} && $thing->{"state"} eq "missing"){
+#	    value gets []
+	    if($lastend ne "]"){
+		$startbit = "[" ;
+	    }
+	    else{$lastend = "";}
+	    $endbit = "]";
+	}
+	elsif($thing->{"state"} && $thing->{"state"} eq "damaged"){
+#	    value gets half[]
+	    if($lastend ne "\x{02FA}"){
+		$startbit = "\x{02F9}" ;
+	    }
+	    else{$lastend = "";}
+	    $endbit = "\x{02FA}";
+	}
+	my $delim = "";
+	if($thing->{"delim"}){
+#	    value gets {}
+	    $delim = $thing->{"delim"};
+	}
+	$testword .= $lastend.$lastdelim.$startbit.$value;
+	$lastend = $endbit;
+	$lastdelim = $delim;
+	
+    }
+    $testword .= $lastend.$lastdelim;
+    my %testdata;
+    $testdata{"word"} = $testword;
+    $testdata{"bits"} = \@testthing;
+    push (@{$localdata->{"word"}}, \%testdata);
     
-    push (@{\@arrayWord}, $localdata->{"word"});
+    push (@arrayWord, $localdata->{"word"});
     print Dumper(@arrayWord);
     
     # try to go through @arrayWord and make the writtenWord; also determine the condition of the word
@@ -743,7 +790,9 @@ sub analyseWord{
     return \%worddata;
 }
 
+
 sub splitWord {
+    my $splitdata = shift;
     my $root = shift;
     my $position = shift;
     my $type = shift || "";
@@ -753,7 +802,6 @@ sub splitWord {
     my $group = shift || "";
     
     my $localdata = {};
-    my $splitdata = ();
     my $tag = $root->tag;
     
     my $value = "";
@@ -782,7 +830,8 @@ sub splitWord {
 	if ($delim ne "") { $localdata->{"delim"} = $delim; }
 	if ($group ne "") { $localdata->{"group"} = $group; }
 
-	$splitdata->{$position} = $localdata;
+	push(@{$splitdata},$localdata);
+	return $splitdata;
     }
 
     # Determinatives and phonetic complements: g:d with g:role and g:pos
@@ -790,13 +839,15 @@ sub splitWord {
 	my @det_elements = $root->children();
 	$type = $root->{att}->{"g:role"};
 	$prepost = $root->{att}->{"g:pos"};
-	my $temp = ();
+	my @temp = ();
 	foreach my $j (@det_elements) {
-	    $localdata = &splitWord($j, $position, $type, $prepost);
-	    push (@{$temp}, $localdata);
-	    $position++; $localdata = {};
+	    $splitdata = &splitWord($splitdata, $j, $position, $type, $prepost);
+	    $position++;
 	}
-	return $temp;
+	
+	    #print Dumper $splitdata;
+	    #die;
+	#return $temp;
     }
     
     # Compounds: g:c { form? , g.meta , c.model , mods* }
@@ -875,16 +926,22 @@ sub splitWord {
 		elsif ($type eq "above") { $punct = "&amp;"; }  # other types = joining, reordered, crossing, opposing; how marked ??
 		$localdata->{"combo"} = $type;
 		$localdata->{"delim"} = $punct;
+		my $lastone = scalar @{$splitdata};
+		if(defined($splitdata->[$lastone - 1]->{"delim"})){
+#		 TODO   if g:c is followed by a g:s then put oldelim after last element of g:c see: Q00003 GA2GAR
+		    $splitdata->[$lastone - 1]->{"olddelim"} = $splitdata->[$lastone - 1]->{"delim"};
+		    #print print Dumper $splitdata;
+		    #die print Dumper $localdata;
+		}
+		$splitdata->[$lastone - 1]->{"delim"} = $punct;
+		$splitdata->[$lastone - 1]->{"combo"} = $type;
 		}
 	    else {
-		$localdata = &splitWord($c, $position, "", "", $break, $delim);
+		$splitdata = &splitWord($splitdata, $c, $position, "", "", $break, $delim);
 		$position++; 
 	    }
-	    push (@{$temp}, $localdata);
-	    $localdata = {};
 	}
 	&listCombos($root);
-	return $temp;
     }
     
     # Qualified graphemes: g:q { form? , g.meta , (v|s|c) , (s|c|n) }
@@ -902,12 +959,10 @@ sub splitWord {
         my $firstpart = $root->getFirstChild();
 	if ($firstpart->{att}->{"g:delim"}) { $delim = $firstpart->{att}->{"g:delim"}; }
 	if ($firstpart->{att}->{"g:break"}) { $break = $firstpart->{att}->{"g:break"}; }
-	$localdata = &splitWord($firstpart, $position, "", "", $delim, $break);
+	$splitdata = &splitWord($splitdata, $firstpart, $position, "", "", $delim, $break);
 	
 	my $secondpart = $firstpart->getNextSibling();
 	&listCombos($root);
-	
-	return $localdata;
     }
     
     # Groups: g:gg
@@ -964,22 +1019,19 @@ sub splitWord {
 	$group = $root->{att}->{"g:type"}; 
 	if ($root->{att}->{"g:delim"}) { $delim = $root->{att}->{"g:delim"}; }
 	if ($root->{att}->{"g:break"}) { $break = $root->{att}->{"g:break"}; }
-	my $temp = ();
+	my @temp = ();
 	if ($group eq "correction") { # only first element matters - how about other groupings??? (not in my test-examples)
 	    my $gg = $root->getFirstChild();
-	    $localdata = &splitWord($gg, $position, "", "", $break, $delim, $group);
-	    push (@{$temp}, $localdata);
-	    $position++; $localdata = {};
+	    $splitdata = &splitWord($splitdata, $gg, $position, "", "", $break, $delim, $group);
+	    $position++;
 	}
 	else { # good for "logo", "reordering"
 	    foreach my $gg (@gg_elements) {
-	        $localdata = &splitWord($gg, $position, "", "", $break, $delim, $group);
-	        push (@{$temp}, $localdata);
-	        $position++; $localdata = {};
+	        $splitdata = &splitWord($splitdata, $gg, $position, "", "", $break, $delim, $group);
+	        $position++; 
 	    }
 	}
 	&listCombos($root);
-	return $temp;
     }
     
     return $splitdata;
