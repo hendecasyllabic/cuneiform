@@ -27,7 +27,7 @@ my $outputtype="text";
 my $resultspath = "..";
 my $resultsfolder = "/dataoutNEW";
 
-my @testthing = ();
+my @splitrefs; # list of xml:id/headref; keep track of the split words that have been analysed through headform, so that they're not analysed twice.
 
 &ItemStats();
 
@@ -82,7 +82,7 @@ sub doQstats{
     $twigObj->purge;
     
     my $twigPQObj = XML::Twig->new(
-                                 twig_roots => { 'xcl' => 1 }
+                                 twig_roots => { 'composite' => 1, 'xcl' => 1 }
                                  );
     $twigPQObj->parsefile($filename);
     $PQroot = $twigPQObj->root;
@@ -123,14 +123,14 @@ sub doPstats{
     
     # xtf-file
     my $twigObj = XML::Twig->new(
-                                 twig_roots => { 'protocols' => 1, 'object' => 1, 'mds' => 1 }
+                                 twig_roots => { 'transliteration' => 1, 'protocols' => 1, 'object' => 1, 'mds' => 1 }
                                  );
     $twigObj->parsefile($filename);
     my $root = $twigObj->root;
     $twigObj->purge;
     
     my $twigPQObj = XML::Twig->new(
-                                 twig_roots => { 'xcl' => 1 }
+                                 twig_roots => { 'transliteration' => 1, 'xcl' => 1 }
                                  );
     $twigPQObj->parsefile($filename);
     $PQroot = $twigPQObj->root;
@@ -512,6 +512,8 @@ sub getLineData {
     # find no_words, no_signs per line, no_nonwords; preserved, damaged, missing
     # plus track words, signs, etc.
     my @words = $root->get_xpath('g:w');
+    my $preservedWords = 0; my $damagedWords = 0; my $missingWords = 0;
+    my $preservedSigns = 0; my $damagedSigns = 0; my $missingSigns = 0;
     foreach my $word (@words) {
 	my @children = $word->children(); my $no_children = scalar @children;
 	my $tag = $children[0]->tag;
@@ -522,17 +524,25 @@ sub getLineData {
 	    }
 	else  {
 	    $linedata{'words'}++;
+	    my $tempdata = {};
 	    if ($word->{att}->{headform}) { # beginning of split word
-		$localdata = &analyseWord($word, $label, "splithead");
-		$localdata->{"split"}++;
+		my $headref = $word->{att}->{"xml:id"};
+		$tempdata = &analyseWord($word, $label, "splithead");
+		$linedata{"split"}++;
+		push (@splitrefs, $headref);
 	    }
 	    elsif ($word->{att}->{"form"} ne "o"){ # words with form="o" are not words at all and shouldn't be considered (e.g. SAA 1 10 o 18 = P 334195)
 		# normal words
 		# analyse words - collect all sign information (position, kind, delim, state)
 		#print "\nAnalyse ". $word->{att}->{"form"};
-		$localdata = &analyseWord($word, $label);
+		$tempdata = &analyseWord($word, $label);
 	    }
-	#push (@{$linedata{'words'}}, $localdata); TODO	# statistical data
+	    if ($tempdata->{"stateWord"} eq "preserved") { $preservedWords++; }
+	    elsif ($tempdata->{"stateWord"} eq "damaged") { $damagedWords++; }
+	    elsif ($tempdata->{"stateWord"} eq "missing") { $missingWords++; }
+	    if ($tempdata->{"preservedSigns"}) { $preservedSigns += $tempdata->{"preservedSigns"}; }
+	    elsif ($tempdata->{"damagedSigns"}) { $damagedSigns += $tempdata->{"damagedSigns"}; }
+	    elsif ($tempdata->{"missingSigns"}) { $missingSigns += $tempdata->{"missingSigns"}; }
 	}
 	$localdata = {};
     }
@@ -540,14 +550,32 @@ sub getLineData {
     my @splitends = $root->get_xpath('g:swc');
     my $no_split = scalar @splitends;
     if ($no_split > 0) {
-	foreach my $split (@splitends) { # end of split word - not counted extra in wordcount TODO
-	    # use headref
-	    $localdata = &analyseWord($split, $label, "splitend"); #-> needs to get the form it belongs to
-	    $localdata->{"split"}++;
+	foreach my $split (@splitends) { # end of split word 
+	    # if the beginning of this word is preserved, then this end will have been treated together with the beginning
+	    # what happens here should only occur when only the end of the word is preserved (and the beginning is not reconstructed)
+	    if (!($split->{att}->{"headref"})) {
+		my $tempdata = {};
+		$tempdata = &analyseWord($split, $label, "splitend"); 
+		$linedata{"split"}++;
+		$linedata{'words'}++;
+		if ($tempdata->{"stateWord"} eq "preserved") { $preservedWords++; }
+		elsif ($tempdata->{"stateWord"} eq "damaged") { $damagedWords++; }
+	        elsif ($tempdata->{"stateWord"} eq "missing") { $missingWords++; }
+	        if ($tempdata->{"preservedSigns"}) { $preservedSigns += $tempdata->{"preservedSigns"}; }
+	        elsif ($tempdata->{"damagedSigns"}) { $damagedSigns += $tempdata->{"damagedSigns"}; }
+	        elsif ($tempdata->{"missingSigns"}) { $missingSigns += $tempdata->{"missingSigns"}; }
+	    }
+	    #else { print "found ".$split->{att}->{"headref"}; }
 	}
-	#push (@{$linedata{'words'}}, $localdata); TODO	# statistical data
-	$localdata = {};
     }
+    
+    if ($preservedWords > 0) { $linedata{'words_preserved'} = $preservedWords; }
+    if ($damagedWords > 0) { $linedata{'words_damaged'} = $damagedWords; }
+    if ($missingWords > 0) { $linedata{'words_missing'} = $missingWords; }
+    if ($preservedSigns > 0) { $linedata{'signs_preserved'} = $preservedSigns; }
+    if ($damagedSigns > 0) { $linedata{'signs_damaged'} = $damagedSigns; }
+    if ($missingSigns > 0) { $linedata{'signs_missing'} = $missingSigns; }
+    $linedata{'signs'} = $preservedSigns + $damagedSigns + $missingSigns;
     
     my @xes = $root->get_xpath('g:x');
     foreach my $x (@xes) {
@@ -648,7 +676,7 @@ sub analyseWord{
     
     # mul2 and id2 may not work - use of special coding ?? check ***
     # ROUGH CLASSIFICATION IF NOT LEMMATIZED
-    if (($wordtype eq "") && ($form ne "")) { # can these be given in capital letters???
+    if (($wordtype eq "") && ($form ne "")) { 
 	my $formsmall = lc ($form);
 	if ($formsmall =~ /(^\{1\})|(^\{m\})/) { $wordtype = "PersonalNames"; }
 	if (($formsmall =~ /(^\{d\})/) || ($formsmall =~ /(^\{mul\})/) || ($formsmall =~ /(^\{mul2\})/)) { $wordtype = "DivineCelestial"; }  
@@ -657,139 +685,182 @@ sub analyseWord{
 
     if (($wordtype ne "PersonalNames") && ($wordtype ne "DivineCelestial") && ($wordtype ne "Geography")) { $wordtype = "OtherWords"; }
     
-    # how about marking preserved signs somehow, so that we immediately know how many of each are preserved ***
-    # make temporary array of each word including information about determinative [det]/phonetic [phon], syllabic [syll], logographic [logo], logographic suffixes [logosuff]
-    # 
 #Split: d
-#
 #Split: AMARUTU
-#$VAR1 = [
-#          [
-#            {
-#              '1' => {
-#                       'value' => 'd',
-#                       'type' => 'semantic',
-#                       'tag' => 'g:v',
-#                       'pos' => 1,
-#                       'prePost' => 'pre',
-#                       'state' => 'damaged'
-#                     }
-#            }
-#          ],
-#          [
-#            {
-#              '2' => {
-#                       'group' => 'logo',
-#                       'value' => 'AMAR',
-#                       'tag' => 'g:s',
-#                       'pos' => 2,
-#                       'delim' => '.',
-#                       'state' => 'damaged'
-#                     }
-#            },
-#            {
-#              '3' => {
-#                       'group' => 'logo',
-#                       'value' => 'UTU',
-#                       'tag' => 'g:s',
-#                       'pos' => 3,
-#                       'state' => 'damaged'
-#                     }
-#            }
-#          ]
-#        ];
-#    
+#$VAR1 = {
+#          'value' => 'd',
+#          'type' => 'semantic',
+#          'tag' => 'g:v',
+#          'pos' => 1,
+#          'prePost' => 'pre',
+#          'state' => 'damaged'
+#        };
+#$VAR2 = {
+#          'group' => 'logo',
+#          'value' => 'AMAR',
+#          'tag' => 'g:s',
+#          'pos' => 2,
+#          'delim' => '.',
+#          'state' => 'damaged'
+#        };
+#$VAR3 = {
+#          'group' => 'logo',
+#          'value' => 'UTU',
+#          'tag' => 'g:s',
+#          'pos' => 3,
+#          'state' => 'damaged'
+#        };
     
     my @arrayWord = ();
     
     my @children = $word->children();
-    
-    @testthing= ();
+ 
     my $no_children = scalar @children;
-    my $position = 0; my $temp = {}; my $localdata = {}; my $cnt = 0;
+    my $position = 1; my $localdata = {}; my $cnt = 0; my $tempdata = {};
     foreach my $i (@children) { # check each element of a word
-	print "\nSplit: ".$i->text."\n";
-	$position++;
-	&splitWord (\@testthing, $i, $position);
-	#push (@{$arrayWord[$cnt]}, $temp);
+	#print "\nSplit: ".$i->text."\n";
+	#$position++;
+	($tempdata, $position) = &splitWord (\@arrayWord, $i, $position);
 	$cnt++;
-	$temp = {};
     }
-    my $testword = "";
-    my $lastdelim = "";
-    my $lastend = "";
-    foreach(@testthing){
+    
+    if ($split eq "splithead") {
+	my $ref = $word->{att}->{"xml:id"};
+	# look for splitend
+	my $tempvalue = '//g:swc[@headref="'.$ref.'"]'; 
+	my @splitenz = $PQroot->findnodes($tempvalue); 
+	if (@splitenz) {
+	    my $lastSoFar = scalar @arrayWord;
+	    $arrayWord[$lastSoFar - 1]->{"split"} = "split";
+	    my @endchildren = $splitenz[0]->children();
+	    $localdata = {}; $cnt = 0;
+	    foreach my $j (@endchildren) { 
+	        #print "\nSplit: ".$j->text."\n";
+	        #$position++;
+	        ($tempdata, $position) = &splitWord (\@arrayWord, $j, $position);
+	        $cnt++;
+	    }
+	    # add extra line number; find parent of swc
+	    my $parent = $splitenz[0]->parent();
+	    if ($parent->{att}->{"label"}) { my $extraLabel = $parent->{att}->{"label"}; $label .= "-".$extraLabel; }
+	}
+	#print Dumper @arrayWord;
+    }
+    
+    my $writtenWord = ""; 
+    my $preservedSigns = 0; my $damagedSigns = 0; my $missingSigns = 0;
+    my $lastdelim = ""; my $lastend = "";
+    foreach(@arrayWord){
 	my $thing = $_;
-	my $startbit = "";
-	my $endbit = "";
+	my $startbit = ""; my $endbit = "";
 	my $value = $thing->{'value'};
-	#print Dumper $thing;
-	if($thing->{"type"} && ( $thing->{"type"} eq "semantic" || $thing->{"type"} eq "phonetic") ){
-#	    value gets {}
+	if ($thing->{"type"} && ( $thing->{"type"} eq "semantic" || $thing->{"type"} eq "phonetic")) { # value gets {}
 	    $value = "{".$value."}";
 	}
-	if($thing->{"state"} && $thing->{"state"} eq "missing"){
-#	    value gets []
-	    if($lastend ne "]"){
-		$startbit = "[" ;
-	    }
-	    else{$lastend = "";}
+	
+	if($thing->{"state"} && $thing->{"state"} eq "missing"){ # value gets []
+	    if ($lastend ne "]") { $startbit = "[" ; }
+	    else { $lastend = ""; }
 	    $endbit = "]";
+	    $missingSigns++;
 	}
-	elsif($thing->{"state"} && $thing->{"state"} eq "damaged"){
-#	    value gets half[]
-	    if($lastend ne "\x{02FA}"){
-		$startbit = "\x{02F9}" ;
-	    }
-	    else{$lastend = "";}
+	elsif ($thing->{"state"} && $thing->{"state"} eq "damaged"){ # value gets half[]
+	    if ($lastend ne "\x{02FA}") { $startbit = "\x{02F9}" ; }
+	    else { $lastend = ""; }
 	    $endbit = "\x{02FA}";
+	    $damagedSigns++;
 	}
 	my $delim = "";
-	if($thing->{"delim"}){
-#	    value gets {}
-	    $delim = $thing->{"delim"};
-	}
-	$testword .= $lastend.$lastdelim.$startbit.$value;
+	if ($thing->{"delim"}) { $delim = $thing->{"delim"}; }
+	$writtenWord .= $lastend.$lastdelim.$startbit.$value;
 	$lastend = $endbit;
 	$lastdelim = $delim;
-	
     }
-    $testword .= $lastend.$lastdelim;
-    my %testdata;
-    $testdata{"word"} = $testword;
-    $testdata{"bits"} = \@testthing;
-    push (@{$localdata->{"word"}}, \%testdata);
+    $writtenWord .= $lastend.$lastdelim;
+    my $no_signs = scalar @arrayWord;
+    $preservedSigns = $no_signs - $damagedSigns - $missingSigns;
     
-    push (@arrayWord, $localdata->{"word"});
-    print Dumper(@arrayWord);
+    # fill in worddata: number of preserved signs, etc.
+    my $break = "damaged";
+    if ($no_signs == $preservedSigns) { $break = "preserved"; $worddata{"stateWord"} = "preserved"; }
+    elsif ($no_signs == $missingSigns) { $break = "missing"; $worddata{"stateWord"} = "missing"; }
+    else { $worddata{"stateWord"} = "damaged"; }
     
-    # try to go through @arrayWord and make the writtenWord; also determine the condition of the word
-    my $writtenWord = ""; my $condition = 0;# missing (2), damaged (1), preserved (0)
-#    my $no_array_els = scalar @arrayWord; $cnt = 0;		FIX THIS - ask CHRIS
-#    while ($cnt < $no_array_els) {
-#	print "\n";
-#	my $pos = 1; # how do I get these values ??? TODO
-#	if ($arrayWord[$cnt][0]{"1"}) { print $arrayWord[$cnt][0]{"1"}{"value"}; }
-#	if ($arrayWord[$cnt][0]{"1"}{"delim"}) { print $arrayWord[$cnt][0]{"1"}{"delim"}; }
-#	$cnt++;
-#    }
-    
-    my $break;
-    if ($condition == 0) { $break = "preserved"; }
-    elsif ($condition == 1) { $break = "damaged"; }
-    elsif ($condition == 2) { $break = "missing"; }
-    # save the relevant data into \%worddata: probably only statistical information
-    
-    # saveWord
+    if ($preservedSigns > 0) { $worddata{"preservedSigns"} = $preservedSigns; }
+    if ($damagedSigns > 0) { $worddata{"damagedSigns"} = $damagedSigns; }
+    if ($missingSigns > 0) { $worddata{"missingSigns"} = $missingSigns; }
+
     &saveWord($lang, $form, $break, $wordtype, $cf, $pofs, $epos, $writtenWord, $label, $split);
 
-    # saveSign
+    my $no_pre = 0; my $no_post = 0;
+    foreach (@arrayWord) { 
+	my $sign = $_; 
+	if ($sign->{'prePost'}) {
+	   if  ($sign->{'prePost'} eq "pre") { $no_pre++; }
+	   else { $no_post++; }
+	}
+    }
+    #die;
+    
+    if (($no_pre == 0) && ($no_post == 0)) { # word without determinatives or phonetic complements
+	foreach (@arrayWord) {
+	    my $sign = $_;
+	    my $pos = $sign->{'pos'}; 
+	    if ($no_signs == 1) { $sign->{'position'} = 'alone'; }
+	    elsif ($pos == 1) { $sign->{'position'} = 'initial'; }
+	    elsif ($pos == $no_signs) { $sign->{'position'} = 'final'; }
+	    else { $sign->{'position'} = 'medial'; }
+	}
+    }
+    else {
+        $cnt = 0; my $earlierPrePost = "";
+        while ($cnt < $no_signs) {
+	    my $pos = $arrayWord[$cnt]->{'pos'}; 
+	    my $prePost = $arrayWord[$cnt]->{'prePost'}?$arrayWord[$cnt]->{'prePost'}:""; # pre or post-position
+	    if (!($arrayWord[$cnt]->{'position'})) {
+	        if ($pos == 1) { $arrayWord[$cnt]->{'position'} = 'initial'; }
+	        elsif ($pos == $no_signs) { $arrayWord[$cnt]->{'position'} = 'final'; }
+	        elsif ($earlierPrePost = "pre") { $arrayWord[$cnt]->{'position'} = $arrayWord[$cnt-1]->{'position'}; }
+	        else { $arrayWord[$cnt]->{'position'} = 'medial'; }
+	    }
+	    
+	    if ($prePost) {
+	        if ($prePost eq "pre") { $earlierPrePost = "pre"; } 
+	        else { $arrayWord[$cnt]->{'position'} = $arrayWord[$cnt-1]->{'position'}; }
+	    }
+	    $cnt++;
+	}
+	    
 
-# fill in worddata: number of preserved signs, etc. TODO
+	if ($arrayWord[$no_signs - 1]->{'position'} eq "initial") { # the last sign is marked as initial, hence all signs are "alone" 
+	    $cnt = 0;
+	#    #print "\nNumber of signs ".$no_signs;
+	#    #print Dumper(@arrayWord); die;    
+	    while ($cnt < $no_signs) {
+	        $arrayWord[$cnt]->{'position'} = 'alone';
+	        $cnt++;
+	    }
+	}
+    }
+
+    my %allWordData;
+    $allWordData{"word"}->{"written"} = $writtenWord; $allWordData{"word"}->{"cf"} = $cf;
+    $allWordData{"word"}->{"form"} = $form; $allWordData{"word"}->{"lang"} = $lang;
+    $allWordData{"word"}->{"no_signs"} = $no_signs; $allWordData{"word"}->{"label"} = $label;
+    $allWordData{"signs"} = \@arrayWord; 
+    
+    #push (@{$localdata->{"word"}}, \%allWordData);
+    print "\n\nArrayWord";
+    print Dumper (@arrayWord);
+    
+    #&saveSigns(\@arrayWord, \%allWordData);
+    &saveSigns(\@arrayWord);
+    
+    #&saveSigns($lang, @arrayWord, $writtenWord, $form, $cf, $label);
+    # make temporary array of each word including information about determinative [det]/phonetic [phon], syllabic [syll], logographic [logo], logographic suffixes [logosuff]
 
     return \%worddata;
 }
-
 
 sub splitWord {
     my $splitdata = shift;
@@ -831,7 +902,8 @@ sub splitWord {
 	if ($group ne "") { $localdata->{"group"} = $group; }
 
 	push(@{$splitdata},$localdata);
-	return $splitdata;
+	$position++;
+	return ($splitdata, $position);
     }
 
     # Determinatives and phonetic complements: g:d with g:role and g:pos
@@ -841,28 +913,23 @@ sub splitWord {
 	$prepost = $root->{att}->{"g:pos"};
 	my @temp = ();
 	foreach my $j (@det_elements) {
-	    $splitdata = &splitWord($splitdata, $j, $position, $type, $prepost);
-	    $position++;
+	    ($splitdata, $position) = &splitWord($splitdata, $j, $position, $type, $prepost);
 	}
-	
-	    #print Dumper $splitdata;
-	    #die;
-	#return $temp;
     }
     
     # Compounds: g:c { form? , g.meta , c.model , mods* }
     # and: g:g { g.meta , c.model , mods* }
     # -> n | s | c | (g,mods*) | q
-    #	    <g:c form="|BAD×DIŠ@t|" xml:id="Q000003.12.2.0" g:status="ok">
+    #	    <g:c form="|BAD?DI?@t|" xml:id="Q000003.12.2.0" g:status="ok">
 #                <g:s>BAD</g:s>
 #                <g:o g:type="containing"/> 
-#                <g:s form="DIŠ@t">
-#                    <g:b>DIŠ</g:b>
+#                <g:s form="DI?@t">
+#                    <g:b>DI?</g:b>
 #                    <g:m>t</g:m>
 #                </g:s>
 #            </g:c>
 
-#	    <g:c form="|EN.PAP.IGI@g.NUN.ME.EZEN×KASKAL|">
+#	    <g:c form="|EN.PAP.IGI@g.NUN.ME.EZEN?KASKAL|">
 #                    <g:s>EN</g:s>
 #                    <g:o g:type="beside"/>
 #                    <g:s>PAP</g:s>
@@ -882,11 +949,11 @@ sub splitWord {
 #                </g:c>
 
 #	g:g ??   
-#	    <g:c form="|(SAL.TUG..).PAP.IGI@g.ME.EZEN×KASKAL|">
+#	    <g:c form="|(SAL.TUG..).PAP.IGI@g.ME.EZEN?KASKAL|">
 #                    <g:g>
 #                        <g:s>SAL</g:s>
 #                        <g:o g:type="beside"/>
-#                        <g:s g:accented="TÚG">TUG..</g:s>
+#                        <g:s g:accented="T?G">TUG..</g:s>
 #                    </g:g>
 #                    <g:o g:type="beside"/>
 #                    <g:s>PAP</g:s>
@@ -903,42 +970,42 @@ sub splitWord {
 #                    <g:s>KASKAL</g:s>
 #                </g:c>
 	    
-#	    <g:c form="|MUŠ&amp;KAK&amp;MUŠ|" xml:id="Q000003.121.1.0" g:status="ok">
-#                    <g:s>MUŠ</g:s>
+#	    <g:c form="|MU?&amp;KAK&amp;MU?|" xml:id="Q000003.121.1.0" g:status="ok">
+#                    <g:s>MU?</g:s>
 #                    <g:o g:type="above"/>
 #                    <g:s>KAK</g:s>
 #                    <g:o g:type="above"/>
-#                    <g:s>MUŠ</g:s>
+#                    <g:s>MU?</g:s>
 #                </g:c>
 
     if (($tag eq "g:c") || ($tag eq "g:g")) {
 	my @c_elements = $root->children();
-	if ($root->{att}->{"g:delim"}) { $delim = $root->{att}->{"g:delim"}; }
+	my $c_delim = "";
+	if ($root->{att}->{"g:delim"}) { $c_delim = $root->{att}->{"g:delim"}; }
 	if ($root->{att}->{"g:break"}) { $break = $root->{att}->{"g:break"}; }
 
-	my $temp = ();
-	foreach my $c (@c_elements) { # elements with "containing" !! g:o
+	my $cnt = 0; my $no_els = scalar @c_elements;
+	foreach my $c (@c_elements) { 
 	    if ($c->tag eq "g:o") {
 		my $punct = "";
 		my $type = $c->{att}->{"g:type"};
 		if ($type eq "beside") { $punct = "."; }
-		elsif ($type eq "containing") { $punct = "x"; }
+		elsif ($type eq "containing") { $punct = "x"; } # should elements with containing have the same position?? ***
 		elsif ($type eq "above") { $punct = "&amp;"; }  # other types = joining, reordered, crossing, opposing; how marked ??
-		$localdata->{"combo"} = $type;
-		$localdata->{"delim"} = $punct;
+		# add info to previous element
 		my $lastone = scalar @{$splitdata};
-		if(defined($splitdata->[$lastone - 1]->{"delim"})){
-#		 TODO   if g:c is followed by a g:s then put oldelim after last element of g:c see: Q00003 GA2GAR
-		    $splitdata->[$lastone - 1]->{"olddelim"} = $splitdata->[$lastone - 1]->{"delim"};
-		    #print print Dumper $splitdata;
-		    #die print Dumper $localdata;
-		}
 		$splitdata->[$lastone - 1]->{"delim"} = $punct;
 		$splitdata->[$lastone - 1]->{"combo"} = $type;
 		}
 	    else {
-		$splitdata = &splitWord($splitdata, $c, $position, "", "", $break, $delim);
-		$position++; 
+		($splitdata, $position) = &splitWord($splitdata, $c, $position, "", "", $break, $delim);
+	    }
+	    $cnt++;
+	    if ($cnt == $no_els) {
+		if ($c_delim ne "") {
+		    my $lastone = scalar @{$splitdata};
+		    $splitdata->[$lastone - 1]->{"delim"} = $c_delim;
+		}
 	    }
 	}
 	&listCombos($root);
@@ -959,7 +1026,7 @@ sub splitWord {
         my $firstpart = $root->getFirstChild();
 	if ($firstpart->{att}->{"g:delim"}) { $delim = $firstpart->{att}->{"g:delim"}; }
 	if ($firstpart->{att}->{"g:break"}) { $break = $firstpart->{att}->{"g:break"}; }
-	$splitdata = &splitWord($splitdata, $firstpart, $position, "", "", $delim, $break);
+	($splitdata, $position) = &splitWord($splitdata, $firstpart, $position, "", "", $delim, $break);
 	
 	my $secondpart = $firstpart->getNextSibling();
 	&listCombos($root);
@@ -975,7 +1042,7 @@ sub splitWord {
 
 # g:gg -> all elements matter; type of gg may matter 
 #	    <g:gg g:type="correction" g:status="ok" g:hc="1">
-#              <g:v g:accented="ù" g:utf8=" xml:id="P338566.6.2.0" g:break="damaged" g:remarked="1" g:ho="1">u...</g:v>
+#              <g:v g:accented="?" g:utf8=" xml:id="P338566.6.2.0" g:break="damaged" g:remarked="1" g:ho="1">u...</g:v>
 #              <g:c form="|DI.LU|" g:utf8="">
 #                <g:s>DI</g:s>
 #                <g:o g:type="beside"/>
@@ -1022,24 +1089,23 @@ sub splitWord {
 	my @temp = ();
 	if ($group eq "correction") { # only first element matters - how about other groupings??? (not in my test-examples)
 	    my $gg = $root->getFirstChild();
-	    $splitdata = &splitWord($splitdata, $gg, $position, "", "", $break, $delim, $group);
-	    $position++;
+	    ($splitdata, $position) = &splitWord($splitdata, $gg, $position, "", "", $break, $delim, $group);
 	}
 	else { # good for "logo", "reordering"
 	    foreach my $gg (@gg_elements) {
-	        $splitdata = &splitWord($splitdata, $gg, $position, "", "", $break, $delim, $group);
-	        $position++; 
+	        ($splitdata, $position) = &splitWord($splitdata, $gg, $position, "", "", $break, $delim, $group);
 	    }
 	}
 	&listCombos($root);
     }
     
-    return $splitdata;
+    return ($splitdata, $position);
 }
    
 
-sub listCombos { # TODO
+sub listCombos { # TODO, save in a separate file?
     my $root = shift;
+    
 }
 
 sub saveWord { 
@@ -1050,7 +1116,7 @@ sub saveWord {
     my $cf = shift;
     my $pofs = shift;
     my $epos = shift;
-    my $writtenWord = shift;  # TODO: add line number
+    my $writtenWord = shift;  
     my $label = shift;
     my $split = shift;
     
@@ -1096,405 +1162,169 @@ sub saveWord {
     $PQdata{"03_Words"}{'count'}++;
 }
 
-sub saveSign { # TODO, LANGUAGE-dependent
-    my @arrayWord = shift;
-}
+sub saveSigns { # TODO, LANGUAGE-dependent
+    my $arrayWord = shift;
+    #my $allWordData = shift;
+    #
+    #my $writtenWord = $allWordData->{"word"}->{"written"}?$allWordData->{"word"}->{"written"}:"";
+    #my $cf = $allWordData->{"word"}->{"cf"}?$allWordData->{"word"}->{"cf"}:"";
+    #my $form = $allWordData->{"word"}->{"form"}?$allWordData->{"word"}->{"form"}:"";
+    #my $lang = $allWordData->{"word"}->{"lang"}?$allWordData->{"word"}->{"lang"}:"noLang";
+    #my $no_signs = $allWordData->{"word"}->{"no_signs"}?$allWordData->{"word"}->{"no_signs"}:0;
+    #my $label = $allWordData->{"word"}->{"label"}?$allWordData->{"word"}->{"label"}:"";
+    ##my $arrayWord = $allWordData->{"signs"}?$allWordData->{"signs"}:(); 
+    
+    print "\n\nIn signs: \n";
+    print Dumper($arrayWord);
 
-
-sub dographemeData{ # DELETE
-    my $root = shift;
-    my $localdata = shift;
-    my %graphemearraytemp = ();
-    
-    my $sumgraphemes =0;
-    
-    
-    #split words 
-    
-#    TODO  words can be split over 2 lines. if they are split the lines always ready l-r
-#    g:w ....  g:swc take the form from g:w not g:swc and only use swc to delve deeper into the word
-#    good to have list of what are split words as fun to study P382687 - not sure best route to attach them to their line above yet...
-    my @splitgraphemes = $root->get_xpath('g:swc');
-    my $splitgraphemesize = scalar @splitgraphemes;
-    my $splitname = "splitwords";
-    my $splitlang = "";
-    
-    foreach my $i (@splitgraphemes){
-	my $splitlang = $i->{att}->{'xml:lang'};
-	my $temp = &doInsideGrapheme($i, $localdata, $splitlang);
-	my $form = "";
-	if($i->{att}->{"form"}){
-	    $form = $i->{att}->{"form"};
-	}
-	if($i->{att}->{"g:break"}){
-	    saveData($splitname,"","",$splitlang,$form,"","","",$localdata,$i->{att}->{"g:break"} ,$temp,"splitwords");
-	}
-	else{
-	    saveData($splitname,"","",$splitlang,$form,"","","",$localdata,"preserved",$temp,"splitwords");
-	}
-	
-	push(@{ $graphemearraytemp{'splitgraphemes'} }, $temp);
-    }
-    
-    # analyze words
-    my @words = $root->get_xpath('g:w');
-    my $graphemesize = scalar @words;
-    my $name = "words";
-    my $lang = "";
-
-    foreach my $word (@words){
-	if ($word->{att}->{"form"} ne "o"){ # words with form="o" are not words at all and shouldn't be considered (e.g. SAA 1 10 o 18 = P 334195).
-	    $lang = $word->{att}->{'xml:lang'};
-	    my $temp = &doInsideGrapheme($word, $localdata, $lang);
-	    
-	    #&outputtext("\nWord: ". $form."; lang: ".$lang);
-	    
-            
-#APRIL TODO THINK ABOUT THIS:::     do we mark in determinatives and phonetic complements in the array or have separate arrays for each
-           #my %a_withd = {
-           #     "preseverd" => [[1,0,1],[1],["d",0,1]],
-           #     "damaged" => [[1,0,"x"],["x",0,1]],
-           #     "missing" => [[1,0,1],[0,1]]
-           #};
-           #
-           #my %a_positions_preserverd = {
-           # "pos1"=>["ssdf"=>4,"sadf"=>6],
-           # "pos2"=>["ssdf"=>4,"sadf"=>6],
-           # "pos3"=>["ssdf"=>4,"iuy"=>6],
-           # "iddy"=>["a"=>6]
-           #};
-           #my %a_positions_damaged = {
-           # "pos1"=>["ssdf"=>4,"sadf"=>6],
-           # "pos2"=>["ssdf"=>4,"sadf"=>6],
-           # "pos3"=>["ssdf"=>4,"iuy"=>6],
-           # "iddy"=>["a"=>6]
-           #};
-           #my %a_positions_missing = {
-           # "pos1"=>["ssdf"=>4,"sadf"=>6],
-           # "pos2"=>["ssdf"=>4,"sadf"=>6],
-           # "pos3"=>["ssdf"=>4,"iuy"=>6],
-           # "iddy"=>["a"=>6]
-           #};
-#           per text,all texts
-           
-           
-            
-	    
-	}
-    }
-    
-    return \%graphemearraytemp;
-}
-
-
-sub doInsideGrapheme{ # DELETE
-    my $root = shift;  # word or sign
-    my $localdata = shift;
-    my $lang = shift; 
-    my $role = shift || "";
-    my $pos = shift || "";
-    
-    my %singledata = ();
-    
-    #missing elements
-    my @graphemesX = $root->get_xpath('g:x');
-    my $xtemp =  &doG("graphemesX",$lang,\@graphemesX, $localdata, "", "");
-    if (scalar keys %$xtemp){
-	    $singledata{"graphemesX"} = $xtemp;
-	}
-    foreach my $i (@graphemesX) {
-	my $temp = &doInsideGrapheme($i, $localdata,  $lang, "gone", "");
-	if (scalar keys %$temp){
-	    push @{ $singledata{"graphemesX"}{"inner"} } , $temp;
-        }
-    }
-    
-    #numbers 
-    my @graphemesN = $root->get_xpath('g:n');
-    my $ntemp = &doG("graphemesN",$lang,\@graphemesN, $localdata, "number", $pos);
-    if (scalar keys %$ntemp){
-	    $singledata{"graphemesN"} = $ntemp;
-	}
-    foreach my $i (@graphemesN){
-	my $temp = &doInsideGrapheme($i, $localdata,  $lang, "number", "");
-	if (scalar keys %$temp){
-	    push @{ $singledata{"graphemesN"}{"inner"} } , $temp;
-        }
-     }   
-     
-    # what's the purpose of this? is this the way to handle g:s and g:v?
-    my $singletemp = &doGSingles($lang,$root, $localdata, $role, $pos); 
-    if (scalar keys %$singletemp){
-	$singledata{"graphemeSingles"} = $singletemp;
-    }
-    
-    #g:c contain g:s,n,x,v
-    my @graphemesC = $root->get_xpath('g:c');
-    my $ctemp = &doG("graphemesC",$lang,\@graphemesC, $localdata, "", "");
-    if (scalar keys %$ctemp){
-	$singledata{"graphemesC"}{"data"} = $ctemp;
-    }
-    foreach my $i (@graphemesC){
-	my $temp = &doInsideGrapheme($i, $localdata, $lang, "", "");
-	if (scalar keys %$temp){
-	    push @{ $singledata{"graphemesC"}{"inner"} } , $temp;
-	}
-    }
-    
-    #g:q contain g:s,n,x,c,v
-    my @graphemesQ = $root->get_xpath('g:q');
-    my $qtemp = &doG("graphemesQ",$lang,\@graphemesQ, $localdata, "", "");
-    if (scalar keys %$qtemp){
-	$singledata{"graphemesQ"}{"data"} = $qtemp;
-    }
-    foreach my $i (@graphemesQ){
-	my $temp = &doInsideGrapheme($i, $localdata,  $lang, "", "");
-	if (scalar keys %$temp){
-	    push @{ $singledata{"graphemesQ"}{"inner"} } , $temp;
-	}
-    }
-    
-    #g:gg contain g:s,n,x,c,v
-    # Greta: ? extra information needed to pass on to datafiles ?
-    my @graphemesGG = $root->get_xpath('g:gg');
-#    my $gtemp = &doG("graphemesGG",$lang,\@graphemesGG, $localdata, "", "");
-#    if (scalar keys %$gtemp){
-#	$singledata{"graphemesGG"}{"data"} = $gtemp;
+    # Greta: what happens to unclear readings? $BA etc.? How marked in SAAo? *** TODO
+#    my $no_pre = 0; my $no_post = 0; my $count = 0;
+#    while (my($k, $v) = each @arrayWord) {
+#	if ($k eq "prePost") {
+#	    if ($v eq "pre") { $no_pre++; print "\nPre"; die; }
+#	    else { $no_post++; }
+#	}
 #    }
-    foreach my $i (@graphemesGG){
-	my $temp = &doInsideGrapheme($i, $localdata, $lang, "", "");
-	if (scalar keys %$temp){
-	    push @{ $singledata{"graphemesGG"}{"inner"} } , $temp;
-	}
-    }
-    #g:d contain g:s,n,x,c,v
-#    g:role attribute = phonetic/semantic; g:pos
-    my @graphemesD = $root->get_xpath('g:d');
-    # QUESTION: should $role and $pos be determined before going to doG ?
-    #$singledata{"graphemesD"}{"data"} = &doG("graphemesD",$lang,\@graphemesD, $localdata, $role, $pos);
-#    my $dtemp = &doG("graphemesD",$lang,\@graphemesD, $localdata, $role, $pos);
-#    if (scalar keys %$dtemp){
-#	$singledata{"graphemesD"}{"data"} = $dtemp;
+
+    
+#    foreach my $sign (@arrayWord) {
+#	my $category = $sign->{'tag'}?$sign->{'tag'}:"unknown"; my $state = $sign->{'state'};
+#	my $value = $sign->{'value'}; my $pos = $sign->{'pos'}; 
+#	my $role = $sign->{'type'}?$sign->{'type'}:""; # semantic or phonetic
+#	my $prePost = $sign->{'prePost'}?$sign->{'prePost'}:""; # pre or post-position
+#	my $base = $sign->{'base'}?$sign->{'base'}:""; # baseform if present
+#	
+#	if ($lang =~ m|^akk|) {
+#	    my $syllabic = ""; 
+#	    if ($category eq 'g:v') { # syllabic signs, unless {d}, {m}
+#		$category = "syllabic";
+#		my %syllables = ();
+#		$syllables{"V"} = 1; $syllables{"VC"} = 1;
+#		$syllables{"CV"} = 1; $syllables{"CVC"} = 1;
+#
+#		my $tempvalue = $sign->{'base'}?$sign->{'base'}:$value;
+#		
+#		$syllabic = lc($tempvalue);
+#		
+#		# determine what kind of syllabic sign we're dealing with: V, CV, VC, CVC, other (ana/ina/arba/CVCV)
+#		$syllabic =~ s|(\d)||g;
+#		$syllabic =~ s|([aeiou])|V|g;
+#		# nuke the subscripts like numbers (unicode 2080 - 2089) # how about subscript x? *** TODO
+#		$syllabic =~ s|(\x{2080})||g; $syllabic =~ s|(\x{2081})||g; $syllabic =~ s|(\x{2082})||g; $syllabic =~ s|(\x{2083})||g; $syllabic =~ s|(\x{2084})||g;
+#		$syllabic =~ s|(\x{2085})||g; $syllabic =~ s|(\x{2086})||g; $syllabic =~ s|(\x{2087})||g; $syllabic =~ s|(\x{2088})||g; $syllabic =~ s|(\x{2089})||g;
+#		$syllabic =~ s|([^V])|C|g;
+#		
+#		if ($syllabic eq "VV") { # e.g., ia
+#		    $syllabic = "CV";
+#		}
+#		
+#		if (!($syllables{$syllabic})) { # not V, CV, VC, or CVC
+#		    if ($role eq "semantic") {
+#		        $syllabic = ""; $category = "logogram";
+#		    }
+#		    elsif ($syllabic eq "C") {
+#			if ($tempvalue eq "d") { $category = "logogram"; $syllabic = ""; }
+#			elsif ($tempvalue eq "m") { $category = "logogram"; $syllabic = ""; }
+#			else { $category = "x"; $syllabic = ""; } # then the value should be x, so unreadable sign, treat as "x"
+#		    } 
+#		    else { $category = "logogram"; $syllabic = ""; } # logosyllabic ?? *** TODO, eg. ana/ina/arba/CVCV
+#		}
+#		else {
+#		    if ($tempvalue eq "o") { $category = ""; $syllabic = ""; }  
+#		}
+#	    }
+#	    elsif ($category eq 'g:s') {
+#		$category = "logogram";
+#	    }
+#	    elsif ($category eq 'g:n') {
+#		$category = "number";
+#	    }
+#	    elsif ($category eq 'g:x') {
+#		$category = "x";
+#	    }
+#	    #&saveData($lang,$category,$value,$base,$role,$prePost,$position,$syllabic,$state,$label, $cf, $writtenWord);
+#	}
+#        elsif ($lang =~ m|^sux|) {
+#	
+#        }
+#        else {
+#	
+#        }
 #    }
-    foreach my $i (@graphemesD){
-	$role = $i->{att}->{"g:role"};
-	$pos = $i->{att}->{"g:pos"};
-	my $temp = &doInsideGrapheme($i, $localdata, $lang, $role, $pos);
-	if (scalar keys %$temp){
-    #		TODO - what am I meant to be doing with the semantic/phonetic stuff?
-	    push @{ $singledata{$i->{att}->{"g:role"}}{$i->{att}->{"g:pos"}} } , $temp;  # what's the function of this?
-	    push @{ $singledata{"graphemesD"}{"inner"} } , $temp;
-	}
-    };#can be 1st and last
-    
-    return \%singledata;
-}
-sub doGSingles{ # DELETE
-    my $lang = shift;
-    my $root = shift;
-    my $localdata = shift;
-    my $role = shift;
-    my $pos = shift;
-    my %singledata = ();
-    $singledata{"graphemesS"} = &doGsv("graphemesS",$lang,$root,"g:s", $localdata, $role, $pos);
-    $singledata{"graphemesV"} = &doGsv("graphemesV",$lang,$root,"g:v", $localdata, $role, $pos);
-    
-    #$singledata{"graphemesB"} = &doGsv("graphemesB",$lang,$root,"g:b", $localdata);
-    #$singledata{"graphemesM"} = &doGsv("graphemesM",$lang,$root,"g:m", $localdata);
-    return \%singledata;
-}
-
-sub doGsv{  # DELETE
-    my $name = shift;
-    my $lang = shift;
-    my $root = shift;
-    my $xpath = shift;
-    my $localdata = shift;
-    my $role = shift;
-    my $pos = shift;
-    my %singledata = ();
-    
-    my @graphemes = $root->get_xpath($xpath);
-    foreach my $i (@graphemes){
-	if ($i->text ne "o") {
-	    my %syllables = ();
-	    $syllables{"V"} = 1;
-	    $syllables{"VC"} = 1;
-	    $syllables{"CV"} = 1;
-	    $syllables{"CVC"} = 1;
-	    my $form = "";
-	    
-	    if($i->text){
-	        $form = $i->text;
-	    }
-	    
-	    if ($role eq "") { 
-		if ($i->{att}->{"g:role"}) {
-		    $role = $i->{att}->{"g:role"};
-		    if (($role eq "semantic") || ($role eq "phonetic")) { $pos = $i->{att}->{"g:pos"}; }
-		    else { $pos = ""; }  # position still has to be checked properly
-		}
-		else { $role = "syll"; $pos = ""; }
-	    }
-	    #my $role = "syll";
-	    #if($i->{att}->{"g:role"} && $i->{att}->{"g:role"} ne ""){
-	    #    $role = $i->{att}->{"g:role"};
-	    #}
-	    #elsif($root->{att}->{"g:role"} && $root->{att}->{"g:role"} ne ""){
-	    #    $role = $root->{att}->{"g:role"};
-	    #}
-	    
-	    # The baseform is the basic form without modifiers or the like	
-	    my $baseform = "";
-	    if($xpath eq "g:s" || $xpath eq "g:v"){
-		$baseform = $i->findvalue("g:b");
-		#if($i->{att}->{"form"} && $i->{att}->{"form"} eq "TA\@v"){
-		#print "\n Not sure what is wrong with this...\ng:s form ".$i->{att}->{"form"};
-		#print "\ng:b value ".$baseform;
-		#}
-	    }
-	    
-#	TODO: There is still a problem with the detection of the following baseform - no idea why PRIORITY (P224395)
-#	<g:w xml:id="P224395.8.3" xml:lang="akk-x-neoass" form="TA@v">
-#            <g:s form="TA@v" g:utf8="??" xml:id="P224395.8.3.0" g:break="damaged" g:status="ok" g:role="logo" g:logolang="sux" g:hc="1">
-#              <g:b>TA</g:b>
-#              <g:m>v</g:m>
-#              <g:f>m</g:f>
-#            </g:s>
-#          </g:w>
-	
-	#    only for lang:akk aei{O}u
-	    my $cvc = ""; my $logo = 0;  
-	    if(($xpath eq "g:v") && ($lang =~ m|^akk|)){ #extend to other languages later
-		my $tempform = $form;
-	        if ($baseform ne "") { 
-		    $tempform = $baseform;
-		}
-		$cvc = lc($tempform);
-		
-		$cvc =~ s|(\d)||g;
-		$cvc =~ s|([aeiou])|V|g;
-		$cvc =~ s|(\x{2080})||g;
-		$cvc =~ s|(\x{2081})||g;
-		$cvc =~ s|(\x{2082})||g;
-		$cvc =~ s|(\x{2083})||g;
-		$cvc =~ s|(\x{2084})||g;
-		$cvc =~ s|(\x{2085})||g;
-		$cvc =~ s|(\x{2086})||g;
-		$cvc =~ s|(\x{2087})||g;
-		$cvc =~ s|(\x{2088})||g;
-		$cvc =~ s|(\x{2089})||g;
-		$cvc =~ s|([^V])|C|g;
-	    
-	    #nuke the subscripts like numbers cf vcvv ia? 2080 - 2089
-	    
-	    # still have to get rid of words/values = "o"
-	    # Greta: what happens to unclear readings? $BA etc.? How marked in SAAo?
-	    
-		if ($cvc eq "VV") {
-		    $cvc = "CV";
-		}
-	    
-		if (!($syllables{$cvc})) {
-		    if ($role eq "semantic") {
-		        $cvc = ""; 
-		    }
-		    elsif ($cvc eq "C") {
-			if ($form eq "d") { $role = "semantic"; $cvc = ""; }
-			elsif ($form eq "m") { $role = "semantic"; $cvc = ""; }
-			else { $role = "leftover"; $cvc = ""; }
-			
-		    } # then the value should be x, so unreadable sign, treat as leftover
-		    else { $role = "logo"; $cvc = ""; }
-		}
-		else {
-		    if ($role eq "") {$role = "syll";}
-		    if ($form eq "o") { $role = ""; $cvc = ""; }  # latest change - check if this works *** am I finally rid of the o's?
-		}
-
-	    }	
-#	print $role;
-	
-	    if($xpath eq "g:s" && $lang =~ m|^akk|){ #extend to other languages later
-	        $logo = 1;
-	    }
-
-#TODO: role should be saved too PRIORITY
-	    if($i->{att}->{"g:break"}){
-	        saveData($name,$role,$pos,$lang,$form,$baseform,$cvc,$logo,$localdata,$i->{att}->{"g:break"} ,\%singledata);
-	    }
-	    else{
-		saveData($name,$role,$pos,$lang,$form,$baseform,$cvc,$logo,$localdata,"preserved",\%singledata);
-	    }
-	}
-    }
-    return \%singledata;
 }
 
 
-
-sub saveData{ #DELETE
-    my $name = shift;
-    my $role = shift;
-    my $pos = shift;
+sub saveData { 
     my $lang = shift;
-    my $form = shift;
-    my $baseform = shift;
-    my $cvc = shift;
-    my $logo = shift;
-    my $localdata = shift;
+    my $category = shift;
+    my $value = shift;
+    my $base = shift;
+    my $role = shift;
+    my $prePost = shift;
+    my $pos = shift;
+    my $syllabic = shift;
     my $break = shift;
-    my $singledata = shift;
-    my $type = shift;
-    
-    if(!defined $type){
-	$type = "graphemes";
-    }
-    push(@{$singledata->{'all'.$type.$break.'Forms'}},$form);
-    
-    if($baseform ne "" && $type ne "words"){
-	push(@{$singledata->{'all'.$type.$break.'BaseForms'}},$form);
-    }
+    my $label = shift;
+    my $cf = shift;
+    my $writtenWord = shift;
     
     if($lang eq ""){
 	$lang = "noLang";
     }
-    
-    $localdata->{$type}{'count'}++;
-    $localdata->{$type}{"state"}{$break}{'num'}++;
-    
-    $localdata->{"lang"}{$lang}{$type}{"type"}{$name}{"total_grapheme"}{$name}{$break}{'num'}++;
+
+    $PQdata{"02_Signs"}{'count'}++; # total number of signs
+    $PQdata{"02_Signs"}{"state"}{$break}{'count'}++;
+    $PQdata{"02_Signs"}{$lang}{'count'}++; # total number of signs per language
+    $PQdata{"02_Signs"}{$lang}{"state"}{$break}{'count'}++;
+    $PQdata{"02_Signs"}{$lang}{$category}{'count'}++; # total number of signs per language and category
+    $PQdata{"02_Signs"}{$lang}{$category}{"state"}{$break}{'count'}++;
+
+    if (($category eq "syllabic") && ($syllabic ne "")) { # we can further categorize the signs into V, CV, VC, CVC
+	    
 	
-    if ($form ne "") { 
-	if ($lang =~ m|^akk|) {
-	    if($cvc ne ""){
-		if ($pos eq "") {
-		    abstractdata(\%{$localdata->{"lang"}{$lang}{$type}{"type"}{$name}{"role"}{$role}{'cvc'}{$cvc}},$baseform,$break,$form);
-		}
-		else {
-		    abstractdata(\%{$localdata->{"lang"}{$lang}{$type}{"type"}{$name}{"role"}{$role}{"pos"}{$pos}{'cvc'}{$cvc}},$baseform,$break,$form);
-		}
-	    }
-	    else {
-		if ($pos eq "") {
-		    abstractdata(\%{$localdata->{"lang"}{$lang}{$type}{"type"}{$name}{"role"}{$role}},$baseform,$break,$form);
-		}
-		else {
-		    abstractdata(\%{$localdata->{"lang"}{$lang}{$type}{"type"}{$name}{"role"}{$role}{"pos"}{$pos}},$baseform,$break,$form);
-		}
-	    }
-	}
-	else {
-	    if ($pos eq "") {
-		abstractdata(\%{$localdata->{"lang"}{$lang}{$type}{"type"}{$name}{"role"}{$role}},$baseform,$break,$form);
-	    }
-	    else {
-		abstractdata(\%{$localdata->{"lang"}{$lang}{$type}{"type"}{$name}{"role"}{$role}{"pos"}{$pos}},$baseform,$break,$form);
-	    }
-	}
+    }
+    else {
+	push (@{$PQdata{"02_Signs"}{$lang}{$category}{"value"}{$value}{"pos"}{$pos}{"cf"}{$cf}{"writtenWord"}{$writtenWord}{"line"}}, $label);
     }
     
-    $localdata->{"lang"}{$lang}{$type}{'count'}++;
+    
+    
+    
+    
+    
+    
+#    $localdata->{"lang"}{$lang}{$type}{"type"}{$category}{"total_grapheme"}{$category}{$break}{'num'}++;
+#	
+#    if ($form ne "") { 
+#	if ($lang =~ m|^akk|) {
+#	    if($cvc ne ""){
+#		if ($pos eq "") {
+#		    abstractdata(\%{$localdata->{"lang"}{$lang}{$type}{"type"}{$category}{"role"}{$role}{'cvc'}{$cvc}},$baseform,$break,$form);
+#		}
+#		else {
+#		    abstractdata(\%{$localdata->{"lang"}{$lang}{$type}{"type"}{$category}{"role"}{$role}{"pos"}{$pos}{'cvc'}{$cvc}},$baseform,$break,$form);
+#		}
+#	    }
+#	    else {
+#		if ($pos eq "") {
+#		    abstractdata(\%{$localdata->{"lang"}{$lang}{$type}{"type"}{$category}{"role"}{$role}},$baseform,$break,$form);
+#		}
+#		else {
+#		    abstractdata(\%{$localdata->{"lang"}{$lang}{$type}{"type"}{$category}{"role"}{$role}{"pos"}{$pos}},$baseform,$break,$form);
+#		}
+#	    }
+#	}
+#	else {
+#	    if ($pos eq "") {
+#		abstractdata(\%{$localdata->{"lang"}{$lang}{$type}{"type"}{$category}{"role"}{$role}},$baseform,$break,$form);
+#	    }
+#	    else {
+#		abstractdata(\%{$localdata->{"lang"}{$lang}{$type}{"type"}{$category}{"role"}{$role}{"pos"}{$pos}},$baseform,$break,$form);
+#	    }
+#	}
+#    }
+    
+
  
     # for period-file
 #    if($localdata->{"period"}){
