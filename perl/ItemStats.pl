@@ -152,7 +152,7 @@ sub doPstats{
 
     &getMetaData($root, $rootxmd, $shortname, "P");
 
-    if (!defined $PQdata{"01_Structure"}) { $PQdata{"01_Structure"} = (); }
+    if (!(defined $PQdata{"01_Structure"})) { $PQdata{"01_Structure"} = (); }
     
     push(@{$PQdata{"01_Structure"}}, &getStructureData($root, "P"));
 
@@ -231,7 +231,10 @@ sub getMetaData{  # find core metadata fields and add them to each itemfile [$PQ
 	}
     }
     
-    $PQdata{"language"} = $rootxmd->findvalue('cat/language');
+    if ($rootxmd->findvalue('cat/language')) { $PQdata{"language"} = $rootxmd->findvalue('cat/language'); }
+    else { my @temp = $PQroot->get_xpath('xcl'); $PQdata{"language"} = $temp[0]->{att}->{"langs"}?$temp[0]->{att}->{"langs"}:""; } # in ETCSRI - also other projects?? check TODO 
+    
+    if ($PQdata{"language"} eq "sux") { $PQdata{"language"} = "Sumerian"; }
     
     my @protocols = $root->get_xpath('protocols/protocol');
 	 # http://oracc.museum.upenn.edu/doc/builder/l2/languages/#Language_codes
@@ -249,6 +252,7 @@ sub getMetaData{  # find core metadata fields and add them to each itemfile [$PQ
 		if ($temp eq "lang na") { $PQdata{"language"} = "Neo-Assyrian"; }
 		if ($temp eq "lang nb") { $PQdata{"language"} = "Neo-Babylonian"; }
 		if ($temp eq "lang sb") { $PQdata{"language"} = "Standard Babylonian"; }
+		if ($temp eq "lang akk-x-stdbab") { $PQdata{"language"} = "Standard Babylonian"; }
 		if ($temp eq "lang ca") { $PQdata{"language"} = "Conventional Akkadian"; } # The artificial form of Akkadian used in lemmatisation Citation Forms.
 		
 		if ($temp eq "lang n") { $PQdata{"language"} = "normalised"; } # Used in lexical lists and restorations; try to avoid wherever possible.
@@ -639,24 +643,21 @@ sub analyseWord{
     
 # return data as number of words, number of signs etc.
 # save data as words, signs, etc. in PQdata{"words"} and PQdata{"signs"}
-    my $lang = $word->{att}->{'xml:lang'};
-    my $form = "";
-    if ($word->{att}->{"form"}){ $form = $word->{att}->{"form"}; }
-    #print "\n".$form;
-    my $wordid = $word->{att}->{"xml:id"};
+    my $lang = $word->{att}->{'xml:lang'}?$word->{att}->{'xml:lang'}:"noLang";
+    my $form = $word->{att}->{"form"}?$word->{att}->{"form"}:""; 
+    my $wordid = $word->{att}->{"xml:id"}?$word->{att}->{"xml:id"}:"";
     my $tempvalue = '//l[@ref="'.$wordid.'"]/xff:f'; # /xtf:transliteration//xcl:l[@ref=$wordid]/xff:f/@cf
-    my $cf = ""; my $pofs = ""; my $epos = "";
+    my $cf = ""; my $pofs = ""; my $epos = ""; my $wordbase = ""; my $gw = "";
             
     # xtf-file
     #print "\n".$tempvalue."\n";
     my @wordref = $PQroot->get_xpath($tempvalue); 
     foreach my $item (@wordref) {
-        if($item->{att}->{"cf"}){  # word is lemmatized
-            $cf = $item->{att}->{"cf"};
-            $pofs = $item->{att}->{"pos"}; # pofs = part-of-speech (pos is used already for position)
-            $epos = $item->{att}->{"epos"};
-            #print $cf;
-        }
+        $cf = $item->{att}->{"cf"}?$item->{att}->{"cf"}:"";
+        $pofs = $item->{att}->{"pos"}?$item->{att}->{"pos"}:""; # pofs = part-of-speech (pos is used already for position)
+        $epos = $item->{att}->{"epos"}?$item->{att}->{"epos"}:"";
+	$gw = $item->{att}->{"gw"}?$item->{att}->{"gw"}:"";
+	$wordbase = $item->{att}->{"base"}?$item->{att}->{"base"}:"";
     }
     
     my $wordtype = $pofs;
@@ -666,7 +667,7 @@ sub analyseWord{
     # http://oracc.museum.upenn.edu/doc/builder/linganno/QPN/
     # GEOGRAPHICAL DATA: GN, WATERCOURSE, ETHNIC (GENTILICS), AGRICULTURAL, FIELD, QUARTER, SETTLEMENT, LINE, TEMPLE 
     if (($wordtype eq "GN") || ($wordtype eq "WN") || ($wordtype eq "EN") || ($wordtype eq "AN") || ($wordtype eq "FN") || ($wordtype eq "QN") || ($wordtype eq "SN") || ($wordtype eq "LN") || ($wordtype eq "TN")) {
-	$wordtype = "Geography"
+	$wordtype = "Geography";
     }
     
     # DIVINE and CELESTIAL NAMES
@@ -674,16 +675,20 @@ sub analyseWord{
 	$wordtype = "DivineCelestial"; 
     }
     
-    # mul2 and id2 may not work - use of special coding ?? check ***
+    # check if mul2 and id2 work *** TODO
     # ROUGH CLASSIFICATION IF NOT LEMMATIZED
     if (($wordtype eq "") && ($form ne "")) { 
 	my $formsmall = lc ($form);
 	if ($formsmall =~ /(^\{1\})|(^\{m\})/) { $wordtype = "PersonalNames"; }
-	if (($formsmall =~ /(^\{d\})/) || ($formsmall =~ /(^\{mul\})/) || ($formsmall =~ /(^\{mul2\})/)) { $wordtype = "DivineCelestial"; }  
-	if (($formsmall =~ /(\{ki\})/) || ($wordtype =~ /(\{kur\})/) || ($form =~ /(\{uru\})/) || ($form =~ /(\{iri\})/) || ($form =~ /(\{id2\})/))  { $pofs = "Geography"; }
+	if (($formsmall =~ /(^\{d\})/) || ($formsmall =~ /(^\{mul\})/) || ($formsmall =~ /(^\{mul\x{2082}\})/)) { $wordtype = "DivineCelestial"; }  
+	if (($formsmall =~ /(\{ki\})/) || ($formsmall =~ /(\{kur\})/) || ($formsmall =~ /(\{uru\})/) || ($formsmall =~ /(\{iri\})/) || ($formsmall =~ /(\{id\x{2082}\})/))  { $wordtype = "Geography"; }
+	if ($formsmall =~ /^\d/) { $wordtype = "Numerical"; }
     }    
 
-    if (($wordtype ne "PersonalNames") && ($wordtype ne "DivineCelestial") && ($wordtype ne "Geography")) { $wordtype = "OtherWords"; }
+    if (($wordtype ne "PersonalNames") && ($wordtype ne "DivineCelestial") && ($wordtype ne "Geography") && ($wordtype ne "Numerical")) {
+	if ($form =~ /^\$/) { $wordtype = "UncertainReading"; }
+	else { $wordtype = "OtherWords"; }
+    }
     
 #Split: d
 #Split: AMARUTU
@@ -718,8 +723,6 @@ sub analyseWord{
     my $no_children = scalar @children;
     my $position = 1; my $localdata = {}; my $cnt = 0; my $tempdata = {};
     foreach my $i (@children) { # check each element of a word
-	#print "\nSplit: ".$i->text."\n";
-	#$position++;
 	($tempdata, $position) = &splitWord (\@arrayWord, $i, $position);
 	$cnt++;
     }
@@ -735,8 +738,6 @@ sub analyseWord{
 	    my @endchildren = $splitenz[0]->children();
 	    $localdata = {}; $cnt = 0;
 	    foreach my $j (@endchildren) { 
-	        #print "\nSplit: ".$j->text."\n";
-	        #$position++;
 	        ($tempdata, $position) = &splitWord (\@arrayWord, $j, $position);
 	        $cnt++;
 	    }
@@ -756,6 +757,7 @@ sub analyseWord{
 	my $value = $thing->{'value'};
 	if ($thing->{"type"} && ( $thing->{"type"} eq "semantic" || $thing->{"type"} eq "phonetic")) { # value gets {}
 	    $value = "{".$value."}";
+	    #if ($thing->{"delim"}) { print "\nValue = ".$value." delim = ".$thing->{"delim"}; die; }
 	}
 	
 	if($thing->{"state"} && $thing->{"state"} eq "missing"){ # value gets []
@@ -790,73 +792,37 @@ sub analyseWord{
     if ($damagedSigns > 0) { $worddata{"damagedSigns"} = $damagedSigns; }
     if ($missingSigns > 0) { $worddata{"missingSigns"} = $missingSigns; }
 
-    &saveWord($lang, $form, $break, $wordtype, $cf, $pofs, $epos, $writtenWord, $label, $split);
+    &saveWord($lang, $form, $break, $wordtype, $cf, $pofs, $epos, $writtenWord, $label, $split, $wordbase, $gw);
 
-    my $no_pre = 0; my $no_post = 0;
-    foreach (@arrayWord) { 
-	my $sign = $_; 
-	if ($sign->{'prePost'}) {
-	   if  ($sign->{'prePost'} eq "pre") { $no_pre++; }
-	   else { $no_post++; }
-	}
-    }
-    #die;
+    # words that comprise several parts should be treated as such e.g. KUR--MAR.TU{ki} and personal names
     
-    if (($no_pre == 0) && ($no_post == 0)) { # word without determinatives or phonetic complements
-	foreach (@arrayWord) {
-	    my $sign = $_;
-	    my $pos = $sign->{'pos'}; 
-	    if ($no_signs == 1) { $sign->{'position'} = 'alone'; }
-	    elsif ($pos == 1) { $sign->{'position'} = 'initial'; }
-	    elsif ($pos == $no_signs) { $sign->{'position'} = 'final'; }
-	    else { $sign->{'position'} = 'medial'; }
+    my $count = 0; my $beginpos = 0; my $endpos = $no_signs - 1; my $severalParts = 0;
+    while ($count < $no_signs) {
+	if (($arrayWord[$count]->{'delim'}) && ($arrayWord[$count]->{'delim'} eq "--")) {
+	    $endpos = $count; $severalParts++;
+	    &determinePosition($beginpos, $endpos, \@arrayWord);
+	    $beginpos = $endpos+1; $endpos = $no_signs - 1;
 	}
+	$count++;
     }
-    else {
-        $cnt = 0; my $earlierPrePost = "";
-        while ($cnt < $no_signs) {
-	    my $pos = $arrayWord[$cnt]->{'pos'}; 
-	    my $prePost = $arrayWord[$cnt]->{'prePost'}?$arrayWord[$cnt]->{'prePost'}:""; # pre or post-position
-	    if (!($arrayWord[$cnt]->{'position'})) {
-	        if ($pos == 1) { $arrayWord[$cnt]->{'position'} = 'initial'; }
-	        elsif ($pos == $no_signs) { $arrayWord[$cnt]->{'position'} = 'final'; }
-	        elsif ($earlierPrePost = "pre") { $arrayWord[$cnt]->{'position'} = $arrayWord[$cnt-1]->{'position'}; }
-	        else { $arrayWord[$cnt]->{'position'} = 'medial'; }
-	    }
-	    
-	    if ($prePost) {
-	        if ($prePost eq "pre") { $earlierPrePost = "pre"; } 
-	        else { $arrayWord[$cnt]->{'position'} = $arrayWord[$cnt-1]->{'position'}; }
-	    }
-	    $cnt++;
-	}
-	    
-
-	if ($arrayWord[$no_signs - 1]->{'position'} eq "initial") { # the last sign is marked as initial, hence all signs are "alone" 
-	    $cnt = 0;
-	#    #print "\nNumber of signs ".$no_signs;
-	#    #print Dumper(@arrayWord); die;    
-	    while ($cnt < $no_signs) {
-	        $arrayWord[$cnt]->{'position'} = 'alone';
-	        $cnt++;
-	    }
-	}
-    }
-
+    &determinePosition($beginpos, $endpos, \@arrayWord);
+    
     my %allWordData;
     $allWordData{"word"}->{"written"} = $writtenWord; $allWordData{"word"}->{"cf"} = $cf;
     $allWordData{"word"}->{"form"} = $form; $allWordData{"word"}->{"lang"} = $lang;
     $allWordData{"word"}->{"no_signs"} = $no_signs; $allWordData{"word"}->{"label"} = $label;
-    $allWordData{"signs"} = \@arrayWord; 
+    $allWordData{"word"}->{"wordtype"} = $wordtype; $allWordData{"word"}->{"wordbase"} = $wordbase;
+    $allWordData{"word"}->{"gw"} = $gw;
+    #$allWordData{"signs"} = \@arrayWord; 
     
     #push (@{$localdata->{"word"}}, \%allWordData);
-    print "\n\nArrayWord";
-    print Dumper (@arrayWord);
+#    if ($wordtype ne "OtherWords") {
+#	print "\n\nArrayWord";
+#	print Dumper (@arrayWord);
+#    }
+#    
+    &saveSigns(\%allWordData, \@arrayWord);
     
-    #&saveSigns(\@arrayWord, \%allWordData);
-    &saveSigns(\@arrayWord);
-    
-    #&saveSigns($lang, @arrayWord, $writtenWord, $form, $cf, $label);
     # make temporary array of each word including information about determinative [det]/phonetic [phon], syllabic [syll], logographic [logo], logographic suffixes [logosuff]
 
     return \%worddata;
@@ -911,9 +877,10 @@ sub splitWord {
 	my @det_elements = $root->children();
 	$type = $root->{att}->{"g:role"};
 	$prepost = $root->{att}->{"g:pos"};
+	$delim = $root->{att}->{"g:delim"};
 	my @temp = ();
 	foreach my $j (@det_elements) {
-	    ($splitdata, $position) = &splitWord($splitdata, $j, $position, $type, $prepost);
+	    ($splitdata, $position) = &splitWord($splitdata, $j, $position, $type, $prepost, "", $delim);
 	}
     }
     
@@ -1103,6 +1070,60 @@ sub splitWord {
 }
    
 
+sub determinePosition { # seems to work with words with 2 determinatives in a row; what about several phonetic complements (a word longer than 1 sign) *** TODO
+    my $beginpos = shift;
+    my $endpos = shift;
+    my @arrayWord = @{$_[0]};
+    
+    my $cnt = $beginpos; my $no_signs = $endpos - $beginpos + 1;
+    my $no_pre = 0; my $no_post = 0;
+    while ($cnt < $endpos + 1) {
+	if ($arrayWord[$cnt]->{'prePost'}) {
+	   if  ($arrayWord[$cnt]->{'prePost'} eq "pre") { $no_pre++; }
+	   else { $no_post++; }
+	}
+	$cnt++;
+    }
+    
+    $cnt = $beginpos;
+    if (($no_pre == 0) && ($no_post == 0)) { # word without determinatives or phonetic complements
+	while ($cnt < $endpos + 1) {
+	    my $pos = $arrayWord[$cnt]->{'pos'}; 
+	    if ($no_signs == 1) { $arrayWord[$cnt]->{'position'} = 'alone'; }
+	    elsif ($pos == $beginpos + 1) { $arrayWord[$cnt]->{'position'} = 'initial'; }
+	    elsif ($pos == $endpos + 1) { $arrayWord[$cnt]->{'position'} = 'final'; }
+	    else { $arrayWord[$cnt]->{'position'} = 'medial'; }
+	    $cnt++;
+	}
+    }
+    elsif ($no_signs - $no_pre - $no_post == 1) { # only one sign with determinative(s) or phonetic complement(s)
+	while ($cnt < $endpos + 1) {
+	    $arrayWord[$cnt]->{'position'} = "alone";
+	    $cnt++;
+	}
+    }
+    else {
+        $cnt = $beginpos; my $earlierPrePost = "";
+        while ($cnt < $endpos + 1) {
+	    my $pos = $arrayWord[$cnt]->{'pos'}; 
+	    my $prePost = $arrayWord[$cnt]->{'prePost'}?$arrayWord[$cnt]->{'prePost'}:""; # pre or post-position
+	    if (!($arrayWord[$cnt]->{'position'})) {
+	        if ($pos == $beginpos + 1) { $arrayWord[$cnt]->{'position'} = 'initial'; }
+	        elsif ($pos == $endpos + 1) { $arrayWord[$cnt]->{'position'} = 'final'; }
+	        else { $arrayWord[$cnt]->{'position'} = 'medial'; }
+	    }
+	    if ($earlierPrePost eq "pre") { $arrayWord[$cnt]->{'position'} = $arrayWord[$cnt-1]->{'position'}; $earlierPrePost = ""; }
+	    
+	    if ($prePost) {
+	        if ($prePost eq "pre") { $earlierPrePost = "pre"; } 
+	        else { $arrayWord[$cnt-1]->{'position'} = $arrayWord[$cnt]->{'position'};
+		}
+	    }
+	    $cnt++;
+	}
+    }
+}
+
 sub listCombos { # TODO, save in a separate file?
     my $root = shift;
     
@@ -1119,6 +1140,8 @@ sub saveWord {
     my $writtenWord = shift;  
     my $label = shift;
     my $split = shift;
+    my $wordbase = shift;  # TODO: save wordbase if present (esp. Sumerian)
+    my $gw = shift; # TODO
     
     if($lang eq "") { $lang = "noLang"; }
     
@@ -1163,94 +1186,107 @@ sub saveWord {
 }
 
 sub saveSigns { # TODO, LANGUAGE-dependent
-    my $arrayWord = shift;
-    #my $allWordData = shift;
-    #
-    #my $writtenWord = $allWordData->{"word"}->{"written"}?$allWordData->{"word"}->{"written"}:"";
-    #my $cf = $allWordData->{"word"}->{"cf"}?$allWordData->{"word"}->{"cf"}:"";
-    #my $form = $allWordData->{"word"}->{"form"}?$allWordData->{"word"}->{"form"}:"";
-    #my $lang = $allWordData->{"word"}->{"lang"}?$allWordData->{"word"}->{"lang"}:"noLang";
-    #my $no_signs = $allWordData->{"word"}->{"no_signs"}?$allWordData->{"word"}->{"no_signs"}:0;
-    #my $label = $allWordData->{"word"}->{"label"}?$allWordData->{"word"}->{"label"}:"";
-    ##my $arrayWord = $allWordData->{"signs"}?$allWordData->{"signs"}:(); 
+    my $allWordData = shift;
+    my @arrayWord = @{$_[0]};
+
+    my $writtenWord = $allWordData->{"word"}->{"written"}?$allWordData->{"word"}->{"written"}:"";
+    my $cf = $allWordData->{"word"}->{"cf"}?$allWordData->{"word"}->{"cf"}:"";
+    my $form = $allWordData->{"word"}->{"form"}?$allWordData->{"word"}->{"form"}:"";
+    my $lang = $allWordData->{"word"}->{"lang"}?$allWordData->{"word"}->{"lang"}:"noLang";
+    my $no_signs = $allWordData->{"word"}->{"no_signs"}?$allWordData->{"word"}->{"no_signs"}:0;
+    my $label = $allWordData->{"word"}->{"label"}?$allWordData->{"word"}->{"label"}:"";
+    my $wordtype = $allWordData->{"word"}->{"wordtype"}?$allWordData->{"word"}->{"wordtype"}:"";
+    my $wordbase = $allWordData->{"word"}->{"wordbase"}?$allWordData->{"word"}->{"wordbase"}:"";
+    my $gw = $allWordData->{"word"}->{"gw"}?$allWordData->{"word"}->{"gw"}:""; 
+    my $category = "";
     
-    print "\n\nIn signs: \n";
-    print Dumper($arrayWord);
+    if ($form =~ m|^\$|gsi) { $category = "uncertainReading"; }
+    #print "\n\nIn signs: \n";
+    #print Dumper(@arrayWord);
+    #print "\nWritten Word: \n";
+    #print Dumper($writtenWord);
 
     # Greta: what happens to unclear readings? $BA etc.? How marked in SAAo? *** TODO
-#    my $no_pre = 0; my $no_post = 0; my $count = 0;
-#    while (my($k, $v) = each @arrayWord) {
-#	if ($k eq "prePost") {
-#	    if ($v eq "pre") { $no_pre++; print "\nPre"; die; }
-#	    else { $no_post++; }
-#	}
-#    }
+    # TODO: logographic suffixes ***
+    foreach my $sign (@arrayWord) {
+	if ($category eq "") { $category = $sign->{'tag'}?$sign->{'tag'}:"unknown"; }
+	my $state = $sign->{'state'}; 
+	my $value = $sign->{'value'}; my $pos = $sign->{'pos'}; my $position = $sign->{'position'};
+	my $role = $sign->{'type'}?$sign->{'type'}:""; # semantic or phonetic
+	my $prePost = $sign->{'prePost'}?$sign->{'prePost'}:""; # pre or post-position
+	my $base = $sign->{'base'}?$sign->{'base'}:""; # baseform if present
+	my $syllabic = "";
+	
+	if ($category eq 'g:n') {
+	    $category = "number";
+	}
+	
+	elsif ($category eq 'g:x') {
+	    #print "\n Value = ".$value." label = ".$label;
+	    $category = "x";
+	}
+	
+	elsif ($lang =~ m|^akk|) {
+	    if ($category eq 'g:v') { # syllabic signs, unless {d}, {m}
+		$category = "syllabic";
+		my %syllables = ();
+		$syllables{"V"} = 1; $syllables{"VC"} = 1;
+		$syllables{"CV"} = 1; $syllables{"CVC"} = 1;
 
-    
-#    foreach my $sign (@arrayWord) {
-#	my $category = $sign->{'tag'}?$sign->{'tag'}:"unknown"; my $state = $sign->{'state'};
-#	my $value = $sign->{'value'}; my $pos = $sign->{'pos'}; 
-#	my $role = $sign->{'type'}?$sign->{'type'}:""; # semantic or phonetic
-#	my $prePost = $sign->{'prePost'}?$sign->{'prePost'}:""; # pre or post-position
-#	my $base = $sign->{'base'}?$sign->{'base'}:""; # baseform if present
-#	
-#	if ($lang =~ m|^akk|) {
-#	    my $syllabic = ""; 
-#	    if ($category eq 'g:v') { # syllabic signs, unless {d}, {m}
-#		$category = "syllabic";
-#		my %syllables = ();
-#		$syllables{"V"} = 1; $syllables{"VC"} = 1;
-#		$syllables{"CV"} = 1; $syllables{"CVC"} = 1;
-#
-#		my $tempvalue = $sign->{'base'}?$sign->{'base'}:$value;
-#		
-#		$syllabic = lc($tempvalue);
-#		
-#		# determine what kind of syllabic sign we're dealing with: V, CV, VC, CVC, other (ana/ina/arba/CVCV)
-#		$syllabic =~ s|(\d)||g;
-#		$syllabic =~ s|([aeiou])|V|g;
-#		# nuke the subscripts like numbers (unicode 2080 - 2089) # how about subscript x? *** TODO
-#		$syllabic =~ s|(\x{2080})||g; $syllabic =~ s|(\x{2081})||g; $syllabic =~ s|(\x{2082})||g; $syllabic =~ s|(\x{2083})||g; $syllabic =~ s|(\x{2084})||g;
-#		$syllabic =~ s|(\x{2085})||g; $syllabic =~ s|(\x{2086})||g; $syllabic =~ s|(\x{2087})||g; $syllabic =~ s|(\x{2088})||g; $syllabic =~ s|(\x{2089})||g;
-#		$syllabic =~ s|([^V])|C|g;
-#		
-#		if ($syllabic eq "VV") { # e.g., ia
-#		    $syllabic = "CV";
-#		}
-#		
-#		if (!($syllables{$syllabic})) { # not V, CV, VC, or CVC
-#		    if ($role eq "semantic") {
-#		        $syllabic = ""; $category = "logogram";
-#		    }
-#		    elsif ($syllabic eq "C") {
-#			if ($tempvalue eq "d") { $category = "logogram"; $syllabic = ""; }
-#			elsif ($tempvalue eq "m") { $category = "logogram"; $syllabic = ""; }
-#			else { $category = "x"; $syllabic = ""; } # then the value should be x, so unreadable sign, treat as "x"
-#		    } 
-#		    else { $category = "logogram"; $syllabic = ""; } # logosyllabic ?? *** TODO, eg. ana/ina/arba/CVCV
-#		}
-#		else {
-#		    if ($tempvalue eq "o") { $category = ""; $syllabic = ""; }  
-#		}
-#	    }
-#	    elsif ($category eq 'g:s') {
-#		$category = "logogram";
-#	    }
-#	    elsif ($category eq 'g:n') {
-#		$category = "number";
-#	    }
-#	    elsif ($category eq 'g:x') {
-#		$category = "x";
-#	    }
-#	    #&saveData($lang,$category,$value,$base,$role,$prePost,$position,$syllabic,$state,$label, $cf, $writtenWord);
-#	}
-#        elsif ($lang =~ m|^sux|) {
-#	
-#        }
-#        else {
-#	
-#        }
-#    }
+		my $tempvalue = $sign->{'base'}?$sign->{'base'}:$value;
+		
+		$syllabic = lc($tempvalue);
+		
+		# determine what kind of syllabic sign we're dealing with: V, CV, VC, CVC, other (ana/ina/arba/CVCV)
+		$syllabic =~ s|(\d)||g;
+		$syllabic =~ s|([aeiou])|V|g;
+	# nuke the subscripts like numbers (unicode 2080 - 2089) 
+		$syllabic =~ s|(\x{2080})||g; $syllabic =~ s|(\x{2081})||g; $syllabic =~ s|(\x{2082})||g; $syllabic =~ s|(\x{2083})||g; $syllabic =~ s|(\x{2084})||g;
+		$syllabic =~ s|(\x{2085})||g; $syllabic =~ s|(\x{2086})||g; $syllabic =~ s|(\x{2087})||g; $syllabic =~ s|(\x{2088})||g; $syllabic =~ s|(\x{2089})||g;
+		$syllabic =~ s|(\x{2093})||g; # subscript x
+		$syllabic =~ s|([^V])|C|g;
+		
+		if ($syllabic eq "VV") { # e.g., ia
+		    $syllabic = "CV";
+		}
+		
+		if ($syllabic eq "CVCV") { # check again TODO - V should be the same
+		    $syllabic = "CVC";
+		}
+		
+		if (!($syllables{$syllabic})) { # not V, CV, VC, or CVC
+		    if ($role eq "semantic") {
+		        $syllabic = ""; $category = "determinative";
+		    }
+		    elsif ($syllabic eq "C") {
+			if (($tempvalue eq "d") || ($tempvalue eq "m")) { $category = "determinative"; $syllabic = ""; }
+			else { $category = "x"; $syllabic = ""; } # then the value should be x, so unreadable sign, treat as "x"
+		    } 
+		    else { $category = "logogram"; $syllabic = ""; } # logosyllabic ?? *** TODO, eg. ana/ina/arba/CVCV
+		}
+		else {
+		    if ($tempvalue eq "o") { $category = ""; $syllabic = ""; }  
+		}
+	    }
+	    elsif ($category eq 'g:s') {
+		$category = "logogram";
+	    }
+	}
+        elsif ($lang =~ m|^sux|) {
+	    if ($category eq 'g:v') {
+		# check if part of wordbase or not.
+		# how about base/different signs in base with their position? somehow done, but may be improved TODO (?)
+		if ($wordbase =~ /$value/) { $category = "base"; }
+		else { $category = "nonbase"; }
+	    }
+	    if ($role eq "semantic") { 	$category = "determinative"; }
+        }
+        else {
+	
+        }
+    &saveData($lang, $category, $value, $base, $role, $prePost, $position, $syllabic, $state, $label, $cf, $writtenWord, $wordtype, $gw, $wordbase);
+    if ($category ne "uncertainReading") { $category = ""; }
+    }
 }
 
 
@@ -1267,30 +1303,83 @@ sub saveData {
     my $label = shift;
     my $cf = shift;
     my $writtenWord = shift;
+    my $wordtype = shift;
+    my $gw = shift; 
+    my $wordbase = shift; # TODO
+    my %temp = ();
     
     if($lang eq ""){
 	$lang = "noLang";
     }
 
+    if ($role eq "semantic") {
+	$category = "determinative";
+    }
+
     $PQdata{"02_Signs"}{'count'}++; # total number of signs
-    $PQdata{"02_Signs"}{"state"}{$break}{'count'}++;
+    $PQdata{"02_Signs"}{"ztotal_state"}{$break}{'count'}++;
     $PQdata{"02_Signs"}{$lang}{'count'}++; # total number of signs per language
-    $PQdata{"02_Signs"}{$lang}{"state"}{$break}{'count'}++;
-    $PQdata{"02_Signs"}{$lang}{$category}{'count'}++; # total number of signs per language and category
-    $PQdata{"02_Signs"}{$lang}{$category}{"state"}{$break}{'count'}++;
+    $PQdata{"02_Signs"}{$lang}{"zlang_total_state"}{$break}{'count'}++;
+    $PQdata{"02_Signs"}{$lang}{"category"}{$category}{'count'}++; # total number of signs per language and category
+    $PQdata{"02_Signs"}{$lang}{"category"}{$category}{"state"}{$break}{'count'}++;
+
+# TODO: try to make shorter, sth like below but example is already outdated. Print and check.
+
+#    if ($cf ne "") {
+#	    push (@{$temp{$role}{"prepost"}{$prePost}{"value"}{$value}{"wordtype"}{$wordtype}{"pos"}{$pos}{"cf"}{$cf}{"writtenWord"}{$writtenWord}{"line"}}, $label);
+#    push (@{$PQdata{"02_Signs"}{$lang}}, \%temp);
 
     if (($category eq "syllabic") && ($syllabic ne "")) { # we can further categorize the signs into V, CV, VC, CVC
-	    
-	
+	$PQdata{"02_Signs"}{$lang}{"category"}{$category}{"type"}{$syllabic}{'count'}++; # total number of signs
+        $PQdata{"02_Signs"}{$lang}{"category"}{$category}{"type"}{$syllabic}{"state"}{$break}{'count'}++;
+	if ($cf ne "") {
+	    push (@{$PQdata{"02_Signs"}{$lang}{"category"}{$category}{"type"}{$syllabic}{"value"}{$value}{"wordtype"}{$wordtype}{"pos"}{$pos}{"cf"}{$cf}{"gw"}{$gw}{"writtenWord"}{$writtenWord}{"line"}}, $label);
+	}
+	else {
+	    push (@{$PQdata{"02_Signs"}{$lang}{"category"}{$category}{"type"}{$syllabic}{"value"}{$value}{"wordtype"}{$wordtype}{"pos"}{$pos}{"writtenWord"}{$writtenWord}{"line"}}, $label);
+	}
     }
-    else {
-	push (@{$PQdata{"02_Signs"}{$lang}{$category}{"value"}{$value}{"pos"}{$pos}{"cf"}{$cf}{"writtenWord"}{$writtenWord}{"line"}}, $label);
+    else { # count determinatives separately ***
+	if (($role ne "semantic") && ($role ne "phonetic")) {
+	    if ($wordbase eq "") {
+		if ($cf ne "") {
+		    push (@{$PQdata{"02_Signs"}{$lang}{"category"}{$category}{"value"}{$value}{"wordtype"}{$wordtype}{"pos"}{$pos}{"cf"}{$cf}{"gw"}{$gw}{"writtenWord"}{$writtenWord}{"line"}}, $label);
+		}
+		else {
+		    push (@{$PQdata{"02_Signs"}{$lang}{"category"}{$category}{"value"}{$value}{"wordtype"}{$wordtype}{"pos"}{$pos}{"writtenWord"}{$writtenWord}{"line"}}, $label);
+		}
+	    }
+	    else {
+		if ($cf ne "") {
+		    push (@{$PQdata{"02_Signs"}{$lang}{"category"}{$category}{"wordbase"}{$wordbase}{"value"}{$value}{"wordtype"}{$wordtype}{"pos"}{$pos}{"cf"}{$cf}{"gw"}{$gw}{"writtenWord"}{$writtenWord}{"line"}}, $label);
+		}
+		else {
+		    push (@{$PQdata{"02_Signs"}{$lang}{"category"}{$category}{"wordbase"}{$wordbase}{"value"}{$value}{"wordtype"}{$wordtype}{"pos"}{$pos}{"writtenWord"}{$writtenWord}{"line"}}, $label);
+		}
+		
+	    }
+	}
+	else {
+	    if ($role eq "semantic") {
+		$PQdata{"02_Signs"}{$lang}{"category"}{$category}{$prePost}{"count"}++;
+		$PQdata{"02_Signs"}{$lang}{"category"}{$category}{$prePost}{"state"}{$break}{"count"}++;
+		if ($cf ne "") {
+		    push (@{$PQdata{"02_Signs"}{$lang}{"category"}{$category}{$prePost}{"value"}{$value}{"wordtype"}{$wordtype}{"pos"}{$pos}{"cf"}{$cf}{"gw"}{$gw}{"writtenWord"}{$writtenWord}{"line"}}, $label);
+		}
+		else {
+		    push (@{$PQdata{"02_Signs"}{$lang}{"category"}{$category}{$prePost}{"value"}{$value}{"wordtype"}{$wordtype}{"pos"}{$pos}{"writtenWord"}{$writtenWord}{"line"}}, $label);
+		}
+	    }
+	    else {
+		if ($cf ne "") {
+		    push (@{$PQdata{"02_Signs"}{$lang}{"category"}{$category}{"value"}{$value}{"wordtype"}{$wordtype}{"role"}{$role}{"prepost"}{$prePost}{"pos"}{$pos}{"cf"}{$cf}{"gw"}{$gw}{"writtenWord"}{$writtenWord}{"line"}}, $label);
+		}
+		else {
+		    push (@{$PQdata{"02_Signs"}{$lang}{"category"}{$category}{"value"}{$value}{"wordtype"}{$wordtype}{"role"}{$role}{"prepost"}{$prePost}{"pos"}{$pos}{"writtenWord"}{$writtenWord}{"line"}}, $label);
+		}
+	    }
+	}
     }
-    
-    
-    
-    
-    
     
     
 #    $localdata->{"lang"}{$lang}{$type}{"type"}{$category}{"total_grapheme"}{$category}{$break}{'num'}++;
@@ -1506,6 +1595,7 @@ sub writetoerror{
     close(SUBFILE2);
 }
 #iterate over folder
+# xtf and xmd-files: /home/varoracc/local/oracc/bld/saao/saa19/P224/P224381/P224381.xtf and .xmd
 sub traverseDir{  # TODO: check if this works over directory structure
     my $path = shift; # filepath to start the search
     my $dirname = shift; #directory to start the search
