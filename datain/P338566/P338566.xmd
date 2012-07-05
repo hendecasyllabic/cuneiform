@@ -1,1 +1,78 @@
-<xmd xmlns="http://oracc.org/ns/xmd/1.0" xmlns:xmd="http://oracc.org/ns/xmd/1.0" xml:id="P338566" langs="0x08000000" project="greta"><cat><primary_publication>STT 2, 247</primary_publication><author>Gurney, Oliver R. &amp;amp; Hulin, Peter</author><publication_date>1964</publication_date><publication_history/><citation/><author_remarks/><published_collation/><provenience c="169">Sultantepe</provenience><provenience_remarks/><excavation_no>51/099</excavation_no><findspot_square/><findspot_remarks/><elevation/><stratigraphic_level/><genre c="1000000"/><subgenre c="1000000"/><subgenre_remarks/><language>Akkadian</language><collection/><museum_no/><accession_no/><acquisition_history/><object_type>tablet</object_type><material>clay</material><height>72</height><width>63</width><thickness>?</thickness><object_preservation/><surface_preservation/><condition_description/><object_remarks/><seal_id/><seal_information/><period c="49">Neo-Assyrian</period><date_of_origin/><dates_referenced/><date_remarks/><alternative_years/><accounting_period/><id_text>P338566</id_text><external_id/><cdli_remarks_internal_only/><date_updated>05/29/2011</date_updated><db_source>20060920 englund</db_source><designation c="14">STT 2, 247</designation><collection_remarks_internal_only/><public>yes</public><join_information/><text_remarks/><period_remarks/><electronic_publication/><atf_up>no</atf_up><photo_up/><lineart_up/><date_entered>09/20/2006</date_entered><public_images>yes</public_images><atf_source/><public_atf>yes</public_atf><google_earth_provenience/><google_earth_collection/><writing_phase/><cdli_comments/><collection_location_internal_only/><cdli_collation/><archive/><collection_copyright/><ark>21198/zz001z0rj6</ark><translation_source/><supergenre c="1000000"/><xproject>CDLI</xproject><images/><xproject uri="http://cdli.ucla.edu/P338566">CDLI</xproject><images public="yes"><img type="l" scale="thumb" src="tn_lineart/P338566_l.jpg" w="263" h="734" mtime="1213300777"/><img type="l" scale="full" src="lineart/P338566_l.jpg" w="526" h="1468" mtime="1213300315"/></images></cat></xmd>
+<xmd xmlns="http://oracc.org/ns/xmd/1.0" xmlns:xmd="http://oracc.org/ns/xmd/1.0" xml:id="P338566" project="cams/gkab">
+  <cat>
+    <accession_no/>
+    <checked>30/03/2011</checked>
+    <credits>Created by Greta Van Buylaere for the AHRC-funded GKAB Project, 2011 and released under the Creative Commons Attribution Share-Alike license 3.0. Please cite this page as http://oracc.org/cams/gkab/stt_2,_247/</credits>
+    <date_of_origin/>
+    <date_remarks/>
+    <designation c="1283">STT 2, 247</designation>
+    <editor>Greta Van Buylaere</editor>
+    <excavation_no>51/099</excavation_no>
+    <findspot_remarks>Huzirina</findspot_remarks>
+    <findspot_square/>
+    <genre c="21">Incantation-Ritual</genre>
+    <height>72</height>
+    <id_text>P338566</id_text>
+    <join_information/>
+    <language/>
+    <last_modified>29/04/2011 15:55:49</last_modified>
+    <lemmed>15/03/2011</lemmed>
+    <material>clay</material>
+    <museum_no/>
+    <notes/>
+    <object_remarks/>
+    <object_type>tablet</object_type>
+    <owner/>
+    <owner_remarks/>
+    <period c="65">Neo-Assyrian</period>
+    <period_remarks/>
+    <photographed>11/11/2008</photographed>
+    <photographer>Philippe Clancier</photographer>
+    <proof-read>29/03/2011</proof-read>
+    <proof-reader>Eleanor Robson</proof-reader>
+    <provenience c="97">Huzirina</provenience>
+    <provenience_remarks/>
+    <stratigraphic_level/>
+    <subgenre c="57">Dream rituals</subgenre>
+    <subgenre_remarks/>
+    <text_remarks>Colophon</text_remarks>
+    <thickness>?</thickness>
+    <translit_ed>23/02/2011</translit_ed>
+    <uploaded>30/03/2011</uploaded>
+    <user>er264</user>
+    <width>63</width>
+    <bibliography__book_title>
+      <subfield></subfield>
+      <subfield>Babylonische und assyrische Kolophone</subfield>
+      <subfield>Mesopotamian Conceptions of Dreams and Dream Rituals</subfield>
+    </bibliography__book_title>
+    <bibliography__id_biblio>
+      <subfield>R000059</subfield>
+      <subfield>R000097</subfield>
+      <subfield>R000205</subfield>
+    </bibliography__id_biblio>
+    <bibliography__journal_title>
+      <subfield>Journal of Near Eastern Studies</subfield>
+    </bibliography__journal_title>
+    <bibliography__shortref>
+      <subfield>Reiner 1967</subfield>
+      <subfield>Hunger 1968</subfield>
+      <subfield>Butler 1998</subfield>
+    </bibliography__shortref>
+    <bibliography__unpublished_title></bibliography__unpublished_title>
+    <bibliography__volume_number>
+      <subfield>26</subfield>
+    </bibliography__volume_number>
+    <pr_joins__pages>
+      <subfield>190</subfield>
+      <subfield>359</subfield>
+      <subfield>249-312 (ms E1)</subfield>
+    </pr_joins__pages>
+    <supergenre c="7">STL</supergenre>
+    <xproject uri="http://cdli.ucla.edu/P338566">CDLI</xproject>
+    <images public="yes">
+      <img type="l" scale="thumb" src="tn_lineart/P338566_l.jpg" w="263" h="734" mtime="1213300777"/>
+      <img type="l" scale="full" src="lineart/P338566_l.jpg" w="526" h="1468" mtime="1213300315"/>
+    </images>
+  </cat>
+</xmd>
