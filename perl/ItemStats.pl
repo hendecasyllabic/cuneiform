@@ -19,6 +19,7 @@ binmode STDOUT, ":utf8";
 my $PQroot = "";
 my %PQdata = ();  # data per text
 my %corpusdata = (); # overview of selected metadata per corpus
+my %combos = ();
 
 my $thisCorpus = "";
 my $thisText = "";
@@ -90,6 +91,9 @@ sub ItemStats{
     
 # Create corpus metadatafile for the whole corpus
     &writetofile("CORPUS_META", \%corpusdata);
+
+# list of combos    
+    &writetofile("combos", \%combos);
 }
 
 sub doQstats{
@@ -439,16 +443,25 @@ sub getStructureData{
 		$localdata = {};
 	    }
 	}
-	elsif ($type eq "lgs") { #disregard l line *** still to be implemented *** still has to go through getLineData TODO
-	    # &writetoerror ("PossibleProblems.txt", localtime."Project: ".$thisCorpus.", text ".$thisText.": lgs");
-	    $localdata->{"type"} = $type;
-	    $localdata->{"label"} = $label;
-	    push (@{$structdata{"line"}}, $localdata);
+	elsif ($type eq "lgs") { # analyse l line, disregard lgs line (even though order on tablet - there doesn't seem to be an automatic link between the elements in the lgs and the words in l) *** still to be implemented *** still has to go through getLineData TODO
+	    # NOTE: this partly distorts the data as the order in which the words are written is not the order given in l (hence the note (lgs) to the label).
+	    # in dcclt: P225958, P231055, P240986, P247847, P247848, P332923, Q000003, Q000014
+	    #&writetoerror ("PossibleProblems.txt", localtime."Project: ".$thisCorpus.", text ".$thisText.": lgs");
+	    foreach my $j (@speciallines) {
+		my $kind = $j->{att}->{"type"}?$j->{att}->{"type"}:"";
+		if ($kind ne "lgs") {
+		    my $speciallabel = $label." (lgs)";
+		    $localdata = &getLineData($j, $speciallabel, "");
+		    $localdata->{"type"} = $type;
+		    $localdata->{"label"} = $label;
+		    push (@{$structdata{"line"}}, $localdata);
+		    $localdata = {};
+		}
+	    }
 	    $structdata{'no_lines'}++;
-	    $localdata = {};
 	}
-	else { # nts check anew *** still has to go through getLineData TODO
-	    # &writetoerror ("PossibleProblems.txt", localtime."Project: ".$thisCorpus.", text ".$thisText.": nts");
+	else { # nts: STEVE: does this still exist??? *** if so, still has to go through getLineData TODO
+	    &writetoerror ("PossibleProblems.txt", localtime."Project: ".$thisCorpus.", text ".$thisText.": nts");
 	    $localdata->{"type"} = $type;
 	    $localdata->{"label"} = $label;
 	    push (@{$structdata{"line"}}, $localdata);
@@ -548,7 +561,7 @@ sub getLineData {
 		    else {
 			$type = "word"; my $position = 1;
 			$role = $nonwEl->{att}->{"g:role"}?$nonwEl->{att}->{"g:role"}:"";
-			($tempdata, $position) = &splitWord (\@arrayNonWord, $nonwEl, $position); # resulting info in @arrayNonWord
+			($tempdata, $position) = &splitWord (\@arrayNonWord, $nonwEl, $label, $position); # resulting info in @arrayNonWord
 		    }
 		    $cnt++;
 		}
@@ -583,8 +596,11 @@ sub getLineData {
 	}
 	elsif ($type eq "word") {
 	    my $wordtype = "dittoword";
-	    my $writtenWord = ""; my $preservedSigns = 0; my $damagedSigns = 0; my $missingSigns = 0;
-	    ($writtenWord, $damagedSigns, $missingSigns) = &formWord(\@arrayNonWord);
+	    my $writtenWord = ""; my $preservedSigns = 0; my $signs = ();
+	    ($writtenWord, $signs) = &formWord(\@arrayNonWord);
+	    my $damagedSigns = $signs->{'damaged'}; my $missingSigns = $signs->{'missing'}; 
+	    #($writtenWord, $damagedSigns, $missingSigns) = &formWord(\@arrayNonWord);
+	    
 	    # info in @arrayNonWord
 	    my $no_signs = scalar @arrayNonWord;
 	    $preservedSigns = $no_signs - $damagedSigns - $missingSigns;
@@ -595,7 +611,7 @@ sub getLineData {
 	    
 	    #form = $writtenWord without [], halfbrackets
 	    $form = $writtenWord; 
-	    $form =~ s|\[||g; $form =~ s|\]||g; $form =~ s|\x{02F9}||g; $form =~ s|\x{02FA}||g;
+	    $form =~ s|\[||g; $form =~ s|\]||g; $form =~ s|\x{2E22}||g; $form =~ s|\x{2E23}||g;
 	    &saveWord($nonwLang, $form, $break, $wordtype, "", "", "", $writtenWord, $label, "", "", "", $note, $writtenAs);
 	    
 	    my $count = 0; my $beginpos = 0; my $endpos = $no_signs - 1; my $severalParts = 0;
@@ -613,10 +629,11 @@ sub getLineData {
 		my $category = "";
 		if ($role eq "logo") { $category = "logogram"; }
 		else { $category = $sign->{'tag'}?$sign->{'tag'}:"unknown"; }
-		my $state = $sign->{'state'}; 
+		my $break = $sign->{'break'}; 
 		my $value = $sign->{'value'}; my $pos = $sign->{'pos'}; my $position = $sign->{'position'};
+		# can these actually have base and modifier ??? TODO - CHECK
 		# I'm not including gw as translation is possibly nonsensical (especially when combination of words)
-		&saveSign($nonwLang, $category, $value, "", "", "", $position, "", $state, $label, $form, $writtenWord, $wordtype, "", "");
+		&saveSign($nonwLang, $category, $value, "", "", "", "", $position, "", $break, $label, $form, $writtenWord, $wordtype, "", "");
 	    }
 	}
     }
@@ -686,7 +703,7 @@ sub getLineData {
 		    
 		}
 		else { # e.g. in P365126; P363582 [g:d and g:s]; P363419; Q001870; P296713 [g:v]; Q003232; P334914 [g:d, g:v]; P348219 [g:n]; P363524
-		    ($tempdata, $position) = &splitWord (\@arrayWord, $i, $position);
+		    ($tempdata, $position) = &splitWord (\@arrayWord, $i, $label, $position);
 		    $sign = $arrayWord[$cnt]->{'value'};
 		    $cnt++;
 		}
@@ -696,8 +713,11 @@ sub getLineData {
 		$localdata = {};
 	    }
 	    my $writtenWord = ""; 
-	    my $preservedSigns = 0; my $damagedSigns = 0; my $missingSigns = 0;
-	    ($writtenWord, $damagedSigns, $missingSigns) = &formWord(\@arrayWord);
+	    my $preservedSigns = 0; #my $damagedSigns = 0; my $missingSigns = 0;
+	    my $signs = ();
+	    #($writtenWord, $damagedSigns, $missingSigns) = &formWord(\@arrayWord);
+	    ($writtenWord, $signs) = &formWord(\@arrayWord);
+	    my $damagedSigns = $signs->{'damaged'}; my $missingSigns = $signs->{'missing'}; 
 	    my $no_signs = scalar @arrayWord;
 	    $preservedSigns = $no_signs - $damagedSigns - $missingSigns;
     
@@ -713,7 +733,7 @@ sub getLineData {
 
 	    #form = $writtenWord without [], halfbrackets
 	    my $form = $writtenWord; 
-	    $form =~ s|\[||g; $form =~ s|\]||g; $form =~ s|\x{02F9}||g; $form =~ s|\x{02FA}||g;
+	    $form =~ s|\[||g; $form =~ s|\]||g; $form =~ s|\x{2E22}||g; $form =~ s|\x{2E23}||g;
 	    
 	    &saveWord($lang, $form, $break, "excisedWord", "", "", "", $writtenWord, $label, "", "", "", $note, $writtenAs);
 	    
@@ -771,7 +791,7 @@ sub getLineData {
 	my $tag = $children[0]->tag;
 	if (($tag eq "g:x") && ($no_children == 1)) { # I don't want to count an ellipsis as 1 word [could be more or (even) less]
 		if ($children[0]->{att}->{"g:type"}) { $localdata->{"kind"} = $children[0]->{att}->{"g:type"}; }
-		if ($children[0]->{att}->{"g:break"}) { $localdata->{"state"} = $children[0]->{att}->{"g:break"}; }
+		if ($children[0]->{att}->{"g:break"}) { $localdata->{"break"} = $children[0]->{att}->{"g:break"}; }
 		push (@{$linedata{'x'}}, $localdata);
 	    }
 	else  {
@@ -841,7 +861,7 @@ sub getLineData {
 	# OK for "newline" | "ellipsis" | 
 	#empty: (only in note, so useless Q003232)
 	#newline: P365126, P338366, P296713
-	if ($x->{att}->{"g:break"}) { $localdata->{"state"} = $x->{att}->{"g:break"}; }
+	if ($x->{att}->{"g:break"}) { $localdata->{"break"} = $x->{att}->{"g:break"}; }
 	push (@{$linedata{'x'}}, $localdata);
 	$localdata = {};
     }
@@ -919,53 +939,105 @@ sub formWord{
     my @arrayWord = @{$_[0]};;
     
     my $writtenWord = "";
-    my $damagedSigns = 0; my $missingSigns = 0;
+    my $signs = ();
+    $signs->{'preserved'} = scalar @arrayWord;
+    $signs->{'missing'} = 0; $signs->{'damaged'} = 0;
+    $signs->{'maybe'} = 0; $signs->{'implied'} = 0; $signs->{'supplied'} = 0; $signs->{'erased'} = 0; $signs->{'excised'} = 0;
     my $lastdelim = ""; my $lastend = "";
     
-    # g:status: "ok" - g:o and g:c ***
-    # "maybe": (...)
-    # "excised": <<...>>
-    # "supplied": <...>
+    # g:status: "ok" - g:o and g:c 
+    # "maybe": (...) # in breaks
+    # "excised": <<...>> : &lt;&lt;    &gt;&gt; # superfluous sign on tablet
+    # "supplied": <...> # forgotten by the scribe, not on tablet
     # "erased": <{...}>
-    # "implied": <(...)> 
+    # "implied": <(...)> #  graphemes are implied because the scribe has left a blank space on the tablet. Right, this means that there's actually nothing on the tablet, just blank space. Ignore?
+    
+    #my $open = ""; my $closed = "";
+    
+    my $noSign = 0; my $previousStatus = "ok";
+    my $previousClosedSym = "";
+    #my $print = "no";
+    my $no_elements = scalar @arrayWord;
     
     foreach(@arrayWord){
 	my $thing = $_;
-	my $status = $thing->{'status'}?$thing->{'status'}:"";
+	my $status = $thing->{'status'}?$thing->{'status'}:""; 
+	
+	my $openSym = ""; my $closedSym = ""; 
+	if ($status ne "ok") {
+	    #$print = "yes";
+	    #&writetoerror ("Words", "Project: ".$thisCorpus.", text ".$thisText.": status: ".$status);
+	    if ($status eq "maybe") { $signs->{'maybe'}++; $openSym = "("; $closedSym = ")"; }
+	    elsif ($status eq "implied") { $signs->{'implied'}++; $openSym = "&lt;("; $closedSym = ")&gt;"; }
+	    elsif ($status eq "supplied") { $signs->{'supplied'}++; $openSym = "&lt;"; $closedSym = "&gt;"; }
+	    elsif ($status eq "erased") { $signs->{'erased'}++; $openSym = "&lt;{"; $closedSym = "}&gt;"; }
+	    elsif ($status eq "excised") { $signs->{'excised'}++; $openSym = "&lt;&lt;"; $closedSym = "&gt;&gt;"; }
+	}
 	
 	my $startbit = ""; my $endbit = "";
 	my $value = $thing->{'value'};
+	if ($value eq "") { $noSign++; } # signs with no value shouldn't be counted (are probably newlines!!!) 
 	
-	if ($thing->{"type"} && ( $thing->{"type"} eq "semantic" || $thing->{"type"} eq "phonetic")) { # value gets {}
+	if ($thing->{"type"} && ( $thing->{"type"} eq "semantic" || $thing->{"type"} eq "phonetic")) { # determinatives and phonetic complements get {}
 	    $value = "{".$value."}";
-	    #if ($thing->{"delim"}) { print "\nValue = ".$value." delim = ".$thing->{"delim"}; die; }
 	}
 	
-	#if ($status eq "maybe") { $value = "(".$value.")"; }
-	#elsif ($status eq "excised") { $value = "<<".$value.">>"; }
-	#elsif ($status eq "supplied") { $value = "<".$value.">"; }
-	#elsif ($status eq "erased") { $value = "<{".$value."}>"; }
+	if (($previousStatus eq "ok") && ($status eq "ok")) {
+	    # nothing needs to happen
+	}
+	elsif (($previousStatus eq "ok") && ($status ne "ok")) {
+	    # we need openSym before word
+	    $value = $openSym.$value;
+	}
 	
-	if($thing->{"state"} && $thing->{"state"} eq "missing"){ # value gets []
+	if($thing->{"break"} && $thing->{"break"} eq "missing"){ # value gets []
 	    if ($lastend ne "]") { $startbit = "[" ; }
 	    else { $lastend = ""; }
 	    $endbit = "]";
-	    $missingSigns++;
+	    $signs->{'missing'}++;
 	}
-	elsif ($thing->{"state"} && $thing->{"state"} eq "damaged"){ # value gets half[]
-	    if ($lastend ne "\x{02FA}") { $startbit = "\x{02F9}" ; }
+	elsif ($thing->{"break"} && $thing->{"break"} eq "damaged"){ # value gets half[]
+	    if ($lastend ne "\x{2E23}") { $startbit = "\x{2E22}" ; }
 	    else { $lastend = ""; }
-	    $endbit = "\x{02FA}";
-	    $damagedSigns++;
+	    $endbit = "\x{2E23}";
+	    $signs->{'damaged'}++;
 	}
+	
+	if (($previousStatus ne "ok") && ($status eq "ok")) {
+	    # we need to close before next sign with $previousClosedSym, adding $lastend before that
+	    $lastend = $previousClosedSym.$lastend;
+	}
+	elsif (($previousStatus ne "ok") && ($status ne "ok")) {
+	    # same or different status?
+	    if ($previousStatus eq $status) {
+		# nothing happens [maybe not true: how about break?] # TODO: check again with other examples
+	    }
+	    else {
+		# close first bit; and next value will need opening after delim if not ok
+		$lastend = $previousClosedSym.$lastend;
+		$lastdelim .= $openSym;
+	    }
+	}
+	
+	
 	my $delim = "";
 	if ($thing->{"delim"}) { $delim = $thing->{"delim"}; }
 	$writtenWord .= $lastend.$lastdelim.$startbit.$value;
 	$lastend = $endbit;
 	$lastdelim = $delim;
+	$previousClosedSym = $closedSym;
+	$previousStatus = $status;
     }
-    $writtenWord .= $lastend.$lastdelim;
-    return ($writtenWord, $damagedSigns, $missingSigns);
+    
+    # always correct? OK for all my examples so far. # TODO check again
+    if ($no_elements > 1) { $writtenWord .= $lastend.$previousClosedSym.$lastdelim; }
+    else { $writtenWord .= $previousClosedSym.$lastend.$lastdelim; }
+    
+    
+    $signs->{'preserved'} = $signs->{'preserved'} - $signs->{'missing'} - $signs->{'damaged'};
+    
+    #if ($print eq "yes") { &writetoerror ("Words", "Project: ".$thisCorpus.", text ".$thisText.": word: ".$writtenWord); }
+    return ($writtenWord, $signs);
 }
 
 sub analyseWord{
@@ -1031,7 +1103,7 @@ sub analyseWord{
 #          'tag' => 'g:v',
 #          'pos' => 1,
 #          'prePost' => 'pre',
-#          'state' => 'damaged'
+#          'break' => 'damaged'
 #        };
 #$VAR2 = {
 #          'group' => 'logo',
@@ -1039,14 +1111,14 @@ sub analyseWord{
 #          'tag' => 'g:s',
 #          'pos' => 2,
 #          'delim' => '.',
-#          'state' => 'damaged'
+#          'break' => 'damaged'
 #        };
 #$VAR3 = {
 #          'group' => 'logo',
 #          'value' => 'UTU',
 #          'tag' => 'g:s',
 #          'pos' => 3,
-#          'state' => 'damaged'
+#          'break' => 'damaged'
 #        };
     
     my @arrayWord = ();
@@ -1056,7 +1128,7 @@ sub analyseWord{
     my $no_children = scalar @children;
     my $position = 1; my $localdata = {}; my $cnt = 0; my $tempdata = {};
     foreach my $i (@children) { # check each element of a word
-	($tempdata, $position) = &splitWord (\@arrayWord, $i, $position);
+	($tempdata, $position) = &splitWord (\@arrayWord, $i, $label, $position);
 	$cnt++;
     }
     
@@ -1071,7 +1143,7 @@ sub analyseWord{
 	    my @endchildren = $splitenz[0]->children();
 	    $localdata = {}; $cnt = 0;
 	    foreach my $j (@endchildren) { 
-	        ($tempdata, $position) = &splitWord (\@arrayWord, $j, $position);
+	        ($tempdata, $position) = &splitWord (\@arrayWord, $j, $label, $position);
 	        $cnt++;
 	    }
 	    # add extra line number; find parent of swc
@@ -1082,8 +1154,11 @@ sub analyseWord{
     }
     
     my $writtenWord = ""; 
-    my $preservedSigns = 0; my $damagedSigns = 0; my $missingSigns = 0;
-    ($writtenWord, $damagedSigns, $missingSigns) = &formWord(\@arrayWord);
+    my $preservedSigns = 0; #my $damagedSigns = 0; my $missingSigns = 0;
+    my $signs = ();
+    ($writtenWord, $signs) = &formWord(\@arrayWord);
+    my $damagedSigns = $signs->{'damaged'}; my $missingSigns = $signs->{'missing'};
+    #($writtenWord, $damagedSigns, $missingSigns) = &formWord(\@arrayWord);
     my $no_signs = scalar @arrayWord;
     $preservedSigns = $no_signs - $damagedSigns - $missingSigns;
     
@@ -1104,7 +1179,7 @@ sub analyseWord{
 	    if ($note eq "correction") {
 		#$writtenAs = $writtenWord without brackets
 		$writtenAs = $writtenWord; 
-		$writtenAs =~ s|\[||g; $writtenAs =~ s|\]||g; $writtenAs =~ s|\x{02F9}||g; $writtenAs =~ s|\x{02FA}||g;
+		$writtenAs =~ s|\[||g; $writtenAs =~ s|\]||g; $writtenAs =~ s|\x{2E22}||g; $writtenAs =~ s|\x{2E23}||g;
 	    }
 	}
 	if ($i->{'newline'}) {
@@ -1151,6 +1226,7 @@ sub analyseWord{
 sub splitWord {
     my $splitdata = shift;
     my $root = shift;
+    my $label = shift;
     my $position = shift;
     my $type = shift || "";
     my $prepost = shift || "";
@@ -1164,8 +1240,9 @@ sub splitWord {
     my $tag = $root->tag;
     
     my $value = "";
-    my $base = "";
+    my $base = ""; my $allo = ""; my $formvar = ""; my $modif = ""; 
     my $newline = "";
+    my $open = ""; my $closed = "";
     # http://oracc.museum.upenn.edu/ns/gdl/1.0/grapheme.rnc.html
     
     # Single elements: g:x (missing), g:n (number), g:v (small letters), g:s (capital)
@@ -1176,15 +1253,40 @@ sub splitWord {
 	    $newline = $root->{att}->{'g:type'};
 	}
 	$value = $root->{att}->{form}?$root->{att}->{form}:"";
-	$base = $root->{att}->{"g:b"}?$root->{att}->{"g:b"}:"";
+	my @bases = $root->get_xpath("g:b");
+	$base = $bases[0]?$bases[0]->text:"";
+	# variants with g:a (allograph), g:f (formvar) or g:m (modifier) ??? TODO
+	# see http://oracc.museum.upenn.edu/ns/gdl/1.0/#schemawords
+	my @allos = $root->get_xpath("g:a");
+	$allo = $allos[0]?$allos[0]->text:"";
+	my @formvars = $root->get_xpath("g:f");
+	$formvar = $formvars[0]?$formvars[0]->text:"";
+	my @mods = $root->get_xpath("g:m");
+	$modif = $mods[0]?$mods[0]->text:"";
+	
 	if (($value eq "") && ($root->text)) { $value = $root->text; }
-	if ($status eq "") { $status = $root->{att}->{"g:status"}?$root->{att}->{"g:status"}:""; }
+	if ($status eq "") {
+	    $status = $root->{att}->{"g:status"}?$root->{att}->{"g:status"}:"";
+	    #if ($status ne "ok") { &writetoerror ("PossibleProblems.txt", localtime."Project: ".$thisCorpus.", text ".$thisText.": sign status ".$status." value ".$value); }
+	    }
+	if ($status ne "ok") {
+	    $open = $root->{att}->{'g:o'}?$root->{att}->{'g:o'}:"";
+	    $closed = $root->{att}->{'g:c'}?$root->{att}->{'g:c'}:"";
+	}
 
 	if ($root->{att}->{"g:delim"}) { $delim = $root->{att}->{"g:delim"}; }
 	if ($root->{att}->{"g:break"}) { $break = $root->{att}->{"g:break"}; }
 	
-	$localdata->{"pos"} = $position; $localdata->{"tag"} = $tag; $localdata->{"value"} = $value; $localdata->{"state"} = $break;
+	# g:break = missing or damaged (otherwise not present)
+	# g:status = ok, excised, supplied, maybe, implied, erased -> ok, excised and erased are present on the tablet; maybe may be too. 
+	# supplied are, however, forgotten signs; and implied is blank space.
+	# SO: state = preserved (ok, excised), damaged, missing (incl. maybe, supplied and implied?), erased
+	
+	$localdata->{"pos"} = $position; $localdata->{"tag"} = $tag; $localdata->{"value"} = $value; $localdata->{"break"} = $break;
 	if ($base ne "") { $localdata->{"base"} = $base; }
+	if ($allo ne "") { $localdata->{"allograph"} = $allo; }
+	if ($formvar ne "") { $localdata->{"formvar"} = $formvar; }
+	if ($modif ne "") { $localdata->{"modifier"} = $modif; }
 	if ($prepost ne "") { $localdata->{"prePost"} = $prepost; }
 	if ($type ne "") { $localdata->{"type"} = $type; }
 	if ($delim ne "") { $localdata->{"delim"} = $delim; }
@@ -1192,6 +1294,8 @@ sub splitWord {
 	if ($for ne "") { $localdata->{"for"} = $for; }
 	if ($status ne "") { $localdata->{"status"} = $status; }
 	if ($newline eq "newline") { $localdata->{"newline"} = $newline; }
+	if ($open ne "") { $localdata->{"open"} = $open; }
+	if ($closed ne "") { $localdata->{"closed"} = $closed; }
 
 	push(@{$splitdata},$localdata);
 	$position++;
@@ -1207,7 +1311,7 @@ sub splitWord {
 	$delim = $root->{att}->{"g:delim"};
 	my @temp = ();
 	foreach my $j (@det_elements) {
-	    ($splitdata, $position) = &splitWord($splitdata, $j, $position, $type, $prepost, "", $delim, $group, $for, $status);
+	    ($splitdata, $position) = &splitWord($splitdata, $j, $label, $position, $type, $prepost, "", $delim, $group, $for, $status);
 	}
     }
     
@@ -1292,7 +1396,7 @@ sub splitWord {
 		$splitdata->[$lastone - 1]->{"combo"} = $type;
 		}
 	    else {
-		($splitdata, $position) = &splitWord($splitdata, $c, $position, "", "", $break, $delim, $group, $for, $status);
+		($splitdata, $position) = &splitWord($splitdata, $c, $label, $position, "", "", $break, $delim, $group, $for, $status);
 	    }
 	    $cnt++;
 	    if ($cnt == $no_els) {
@@ -1302,7 +1406,7 @@ sub splitWord {
 		}
 	    }
 	}
-	&listCombos($root);
+	&listCombos($root, $label);
     }
     
     # Qualified graphemes: g:q { form? , g.meta , (v|s|c) , (s|c|n) }
@@ -1321,10 +1425,10 @@ sub splitWord {
         my $firstpart = $root->getFirstChild();
 	if ($firstpart->{att}->{"g:delim"}) { $delim = $firstpart->{att}->{"g:delim"}; }
 	if ($firstpart->{att}->{"g:break"}) { $break = $firstpart->{att}->{"g:break"}; }
-	($splitdata, $position) = &splitWord($splitdata, $firstpart, $position, "", "", $break, $delim, $group, $for, $status);
+	($splitdata, $position) = &splitWord($splitdata, $firstpart, $label, $position, "", "", $break, $delim, $group, $for, $status);
 	
 	my $secondpart = $firstpart->getNextSibling();
-	&listCombos($root);
+	&listCombos($root, $label);
     }
     
     # Groups: g:gg
@@ -1416,31 +1520,31 @@ sub splitWord {
 	    my $gg1 = $root->getFirstChild(); # corrected reading
 	    $for = $gg1->text;
 	    my $gg2 = $gg1->getNextSibling(); # written sign
-	    ($splitdata, $position) = &splitWord($splitdata, $gg2, $position, "", "", $break, $delim, $group, $for, $status);
+	    ($splitdata, $position) = &splitWord($splitdata, $gg2, $label, $position, "", "", $break, $delim, $group, $for, $status);
 	}
 	elsif (($group eq "logo") || ($group eq "reordering")) {
 	    $for = "";
 	    foreach my $gg (@gg_elements) {
-	        ($splitdata, $position) = &splitWord($splitdata, $gg, $position, "", "", $break, $delim, $group, $for, $status);
+	        ($splitdata, $position) = &splitWord($splitdata, $gg, $label, $position, "", "", $break, $delim, $group, $for, $status);
 	    }
 	}
 	elsif ($group eq "ligature") { # this may be OK, but check with more normal ligatures...
 	    $for = "";
 	    foreach my $gg (@gg_elements) {
-	        ($splitdata, $position) = &splitWord($splitdata, $gg, $position, "", "", $break, $delim, $group, $for, $status);
+	        ($splitdata, $position) = &splitWord($splitdata, $gg, $label, $position, "", "", $break, $delim, $group, $for, $status);
 	    }
 	}
 	else { # some uncovered situation?
 	    &writetoerror ("PossibleProblems.txt", localtime."Project: ".$thisCorpus.", text ".$thisText.": group of type ".$group); # - keep checking ***
 	}
-	&listCombos($root);
+	&listCombos($root, $label);
     }
     
     return ($splitdata, $position);
 }
    
 
-sub determinePosition { # seems to work with words with 2 determinatives in a row; what about several phonetic complements (a word longer than 1 sign) *** TODO
+sub determinePosition { # seems to work with words with 2 determinatives in a row; what about several phonetic complements (a word longer than 1 sign) *** TODO check (not in my examples so far)
     my $beginpos = shift;
     my $endpos = shift;
     my @arrayWord = @{$_[0]};
@@ -1494,9 +1598,11 @@ sub determinePosition { # seems to work with words with 2 determinatives in a ro
     }
 }
 
-sub listCombos { # TODO, save in a separate file?
+sub listCombos { # Chris: how can I get the root structure saved in combos ????
     my $root = shift;
-    
+    my $label = shift;
+    my $realLabel = $thisCorpus.".".$thisText." ".$label;
+    #push (@{$combos{"combo"}{$root}{"label"}}, $realLabel);
 }
 
 sub saveWord { 
@@ -1557,13 +1663,13 @@ sub abstractWorddata{
     my $label = shift;
     
     if ($break eq "damaged") {
-	$data->{'state'}{$break}{'writtenform'}{$writtenWord}{'num'}++;
-	push (@{$data->{'state'}{$break}{'writtenform'}{$writtenWord}{'line'}}, $label);
+	$data->{'break'}{$break}{'writtenform'}{$writtenWord}{'num'}++;
+	push (@{$data->{'break'}{$break}{'writtenform'}{$writtenWord}{'line'}}, $label);
     }
     else {
-	push (@{$data->{'state'}{$break}{'line'}}, $label);
+	push (@{$data->{'break'}{$break}{'line'}}, $label);
     }
-    $data->{'state'}{$break}{'num'}++;
+    $data->{'break'}{$break}{'num'}++;
 }
 
 sub saveSigns { 
@@ -1589,11 +1695,22 @@ sub saveSigns {
     # TODO: logographic suffixes ***
     foreach my $sign (@arrayWord) {
 	if ($category eq "") { $category = $sign->{'tag'}?$sign->{'tag'}:"unknown"; }
-	my $state = $sign->{'state'}; 
+	my $break = $sign->{'break'}; 
 	my $value = $sign->{'value'}; my $pos = $sign->{'pos'}; my $position = $sign->{'position'};
 	my $role = $sign->{'type'}?$sign->{'type'}:""; # semantic or phonetic
 	my $prePost = $sign->{'prePost'}?$sign->{'prePost'}:""; # pre or post-position
 	my $base = $sign->{'base'}?$sign->{'base'}:""; # baseform if present
+	my $allo = $sign->{'allograph'}?$sign->{'allograph'}:""; # variant forms if present
+	my $formvar = $sign->{'formvar'}?$sign->{'formvar'}:"";
+	my $modif = $sign->{'modifier'}?$sign->{'modifier'}:"";
+	
+	my $variantType = "";
+	if ($base ne "") {
+	    if ($allo ne "") { $variantType = "allograph"; }
+	    elsif ($modif ne "") { $variantType = "modif"; }
+	    elsif ($formvar ne "") { $variantType = "formvar"; }
+	}
+	
 	$group = $sign->{'group'}?$sign->{'group'}:"";
 	$for = $sign->{'for'}?$sign->{'for'}:"";
 	
@@ -1677,7 +1794,8 @@ sub saveSigns {
         else {
 	# TODO different languages ***
         }
-    &saveSign($lang, $category, $value, $base, $role, $prePost, $position, $syllabic, $state, $label, $cf, $writtenWord, $wordtype, $gw, $wordbase, $group, $for);
+    
+    &saveSign($lang, $category, $value, $base, $variantType, $role, $prePost, $position, $syllabic, $break, $label, $cf, $writtenWord, $wordtype, $gw, $wordbase, $group, $for);
     if ($category ne "uncertainReading") { $category = ""; }
     }
 }
@@ -1687,6 +1805,7 @@ sub saveSign {
     my $category = shift;
     my $value = shift;
     my $base = shift;
+    my $variantType = shift;
     my $role = shift;
     my $prePost = shift;
     my $pos = shift;
@@ -1715,23 +1834,25 @@ sub saveSign {
     if (($category eq "syllabic") && ($syllabic ne "")) {
 	$PQdata{"02_Signs"}{$lang}{"category"}{$category}{"type"}{$syllabic}{'total'}++; # total number of signs
         $PQdata{"02_Signs"}{$lang}{"category"}{$category}{"type"}{$syllabic}{"state"}{$break}{'num'}++;
-	&abstractSigndata(\%{$PQdata{"02_Signs"}{$lang}{"category"}{$category}{"type"}{$syllabic}}, $value, $wordtype, $pos, $gw, $cf, $break, $writtenWord, $label, $group, $for);
+	&abstractSigndata(\%{$PQdata{"02_Signs"}{$lang}{"category"}{$category}{"type"}{$syllabic}}, $value, $base, $variantType, $wordtype, $pos, $gw, $cf, $break, $writtenWord, $label, $group, $for);
     }
     elsif (($role eq "semantic") || ($role eq "phonetic")) {
 	$PQdata{"02_Signs"}{$lang}{"category"}{$category}{"prePost"}{$prePost}{"total"}++;
 	$PQdata{"02_Signs"}{$lang}{"category"}{$category}{"prePost"}{$prePost}{"state"}{$break}{"num"}++;
-	&abstractSigndata(\%{$PQdata{"02_Signs"}{$lang}{"category"}{$category}{"prePost"}{$prePost}}, $value, $wordtype, $pos, $gw, $cf, $break, $writtenWord, $label, $group, $for);
+	&abstractSigndata(\%{$PQdata{"02_Signs"}{$lang}{"category"}{$category}{"prePost"}{$prePost}}, $value, $base, $variantType, $wordtype, $pos, $gw, $cf, $break, $writtenWord, $label, $group, $for);
     }
     else {
 	# wordbase only here if Sumerian
-	if (($wordbase eq "") || ($category eq "nonbase")) { &abstractSigndata(\%{$PQdata{"02_Signs"}{$lang}{"category"}{$category}}, $value, $wordtype, $pos, $gw, $cf, $break, $writtenWord, $label, $group, $for); }
-	else { &abstractSigndata(\%{$PQdata{"02_Signs"}{$lang}{"category"}{$category}{"wordbase"}{$wordbase}}, $value, $wordtype, $pos, $gw, $cf, $break, $writtenWord, $label, $group, $for); }
+	if (($wordbase eq "") || ($category eq "nonbase")) { &abstractSigndata(\%{$PQdata{"02_Signs"}{$lang}{"category"}{$category}}, $value, $base, $variantType, $wordtype, $pos, $gw, $cf, $break, $writtenWord, $label, $group, $for); }
+	else { &abstractSigndata(\%{$PQdata{"02_Signs"}{$lang}{"category"}{$category}{"wordbase"}{$wordbase}}, $value, $base, $variantType, $wordtype, $pos, $gw, $cf, $break, $writtenWord, $label, $group, $for); }
     }
 }    
 
 sub abstractSigndata{ 
     my $data = shift;
     my $value = shift;
+    my $base = shift;
+    my $variantType = shift;
     my $wordtype = shift;
     my $pos = shift;
     my $gw = shift;
@@ -1744,11 +1865,20 @@ sub abstractSigndata{
     
     if ($gw eq "1") { $gw = ""; } # personal names etc.
     
-    $data->{"value"}{$value}{'num'}++;
-    if (($gw ne "") && ($cf ne "")) { &abstractSigndata2(\%{$data->{"value"}{$value}{"wordtype"}{$wordtype}{"pos"}{$pos}{"cf"}{$cf}{"gw"}{$gw}}, $break, $writtenWord, $label, $group, $for); }
-    elsif ($gw ne "") { &abstractSigndata2(\%{$data->{"value"}{$value}{"wordtype"}{$wordtype}{"pos"}{$pos}{"gw"}{$gw}}, $break, $writtenWord, $label, $group, $for); }
-    elsif ($cf ne "") { &abstractSigndata2(\%{$data->{"value"}{$value}{"wordtype"}{$wordtype}{"pos"}{$pos}{"cf"}{$cf}}, $break, $writtenWord, $label, $group, $for); }
-    else { &abstractSigndata2(\%{$data->{"value"}{$value}{"wordtype"}{$wordtype}{"pos"}{$pos}}, $break, $writtenWord, $label, $group, $for); } 
+    if ($base eq "") {
+        $data->{"value"}{$value}{'num'}++;
+        if (($gw ne "") && ($cf ne "")) { &abstractSigndata2(\%{$data->{"value"}{$value}{"wordtype"}{$wordtype}{"pos"}{$pos}{"cf"}{$cf}{"gw"}{$gw}}, $break, $writtenWord, $label, $group, $for); }
+        elsif ($gw ne "") { &abstractSigndata2(\%{$data->{"value"}{$value}{"wordtype"}{$wordtype}{"pos"}{$pos}{"gw"}{$gw}}, $break, $writtenWord, $label, $group, $for); }
+        elsif ($cf ne "") { &abstractSigndata2(\%{$data->{"value"}{$value}{"wordtype"}{$wordtype}{"pos"}{$pos}{"cf"}{$cf}}, $break, $writtenWord, $label, $group, $for); }
+        else { &abstractSigndata2(\%{$data->{"value"}{$value}{"wordtype"}{$wordtype}{"pos"}{$pos}}, $break, $writtenWord, $label, $group, $for); }
+    }
+    else { # treat base as value and work with variants: allograph, modifier, formvar
+	$data->{"value"}{$base}{'num'}++;
+        if (($gw ne "") && ($cf ne "")) { &abstractSigndata2(\%{$data->{"value"}{$base}{$variantType}{$value}{"wordtype"}{$wordtype}{"pos"}{$pos}{"cf"}{$cf}{"gw"}{$gw}}, $break, $writtenWord, $label, $group, $for); }
+        elsif ($gw ne "") { &abstractSigndata2(\%{$data->{"value"}{$base}{$variantType}{$value}{"wordtype"}{$wordtype}{"pos"}{$pos}{"gw"}{$gw}}, $break, $writtenWord, $label, $group, $for); }
+        elsif ($cf ne "") { &abstractSigndata2(\%{$data->{"value"}{$base}{$variantType}{$value}{"wordtype"}{$wordtype}{"pos"}{$pos}{"cf"}{$cf}}, $break, $writtenWord, $label, $group, $for); }
+        else { &abstractSigndata2(\%{$data->{"value"}{$base}{$variantType}{$value}{"wordtype"}{$wordtype}{"pos"}{$pos}}, $break, $writtenWord, $label, $group, $for); }
+    }
 }
 
 sub abstractSigndata2{
@@ -1829,6 +1959,7 @@ sub writetoerror{
     print $destinationdir."/".$shortname;
 #    create a file called the shortname - allows sub sectioning of error messages
     open(SUBFILE2, ">>".$destinationdir."/".$shortname) or die "Couldn't open: $!";
+    binmode SUBFILE2, ":utf8";
     print SUBFILE2 $error."\n";
     close(SUBFILE2);
 }
