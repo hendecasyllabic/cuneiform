@@ -20,6 +20,9 @@ my $PQroot = "";
 my %PQdata = ();  # data per text
 my %corpusdata = (); # overview of selected metadata per corpus
 my %combos = ();
+my %compilationERSigns = (); # temporary feature for ER - get rid of all references later # unfortunately, this doesn't seem to work correctly as
+# some elements seem to be overwritten instead of added - WHY? CHRIS?
+my %compilationERWords = ();
 
 my $thisCorpus = "";
 my $thisText = "";
@@ -94,6 +97,10 @@ sub ItemStats{
 
 # list of combos    
     &writetofile("combos", \%combos);
+    
+# compilations for ER
+    &writetofile("CompilationSigns", \%compilationERSigns);
+    &writetofile("CompilationWords", \%compilationERWords);
 }
 
 sub doQstats{
@@ -633,7 +640,7 @@ sub getLineData {
 		my $value = $sign->{'value'}; my $pos = $sign->{'pos'}; my $position = $sign->{'position'};
 		# can these actually have base and modifier ??? TODO - CHECK
 		# I'm not including gw as translation is possibly nonsensical (especially when combination of words)
-		&saveSign($nonwLang, $category, $value, "", "", "", "", $position, "", $break, $label, $form, $writtenWord, $wordtype, "", "");
+		&saveSign($nonwLang, $category, $value, "", "", "", "", "", "", $position, "", $break, $label, $form, $writtenWord, $wordtype, "", "");
 	    }
 	}
     }
@@ -890,6 +897,20 @@ sub savePunct {
 	}
     else { # as gw can be a bit nonsensical (esp. if existing of several words), I'm not yet including it. Don't yet know if there's any need. Maybe check again later ***
 	push (@{$PQdata{"02_Signs"}{$lang}{"category"}{$category}{"value"}{$sign}{$ditto}{$cf}{"state"}{$break}{"line"}}, $label);
+    }
+    
+    
+    $compilationERSigns{"02_Signs"}{'total'}++; # total number of signs
+    $compilationERSigns{"02_Signs"}{"ztotal_state"}{$break}{'total'}++;
+    $compilationERSigns{"02_Signs"}{$lang}{'total'}++; # total number of signs per language
+    $compilationERSigns{"02_Signs"}{$lang}{"zlang_total_state"}{$break}{'total'}++;
+    $compilationERSigns{"02_Signs"}{$lang}{"category"}{$category}{'total'}++; # total number of signs per language and category
+    $compilationERSigns{"02_Signs"}{$lang}{"category"}{$category}{"state"}{$break}{'total'}++;
+    if ($ditto eq "") {
+	push (@{$compilationERSigns{"02_Signs"}{$lang}{"category"}{$category}{"value"}{$sign}{"state"}{$break}{"line"}}, $label);
+	}
+    else { # as gw can be a bit nonsensical (esp. if existing of several words), I'm not yet including it. Don't yet know if there's any need. Maybe check again later ***
+	push (@{$compilationERSigns{"02_Signs"}{$lang}{"category"}{$category}{"value"}{$sign}{$ditto}{$cf}{"state"}{$break}{"line"}}, $label);
     }
 }
 
@@ -1255,14 +1276,16 @@ sub splitWord {
 	$value = $root->{att}->{form}?$root->{att}->{form}:"";
 	my @bases = $root->get_xpath("g:b");
 	$base = $bases[0]?$bases[0]->text:"";
-	# variants with g:a (allograph), g:f (formvar) or g:m (modifier) ??? TODO
+	# variants with g:a (allograph), g:f (formvar) or g:m (modifier)
 	# see http://oracc.museum.upenn.edu/ns/gdl/1.0/#schemawords
-	my @allos = $root->get_xpath("g:a");
-	$allo = $allos[0]?$allos[0]->text:"";
-	my @formvars = $root->get_xpath("g:f");
-	$formvar = $formvars[0]?$formvars[0]->text:"";
-	my @mods = $root->get_xpath("g:m");
-	$modif = $mods[0]?$mods[0]->text:"";
+	 
+	my @allos = $root->get_xpath("g:a"); $allo = $allos[0]?$allos[0]->text:"";
+	my @formvars = $root->get_xpath("g:f"); $formvar = $formvars[0]?$formvars[0]->text:"";
+	my @mods = $root->get_xpath("g:m"); $modif = $mods[0]?$mods[0]->text:"";
+	
+	if ((($allo ne "") && ($formvar ne "")) || (($allo ne "") && ($modif ne "")) || (($modif ne "") && ($formvar ne ""))) {
+	    &writetoerror ("PossibleProblems.txt", localtime."Project: ".$thisCorpus.", text ".$thisText.": allo ".$allo." formvar ".$formvar." modif ".$modif);
+	}
 	
 	if (($value eq "") && ($root->text)) { $value = $root->text; }
 	if ($status eq "") {
@@ -1654,13 +1677,47 @@ sub saveWord {
 	}
     }
     $PQdata{"03_Words"}{'total'}++;
+    
+    
+    $compilationERWords{"03_Words"}{$lang}{$wordtype}{$totaltype}{'total'}++;
+    $compilationERWords{"03_Words"}{$lang}{$wordtype}{$totaltype}{$break}{'num'}++;
+    
+    if ($form ne "") {
+	$compilationERWords{"03_Words"}{$lang}{$wordtype}{'form'}{$form}{'total'}++;
+	if ($cf ne "") { $compilationERWords{"03_Words"}{$lang}{$wordtype}{'form'}{$form}{'cf'} = $cf; }
+	if ($gw ne "") { $compilationERWords{"03_Words"}{$lang}{$wordtype}{'form'}{$form}{'gw'} = $gw; }
+	if ($wordbase ne "") { $compilationERWords{"03_Words"}{$lang}{$wordtype}{'form'}{$form}{'wordbase'} = $wordbase; }
+	if ($pofs ne "") { $compilationERWords{"03_Words"}{$lang}{$wordtype}{'form'}{$form}{'pofs'} = $pofs; }
+	if ($epos ne "") { $compilationERWords{"03_Words"}{$lang}{$wordtype}{'form'}{$form}{'epos'} = $epos; }
+	if ($split ne "") {
+	    #&writetoerror ("PossibleProblems.txt", localtime."Project: ".$thisCorpus.", text ".$thisText.", ".$label.": split words.");
+	    $compilationERWords{"03_Words"}{$lang}{$wordtype}{'form'}{$form}{'splitWord'}++; } 
+	if (($note ne "") && ($note ne "correction")) {
+	    if ($note eq "gloss") { $compilationERWords{"03_Words"}{$lang}{$wordtype}{'form'}{$form}{'num_gloss'}++; }
+	    $compilationERWords{"03_Words"}{$lang}{$wordtype}{'form'}{$form}{'note'}{$note}{'num'}++;
+	    }
+	
+	if ($note eq "") {
+	    &abstractWorddata(\%{$compilationERWords{"03_Words"}{$lang}{$wordtype}{'form'}{$form}}, $break, $writtenWord, $label);
+	}
+	elsif (($note eq "correction") && ($writtenAs ne "")) {
+	    &abstractWorddata(\%{$compilationERWords{"03_Words"}{$lang}{$wordtype}{'form'}{$form}{'wronglyWrittenAs'}{$writtenAs}}, $break, $writtenWord, $label);
+	}
+	else { 
+	    &abstractWorddata(\%{$compilationERWords{"03_Words"}{$lang}{$wordtype}{'form'}{$form}{'note'}{$note}}, $break, $writtenWord, $label);
+	}
+    }
+    $compilationERWords{"03_Words"}{'total'}++;
+    
 }
 
 sub abstractWorddata{ 
     my $data = shift;
     my $break = shift;
     my $writtenWord = shift;
-    my $label = shift;
+    my $shortlabel = shift;
+    
+    my $label = $thisText." ".$shortlabel;
     
     if ($break eq "damaged") {
 	$data->{'break'}{$break}{'writtenform'}{$writtenWord}{'num'}++;
@@ -1704,13 +1761,6 @@ sub saveSigns {
 	my $formvar = $sign->{'formvar'}?$sign->{'formvar'}:"";
 	my $modif = $sign->{'modifier'}?$sign->{'modifier'}:"";
 	
-	my $variantType = "";
-	if ($base ne "") {
-	    if ($allo ne "") { $variantType = "allograph"; }
-	    elsif ($modif ne "") { $variantType = "modif"; }
-	    elsif ($formvar ne "") { $variantType = "formvar"; }
-	}
-	
 	$group = $sign->{'group'}?$sign->{'group'}:"";
 	$for = $sign->{'for'}?$sign->{'for'}:"";
 	
@@ -1731,6 +1781,10 @@ sub saveSigns {
 		my %syllables = ();
 		$syllables{"V"} = 1; $syllables{"VC"} = 1;
 		$syllables{"CV"} = 1; $syllables{"CVC"} = 1;
+		$syllables{"CVC"} = 1; $syllables{"CVCV"} = 1; # taken out, maybe better to treat them together in chart program TODO
+		$syllables{"VCV"} = 1; 
+		# I'd like to treat CVCV and VCV together with CVC and VC to avoid confusion (then there won't be too much problem with the differing opinions of scholars).
+		# Moreover, on CVC instead of CVCV in NA, cf. Hämeen-Anttila par. 1.2.1
 
 		my $tempvalue = $sign->{'base'}?$sign->{'base'}:$value;
 		
@@ -1748,31 +1802,28 @@ sub saveSigns {
 		if ($syllabic eq "VV") { # e.g., ia
 		    $syllabic = "CV";
 		}
-		
-		
-	    # I'm treating CVCV and VCV together with CVC and VC to avoid confusion (then there won't be too much problem with the differing opinions of scholars).
-	    # Moreover, on CVC instead of CVCV in NA, cf. Hämeen-Anttila par. 1.2.1
-		if (($syllabic eq "CVCV") && (substr($tempvalue, 1, 1) eq substr($tempvalue, 3, 1))){  
-		    $syllabic = "CVC";
-		    #print "\nCVCV: ".$tempvalue;
-		}
-		
-		if (($syllabic eq "VCV") && (substr($tempvalue, 0, 1) eq substr($tempvalue, 2, 1))){ 
-		    if ($tempvalue ne "ana") { $syllabic = "VC"; }
-		    #print "\nVCV".$tempvalue;
-		# check IGI as ini *** TODO cf. Hämeen-Anttila
-		}
+	    
+		#if (($syllabic eq "CVCV") && (substr($tempvalue, 1, 1) eq substr($tempvalue, 3, 1))){  
+		#    $syllabic = "CVC";
+		#    #print "\nCVCV: ".$tempvalue;
+		#}
+		#
+		#if (($syllabic eq "VCV") && (substr($tempvalue, 0, 1) eq substr($tempvalue, 2, 1))){ 
+		#    if ($tempvalue ne "ana") { $syllabic = "VC"; }
+		#    #print "\nVCV".$tempvalue;
+		## check IGI as ini *** TODO cf. Hämeen-Anttila
+		#}
 		
 		if ($role eq "semantic") {
 		    $syllabic = ""; $category = "determinative";
 		}
-		
-		if (!($syllables{$syllabic})) { # not V, CV, VC, or CVC
+		elsif (!($syllables{$syllabic})) { # not V, CV, VC, or CVC
 		    if ($syllabic eq "C") {
 			if (($tempvalue eq "d") || ($tempvalue eq "m") || ($tempvalue eq "f")) { $category = "determinative"; $syllabic = ""; }
 			else { $category = "x"; $syllabic = ""; } # then the value should be x, so unreadable sign, treat as "x"
 		    } 
-		    else { $category = "logogram"; $syllabic = ""; } # logosyllabic/syllabic-other ?? Mikko *** TODO, eg. ana/ina/arba/CVCV
+		    else { $category = "syllabic"; $syllabic = "other";
+			&writetoerror ("PossibleProblems.txt", localtime."Project: ".$thisCorpus.", text ".$thisText.": other syllabic value ".$value); } # logosyllabic/syllabic-other ?? Mikko *** TODO, eg. ana/ina/arba/CVCV
 		}
 		else {
 		    if ($tempvalue eq "o") { $category = ""; $syllabic = ""; }  
@@ -1795,7 +1846,7 @@ sub saveSigns {
 	# TODO different languages ***
         }
     
-    &saveSign($lang, $category, $value, $base, $variantType, $role, $prePost, $position, $syllabic, $break, $label, $cf, $writtenWord, $wordtype, $gw, $wordbase, $group, $for);
+    &saveSign($lang, $category, $value, $base, $allo, $formvar, $modif, $role, $prePost, $position, $syllabic, $break, $label, $cf, $writtenWord, $wordtype, $gw, $wordbase, $group, $for);
     if ($category ne "uncertainReading") { $category = ""; }
     }
 }
@@ -1805,7 +1856,9 @@ sub saveSign {
     my $category = shift;
     my $value = shift;
     my $base = shift;
-    my $variantType = shift;
+    my $allo = shift;
+    my $formvar = shift;
+    my $modif = shift;
     my $role = shift;
     my $prePost = shift;
     my $pos = shift;
@@ -1820,7 +1873,7 @@ sub saveSign {
     my $group = shift || "";
     my $for = shift || "";
     my %temp = ();
-    
+
     if($lang eq ""){ $lang = "noLang"; }
     if ($role eq "semantic") { $category = "determinative"; }
     
@@ -1834,17 +1887,42 @@ sub saveSign {
     if (($category eq "syllabic") && ($syllabic ne "")) {
 	$PQdata{"02_Signs"}{$lang}{"category"}{$category}{"type"}{$syllabic}{'total'}++; # total number of signs
         $PQdata{"02_Signs"}{$lang}{"category"}{$category}{"type"}{$syllabic}{"state"}{$break}{'num'}++;
-	&abstractSigndata(\%{$PQdata{"02_Signs"}{$lang}{"category"}{$category}{"type"}{$syllabic}}, $value, $base, $variantType, $wordtype, $pos, $gw, $cf, $break, $writtenWord, $label, $group, $for);
+	&abstractSigndata(\%{$PQdata{"02_Signs"}{$lang}{"category"}{$category}{"type"}{$syllabic}}, $value, $base, $allo, $formvar, $modif, $wordtype, $pos, $gw, $cf, $break, $writtenWord, $label, $group, $for);
     }
     elsif (($role eq "semantic") || ($role eq "phonetic")) {
 	$PQdata{"02_Signs"}{$lang}{"category"}{$category}{"prePost"}{$prePost}{"total"}++;
 	$PQdata{"02_Signs"}{$lang}{"category"}{$category}{"prePost"}{$prePost}{"state"}{$break}{"num"}++;
-	&abstractSigndata(\%{$PQdata{"02_Signs"}{$lang}{"category"}{$category}{"prePost"}{$prePost}}, $value, $base, $variantType, $wordtype, $pos, $gw, $cf, $break, $writtenWord, $label, $group, $for);
+	&abstractSigndata(\%{$PQdata{"02_Signs"}{$lang}{"category"}{$category}{"prePost"}{$prePost}}, $value, $base, $allo, $formvar, $modif, $wordtype, $pos, $gw, $cf, $break, $writtenWord, $label, $group, $for);
     }
     else {
 	# wordbase only here if Sumerian
-	if (($wordbase eq "") || ($category eq "nonbase")) { &abstractSigndata(\%{$PQdata{"02_Signs"}{$lang}{"category"}{$category}}, $value, $base, $variantType, $wordtype, $pos, $gw, $cf, $break, $writtenWord, $label, $group, $for); }
-	else { &abstractSigndata(\%{$PQdata{"02_Signs"}{$lang}{"category"}{$category}{"wordbase"}{$wordbase}}, $value, $base, $variantType, $wordtype, $pos, $gw, $cf, $break, $writtenWord, $label, $group, $for); }
+	if (($wordbase eq "") || ($category eq "nonbase")) { &abstractSigndata(\%{$PQdata{"02_Signs"}{$lang}{"category"}{$category}}, $value, $base, $allo, $formvar, $modif, $wordtype, $pos, $gw, $cf, $break, $writtenWord, $label, $group, $for); }
+	else { &abstractSigndata(\%{$PQdata{"02_Signs"}{$lang}{"category"}{$category}{"wordbase"}{$wordbase}}, $value, $base, $allo, $formvar, $modif, $wordtype, $pos, $gw, $cf, $break, $writtenWord, $label, $group, $for); }
+    }
+    
+    
+    # HIER
+    $compilationERSigns{"02_Signs"}{'total'}++; # total number of signs
+    $compilationERSigns{"02_Signs"}{"ztotal_state"}{$break}{'total'}++;
+    $compilationERSigns{"02_Signs"}{$lang}{'total'}++; # total number of signs per language
+    $compilationERSigns{"02_Signs"}{$lang}{"zlang_total_state"}{$break}{'total'}++;
+    $compilationERSigns{"02_Signs"}{$lang}{"category"}{$category}{'total'}++; # total number of signs per language and category
+    $compilationERSigns{"02_Signs"}{$lang}{"category"}{$category}{"state"}{$break}{'num'}++;
+    
+    if (($category eq "syllabic") && ($syllabic ne "")) {
+	$compilationERSigns{"02_Signs"}{$lang}{"category"}{$category}{"type"}{$syllabic}{'total'}++; # total number of signs
+        $compilationERSigns{"02_Signs"}{$lang}{"category"}{$category}{"type"}{$syllabic}{"state"}{$break}{'num'}++;
+	&abstractSigndata(\%{$compilationERSigns{"02_Signs"}{$lang}{"category"}{$category}{"type"}{$syllabic}}, $value, $base, $allo, $formvar, $modif, $wordtype, $pos, $gw, $cf, $break, $writtenWord, $label, $group, $for);
+    }
+    elsif (($role eq "semantic") || ($role eq "phonetic")) {
+	$compilationERSigns{"02_Signs"}{$lang}{"category"}{$category}{"prePost"}{$prePost}{"total"}++;
+	$compilationERSigns{"02_Signs"}{$lang}{"category"}{$category}{"prePost"}{$prePost}{"state"}{$break}{"num"}++;
+	&abstractSigndata(\%{$compilationERSigns{"02_Signs"}{$lang}{"category"}{$category}{"prePost"}{$prePost}}, $value, $base, $allo, $formvar, $modif, $wordtype, $pos, $gw, $cf, $break, $writtenWord, $label, $group, $for);
+    }
+    else {
+	# wordbase only here if Sumerian
+	if (($wordbase eq "") || ($category eq "nonbase")) { &abstractSigndata(\%{$compilationERSigns{"02_Signs"}{$lang}{"category"}{$category}}, $value, $base, $allo, $formvar, $modif, $wordtype, $pos, $gw, $cf, $break, $writtenWord, $label, $group, $for); }
+	else { &abstractSigndata(\%{$compilationERSigns{"02_Signs"}{$lang}{"category"}{$category}{"wordbase"}{$wordbase}}, $value, $base, $allo, $formvar, $modif, $wordtype, $pos, $gw, $cf, $break, $writtenWord, $label, $group, $for); }
     }
 }    
 
@@ -1852,7 +1930,9 @@ sub abstractSigndata{
     my $data = shift;
     my $value = shift;
     my $base = shift;
-    my $variantType = shift;
+    my $allo = shift;
+    my $formvar = shift;
+    my $modif = shift;
     my $wordtype = shift;
     my $pos = shift;
     my $gw = shift;
@@ -1863,32 +1943,71 @@ sub abstractSigndata{
     my $group = shift || "";
     my $for = shift || "";
     
-    if ($gw eq "1") { $gw = ""; } # personal names etc.
+    #if ($gw eq "1") { $gw = ""; } # personal names etc.
+
+    # An allograph, or systemic sign variant, is introduced by the tilde-prefix (~)
+    # The at-sign (@) precedes each modifier
+    # Form variants is the GDL name for minor differences in the construction of signs which may be of interest in analysis of a corpus for handwritings, but which are not important enough to be displayed or included in the version of the writing used for linguistic analysis. Form variants are preceded by the backslash character (\) and consist of lowercase letters and or digits.
     
-    if ($base eq "") {
-        $data->{"value"}{$value}{'num'}++;
-        if (($gw ne "") && ($cf ne "")) { &abstractSigndata2(\%{$data->{"value"}{$value}{"wordtype"}{$wordtype}{"pos"}{$pos}{"cf"}{$cf}{"gw"}{$gw}}, $break, $writtenWord, $label, $group, $for); }
-        elsif ($gw ne "") { &abstractSigndata2(\%{$data->{"value"}{$value}{"wordtype"}{$wordtype}{"pos"}{$pos}{"gw"}{$gw}}, $break, $writtenWord, $label, $group, $for); }
-        elsif ($cf ne "") { &abstractSigndata2(\%{$data->{"value"}{$value}{"wordtype"}{$wordtype}{"pos"}{$pos}{"cf"}{$cf}}, $break, $writtenWord, $label, $group, $for); }
-        else { &abstractSigndata2(\%{$data->{"value"}{$value}{"wordtype"}{$wordtype}{"pos"}{$pos}}, $break, $writtenWord, $label, $group, $for); }
+    my $variantType = ""; my $variantMod = $base; # first allograph, then modifier, then formvar...
+    # can be a combination!!! eg P314339
+    # in form, however, the formvars are not marked. Hence I make my own form existing of the base + allograph (preceded by tilde) + modifier (preceded by at-sign) + formvar (preceded by backslash)
+    if ($base ne "") {
+	if ($allo ne "") { $variantType = "allograph"; $variantMod .= "~".$allo; }
+	if ($modif ne "") {
+	    if ($variantType ne "") { $variantType .= "_and_"; }
+	    $variantType .= "modifier";
+	    $variantMod .= "@".$modif;
+	}
+	if ($formvar ne "") {
+	    if ($variantType ne "") { $variantType .= "_and_"; }
+	    $variantType .= "formvar";
+	    $variantMod .= "\\".$formvar;
+	}
     }
-    else { # treat base as value and work with variants: allograph, modifier, formvar
+    
+    if ($base eq "") { # normal values
+        $data->{"value"}{$value}{'num'}++;
+	$data->{"value"}{$value}{"state"}{$break}{'num'}++;
+	&abstractSigndata2(\%{$data->{"value"}{$value}{"standard"}{$value}{"wordtype"}{$wordtype}{"pos"}{$pos}}, $cf, $gw, $break, $writtenWord, $label, $group, $for); 
+    }
+    else { # variant values; treat base as value and work with variants: allograph, modifier, formvar
 	$data->{"value"}{$base}{'num'}++;
-        if (($gw ne "") && ($cf ne "")) { &abstractSigndata2(\%{$data->{"value"}{$base}{$variantType}{$value}{"wordtype"}{$wordtype}{"pos"}{$pos}{"cf"}{$cf}{"gw"}{$gw}}, $break, $writtenWord, $label, $group, $for); }
-        elsif ($gw ne "") { &abstractSigndata2(\%{$data->{"value"}{$base}{$variantType}{$value}{"wordtype"}{$wordtype}{"pos"}{$pos}{"gw"}{$gw}}, $break, $writtenWord, $label, $group, $for); }
-        elsif ($cf ne "") { &abstractSigndata2(\%{$data->{"value"}{$base}{$variantType}{$value}{"wordtype"}{$wordtype}{"pos"}{$pos}{"cf"}{$cf}}, $break, $writtenWord, $label, $group, $for); }
-        else { &abstractSigndata2(\%{$data->{"value"}{$base}{$variantType}{$value}{"wordtype"}{$wordtype}{"pos"}{$pos}}, $break, $writtenWord, $label, $group, $for); }
+	$data->{"value"}{$base}{"state"}{$break}{'num'}++;
+	# variant types...: form; allo, modif and/or formvar
+	&abstractSigndata2(\%{$data->{"value"}{$base}{$variantType}{$variantMod}{"wordtype"}{$wordtype}{"pos"}{$pos}}, $cf, $gw, $break, $writtenWord, $label, $group, $for); 
     }
 }
 
-sub abstractSigndata2{
+sub abstractSigndata2 {
     my $data = shift;
+    my $gw = shift;
+    my $cf = shift;
     my $break = shift;
     my $writtenWord = shift;
     my $label = shift;
     my $group = shift || "";
     my $for = shift || "";
+    
+    if ($cf eq "1") { $cf = ""; } # personal names etc.
+    
+    if (($gw ne "") && ($cf ne "")) { &abstractSigndata3(\%{$data->{"gw"}{$gw}{"cf"}{$cf}}, $break, $writtenWord, $label, $group, $for); }
+    elsif ($gw ne "") { &abstractSigndata3(\%{$data->{"gw"}{$gw}}, $break, $writtenWord, $label, $group, $for); }
+    elsif ($cf ne "") { &abstractSigndata3(\%{$data->{"cf"}{$cf}}, $break, $writtenWord, $label, $group, $for); }
+    else { &abstractSigndata3(\%{$data}, $break, $writtenWord, $label, $group, $for); }
+}
+
+
+sub abstractSigndata3{
+    my $data = shift;
+    my $break = shift;
+    my $writtenWord = shift;
+    my $shortlabel = shift;
+    my $group = shift || "";
+    my $for = shift || "";
     my $standsfor = "";
+    
+    my $label = $thisText." ".$shortlabel;
     
     if ($group eq "logo") { $group = ""; }
     elsif (($group eq "correction") && ($for ne "")) { $standsfor = $for; }
@@ -1979,12 +2098,12 @@ sub traverseDir{  # TODO: check if this works over directory structure
     while (my $file = readdir(DIR)) {
 
         # Use a regular expression to ignore files beginning with a period as they aren't important
-        next if ($file =~ m/^\./);
+        next if ($file =~ m|^\.|);
         
         # Use -f to test for a file
         if(-f "$dir/$file"){
             # Ignore all files which don't have the extension we are interested in
-            next if($file !~m|\.${ext}$|);
+            next if($file !~ m|\.${ext}$|);
             push(@{$config{"filelist"}{$typename}}, "$dir/$file");# places in the global config so we can use the info later
             $config{"filehash"}{$typename}{"$file"} = 1;
         }
