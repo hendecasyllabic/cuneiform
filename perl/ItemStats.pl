@@ -99,8 +99,14 @@ sub ItemStats{
     &writetofile("combos", \%combos);
     
 # compilations for ER
-    &writetofile("CompilationSigns", \%compilationERSigns);
-    &writetofile("CompilationWords", \%compilationERWords);
+    foreach my $PQ (keys %compilationERSigns) {
+	foreach my $lang (keys $compilationERSigns{$PQ}{'lang'}){
+	    &writetofile("SIGNS_".$PQ."_LANG_".$lang, $compilationERSigns{$PQ}{'lang'}{$lang});
+	}
+    }
+    
+    #&writetofile("CompilationSigns", \%compilationERSigns);
+    &writetofile("CompilationWords", \%compilationERWords); # maybe also to be split later TODO
 }
 
 sub doQstats{
@@ -901,9 +907,9 @@ sub savePunct {
     $PQdata{"02_Signs"}{'total'}++; # total number of signs
     $PQdata{"02_Signs"}{"ztotal_state"}{$break}{'total'}++;
     $PQdata{"02_Signs"}{'lang'}{$lang}{'total'}++; # total number of signs per language
-    $PQdata{"02_Signs"}{'lang'}{$lang}{"zlang_total_state"}{$break}{'total'}++;
+    $PQdata{"02_Signs"}{'lang'}{$lang}{"state"}{$break}{'total'}++;
     $PQdata{"02_Signs"}{'lang'}{$lang}{"category"}{$category}{'total'}++; # total number of signs per language and category
-    $PQdata{"02_Signs"}{'lang'}{$lang}{"category"}{$category}{"state"}{$break}{'total'}++;
+    $PQdata{"02_Signs"}{'lang'}{$lang}{"category"}{$category}{"state"}{$break}{'num'}++;
     if ($ditto eq "") {
 	push (@{$PQdata{"02_Signs"}{'lang'}{$lang}{"category"}{$category}{"value"}{$sign}{"state"}{$break}{"line"}}, $label);
 	}
@@ -911,18 +917,30 @@ sub savePunct {
 	push (@{$PQdata{"02_Signs"}{'lang'}{$lang}{"category"}{$category}{"value"}{$sign}{$ditto}{$cf}{"state"}{$break}{"line"}}, $label);
     }
     
-    $compilationERSigns{"02_Signs"}{'total'}++; # total number of signs
-    $compilationERSigns{"02_Signs"}{"ztotal_state"}{$break}{'total'}++;
-    $compilationERSigns{"02_Signs"}{'lang'}{$lang}{'total'}++; # total number of signs per language
-    $compilationERSigns{"02_Signs"}{'lang'}{$lang}{"zlang_total_state"}{$break}{'total'}++;
-    $compilationERSigns{"02_Signs"}{'lang'}{$lang}{"category"}{$category}{'total'}++; # total number of signs per language and category
-    $compilationERSigns{"02_Signs"}{'lang'}{$lang}{"category"}{$category}{"state"}{$break}{'total'}++;
+    my $PQ = substr($thisText, 0, 1);
+    #$compilationERSigns{"02_Signs"}{'total'}++; # total number of signs
+    #$compilationERSigns{"02_Signs"}{"ztotal_state"}{$break}{'total'}++;
+    $compilationERSigns{$PQ}{'lang'}{$lang}{'total'}++; # total number of signs per language
+    $compilationERSigns{$PQ}{'lang'}{$lang}{"state"}{$break}{'total'}++;
+    $compilationERSigns{$PQ}{'lang'}{$lang}{"category"}{$category}{'total'}++; # total number of signs per language and category
+    $compilationERSigns{$PQ}{'lang'}{$lang}{"category"}{$category}{"state"}{$break}{'num'}++;
     if ($ditto eq "") {
-	push (@{$compilationERSigns{"02_Signs"}{'lang'}{$lang}{"category"}{$category}{"value"}{$sign}{"state"}{$break}{"line"}}, $label);
+	push (@{$compilationERSigns{$PQ}{'lang'}{$lang}{"category"}{$category}{"value"}{$sign}{"state"}{$break}{"line"}}, $label);
 	}
     else { # as gw can be a bit nonsensical (esp. if existing of several words), I'm not yet including it. Don't yet know if there's any need. Maybe check again later ***
-	push (@{$compilationERSigns{"02_Signs"}{'lang'}{$lang}{"category"}{$category}{"value"}{$sign}{$ditto}{$cf}{"state"}{$break}{"line"}}, $label);
+	push (@{$compilationERSigns{$PQ}{'lang'}{$lang}{"category"}{$category}{"value"}{$sign}{$ditto}{$cf}{"state"}{$break}{"line"}}, $label);
     }
+    
+#    $compilationERSigns{"02_Signs"}{'lang'}{$lang}{'total'}++; # total number of signs per language
+#    $compilationERSigns{"02_Signs"}{'lang'}{$lang}{"state"}{$break}{'total'}++;
+#    $compilationERSigns{"02_Signs"}{'lang'}{$lang}{"category"}{$category}{'total'}++; # total number of signs per language and category
+#    $compilationERSigns{"02_Signs"}{'lang'}{$lang}{"category"}{$category}{"state"}{$break}{'num'}++;
+#    if ($ditto eq "") {
+#	push (@{$compilationERSigns{"02_Signs"}{'lang'}{$lang}{"category"}{$category}{"value"}{$sign}{"state"}{$break}{"line"}}, $label);
+#	}
+#    else { # as gw can be a bit nonsensical (esp. if existing of several words), I'm not yet including it. Don't yet know if there's any need. Maybe check again later ***
+#	push (@{$compilationERSigns{"02_Signs"}{'lang'}{$lang}{"category"}{$category}{"value"}{$sign}{$ditto}{$cf}{"state"}{$break}{"line"}}, $label);
+#    }
 }
 
 sub checkPQdataStructure{
@@ -1873,7 +1891,7 @@ sub saveSigns {
 		
 		$syllabic = lc($tempvalue);
 		
-		# determine what kind of syllabic sign we're dealing with: V, CV, VC, CVC, other (ana/ina/arba/CVCV)
+		# determine what kind of syllabic sign we're dealing with: V, CV, VC, VCV, CVC, CVCV, other (ana/ina/arba/CVCV)
 		$syllabic =~ s|(\d)||g;
 		$syllabic =~ s|([aeiou])|V|g;
 		# nuke the subscripts like numbers (unicode 2080 - 2089) 
@@ -1900,7 +1918,7 @@ sub saveSigns {
 		if ($role eq "semantic") {
 		    $syllabic = ""; $category = "determinative";
 		}
-		elsif (!($syllables{$syllabic})) { # not V, CV, VC, or CVC
+		elsif (!($syllables{$syllabic})) { 
 		    if ($syllabic eq "C") {
 			if (($tempvalue eq "d") || ($tempvalue eq "m") || ($tempvalue eq "f")) { $category = "determinative"; $syllabic = ""; }
 			else { $category = "x"; $syllabic = ""; } # then the value should be x, so unreadable sign, treat as "x"
@@ -1963,9 +1981,9 @@ sub saveSign {
     if ($role eq "semantic") { $category = "determinative"; }
     
     $PQdata{"02_Signs"}{'total'}++; # total number of signs
-    $PQdata{"02_Signs"}{"ztotal_state"}{$break}{'total'}++;
+    $PQdata{"02_Signs"}{"state"}{$break}{'total'}++;
     $PQdata{"02_Signs"}{'lang'}{$lang}{'total'}++; # total number of signs per language
-    $PQdata{"02_Signs"}{'lang'}{$lang}{"zlang_total_state"}{$break}{'total'}++;
+    $PQdata{"02_Signs"}{'lang'}{$lang}{"state"}{$break}{'total'}++;
     $PQdata{"02_Signs"}{'lang'}{$lang}{"zlang_total_wordtype"}{$wordtype}{'total'}++;
     $PQdata{"02_Signs"}{'lang'}{$lang}{"zlang_total_wordtype"}{$wordtype}{'state'}{$break}{'num'}++;
     $PQdata{"02_Signs"}{'lang'}{$lang}{"category"}{$category}{'total'}++; # total number of signs per language and category
@@ -1987,29 +2005,32 @@ sub saveSign {
 	else { &abstractSigndata(\%{$PQdata{"02_Signs"}{'lang'}{$lang}{"category"}{$category}{"wordbase"}{$wordbase}}, $value, $base, $allo, $formvar, $modif, $wordtype, $pos, $gw, $cf, $break, $writtenWord, $label, $group, $for); }
     }
     
-    $compilationERSigns{"02_Signs"}{'total'}++; # total number of signs
-    $compilationERSigns{"02_Signs"}{"ztotal_state"}{$break}{'total'}++;
-    $compilationERSigns{"02_Signs"}{'lang'}{$lang}{'total'}++; # total number of signs per language
-    $compilationERSigns{"02_Signs"}{'lang'}{$lang}{"zlang_total_state"}{$break}{'total'}++;
-    $compilationERSigns{"02_Signs"}{'lang'}{$lang}{"zlang_total_wordtype"}{$wordtype}{'total'}++;
-    $compilationERSigns{"02_Signs"}{'lang'}{$lang}{"zlang_total_wordtype"}{$wordtype}{'state'}{$break}{'num'}++;
-    $compilationERSigns{"02_Signs"}{'lang'}{$lang}{"category"}{$category}{'total'}++; # total number of signs per language and category
-    $compilationERSigns{"02_Signs"}{'lang'}{$lang}{"category"}{$category}{"state"}{$break}{'num'}++;
+    #$compilationERSigns{"02_Signs"}{'total'}++; # total number of signs
+    #$compilationERSigns{"02_Signs"}{"ztotal_state"}{$break}{'total'}++;
+    # Note: {"02_Signs"} consistently replaced by {$PQ}
+    
+    my $PQ = substr($thisText, 0, 1);
+    $compilationERSigns{$PQ}{'lang'}{$lang}{'total'}++; # total number of signs per language
+    $compilationERSigns{$PQ}{'lang'}{$lang}{"state"}{$break}{'total'}++;
+    $compilationERSigns{$PQ}{'lang'}{$lang}{"zlang_total_wordtype"}{$wordtype}{'total'}++;
+    $compilationERSigns{$PQ}{'lang'}{$lang}{"zlang_total_wordtype"}{$wordtype}{'state'}{$break}{'num'}++;
+    $compilationERSigns{$PQ}{'lang'}{$lang}{"category"}{$category}{'total'}++; # total number of signs per language and category
+    $compilationERSigns{$PQ}{'lang'}{$lang}{"category"}{$category}{"state"}{$break}{'num'}++;
     
     if (($category eq "syllabic") && ($syllabic ne "")) {
-	$compilationERSigns{"02_Signs"}{'lang'}{$lang}{"category"}{$category}{"type"}{$syllabic}{'total'}++; # total number of signs
-        $compilationERSigns{"02_Signs"}{'lang'}{$lang}{"category"}{$category}{"type"}{$syllabic}{"state"}{$break}{'num'}++;
-	&abstractSigndata(\%{$compilationERSigns{"02_Signs"}{'lang'}{$lang}{"category"}{$category}{"type"}{$syllabic}}, $value, $base, $allo, $formvar, $modif, $wordtype, $pos, $gw, $cf, $break, $writtenWord, $label, $group, $for);
+	$compilationERSigns{$PQ}{'lang'}{$lang}{"category"}{$category}{"type"}{$syllabic}{'total'}++; # total number of signs
+        $compilationERSigns{$PQ}{'lang'}{$lang}{"category"}{$category}{"type"}{$syllabic}{"state"}{$break}{'num'}++;
+	&abstractSigndata(\%{$compilationERSigns{$PQ}{'lang'}{$lang}{"category"}{$category}{"type"}{$syllabic}}, $value, $base, $allo, $formvar, $modif, $wordtype, $pos, $gw, $cf, $break, $writtenWord, $label, $group, $for);
     }
     elsif (($role eq "semantic") || ($role eq "phonetic")) {
-	$compilationERSigns{"02_Signs"}{'lang'}{$lang}{"category"}{$category}{"prePost"}{$prePost}{"total"}++;
-	$compilationERSigns{"02_Signs"}{'lang'}{$lang}{"category"}{$category}{"prePost"}{$prePost}{"state"}{$break}{"num"}++;
-	&abstractSigndata(\%{$compilationERSigns{"02_Signs"}{'lang'}{$lang}{"category"}{$category}{"prePost"}{$prePost}}, $value, $base, $allo, $formvar, $modif, $wordtype, $pos, $gw, $cf, $break, $writtenWord, $label, $group, $for);
+	$compilationERSigns{$PQ}{'lang'}{$lang}{"category"}{$category}{"prePost"}{$prePost}{"total"}++;
+	$compilationERSigns{$PQ}{'lang'}{$lang}{"category"}{$category}{"prePost"}{$prePost}{"state"}{$break}{"num"}++;
+	&abstractSigndata(\%{$compilationERSigns{$PQ}{'lang'}{$lang}{"category"}{$category}{"prePost"}{$prePost}}, $value, $base, $allo, $formvar, $modif, $wordtype, $pos, $gw, $cf, $break, $writtenWord, $label, $group, $for);
     }
     else {
 	# wordbase only here if Sumerian
-	if (($wordbase eq "") || ($category eq "nonbase")) { &abstractSigndata(\%{$compilationERSigns{"02_Signs"}{'lang'}{$lang}{"category"}{$category}}, $value, $base, $allo, $formvar, $modif, $wordtype, $pos, $gw, $cf, $break, $writtenWord, $label, $group, $for); }
-	else { &abstractSigndata(\%{$compilationERSigns{"02_Signs"}{'lang'}{$lang}{"category"}{$category}{"wordbase"}{$wordbase}}, $value, $base, $allo, $formvar, $modif, $wordtype, $pos, $gw, $cf, $break, $writtenWord, $label, $group, $for); }
+	if (($wordbase eq "") || ($category eq "nonbase")) { &abstractSigndata(\%{$compilationERSigns{$PQ}{'lang'}{$lang}{"category"}{$category}}, $value, $base, $allo, $formvar, $modif, $wordtype, $pos, $gw, $cf, $break, $writtenWord, $label, $group, $for); }
+	else { &abstractSigndata(\%{$compilationERSigns{$PQ}{'lang'}{$lang}{"category"}{$category}{"wordbase"}{$wordbase}}, $value, $base, $allo, $formvar, $modif, $wordtype, $pos, $gw, $cf, $break, $writtenWord, $label, $group, $for); }
     }
 }    
 
@@ -2056,11 +2077,17 @@ sub abstractSigndata{
     if ($base eq "") { # normal values
         $data->{"value"}{$value}{'num'}++;
 	$data->{"value"}{$value}{"state"}{$break}{'num'}++;
+	if (($break eq "preserved") || ($break eq "damaged") || ($break eq "excised")) {
+	   $data->{"value"}{$value}{'there'} = "yes";
+	}
 	&abstractSigndata2(\%{$data->{"value"}{$value}{"standard"}{$value}{"wordtype"}{$wordtype}{"pos"}{$pos}}, $cf, $gw, $break, $writtenWord, $label, $group, $for); 
     }
     else { # variant values; treat base as value and work with variants: allograph, modifier, formvar
 	$data->{"value"}{$base}{'num'}++;
 	$data->{"value"}{$base}{"state"}{$break}{'num'}++;
+	if (($break eq "preserved") || ($break eq "damaged") || ($break eq "excised")) {
+	   $data->{"value"}{$base}{'there'} = "yes";
+	}
 	# variant types...: form; allo, modif and/or formvar
 	&abstractSigndata2(\%{$data->{"value"}{$base}{$variantType}{$variantMod}{"wordtype"}{$wordtype}{"pos"}{$pos}}, $cf, $gw, $break, $writtenWord, $label, $group, $for); 
     }

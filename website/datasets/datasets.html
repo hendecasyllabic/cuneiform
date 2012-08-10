@@ -1,0 +1,40 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head>
+    <title>Datasets</title>
+</head>
+<body>
+    <h1>Datasets</h1>
+    <p>Choose the dataset you want to analyze</p>
+    <form action="../perl/choosedataset.pl" method=post> <!-- change to right directory -->
+        <fieldset>
+            <legend>Select a corpus</legend>
+            <select id="project1" name="project">
+                <option value="cams">CAMS</option>
+                <option value="greta">greta</option>
+                <option value="rinap">RINAP</option>
+                <option value="saao">SAAo</option>
+                <option value="test">Test</option>
+            </select>
+        </fieldset>
+        <p><input type=hidden name="corpus1" /></p>
+        <fieldset>
+            <legend>Select a second corpus or leave blank</legend>
+            <select id="project2" name="project">
+                <option value="blank"> </option>
+                <option value="cams">CAMS</option>
+                <option value="greta">greta</option>
+                <option value="rinap">RINAP</option>
+                <option value="saao">SAAo</option>
+                <option value="test">Test</option>
+            </select>
+        </fieldset>
+        <p><input type=submit name="corpus2" /></p>
+    </form>
+</body>
+</html>
+
+
+
+<!-- TO do: add possibility to stats2 to start from certain project -->
+<!-- I suppose one only gets the perl program to work from a server? -->
