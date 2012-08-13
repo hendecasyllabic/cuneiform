@@ -1,0 +1,93 @@
+<!DOCTYPE html
+	PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US" xml:lang="en-US">
+<head>
+<title>Cuneiform literacy</title>
+
+        <!-- CSS -->
+        <link rel="stylesheet" href="css/custom-theme/jquery-ui-1.8.14.custom.css" type="text/css" media="screen, print" />
+        <link rel="stylesheet" href="css/jquery.gritter.css" type="text/css" media="screen" />
+        <link rel="stylesheet" href="css/cuneiform.css" type="text/css" media="screen" />
+        <!-- Libs JS-->
+        <script src="lib/common-libs.js" type="text/javascript"></script>
+        <script src="lib/jstorage.min.js" type="text/javascript"></script>
+        <!-- Common Lib JS-->
+        <script src="js/cuneiform_common.js" type="text/javascript"></script>
+<script>
+var cuneiform = cuneiform || {};
+
+cuneiform.login = {};
+cuneiform.login.init = function() {
+    
+// Set up 'Save' click event
+    $("#login_button").bind("click", function(e) {
+        cuneiform.common.login_user(function(user) {
+            cuneiform.data.user = user;
+            alert(user.loggedin);
+            if(user.loggedin){
+            alert(user.perms.fullname+":"+user.perms.crsid+":"+user.loggedin);
+                 window.location = "./corpuslist.html";
+                 // window.location = "./student.html";
+            }
+        
+        });
+    });
+
+    cuneiform.common.get_user(function(user) {
+        cuneiform.data.user = user;
+        alert(user.loggedin);
+        if(user.loggedin){
+            alert(user.perms.fullname+":"+user.perms.crsid+":"+user.loggedin);
+                 window.location = "./corpuslist.html";
+         // window.location = "./student.html";
+        }
+        
+    });
+};
+
+
+</script>
+</head>
+<body>
+    login:
+    
+
+ <table border="0">
+
+ <tr><td>Username:</td><td>
+
+ <input type="text" name="username" id="username" maxlength="60">
+
+ </td></tr>
+
+ <tr><td>Password:</td><td>
+
+ <input type="password" name="pass" id="pass" maxlength="10">
+
+ </td></tr>
+
+ <tr><td>Confirm Password:</td><td>
+
+ <input type="password" name="pass2" maxlength="10">
+
+ </td></tr>
+
+ <tr><th colspan=2>
+ <button class="login_button" id="login_button">Login</button></th></tr> </table>
+
+
+<script>
+        // Start with calling  page init function
+$(document).ready(function() {
+        try {
+            cuneiform.login.init();
+        } catch(err) {
+            var error = 'Javascript error on page caught by list init try/catch  :' + err;
+        cuneiform.common.report_error('error',error);
+        alert("An error occurred loading this page. Perhaps you are using an unsupported browser? I suggest the basic javascript-free version, linked below.");
+        }
+});
+</script>
+</body>
+</html>

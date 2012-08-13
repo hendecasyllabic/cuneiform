@@ -1,0 +1,26 @@
+
+        .eg-data, .eg-elementdata, .eg-pastdata{
+            width:300px;
+        }
+        .eg{
+            padding-bottom:10px;
+        }
+        .eg-part{
+            width:100px;
+            float:left;
+        }
+	.eg-paperlist{
+	    float:left;
+	    width: 300px;
+	    height:300px;
+	    padding-right:5px;
+	}
+	.eg-left{
+	    float:left;
+	}
+	.eg-halfwidth{
+	    width:150px;
+	}
+	a.ui-icon,.ui-icon{
+	    float: left;
+	}

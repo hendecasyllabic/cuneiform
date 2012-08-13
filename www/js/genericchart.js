@@ -38,7 +38,6 @@ var pieoptions = {
 
 
 function makeDonut(data,title1,title2, catnames,container){
-        var colors = Highcharts.getOptions().colors;
         var categories = catnames;
         // Build the data arrays
         var browserData = [];
