@@ -99,8 +99,14 @@ sub ItemStats{
     &writetofile("combos", \%combos);
     
 # compilations for ER
-    &writetofile("CompilationSigns", \%compilationERSigns);
-    &writetofile("CompilationWords", \%compilationERWords);
+    foreach my $PQ (keys %compilationERSigns) {
+	foreach my $lang (keys $compilationERSigns{$PQ}{'lang'}){
+	    &writetofile("SIGNS_".$PQ."_LANG_".$lang, $compilationERSigns{$PQ}{'lang'}{$lang});
+	}
+    }
+    
+    #&writetofile("CompilationSigns", \%compilationERSigns);
+    &writetofile("CompilationWords", \%compilationERWords); # maybe also to be split later TODO
 }
 
 sub doQstats{
@@ -450,7 +456,7 @@ sub getStructureData{
 		$localdata = {};
 	    }
 	}
-	elsif ($type eq "lgs") { # analyse l line, disregard lgs line (even though order on tablet - there doesn't seem to be an automatic link between the elements in the lgs and the words in l) *** still to be implemented *** still has to go through getLineData TODO
+	elsif ($type eq "lgs") { # analyse l line, disregard lgs line (even though order on tablet - there doesn't seem to be an automatic link between the elements in the lgs and the words in l) 
 	    # NOTE: this partly distorts the data as the order in which the words are written is not the order given in l (hence the note (lgs) to the label).
 	    # in dcclt: P225958, P231055, P240986, P247847, P247848, P332923, Q000003, Q000014
 	    #&writetoerror ("PossibleProblems.txt", localtime."Project: ".$thisCorpus.", text ".$thisText.": lgs");
@@ -467,7 +473,7 @@ sub getStructureData{
 	    }
 	    $structdata{'no_lines'}++;
 	}
-	else { # nts: STEVE: does this still exist??? *** if so, still has to go through getLineData TODO
+	else { # nts: STEVE: does this still exist??? *** if so, still has to go through getLineData 
 	    &writetoerror ("PossibleProblems.txt", localtime."Project: ".$thisCorpus.", text ".$thisText.": nts");
 	    $localdata->{"type"} = $type;
 	    $localdata->{"label"} = $label;
@@ -606,18 +612,13 @@ sub getLineData {
 	    my $writtenWord = ""; my $preservedSigns = 0; my $signs = ();
 	    my $conditionWord = "";
 	    ($writtenWord, $signs, $conditionWord) = &formWord(\@arrayNonWord);
+	    $linedata{$conditionWord}++;
 	    my $damagedSigns = $signs->{'damaged'}; my $missingSigns = $signs->{'missing'}; 
-	    #($writtenWord, $damagedSigns, $missingSigns) = &formWord(\@arrayNonWord);
 	    
 	    # info in @arrayNonWord
 	    my $no_signs = scalar @arrayNonWord;
-	    #$preservedSigns = $no_signs - $damagedSigns - $missingSigns;
 	    $preservedSigns = $signs->{'preserved'};
     
-	    #my $break = "damaged";
-	    #if ($no_signs == $preservedSigns) { $break = "preserved"; }
-	    #elsif ($no_signs == $missingSigns) { $break = "missing"; }
-	    #
 	    #form = $writtenWord without [], halfbrackets
 	    $form = $writtenWord; 
 	    $form =~ s|\[||g; $form =~ s|\]||g; $form =~ s|\x{2E22}||g; $form =~ s|\x{2E23}||g;
@@ -638,11 +639,27 @@ sub getLineData {
 		my $category = "";
 		if ($role eq "logo") { $category = "logogram"; }
 		else { $category = $sign->{'tag'}?$sign->{'tag'}:"unknown"; }
-		my $break = $sign->{'break'}; # HIER *** can still be undetermined!
+		
+		# condition of sign:
+		# preserved: no break and status = ok
+		# erased: status = erased
+		# excised: status = excised
+		# supplied: status = supplied
+		# implied: status = implied
+		# missing: break = missing and not "erased", "excised", "supplied" or "implied"
+		# damaged: break = damaged (or rarely maybe with no break, so essentially the rest)
+		
+		my $condition = $sign->{'status'}?$sign->{'status'}:"";
+		my $break = $sign->{'break'}?$sign->{'break'}:""; 
+		if (($condition ne "erased") && ($condition ne "excised") && ($condition ne "supplied") && ($condition ne "implied")) {
+		    if ($break eq "missing") { $condition = "missing"; }
+		    elsif (($break eq "damaged") || ($condition eq "maybe")) { $condition = "damaged"; }
+		    else { $condition = "preserved"; }
+		}
 		my $value = $sign->{'value'}; my $pos = $sign->{'pos'}; my $position = $sign->{'position'};
 		# can these actually have base and modifier ??? TODO - CHECK
 		# I'm not including gw as translation is possibly nonsensical (especially when combination of words)
-		&saveSign($nonwLang, $category, $value, "", "", "", "", "", "", $position, "", $break, $label, $form, $writtenWord, $wordtype, "", "");
+		&saveSign($nonwLang, $category, $value, "", "", "", "", "", "", $position, "", $condition, $label, $form, $writtenWord, $wordtype, "", "");
 	    }
 	}
     }
@@ -722,33 +739,30 @@ sub getLineData {
 		$localdata = {};
 	    }
 	    my $writtenWord = ""; 
-	    my $preservedSigns = 0; #my $damagedSigns = 0; my $missingSigns = 0;
+	    my $preservedSigns = 0; 
 	    my $signs = (); my $conditionWord = "";
-	    #($writtenWord, $damagedSigns, $missingSigns) = &formWord(\@arrayWord);
 	    ($writtenWord, $signs, $conditionWord) = &formWord(\@arrayWord);
-	    my $damagedSigns = $signs->{'damaged'}; my $missingSigns = $signs->{'missing'}; 
-	    my $no_signs = scalar @arrayWord;
-	    #$preservedSigns = $no_signs - $damagedSigns - $missingSigns;
-	    $preservedSigns = $signs->{'preserved'};
-    
-	    # fill in worddata: number of preserved signs, etc.
-	    my %worddata = ();
-	    $worddata{"stateWord"} = $conditionWord;
+	    $linedata{$conditionWord}++;
 	    
-	    #my $break = "damaged"; 
-	    #if ($no_signs == $preservedSigns) { $break = "preserved"; $worddata{"stateWord"} = "preserved"; }
-	    #elsif ($no_signs == $missingSigns) { $break = "missing"; $worddata{"stateWord"} = "missing"; }
-	    #else { $worddata{"stateWord"} = "damaged"; }
+	    if ($signs->{'preserved'}) { $linedata{"preservedSigns"} += $signs->{'preserved'}; $linedata{'totalSigns'} += $signs->{'preserved'}; }
+	    if ($signs->{'damaged'}) { $linedata{"damagedSigns"} += $signs->{'damaged'}; $linedata{'totalSigns'} += $signs->{'damaged'}; }
+	    if ($signs->{'missing'}) { $linedata{"missingSigns"} += $signs->{'missing'}; $linedata{'totalSigns'} += $signs->{'missing'}; }
+	    if ($signs->{'implied'}) { $linedata{"impliedSigns"} += $signs->{'implied'}; $linedata{'totalSigns'} += $signs->{'implied'}; }
+	    if ($signs->{'supplied'}) { $linedata{"suppliedSigns"} += $signs->{'supplied'}; $linedata{'totalSigns'} += $signs->{'supplied'}; }
+	    if ($signs->{'erased'}) { $linedata{"erasedSigns"} += $signs->{'erased'}; $linedata{'totalSigns'} += $signs->{'erased'}; }
+	    if ($signs->{'excised'}) { $linedata{"excisedSigns"} += $signs->{'excised'}; $linedata{'totalSigns'} += $signs->{'excised'}; }
+	    
+	    my $no_signs = scalar @arrayWord;
     
-	    if ($preservedSigns > 0) { $worddata{"preservedSigns"} = $preservedSigns; } # check further TODO
-	    if ($damagedSigns > 0) { $worddata{"damagedSigns"} = $damagedSigns; }
-	    if ($missingSigns > 0) { $worddata{"missingSigns"} = $missingSigns; }
-
-	    #form = $writtenWord without [], halfbrackets
+	    #form = $writtenWord without [], halfbrackets, <>, (), {}
 	    my $form = $writtenWord; 
 	    $form =~ s|\[||g; $form =~ s|\]||g; $form =~ s|\x{2E22}||g; $form =~ s|\x{2E23}||g;
+	    $form =~ s|\(||g; $form =~ s|\)||g; $form =~ s|\&lt;||g; $form =~ s|\&gt;||g; $form =~ s|\&lt;\{||g; $form =~ s|\}\&gt;||g;
 	    
-	    &saveWord($lang, $form, $conditionWord, "excisedWord", "", "", "", $writtenWord, $label, "", "", "", $note, $writtenAs);
+	    my $wordtype = &typeWord ($form, "");
+	    #&writetoerror ("PossibleProblems.txt", localtime."Project: ".$thisCorpus.", text ".$thisText.": nonw of form ".$form." type ".$wordtype); 
+	    
+	    &saveWord($lang, $form, $conditionWord, $wordtype, "", "", "", $writtenWord, $label, "", "", "", $note, $writtenAs); 
 	    
 	    my $count = 0; my $beginpos = 0; my $endpos = $no_signs - 1; my $severalParts = 0;
 	    while ($count < $no_signs) {
@@ -765,7 +779,7 @@ sub getLineData {
 	    $allWordData{"word"}->{"written"} = $writtenWord; $allWordData{"word"}->{"cf"} = "";
 	    $allWordData{"word"}->{"form"} = $form; $allWordData{"word"}->{"lang"} = $lang;
 	    $allWordData{"word"}->{"no_signs"} = $no_signs; $allWordData{"word"}->{"label"} = $label;
-	    $allWordData{"word"}->{"wordtype"} = "excisedWord"; $allWordData{"word"}->{"wordbase"} = "";
+	    $allWordData{"word"}->{"wordtype"} = $wordtype; $allWordData{"word"}->{"wordbase"} = "";
 	    $allWordData{"word"}->{"gw"} = "";
         
 	    &saveSigns(\%allWordData, \@arrayWord);
@@ -798,7 +812,8 @@ sub getLineData {
     # plus track words, signs, etc.
     my @words = $root->get_xpath('g:w');
     my $preservedWords = 0; my $damagedWords = 0; my $missingWords = 0;
-    my $preservedSigns = 0; my $damagedSigns = 0; my $missingSigns = 0;
+    my $preservedSigns = 0; my $damagedSigns = 0; my $missingSigns = 0; my $impliedSigns = 0; my $suppliedSigns = 0; my $erasedSigns = 0; my $excisedSigns = 0;
+    $linedata{'totalSigns'} = 0; # needed ??? HIER
     foreach my $word (@words) {
 	my @children = $word->children(); my $no_children = scalar @children;
 	my $tag = $children[0]->tag;
@@ -808,7 +823,6 @@ sub getLineData {
 		push (@{$linedata{'x'}}, $localdata);
 	    }
 	else  {
-	    $linedata{'words'}++;
 	    my $tempdata = {};
 	    if ($word->{att}->{headform}) { # beginning of split word
 		my $headref = $word->{att}->{"xml:id"};
@@ -822,14 +836,16 @@ sub getLineData {
 		#print "\nAnalyse ". $word->{att}->{"form"};
 		$tempdata = &analyseWord($word, $label, $note);
 	    }
-	    if ($tempdata->{"stateWord"}) {
-		if ($tempdata->{"stateWord"} eq "preserved") { $preservedWords++; }
-		elsif ($tempdata->{"stateWord"} eq "damaged") { $damagedWords++; }
-		elsif ($tempdata->{"stateWord"} eq "missing") { $missingWords++; }
-	    }
-	    if ($tempdata->{"preservedSigns"}) { $preservedSigns += $tempdata->{"preservedSigns"}; }
-	    elsif ($tempdata->{"damagedSigns"}) { $damagedSigns += $tempdata->{"damagedSigns"}; }
-	    elsif ($tempdata->{"missingSigns"}) { $missingSigns += $tempdata->{"missingSigns"}; }
+	    
+	    if ($tempdata->{"conditionWord"}) { $linedata{$tempdata->{"conditionWord"}}++; }
+	
+	    if ($tempdata->{"preservedSigns"}) { $linedata{"preservedSigns"} += $tempdata->{"preservedSigns"}; $linedata{'totalSigns'} += $tempdata->{"preservedSigns"}; }
+	    if ($tempdata->{"damagedSigns"}) { $linedata{"damagedSigns"} += $tempdata->{"damagedSigns"}; $linedata{'totalSigns'} += $tempdata->{"damagedSigns"}; }
+	    if ($tempdata->{"missingSigns"}) { $linedata{"missingSigns"} += $tempdata->{"missingSigns"}; $linedata{'totalSigns'} += $tempdata->{"missingSigns"}; }
+	    if ($tempdata->{"impliedSigns"}) { $linedata{"impliedSigns"} += $tempdata->{'impliedSigns'}; $linedata{'totalSigns'} += $tempdata->{'impliedSigns'}; }
+	    if ($tempdata->{"suppliedSigns"}) { $linedata{"suppliedSigns"} += $tempdata->{'suppliedSigns'}; $linedata{'totalSigns'} += $tempdata->{'suppliedSigns'}; }
+	    if ($tempdata->{"erasedSigns"}) { $linedata{"erasedSigns"} += $tempdata->{'erasedSigns'}; $linedata{'totalSigns'} += $tempdata->{'erasedSigns'}; }
+	    if ($tempdata->{"excisedSigns"}) { $linedata{"excisedSigns"} += $tempdata->{'excisedSigns'}; $linedata{'totalSigns'} += $tempdata->{'excisedSigns'}; }
 	}
 	$localdata = {};
     }
@@ -842,27 +858,21 @@ sub getLineData {
 	    # what happens here should only occur when only the end of the word is preserved (and the beginning is not reconstructed)
 	    if (!($split->{att}->{"headref"})) {
 		my $tempdata = {};
-		$tempdata = &analyseWord($split, $label, $note, "splitend"); 
+		$tempdata = &analyseWord($split, $label, $note, "splitend");  
 		$linedata{"split"}++;
-		$linedata{'words'}++;
-		if ($tempdata->{"stateWord"} eq "preserved") { $preservedWords++; }
-		elsif ($tempdata->{"stateWord"} eq "damaged") { $damagedWords++; }
-	        elsif ($tempdata->{"stateWord"} eq "missing") { $missingWords++; }
-	        if ($tempdata->{"preservedSigns"}) { $preservedSigns += $tempdata->{"preservedSigns"}; }
-	        elsif ($tempdata->{"damagedSigns"}) { $damagedSigns += $tempdata->{"damagedSigns"}; }
-	        elsif ($tempdata->{"missingSigns"}) { $missingSigns += $tempdata->{"missingSigns"}; }
+		if ($tempdata->{"conditionWord"}) { $linedata{$tempdata->{"conditionWord"}}++; }
+	
+	        if ($tempdata->{"preservedSigns"}) { $linedata{"preservedSigns"} += $tempdata->{"preservedSigns"}; $linedata{'totalSigns'} += $tempdata->{"preservedSigns"}; }
+		if ($tempdata->{"damagedSigns"}) { $linedata{"damagedSigns"} += $tempdata->{"damagedSigns"}; $linedata{'totalSigns'} += $tempdata->{"damagedSigns"}; }
+		if ($tempdata->{"missingSigns"}) { $linedata{"missingSigns"} += $tempdata->{"missingSigns"}; $linedata{'totalSigns'} += $tempdata->{"missingSigns"}; }
+		if ($tempdata->{"impliedSigns"}) { $linedata{"impliedSigns"} += $tempdata->{'impliedSigns'}; $linedata{'totalSigns'} += $tempdata->{'impliedSigns'}; }
+		if ($tempdata->{"suppliedSigns"}) { $linedata{"suppliedSigns"} += $tempdata->{'suppliedSigns'}; $linedata{'totalSigns'} += $tempdata->{'suppliedSigns'}; }
+		if ($tempdata->{"erasedSigns"}) { $linedata{"erasedSigns"} += $tempdata->{'erasedSigns'}; $linedata{'totalSigns'} += $tempdata->{'erasedSigns'}; }
+		if ($tempdata->{"excisedSigns"}) { $linedata{"excisedSigns"} += $tempdata->{'excisedSigns'}; $linedata{'totalSigns'} += $tempdata->{'excisedSigns'}; }
 	    }
 	    #else { print "found ".$split->{att}->{"headref"}; }
 	}
     }
-    
-    if ($preservedWords > 0) { $linedata{'words_preserved'} = $preservedWords; }
-    if ($damagedWords > 0) { $linedata{'words_damaged'} = $damagedWords; }
-    if ($missingWords > 0) { $linedata{'words_missing'} = $missingWords; }
-    if ($preservedSigns > 0) { $linedata{'signs_preserved'} = $preservedSigns; }
-    if ($damagedSigns > 0) { $linedata{'signs_damaged'} = $damagedSigns; }
-    if ($missingSigns > 0) { $linedata{'signs_missing'} = $missingSigns; }
-    $linedata{'signs'} = $preservedSigns + $damagedSigns + $missingSigns;
     
     my @xes = $root->get_xpath('g:x');
     foreach my $x (@xes) {
@@ -897,9 +907,9 @@ sub savePunct {
     $PQdata{"02_Signs"}{'total'}++; # total number of signs
     $PQdata{"02_Signs"}{"ztotal_state"}{$break}{'total'}++;
     $PQdata{"02_Signs"}{'lang'}{$lang}{'total'}++; # total number of signs per language
-    $PQdata{"02_Signs"}{'lang'}{$lang}{"zlang_total_state"}{$break}{'total'}++;
+    $PQdata{"02_Signs"}{'lang'}{$lang}{"state"}{$break}{'total'}++;
     $PQdata{"02_Signs"}{'lang'}{$lang}{"category"}{$category}{'total'}++; # total number of signs per language and category
-    $PQdata{"02_Signs"}{'lang'}{$lang}{"category"}{$category}{"state"}{$break}{'total'}++;
+    $PQdata{"02_Signs"}{'lang'}{$lang}{"category"}{$category}{"state"}{$break}{'num'}++;
     if ($ditto eq "") {
 	push (@{$PQdata{"02_Signs"}{'lang'}{$lang}{"category"}{$category}{"value"}{$sign}{"state"}{$break}{"line"}}, $label);
 	}
@@ -907,18 +917,30 @@ sub savePunct {
 	push (@{$PQdata{"02_Signs"}{'lang'}{$lang}{"category"}{$category}{"value"}{$sign}{$ditto}{$cf}{"state"}{$break}{"line"}}, $label);
     }
     
-    $compilationERSigns{"02_Signs"}{'total'}++; # total number of signs
-    $compilationERSigns{"02_Signs"}{"ztotal_state"}{$break}{'total'}++;
-    $compilationERSigns{"02_Signs"}{'lang'}{$lang}{'total'}++; # total number of signs per language
-    $compilationERSigns{"02_Signs"}{'lang'}{$lang}{"zlang_total_state"}{$break}{'total'}++;
-    $compilationERSigns{"02_Signs"}{'lang'}{$lang}{"category"}{$category}{'total'}++; # total number of signs per language and category
-    $compilationERSigns{"02_Signs"}{'lang'}{$lang}{"category"}{$category}{"state"}{$break}{'total'}++;
+    my $PQ = substr($thisText, 0, 1);
+    #$compilationERSigns{"02_Signs"}{'total'}++; # total number of signs
+    #$compilationERSigns{"02_Signs"}{"ztotal_state"}{$break}{'total'}++;
+    $compilationERSigns{$PQ}{'lang'}{$lang}{'total'}++; # total number of signs per language
+    $compilationERSigns{$PQ}{'lang'}{$lang}{"state"}{$break}{'total'}++;
+    $compilationERSigns{$PQ}{'lang'}{$lang}{"category"}{$category}{'total'}++; # total number of signs per language and category
+    $compilationERSigns{$PQ}{'lang'}{$lang}{"category"}{$category}{"state"}{$break}{'num'}++;
     if ($ditto eq "") {
-	push (@{$compilationERSigns{"02_Signs"}{'lang'}{$lang}{"category"}{$category}{"value"}{$sign}{"state"}{$break}{"line"}}, $label);
+	push (@{$compilationERSigns{$PQ}{'lang'}{$lang}{"category"}{$category}{"value"}{$sign}{"state"}{$break}{"line"}}, $label);
 	}
     else { # as gw can be a bit nonsensical (esp. if existing of several words), I'm not yet including it. Don't yet know if there's any need. Maybe check again later ***
-	push (@{$compilationERSigns{"02_Signs"}{'lang'}{$lang}{"category"}{$category}{"value"}{$sign}{$ditto}{$cf}{"state"}{$break}{"line"}}, $label);
+	push (@{$compilationERSigns{$PQ}{'lang'}{$lang}{"category"}{$category}{"value"}{$sign}{$ditto}{$cf}{"state"}{$break}{"line"}}, $label);
     }
+    
+#    $compilationERSigns{"02_Signs"}{'lang'}{$lang}{'total'}++; # total number of signs per language
+#    $compilationERSigns{"02_Signs"}{'lang'}{$lang}{"state"}{$break}{'total'}++;
+#    $compilationERSigns{"02_Signs"}{'lang'}{$lang}{"category"}{$category}{'total'}++; # total number of signs per language and category
+#    $compilationERSigns{"02_Signs"}{'lang'}{$lang}{"category"}{$category}{"state"}{$break}{'num'}++;
+#    if ($ditto eq "") {
+#	push (@{$compilationERSigns{"02_Signs"}{'lang'}{$lang}{"category"}{$category}{"value"}{$sign}{"state"}{$break}{"line"}}, $label);
+#	}
+#    else { # as gw can be a bit nonsensical (esp. if existing of several words), I'm not yet including it. Don't yet know if there's any need. Maybe check again later ***
+#	push (@{$compilationERSigns{"02_Signs"}{'lang'}{$lang}{"category"}{$category}{"value"}{$sign}{$ditto}{$cf}{"state"}{$break}{"line"}}, $label);
+#    }
 }
 
 sub checkPQdataStructure{
@@ -998,7 +1020,6 @@ sub formWord{
 	my $status = $thing->{'status'}?$thing->{'status'}:"";
 	my $break = $thing->{"break"}?$thing->{"break"}:"undetermined";
 	
-
 	# "maybe" will normally be missing or damaged; rarely no break given (e.g. P363582 (x)), if x then damaged? (obviously difficult to see on photo whether there is a sign or not)
 	#if (($status eq "maybe") && !(($break eq "missing") || ($break eq "damaged"))) {
 	#    &writetoerror ("Words", "Project: ".$thisCorpus.", text ".$thisText.": status: ".$status." break: ".$break);
@@ -1006,17 +1027,11 @@ sub formWord{
 	
 	my $openSym = ""; my $closedSym = "";
 	$signs->{$status}++;
-	#if ($status eq "ok") { $signs->{'ok'}++; }
-	if ($status eq "maybe") { #$signs->{'maybe'}++;
-	    $openSym = "("; $closedSym = ")"; }
-	elsif ($status eq "implied") { #$signs->{'implied'}++;
-	    $openSym = "&lt;("; $closedSym = ")&gt;"; }
-	elsif ($status eq "supplied") { #$signs->{'supplied'}++;
-	    $openSym = "&lt;"; $closedSym = "&gt;"; }
-	elsif ($status eq "erased") { #$signs->{'erased'}++;
-	    $openSym = "&lt;{"; $closedSym = "}&gt;"; }
-	elsif ($status eq "excised") { #$signs->{'excised'}++;
-	    $openSym = "&lt;&lt;"; $closedSym = "&gt;&gt;"; }
+	if ($status eq "maybe") { $openSym = "("; $closedSym = ")"; }
+	elsif ($status eq "implied") { $openSym = "&lt;("; $closedSym = ")&gt;"; }
+	elsif ($status eq "supplied") { $openSym = "&lt;"; $closedSym = "&gt;"; }
+	elsif ($status eq "erased") { $openSym = "&lt;{"; $closedSym = "}&gt;"; }
+	elsif ($status eq "excised") { $openSym = "&lt;&lt;"; $closedSym = "&gt;&gt;"; }
 	
 	$signs->{$break}++;
 	
@@ -1099,13 +1114,13 @@ sub formWord{
     # Note: there is no condition "maybe". "maybe" will normally be missing or damaged; rarely there is no g:break given (e.g. P363582 (x))
     # => damaged (obviously difficult to see on photo whether there is a sign or not)
 
-    if ($no_elements == $signs->{'erased'}) { $conditionWord = "erased"; }
-    elsif ($no_elements == $signs->{'excised'}) { $conditionWord = "excised"; }
-    elsif ($no_elements == $signs->{'supplied'}) { $conditionWord = "supplied"; }
-    elsif ($no_elements == $signs->{'implied'}) { $conditionWord = "implied"; }
-    elsif ($no_elements == $signs->{'missing'}) { $conditionWord = "missing"; }
-    elsif ($no_elements == $signs->{'ok'}) { $conditionWord = "preserved"; }
-    else { $conditionWord = "damaged"; }
+    if ($no_elements == $signs->{'erased'}) { $conditionWord = "erasedWord"; }
+    elsif ($no_elements == $signs->{'excised'}) { $conditionWord = "excisedWord"; }
+    elsif ($no_elements == $signs->{'supplied'}) { $conditionWord = "suppliedWord"; }
+    elsif ($no_elements == $signs->{'implied'}) { $conditionWord = "impliedWord"; }
+    elsif ($no_elements == $signs->{'missing'}) { $conditionWord = "missingWord"; }
+    elsif ($no_elements == $signs->{'ok'}) { $conditionWord = "preservedWord"; }
+    else { $conditionWord = "damagedWord"; }
     
     # well preserved signs:
     # = NOT damaged signs, NOT missing signs, NOT implied signs [because blank space], NOT supplied signs [because forgotten], NOT erased signs [because, though present, not intended to be read and 'deleted']
@@ -1114,6 +1129,42 @@ sub formWord{
     
     #if ($print eq "yes") { &writetoerror ("Words", "Project: ".$thisCorpus.", text ".$thisText.": word: ".$writtenWord); }
     return ($writtenWord, $signs, $conditionWord);
+}
+
+sub typeWord {
+    my $form = shift;
+    my $pofs = shift || "";
+    
+    my $wordtype = $pofs;
+    
+    # PERSONAL and ROYAL NAMES
+    if (($wordtype eq "RN") || ($wordtype eq "PN")) { $wordtype = "PersonalNames"; } 
+    
+    # http://oracc.museum.upenn.edu/doc/builder/linganno/QPN/
+    # GEOGRAPHICAL DATA: GN, WATERCOURSE, ETHNIC (GENTILICS), AGRICULTURAL, FIELD, QUARTER, SETTLEMENT, LINE, TEMPLE 
+    if (($wordtype eq "GN") || ($wordtype eq "WN") || ($wordtype eq "EN") || ($wordtype eq "AN") || ($wordtype eq "FN") || ($wordtype eq "QN") || ($wordtype eq "SN") || ($wordtype eq "LN") || ($wordtype eq "TN")) {
+	$wordtype = "Geography";
+    }
+    
+    # DIVINE and CELESTIAL NAMES
+    if (($wordtype eq "DN") || ($wordtype eq "CN")) {
+	$wordtype = "DivineCelestial"; 
+    }
+    
+    # ROUGH CLASSIFICATION IF NOT LEMMATIZED
+    if (($wordtype eq "") && ($form ne "")) { 
+	my $formsmall = lc ($form);
+	if ($formsmall =~ /(^\{1\})|(^\{m\})|(^\{f\})/) { $wordtype = "PersonalNames"; }
+	if (($formsmall =~ /(^\{d\})/) || ($formsmall =~ /(^\{mul\})/) || ($formsmall =~ /(^\{mul\x{2082}\})/)) { $wordtype = "DivineCelestial"; }  
+	if (($formsmall =~ /(\{ki\})/) || ($formsmall =~ /(\{kur\})/) || ($formsmall =~ /(\{uru\})/) || ($formsmall =~ /(\{iri\})/) || ($formsmall =~ /(\{id\x{2082}\})/))  { $wordtype = "Geography"; }
+	if ($formsmall =~ /^\d/) { $wordtype = "Numerical"; }
+    }    
+
+    if (($wordtype ne "PersonalNames") && ($wordtype ne "DivineCelestial") && ($wordtype ne "Geography") && ($wordtype ne "Numerical")) {
+	if ($form =~ /^\$/) { $wordtype = "UncertainReading"; }
+	else { $wordtype = "OtherWords"; }
+    }
+    return $wordtype;
 }
 
 sub analyseWord{
@@ -1142,34 +1193,7 @@ sub analyseWord{
 	$wordbase = $item->{att}->{"base"}?$item->{att}->{"base"}:"";
     }
     
-    my $wordtype = $pofs;
-    # PERSONAL and ROYAL NAMES
-    if (($wordtype eq "RN") || ($wordtype eq "PN")) { $wordtype = "PersonalNames"; } 
-    
-    # http://oracc.museum.upenn.edu/doc/builder/linganno/QPN/
-    # GEOGRAPHICAL DATA: GN, WATERCOURSE, ETHNIC (GENTILICS), AGRICULTURAL, FIELD, QUARTER, SETTLEMENT, LINE, TEMPLE 
-    if (($wordtype eq "GN") || ($wordtype eq "WN") || ($wordtype eq "EN") || ($wordtype eq "AN") || ($wordtype eq "FN") || ($wordtype eq "QN") || ($wordtype eq "SN") || ($wordtype eq "LN") || ($wordtype eq "TN")) {
-	$wordtype = "Geography";
-    }
-    
-    # DIVINE and CELESTIAL NAMES
-    if (($wordtype eq "DN") || ($wordtype eq "CN")) {
-	$wordtype = "DivineCelestial"; 
-    }
-    
-    # ROUGH CLASSIFICATION IF NOT LEMMATIZED
-    if (($wordtype eq "") && ($form ne "")) { 
-	my $formsmall = lc ($form);
-	if ($formsmall =~ /(^\{1\})|(^\{m\})|(^\{f\})/) { $wordtype = "PersonalNames"; }
-	if (($formsmall =~ /(^\{d\})/) || ($formsmall =~ /(^\{mul\})/) || ($formsmall =~ /(^\{mul\x{2082}\})/)) { $wordtype = "DivineCelestial"; }  
-	if (($formsmall =~ /(\{ki\})/) || ($formsmall =~ /(\{kur\})/) || ($formsmall =~ /(\{uru\})/) || ($formsmall =~ /(\{iri\})/) || ($formsmall =~ /(\{id\x{2082}\})/))  { $wordtype = "Geography"; }
-	if ($formsmall =~ /^\d/) { $wordtype = "Numerical"; }
-    }    
-
-    if (($wordtype ne "PersonalNames") && ($wordtype ne "DivineCelestial") && ($wordtype ne "Geography") && ($wordtype ne "Numerical")) {
-	if ($form =~ /^\$/) { $wordtype = "UncertainReading"; }
-	else { $wordtype = "OtherWords"; }
-    }
+    my $wordtype = &typeWord ($form, $pofs);
     
 #Split: d
 #Split: AMARUTU
@@ -1233,22 +1257,19 @@ sub analyseWord{
     my $preservedSigns = 0; #my $damagedSigns = 0; my $missingSigns = 0;
     my $signs = (); my $conditionWord = "";
     ($writtenWord, $signs, $conditionWord) = &formWord(\@arrayWord);
-    my $damagedSigns = $signs->{'damaged'}; my $missingSigns = $signs->{'missing'};
-    #($writtenWord, $damagedSigns, $missingSigns) = &formWord(\@arrayWord);
+    $worddata{"conditionWord"} = $conditionWord;
     my $no_signs = scalar @arrayWord;
-    #$preservedSigns = $no_signs - $damagedSigns - $missingSigns;
-    $preservedSigns = $signs->{'preserved'};
     
     # fill in worddata: number of preserved signs, etc.
-    $worddata{"stateWord"} = $conditionWord;
-    #my $break = "damaged";
-    #if ($no_signs == $preservedSigns) { $break = "preserved"; $worddata{"stateWord"} = "preserved"; }
-    #elsif ($no_signs == $missingSigns) { $break = "missing"; $worddata{"stateWord"} = "missing"; }
-    #else { $worddata{"stateWord"} = "damaged"; }
+    #$worddata{"stateWord"} = $conditionWord;
     
-    if ($preservedSigns > 0) { $worddata{"preservedSigns"} = $preservedSigns; }
-    if ($damagedSigns > 0) { $worddata{"damagedSigns"} = $damagedSigns; }
-    if ($missingSigns > 0) { $worddata{"missingSigns"} = $missingSigns; }
+    if ($signs->{'preserved'} > 0) { $worddata{"preservedSigns"} = $signs->{'preserved'}; }
+    if ($signs->{'damaged'} > 0) { $worddata{"damagedSigns"} = $signs->{'damaged'}; }
+    if ($signs->{'missing'} > 0) { $worddata{"missingSigns"} = $signs->{'missing'}; }
+    if ($signs->{'implied'} > 0) { $worddata{"impliedSigns"} = $signs->{'implied'}; }
+    if ($signs->{'supplied'} > 0) { $worddata{"suppliedSigns"} = $signs->{'supplied'}; }
+    if ($signs->{'erased'} > 0) { $worddata{"erasedSigns"} = $signs->{'erased'}; }
+    if ($signs->{'excised'} > 0) { $worddata{"excisedSigns"} = $signs->{'excised'}; }
 
     my $writtenAs = "";
     foreach my $i (@arrayWord) {
@@ -1285,7 +1306,7 @@ sub analyseWord{
     $allWordData{"word"}->{"form"} = $form; $allWordData{"word"}->{"lang"} = $lang;
     $allWordData{"word"}->{"no_signs"} = $no_signs; $allWordData{"word"}->{"label"} = $label;
     $allWordData{"word"}->{"wordtype"} = $wordtype; $allWordData{"word"}->{"wordbase"} = $wordbase;
-    $allWordData{"word"}->{"gw"} = $gw;
+    $allWordData{"word"}->{"gw"} = $gw; $allWordData{"word"}->{"condition"} = $conditionWord;
     #$allWordData{"signs"} = \@arrayWord; 
     
     #push (@{$localdata->{"word"}}, \%allWordData);
@@ -1683,12 +1704,15 @@ sub determinePosition { # seems to work with words with 2 determinatives in a ro
 sub listCombos { # Chris: how can I get the root structure saved in combos ????
     my $root = shift;
     my $label = shift;
+    my $realLabel = $thisCorpus.".".$thisText." ".$label;
     
-    #my $clone = $root->copy(); # HIER
-    #my $realLabel = $thisCorpus.".".$thisText." ".$label;
+    my $clone = $root->sprint; # TODO
+    #$clone = unescape($clone);
+    #push (@{$combos{"combo"}}, unescape($clone)); still needs to be unescaped! 
+    
     #push (@{$clone->{'label'}}, $realLabel);
     #
-    #push (@{$combos{"combo"}}, $clone);
+    #
 }
 
 sub saveWord { 
@@ -1809,6 +1833,7 @@ sub saveSigns {
     my $label = $allWordData->{"word"}->{"label"}?$allWordData->{"word"}->{"label"}:"";
     my $wordtype = $allWordData->{"word"}->{"wordtype"}?$allWordData->{"word"}->{"wordtype"}:"";
     my $wordbase = $allWordData->{"word"}->{"wordbase"}?$allWordData->{"word"}->{"wordbase"}:"";
+    my $conditionWord = $allWordData->{"word"}->{"conditionWord"}?$allWordData->{"word"}->{"conditionWord"}:"";
     
     my $gw = $allWordData->{"word"}->{"gw"}?$allWordData->{"word"}->{"gw"}:""; 
     my $category = "";
@@ -1820,7 +1845,15 @@ sub saveSigns {
     # TODO: logographic suffixes ***
     foreach my $sign (@arrayWord) {
 	if ($category eq "") { $category = $sign->{'tag'}?$sign->{'tag'}:"unknown"; }
-	my $break = $sign->{'break'}; 
+	
+	my $condition = $sign->{'status'}?$sign->{'status'}:"";
+	my $break = $sign->{'break'}?$sign->{'break'}:""; 
+	if (($condition ne "erased") && ($condition ne "excised") && ($condition ne "supplied") && ($condition ne "implied")) {
+	    if ($break eq "missing") { $condition = "missing"; }
+	    elsif (($break eq "damaged") || ($condition eq "maybe")) { $condition = "damaged"; }
+	    else { $condition = "preserved"; }
+	}
+	
 	my $value = $sign->{'value'}; my $pos = $sign->{'pos'}; my $position = $sign->{'position'};
 	my $role = $sign->{'type'}?$sign->{'type'}:""; # semantic or phonetic
 	my $prePost = $sign->{'prePost'}?$sign->{'prePost'}:""; # pre or post-position
@@ -1849,7 +1882,7 @@ sub saveSigns {
 		my %syllables = ();
 		$syllables{"V"} = 1; $syllables{"VC"} = 1;
 		$syllables{"CV"} = 1; $syllables{"CVC"} = 1;
-		$syllables{"CVC"} = 1; $syllables{"CVCV"} = 1; # taken out, maybe better to treat them together in chart program TODO
+		$syllables{"CVC"} = 1; $syllables{"CVCV"} = 1; # taken out, maybe better to treat them together in chart program 
 		$syllables{"VCV"} = 1; 
 		# I'd like to treat CVCV and VCV together with CVC and VC to avoid confusion (then there won't be too much problem with the differing opinions of scholars).
 		# Moreover, on CVC instead of CVCV in NA, cf. Hämeen-Anttila par. 1.2.1
@@ -1858,7 +1891,7 @@ sub saveSigns {
 		
 		$syllabic = lc($tempvalue);
 		
-		# determine what kind of syllabic sign we're dealing with: V, CV, VC, CVC, other (ana/ina/arba/CVCV)
+		# determine what kind of syllabic sign we're dealing with: V, CV, VC, VCV, CVC, CVCV, other (ana/ina/arba/CVCV)
 		$syllabic =~ s|(\d)||g;
 		$syllabic =~ s|([aeiou])|V|g;
 		# nuke the subscripts like numbers (unicode 2080 - 2089) 
@@ -1879,19 +1912,19 @@ sub saveSigns {
 		#if (($syllabic eq "VCV") && (substr($tempvalue, 0, 1) eq substr($tempvalue, 2, 1))){ 
 		#    if ($tempvalue ne "ana") { $syllabic = "VC"; }
 		#    #print "\nVCV".$tempvalue;
-		## check IGI as ini *** TODO cf. Hämeen-Anttila
+		## check IGI as ini ***  cf. Hämeen-Anttila
 		#}
 		
 		if ($role eq "semantic") {
 		    $syllabic = ""; $category = "determinative";
 		}
-		elsif (!($syllables{$syllabic})) { # not V, CV, VC, or CVC
+		elsif (!($syllables{$syllabic})) { 
 		    if ($syllabic eq "C") {
 			if (($tempvalue eq "d") || ($tempvalue eq "m") || ($tempvalue eq "f")) { $category = "determinative"; $syllabic = ""; }
 			else { $category = "x"; $syllabic = ""; } # then the value should be x, so unreadable sign, treat as "x"
 		    } 
 		    else { $category = "syllabic"; $syllabic = "other"; }
-			#&writetoerror ("PossibleProblems.txt", localtime."Project: ".$thisCorpus.", text ".$thisText.": other syllabic value ".$value); } # logosyllabic/syllabic-other ?? Mikko *** TODO, eg. ana/ina/arba/CVCV
+			#&writetoerror ("PossibleProblems.txt", localtime."Project: ".$thisCorpus.", text ".$thisText.": other syllabic value ".$value); } 
 		}
 		else {
 		    if ($tempvalue eq "o") { $category = ""; $syllabic = ""; }  
@@ -1914,7 +1947,7 @@ sub saveSigns {
 	# TODO different languages ***
         }
     
-    &saveSign($lang, $category, $value, $base, $allo, $formvar, $modif, $role, $prePost, $position, $syllabic, $break, $label, $cf, $writtenWord, $wordtype, $gw, $wordbase, $group, $for);
+    &saveSign($lang, $category, $value, $base, $allo, $formvar, $modif, $role, $prePost, $position, $syllabic, $condition, $label, $cf, $writtenWord, $wordtype, $gw, $wordbase, $group, $for);
     if ($category ne "uncertainReading") { $category = ""; }
     }
 }
@@ -1948,9 +1981,9 @@ sub saveSign {
     if ($role eq "semantic") { $category = "determinative"; }
     
     $PQdata{"02_Signs"}{'total'}++; # total number of signs
-    $PQdata{"02_Signs"}{"ztotal_state"}{$break}{'total'}++;
+    $PQdata{"02_Signs"}{"state"}{$break}{'total'}++;
     $PQdata{"02_Signs"}{'lang'}{$lang}{'total'}++; # total number of signs per language
-    $PQdata{"02_Signs"}{'lang'}{$lang}{"zlang_total_state"}{$break}{'total'}++;
+    $PQdata{"02_Signs"}{'lang'}{$lang}{"state"}{$break}{'total'}++;
     $PQdata{"02_Signs"}{'lang'}{$lang}{"zlang_total_wordtype"}{$wordtype}{'total'}++;
     $PQdata{"02_Signs"}{'lang'}{$lang}{"zlang_total_wordtype"}{$wordtype}{'state'}{$break}{'num'}++;
     $PQdata{"02_Signs"}{'lang'}{$lang}{"category"}{$category}{'total'}++; # total number of signs per language and category
@@ -1972,29 +2005,32 @@ sub saveSign {
 	else { &abstractSigndata(\%{$PQdata{"02_Signs"}{'lang'}{$lang}{"category"}{$category}{"wordbase"}{$wordbase}}, $value, $base, $allo, $formvar, $modif, $wordtype, $pos, $gw, $cf, $break, $writtenWord, $label, $group, $for); }
     }
     
-    $compilationERSigns{"02_Signs"}{'total'}++; # total number of signs
-    $compilationERSigns{"02_Signs"}{"ztotal_state"}{$break}{'total'}++;
-    $compilationERSigns{"02_Signs"}{'lang'}{$lang}{'total'}++; # total number of signs per language
-    $compilationERSigns{"02_Signs"}{'lang'}{$lang}{"zlang_total_state"}{$break}{'total'}++;
-    $compilationERSigns{"02_Signs"}{'lang'}{$lang}{"zlang_total_wordtype"}{$wordtype}{'total'}++;
-    $compilationERSigns{"02_Signs"}{'lang'}{$lang}{"zlang_total_wordtype"}{$wordtype}{'state'}{$break}{'num'}++;
-    $compilationERSigns{"02_Signs"}{'lang'}{$lang}{"category"}{$category}{'total'}++; # total number of signs per language and category
-    $compilationERSigns{"02_Signs"}{'lang'}{$lang}{"category"}{$category}{"state"}{$break}{'num'}++;
+    #$compilationERSigns{"02_Signs"}{'total'}++; # total number of signs
+    #$compilationERSigns{"02_Signs"}{"ztotal_state"}{$break}{'total'}++;
+    # Note: {"02_Signs"} consistently replaced by {$PQ}
+    
+    my $PQ = substr($thisText, 0, 1);
+    $compilationERSigns{$PQ}{'lang'}{$lang}{'total'}++; # total number of signs per language
+    $compilationERSigns{$PQ}{'lang'}{$lang}{"state"}{$break}{'total'}++;
+    $compilationERSigns{$PQ}{'lang'}{$lang}{"zlang_total_wordtype"}{$wordtype}{'total'}++;
+    $compilationERSigns{$PQ}{'lang'}{$lang}{"zlang_total_wordtype"}{$wordtype}{'state'}{$break}{'num'}++;
+    $compilationERSigns{$PQ}{'lang'}{$lang}{"category"}{$category}{'total'}++; # total number of signs per language and category
+    $compilationERSigns{$PQ}{'lang'}{$lang}{"category"}{$category}{"state"}{$break}{'num'}++;
     
     if (($category eq "syllabic") && ($syllabic ne "")) {
-	$compilationERSigns{"02_Signs"}{'lang'}{$lang}{"category"}{$category}{"type"}{$syllabic}{'total'}++; # total number of signs
-        $compilationERSigns{"02_Signs"}{'lang'}{$lang}{"category"}{$category}{"type"}{$syllabic}{"state"}{$break}{'num'}++;
-	&abstractSigndata(\%{$compilationERSigns{"02_Signs"}{'lang'}{$lang}{"category"}{$category}{"type"}{$syllabic}}, $value, $base, $allo, $formvar, $modif, $wordtype, $pos, $gw, $cf, $break, $writtenWord, $label, $group, $for);
+	$compilationERSigns{$PQ}{'lang'}{$lang}{"category"}{$category}{"type"}{$syllabic}{'total'}++; # total number of signs
+        $compilationERSigns{$PQ}{'lang'}{$lang}{"category"}{$category}{"type"}{$syllabic}{"state"}{$break}{'num'}++;
+	&abstractSigndata(\%{$compilationERSigns{$PQ}{'lang'}{$lang}{"category"}{$category}{"type"}{$syllabic}}, $value, $base, $allo, $formvar, $modif, $wordtype, $pos, $gw, $cf, $break, $writtenWord, $label, $group, $for);
     }
     elsif (($role eq "semantic") || ($role eq "phonetic")) {
-	$compilationERSigns{"02_Signs"}{'lang'}{$lang}{"category"}{$category}{"prePost"}{$prePost}{"total"}++;
-	$compilationERSigns{"02_Signs"}{'lang'}{$lang}{"category"}{$category}{"prePost"}{$prePost}{"state"}{$break}{"num"}++;
-	&abstractSigndata(\%{$compilationERSigns{"02_Signs"}{'lang'}{$lang}{"category"}{$category}{"prePost"}{$prePost}}, $value, $base, $allo, $formvar, $modif, $wordtype, $pos, $gw, $cf, $break, $writtenWord, $label, $group, $for);
+	$compilationERSigns{$PQ}{'lang'}{$lang}{"category"}{$category}{"prePost"}{$prePost}{"total"}++;
+	$compilationERSigns{$PQ}{'lang'}{$lang}{"category"}{$category}{"prePost"}{$prePost}{"state"}{$break}{"num"}++;
+	&abstractSigndata(\%{$compilationERSigns{$PQ}{'lang'}{$lang}{"category"}{$category}{"prePost"}{$prePost}}, $value, $base, $allo, $formvar, $modif, $wordtype, $pos, $gw, $cf, $break, $writtenWord, $label, $group, $for);
     }
     else {
 	# wordbase only here if Sumerian
-	if (($wordbase eq "") || ($category eq "nonbase")) { &abstractSigndata(\%{$compilationERSigns{"02_Signs"}{'lang'}{$lang}{"category"}{$category}}, $value, $base, $allo, $formvar, $modif, $wordtype, $pos, $gw, $cf, $break, $writtenWord, $label, $group, $for); }
-	else { &abstractSigndata(\%{$compilationERSigns{"02_Signs"}{'lang'}{$lang}{"category"}{$category}{"wordbase"}{$wordbase}}, $value, $base, $allo, $formvar, $modif, $wordtype, $pos, $gw, $cf, $break, $writtenWord, $label, $group, $for); }
+	if (($wordbase eq "") || ($category eq "nonbase")) { &abstractSigndata(\%{$compilationERSigns{$PQ}{'lang'}{$lang}{"category"}{$category}}, $value, $base, $allo, $formvar, $modif, $wordtype, $pos, $gw, $cf, $break, $writtenWord, $label, $group, $for); }
+	else { &abstractSigndata(\%{$compilationERSigns{$PQ}{'lang'}{$lang}{"category"}{$category}{"wordbase"}{$wordbase}}, $value, $base, $allo, $formvar, $modif, $wordtype, $pos, $gw, $cf, $break, $writtenWord, $label, $group, $for); }
     }
 }    
 
@@ -2041,11 +2077,17 @@ sub abstractSigndata{
     if ($base eq "") { # normal values
         $data->{"value"}{$value}{'num'}++;
 	$data->{"value"}{$value}{"state"}{$break}{'num'}++;
+	if (($break eq "preserved") || ($break eq "damaged") || ($break eq "excised")) {
+	   $data->{"value"}{$value}{'there'} = "yes";
+	}
 	&abstractSigndata2(\%{$data->{"value"}{$value}{"standard"}{$value}{"wordtype"}{$wordtype}{"pos"}{$pos}}, $cf, $gw, $break, $writtenWord, $label, $group, $for); 
     }
     else { # variant values; treat base as value and work with variants: allograph, modifier, formvar
 	$data->{"value"}{$base}{'num'}++;
 	$data->{"value"}{$base}{"state"}{$break}{'num'}++;
+	if (($break eq "preserved") || ($break eq "damaged") || ($break eq "excised")) {
+	   $data->{"value"}{$base}{'there'} = "yes";
+	}
 	# variant types...: form; allo, modif and/or formvar
 	&abstractSigndata2(\%{$data->{"value"}{$base}{$variantType}{$variantMod}{"wordtype"}{$wordtype}{"pos"}{$pos}}, $cf, $gw, $break, $writtenWord, $label, $group, $for); 
     }

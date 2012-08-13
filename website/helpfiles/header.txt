@@ -1,0 +1,8 @@
+﻿<xsl:template name="header">
+
+<div id="header">
+    <div id="headertxt">QLAB</div>  
+    <div id="headertxt2">Cuneiform Literacies in Assyria and Babylonia</div>
+</div> <!--end header-->
+
+</xsl:template>

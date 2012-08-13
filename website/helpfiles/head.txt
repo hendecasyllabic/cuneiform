@@ -1,0 +1,17 @@
+﻿<head>
+	  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+	  <meta name="title" content="QLAB - Cuneiform Literacies in Assyria and Babylonia" />
+	  <meta name="description" content="This is an experimental playground for manipulations of cuneiform data stored in Oracc, the Open Richly-Annotated Cuneiform Corpus." />
+	  <meta name="keywords" content="Mesopotamia, Cuneiform, Ancient Near East, Assyriology, Literacy, Orthography" />
+
+    <link href="../css/qlab.css" rel="stylesheet" type="text/css" />
+	
+    <style type="text/css">
+
+	  #header {background:url("../images/Detail_Or._Dr._IV,_ 65.JPG") no-repeat; height:170px; position:relative; alt="Two scribes recording prisoners, reign of Sennacherib (Original Drawing IV, 65; R.D Barnett, E. Bleibtreu and G. Turner, Sculptures from the Southwest Palace of Sennacherib at Nineveh, London, 1998: 74, pl. 143 no. 214a)"}
+
+    </style>
+
+	  <title>QLAB - Cuneiform Literacies in Assyria and Babylonia</title>
+</head>

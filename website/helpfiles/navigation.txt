@@ -1,0 +1,26 @@
+﻿<xsl:template name="navigation">
+<div id="nav"> 
+	<ul>
+        <li><a href="index.html">Home</a>
+		</li>
+        
+        <li><a href="./datasets/index.html">Datasets</a>
+        </li>
+
+        <li><a href="../stats/index.xsl">Statistics &amp; sign use</a>
+		<ul>
+            <li><a href="./stats/general.html">General tablet statistics</a></li>
+            <li><a href="./stats/signs.html">Sign use</a></li>
+            <li><a href="./stats/detail.html">Detailed sign use</a></li>
+            <li><a href="./stats/method.html">Methodology</a></li>
+        </ul></li>
+            
+        <li><a href="./signlist/index.html">Sign lists</a>
+        </li>
+    
+	    <li><a href="./absl/index.html">ABSL</a></li>
+	    
+   	</ul>
+</div> <!--end nav-->
+
+</xsl:template>

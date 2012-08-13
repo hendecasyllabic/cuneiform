@@ -1,0 +1,10 @@
+﻿</div><!--end main_content-->
+
+<div id="footer">
+    <div id="footerleft">&copy; 2011-2012 Greta Van Buylaere</div>
+    <div id="footerright">Last updated: ***</div>
+</div>
+</div> <!--end container-->
+
+</body>
+</html>
