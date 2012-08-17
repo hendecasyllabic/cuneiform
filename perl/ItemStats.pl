@@ -92,18 +92,50 @@ sub ItemStats{
 	}
     }
     
+
+    my %corpusnewdata;
+    #slight pivot of corpus data
+    
+    foreach my $q (keys %{$corpusdata{"corpus"}}){
+	my %structure = {};
+	$corpusnewdata{"corpus"}{$q} = {};
+	foreach my $w (keys %{$corpusdata{"corpus"}{$q}}){
+	    $corpusnewdata{"corpus"}{$q}{$w} = {};#$corpusdata{"corpus"}{$project}{"designation"}
+	    foreach my $e (keys %{$corpusdata{"corpus"}{$q}{$w}}){
+		my %item;
+		$item{"name"}[0]= $e;
+		$item{"ps"} = {};
+		foreach my $r (keys %{$corpusdata{"corpus"}{$q}{$w}{$e}}){ #$corpusdata{"corpus"}{$project}{"designation"}{$designation}{$PorQ}}
+		    #$r = p/q
+		    #print Dumper $r;#P Q
+		    #print Dumper $corpusdata{"corpus"}{$q}{$w}{$e}{$r}; # [ ]
+		    #die ;
+		    foreach (@{$corpusdata{"corpus"}{$q}{$w}{$e}{$r}}){
+			#this is an array?
+			#die $t;
+			my $t = $_;
+			print Dumper $t;
+			push(@{$item{"ps"}{$r}},$t);
+		    }
+		    #push(@{$item{"ps"}},$corpusdata{"corpus"}{$q}{$w}{$e}{$r});
+		}
+		push(@{$corpusnewdata{"corpus"}{$q}{$w}{"item"}}, \%item);
+	    }
+	}
+	
+    }
 # Create corpus metadatafile for the whole corpus
-    &writetofile("CORPUS_META", \%corpusdata);
+    &writetofile("CORPUS_META", \%corpusnewdata);
 
 # list of combos    
     &writetofile("combos", \%combos);
     
 # compilations for ER
-    foreach my $PQ (keys %compilationERSigns) {
-	foreach my $lang (keys $compilationERSigns{$PQ}{'lang'}){
-	    &writetofile("SIGNS_".$PQ."_LANG_".$lang, $compilationERSigns{$PQ}{'lang'}{$lang});
-	}
-    }
+#    foreach my $PQ (keys %compilationERSigns) {
+#	foreach my $lang (keys $compilationERSigns{$PQ}{'lang'}){
+#	    &writetofile("SIGNS_".$PQ."_LANG_".$lang, $compilationERSigns{$PQ}{'lang'}{$lang});
+#	}
+#    }
     
     #&writetofile("CompilationSigns", \%compilationERSigns);
     &writetofile("CompilationWords", \%compilationERWords); # maybe also to be split later TODO
