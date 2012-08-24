@@ -35,14 +35,19 @@ my %deterdata = ();
 my %numberdata = ();
 my %totals = ();
 
-# P_LANG_...xml; Q_LANG_...xml TODO
-
-#&getGlobalSignData($projdir."SIGNS_P_global.xml");
-#&compileSignData;
-#&getSigns($projdir."SIGNS_P_LANG_akk.xml");
-#&getWords($projdir."WORDS_P_LANG_akk.xml");
-
-print   header({-charset => 'utf-8'}),
+my $file = $projdir."SIGNS_P_LANG_Standard Babylonian.xml";
+#was a parameter passed...
+if($#ARGV==2){
+    my $filepath = $ARGV[0];
+    my $sysdir = $ARGV[1];
+    my $filename = $ARGV[2];
+    $ogslfile = $sysdir."resources/ogsl.xml";
+    $projdir = $sysdir."dataoutNEW/".$filepath."/";
+    
+    $file = $projdir.$filename;
+}
+else{
+    print   header({-charset => 'utf-8'}),
         start_html(
                        -title => 'Cuneiform literacy',
                        -script => [ {-language=>'javascript',
@@ -54,12 +59,21 @@ print   header({-charset => 'utf-8'}),
 				    ]
                        ),
         h1('Corpus');
+}
+# P_LANG_...xml; Q_LANG_...xml TODO
+
+#&getGlobalSignData($projdir."SIGNS_P_global.xml");
+#&compileSignData;
+#&getSigns($projdir."SIGNS_P_LANG_akk.xml");
+#&getWords($projdir."WORDS_P_LANG_akk.xml");
+
+
 
 #&getGlobalWordData($projdir."WORDS_P_global.xml"); # TODO: generate global file
 
 # for each language... TODO
 # all languages at the moment in CompilationSigns and CompilationWords!!!
-my $file = $projdir."SIGNS_P_LANG_Standard Babylonian.xml";
+
 &makeCategoryDonut($file);
 &makeSignsPerCategoryDonut($file);
 &makeSyllabicTable($file);
@@ -323,10 +337,12 @@ sub makeSyllabicTable {
 		#my $tempvalue = '//l[@ref="'.$wordid.'"]/xff:f'; # /xtf:transliteration//xcl:l[@ref=$wordid]/xff:f/@cf
 		my $tempvalue = '//type[@name="'.$name.'"]'; 
 		my $node = $cat->get_xpath($tempvalue);
-		my @values = $node->get_xpath('value');
-		foreach my $i (@values) {
-		    if ($i->{att}->{'there'}) {
-			# put value in table - make hash TODO HIER
+		if($node){
+		    my @values = $node->get_xpath('value');
+		    foreach my $i (@values) {
+			if ($i->{att}->{'there'}) {
+			    # put value in table - make hash TODO HIER
+			}
 		    }
 		}
 	    }
