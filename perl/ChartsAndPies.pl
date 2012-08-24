@@ -19,7 +19,7 @@ my $projname = "***";
 my $projdir = "../dataoutNEW/";
 my $ogslfile = "../resources/ogsl.xml";
 
-my $language = "Standard Babylonian";
+my $language = "Late Babylonian";
 #my $language = "Sumerian";
 my $file = $projdir."SIGNS_P_LANG_".$language.".xml";
 
@@ -687,110 +687,13 @@ sub printSyllabicTables {
 		    #print p("Syllable ".$l." written as ");
 		    my %tempdata = ();
 		    foreach my $v (@{$variousSignsPerValue{$t}{"syllable"}{$l}{"value"}}) {
-			#print "find position of v = ".$v;
-			$tempdata{$v} = &findPositionData($file, $wordtype, $t, $v);
-			#if ($number > 1) { print $v." and "; }
-			#else { print $v."."; }
-			#$number--;
+			&findPositionData($file, $wordtype, $t, $v);
 		    }
 		    print end_table;
 		    print p();
 		    my @positions = ("initial", "medial", "final", "alone");
-		    #foreach my $v (sort keys %tempdata) {
-			#print h4($v);
-			#while ((my $key, my $val) = each %tempdata) {
-			#    print "key = ".$key;
-			#    foreach my $z (%{$val}) {
-			#	print "z = ".$z;
-			#    }
-			#    
-			#}
-			#foreach my $q (keys %{$tempdata{$v}}) {
-			#    #print $q;
-			#    foreach my $y (keys %{$tempdata{$v}{$q}}) {
-			#	print "y = ".$y;
-			#    }
-			#}
-			
-			#foreach my $pos (@positions) {
-			#    print h5("Position: ".$pos);
-			#    #print p($tempdata{$v}{$pos});
-			#    foreach my $wt (sort keys %{$tempdata{$v}{$pos}}) {
-			#	print p($wt);
-			#	print p($tempdata{$v}{$pos}{$wt});
-			#	#foreach my $q (sort keys %{$tempdata{$i}{$pos}{$wt}{"gw"}}) {
-				#    print $q;
-				#}
-				#print Dumper(%tempdata);
-				#die;
-				#foreach my $q (sort keys $tempdata{$i}{$wt}) {
-				 #   print $q;
-				#}
-				#my @gw = @{$tempdata{$i}{$wt}{$pos}{"gw"}};
-				#print Dumper(@{$tempdata{$i}{$wt}}->{$pos});
-				#foreach my $w ($tempdata{$i}{$wt}{$pos}{"gw"}) {
-				#    print p(" - ".$wt." : ".$w.", references: ");    
-				#}
-				
-				    
-				
-			    #}
-			#}
-			#die;
-		    #}
 		}
-		
 	    }
-	    
-	    
-	#    foreach my $j (sort keys %{$syllsign{$t}{"sign"}}) {
-	#	my $number = scalar @{$syllsign{$t}{"sign"}{$j}{"value"}};
-	#	if ($number > 1) { # several values belong to the same sign
-	#	    my %temp = ();
-	#	    foreach my $value (@{$syllsign{$t}{"sign"}{$j}{"value"}}) {
-	#		#if ($value=~m|^|) # beginning with b/p, etc. - not yet implemented as this is no fixed rule
-	#	        $value = substr($value,0,length ($t)); # get rid of index numbers
-	#		if (($t eq "CV") || ($t eq "CVC") || ($t eq "CVCV")) {
-	#		    $value =~ s/[ie]/I/gsi;
-	#		    #print p($value);
-	#		}
-	#		if ($t eq "VC") {
-	#		    my $cons = substr($value,1,1);
-	#		    $value =~ s/[bp]/B/;
-	#		    $value =~ s/[gkq]/G/;
-	#		    $value =~ s/[dt\x{1E6D}]/D/;
-	#		    $value =~ s/[z\x{1E63}s]/Z/;
-	#		    #print p($value);
-	#		}
-	#		if (($t eq "CVC") || ($t eq "CVCV")) {
-	#		    my $cons = substr($value,2,1);
-	#		    $cons =~ s/[bp]/B/;
-	#		    $cons =~ s/[gkq]/G/;
-	#		    $cons =~ s/[dt\x{1E6D}]/D/;
-	#		    $cons =~ s/[z\x{1E63}s]/Z/;
-	#		    substr($value, 2, 1) = $cons; 
-	#		    #print p($value);
-	#		}
-	#	    print p($value);
-	#	    $temp{$value}++;
-	#	    }
-	#	    if (($t eq "CV") || ($t eq "VC") || ($t eq "CVC") || ($t eq "CVCV")) {
-	#		my $cnt = 0;
-	#		foreach my $r (keys %temp) {
-	#		    #print ('el '.$r);
-	#		    $cnt++;
-	#		}
-	#		print p('Keys temp '.$cnt);
-	#		if ($cnt != $number) { 
-	#		    $cnt = $number - $cnt;
-	#		#    $syllcount{$t} += $cnt;
-	#		    #print p($i." ".$syllcount{$i}); }
-	#		#    $sylldoubles += $cnt;
-	#		}
-	#		#print p('Syllcount '.$syllcount{$i});
-	#	    }
-	#	}
-	#    }
 	}
     }
 }
@@ -814,7 +717,6 @@ sub findPositionData {
     my @start = $TypeRoot->get_xpath('type');
     my %data = ();
     $data{"initial"} = " "; $data{"medial"} = " "; $data{"final"} = " "; $data{"alone"} = " ";
-    my %attestations = ();
     
     print start_Tr, td([$value]);
     foreach my $s (@start) {
@@ -832,129 +734,121 @@ sub findPositionData {
 		    }
 		}
 	    }
-	
-# PROBLEMS with following - FIX TODO
-	    # store the data per position and wordtype (if "All_attested")
-	#    if ($wordtype ne "All_attested") { # data gathered for one specific $wordtype
-	#	my $tempvalue = '//wordtype[@name"'.$wordtype.'"]';
-	#	my @nodes = $valueNode->get_xpath($tempvalue);
-	#	foreach my $n (@nodes) {
-	#	    my %temp = ();
-	#	    $temp{$wordtype} = &findAttestations ($n);
-	#	    push (@{$attestations{$wordtype}}, $temp{$wordtype});
-	#	}
-	#    }
-	#    else {
-	#	my @wordtypes = $valueNode->get_xpath('//wordtype');
-	#	foreach my $w (@wordtypes) {
-	#	    my $i = $w->{att}->{name};
-	#	    #print p("Value = ".$value."; wordtype ".$i);
-	#	    my @positions = $w->get_xpath('pos');
-	#	    foreach my $x (@positions) {
-	#		my @gws = $x->get_xpath('gw');
-	#		my $toPrint = "";
-	#		if ($gws[0]) {
-	#		    foreach my $gw (@gws) {
-	#			my $gwName = $gws[0]->{att}->{name};
-	#			my @states = $gw->get_xpath('state');
-	#			foreach my $s (@states) {
-	#			    my $sName = $s->{att}->{name};
-	#			    if (($sName eq "preserved") || ($sName eq "damaged") || ($sName eq "excised")) {
-	#				my @writtens = $s->get_xpath('writtenWord');
-	#				foreach my $w (@writtens) {
-	#				    my $spelling = $w->{att}->{name};
-	#				    #print $spelling;
-	#				    my @lines = $w->get_xpath('line');
-	#				    my $string = "";
-	#				    foreach my $l (@lines) {
-	#					my $lineNo = $l->text;
-	#					$string .= $lineNo.", ";
-	#					#print p("Gw ".$gwName." written ".$spelling." line ".$lineNo);
-	#				    }
-	#				    $string = substr($string, 0, length($string)-2);
-	#				    $toPrint .= $gwName.": ".$spelling.", reference(s): ".$string."; ";
-	#				    #print p("Gw ".$gwName." written ".$spelling." line ".$string);
-	#				    #push (@{$temp{$position}{"gw"}{$gwName}{"written"}{$spelling}->{"line"}}, $string);
-	#				    #die;
-	#				}
-	#			    #push (@{$temp{$position}{"word"}}, $toPrint);
-	#			    }
-	#			$toPrint = substr($toPrint, 0, length($toPrint)-2);
-	#			}
-	#		    }
-	#		}
-	#		$attestations{$x} = $toPrint;
-	#	    }
-	#	}
-	#    }
-        }
-		    
-		#    my %temp = ();
-		#    $temp{$i} = &findAttestations ($w);
-		#    
-		#    
-		#    foreach my $pos (keys %{$temp{$i}}) {
-		#	#print $pos;
-		#	print p("Value = ".$value."; pos = ".$pos."; wordtype = ".$i);
-		#	print $temp{$i}{$pos};
-		#	push (@{$attestationdata{$pos}{$i}}, $temp{$i}{$pos}); 
-		#    }
+	}
     }
 
     foreach my $p (@positions) {
 	print td([$data{$p}]);
     }
-    
-    return \%attestations;
 }
 
 sub findAttestations {
-    my $wordtypeNode = shift;
+    my $file = shift;
+    my $wordtype = shift;
+    my $category = shift;
+    my $prePost = shift; # can be empty (only used for determinative and phonetic)
+    my $type = shift; # can be empty (used for syllabic and phonetic)
+    my $value = shift;
     
-    #my %temp = ();
+    my $twigFile = XML::Twig->new(
+				  twig_roots => { 'category' => 1 }
+				  );
+    $twigFile->parsefile($file);
+    my $FileRoot = $twigFile->root;
+    $twigFile->purge;
+    
     my %data = ();
     $data{"initial"} = ""; $data{"medial"} = ""; $data{"final"} = ""; $data{"alone"} = "";
-    my @pos = $wordtypeNode->get_xpath('pos');
-    foreach my $p (@pos) {
-	my $position = $p->{att}->{name};
-	my @gws = $p->get_xpath('gw');
-	my $toPrint = "";
-	if ($gws[0]) {
-	    foreach my $gw (@gws) {
-		my $gwName = $gws[0]->{att}->{name};
-		my @states = $gw->get_xpath('state');
-		foreach my $s (@states) {
-		    my $sName = $s->{att}->{name};
-		    if (($sName eq "preserved") || ($sName eq "damaged") || ($sName eq "excised")) {
-			my @writtens = $s->get_xpath('writtenWord');
-			foreach my $w (@writtens) {
-			    my $spelling = $w->{att}->{name};
-			    #print $spelling;
-			    my @lines = $w->get_xpath('line');
-			    my $string = "";
-			    foreach my $l (@lines) {
-				my $lineNo = $l->text;
-				$string .= $lineNo.", ";
-				#print p("Gw ".$gwName." written ".$spelling." line ".$lineNo);
-			    }
-			    $string = substr($string, 0, length($string)-2);
-			    $toPrint .= $gwName.": ".$spelling.", reference(s): ".$string."; ";
-			    #print p("Gw ".$gwName." written ".$spelling." line ".$string);
-			    #push (@{$temp{$position}{"gw"}{$gwName}{"written"}{$spelling}->{"line"}}, $string);
-			    #die;
-			}
-			
-			#push (@{$temp{$position}{"word"}}, $toPrint);
+
+    my $tempvalue = '/value[@name="'.$value.'"]';
+    if ($type ne "") {
+	$tempvalue = '/type[@name="'.$type.'"]'.$tempvalue;
+    }
+    if ($prePost ne "") {
+	$tempvalue = '/prePost[@name="'.$prePost.'"]'.$tempvalue;
+    }
+    if ($category ne "") {
+	$tempvalue = 'category[@name="'.$category.'"]'.$tempvalue;
+    }
+
+    print p("tempvalue ".$tempvalue);
+    
+    # values can be standard or variant
+    # followed by wordtype
+    # followed by position
+    # followed by gw/cf/state/writtenWord/line
+    
+    my @nodes = $FileRoot->get_xpath($tempvalue);
+    foreach my $n (@nodes) {
+	my @pos = $n->get_xpath('pos');
+        foreach my $p (@pos) {
+	    my $test = $p->{att}->{$wordtype}?$p->{att}->{$wordtype}:0;
+	    if ($test > 0) {
+		my $kind = substr($wordtype, 0, length($wordtype)-9);
+		print p("kind ".$kind); 
+		my @ws = ();
+		if ($kind ne "All") {
+		    $tempvalue = '//wordtype[@name="'.$kind.'"]';
+		    @ws = $p->get_xpath($tempvalue);
+		}
+		else {
+		    @ws = $p->get_xpath('//wordtype');
+		}
+		
+		foreach my $w (@ws) {
+		    my @pos = $w->get_xpath('pos');
+		    foreach my $position (@pos) {
+			my $pos1 = $position->{att}->{name};
+			print p("getting there");
+			print p("value ".$value." wordtype ".$kind." position ".$pos1);
 		    }
-		    $toPrint = substr($toPrint, 0, length($toPrint)-2);
 		}
 	    }
-        }
-	$data{$position} = $toPrint;
+	}
+	print p("node found");
     }
+    
+#    my @pos = $wordtypeNode->get_xpath('pos');
+#    foreach my $p (@pos) {
+#	my $position = $p->{att}->{name};
+#	my @gws = $p->get_xpath('gw');
+#	my $toPrint = "";
+#	if ($gws[0]) {
+#	    foreach my $gw (@gws) {
+#		my $gwName = $gws[0]->{att}->{name};
+#		my @states = $gw->get_xpath('state');
+#		foreach my $s (@states) {
+#		    my $sName = $s->{att}->{name};
+#		    if (($sName eq "preserved") || ($sName eq "damaged") || ($sName eq "excised")) {
+#			my @writtens = $s->get_xpath('writtenWord');
+#			foreach my $w (@writtens) {
+#			    my $spelling = $w->{att}->{name};
+#			    #print $spelling;
+#			    my @lines = $w->get_xpath('line');
+#			    my $string = "";
+#			    foreach my $l (@lines) {
+#				my $lineNo = $l->text;
+#				$string .= $lineNo.", ";
+#				#print p("Gw ".$gwName." written ".$spelling." line ".$lineNo);
+#			    }
+#			    $string = substr($string, 0, length($string)-2);
+#			    $toPrint .= $gwName.": ".$spelling.", reference(s): ".$string."; ";
+#			    #print p("Gw ".$gwName." written ".$spelling." line ".$string);
+#			    #push (@{$temp{$position}{"gw"}{$gwName}{"written"}{$spelling}->{"line"}}, $string);
+#			    #die;
+#			}
+#			
+#			#push (@{$temp{$position}{"word"}}, $toPrint);
+#		    }
+#		    $toPrint = substr($toPrint, 0, length($toPrint)-2);
+#		}
+#	    }
+#        }
+#	$data{$position} = $toPrint;
+#    }
     #print Dumper (%temp);
     #return \%temp;
-    return \%data;
+    #return \%data;
 }
     
 sub makePhoneticList {
@@ -990,13 +884,14 @@ sub makePhoneticList {
     }
 
 # alphabetically organized list of phonetic values within pre/post and CV etc.
-    print h2("Phonetic complements");
+    print h1("Phonetic complements");
     foreach my $p (keys %{$phoneticdata{"prePost"}}) {
 	print h3($p);
 	foreach my $t (sort keys %{$phoneticdata{"prePost"}{$p}{"type"}}) {
 	    print h3("Type ".$t);
 	    while (my ($k, $v) = sort each(@{$phoneticdata{"prePost"}{$p}{"type"}{$t}{"value"}})) {
 		print p("Value: ".$v);
+		&findAttestations($file, $wordtype, "phonetic", $p, $t, $v);
 	    }
 	}
     }
