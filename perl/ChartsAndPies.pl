@@ -80,7 +80,7 @@ print   header({-charset => 'utf-8'}),
 				    ]
                        ),
         h1('Corpus '.$projname),
-	h2('Language:'.$language.' with data: '.$kind),
+	h2('Language: '.$language.' with data: '.$kind),
 	p ('Note that only actually attested signs are taken into account (thus: preserved, damaged and excised signs); missing, supplied, implied, maybe and erased signs are not.');
 
 #&getGlobalWordData($projdir."WORDS_P_global.xml"); # TODO: generate global file
@@ -93,6 +93,8 @@ print   header({-charset => 'utf-8'}),
 &makeDeterminativeChart($file, $kind);
 &prepareSyllabicTable($file, $kind);
 &printSyllabicTables($file, $kind);
+&makePhoneticList($file, $kind);
+
 	#p({-style => 'text-indent:50px' },'- '.$preservedwords.' fully preserved words;'),
 	#p({-style => 'text-indent:50px' },'- '.$damagedwords.' partially preserved words;'),
 	#p({-style => 'text-indent:50px' },'- '.$missingwords.' restored words.'),
@@ -159,7 +161,7 @@ sub makeCategoryDonut {
 	
 	my @subCategories; # determinatives and syllabic signs may have subcategories
 	my @catdata;
-	if ($name eq "determinative") { # subdivision of pre- and postdeterminatives
+	if (($name eq "determinative") || ($name eq "phonetic")) { # subdivision of pre- and postdeterminatives
 	    my @prePost = $cat->get_xpath('prePost');
 	    foreach my $p (@prePost) {
 		my $n = $p->{att}->{name};
@@ -191,7 +193,7 @@ sub makeCategoryDonut {
 	# TODO: Question: for some reason really small categories are not printed on screen (e.g. category CVCV attested 0.02%)
 	# TODO: how to get the actual numbers of attestations printed along the percentages?
 	
-	if (!($colours{$name})) { print " no colour for ".$name.". "; }
+	#if (!($colours{$name})) { print " no colour for ".$name.". "; }
 	
 	my $writeme = "{   y: ".$totalCat.",";
 	$writeme .= "      color: colors[".$colours{$name}."],";
@@ -275,7 +277,7 @@ sub makeSignsPerCategoryDonut {
 	my @subCategories; # determinatives and syllabic signs may have subcategories
 	my @signsPerCatdata;
 	
-	if ($name eq "determinative") { # subdivision of pre- and postdeterminatives
+	if (($name eq "determinative") || ($name eq "phonetic")) { # subdivision of pre- and postdeterminatives
 	    my @prePost = $cat->get_xpath('prePost');
 	    foreach my $p (@prePost) {
 		my $n = $p->{att}->{name};
@@ -283,10 +285,12 @@ sub makeSignsPerCategoryDonut {
 		$totalForms += $t;
 		push(@subCategories, $n);
 		push(@signsPerCatdata, $t);
-		$deterForms += $totalForms;
+		if ($name eq "determinative") { $deterForms += $totalForms; }
 	    }
-	    $deterTotal = &totalNum($cat, $wordtype);
-	    #print p("category ".$name." deterTotal ".$deterTotal);
+	    if ($name eq "determinative") {
+		$deterTotal = &totalNum($cat, $wordtype);
+		#print p("category ".$name." deterTotal ".$deterTotal);
+	    }
     	}
 	elsif ($name eq "syllabic") { # subdivision of different syllabic categories
 	    my @types = $cat->get_xpath('type');
@@ -389,7 +393,7 @@ sub makeLogogramChart {
     my $remlogo = $logoForms;
     
     foreach my $n (sort { $b <=> $a } keys %{$logodata{"num"}}) {
-        if ($i < 10) {
+        if (($i < 10) && ($rest > 0)) {
 	    foreach my $s (@{$logodata{"num"}{$n}{"value"}}) {
 		#print p($s." ".$n);
 		$i++;
@@ -398,8 +402,8 @@ sub makeLogogramChart {
 	    }
 	}
     }
-    $remlogo -= $i;
-    $pielogo .= " ['Remaining ".$remlogo." logograms (".$rest.")"."',   ".$rest."],";
+    $remlogo -= ($i + 1);
+    if ($remlogo > 0) { $pielogo .= " ['Remaining ".$remlogo." logogram(s) (".$rest.")"."',   ".$rest."],"; }
 
     $pielogo = substr($pielogo,0,length($pielogo)-1);
     $pielogo .= " ]";
@@ -450,7 +454,7 @@ sub makeDeterminativeChart {
     my $remdeter = $deterForms;
     
     foreach my $n (sort { $b <=> $a } keys %{$deterdata{"num"}}) {
-        if ($i < 10) {
+        if (($i < 10) && ($rest > 0)) {
 	    foreach my $s (@{$deterdata{"num"}{$n}{"value"}}) {
 		#print p("determinative ".$s." ".$n);
 		$i++;
@@ -459,8 +463,8 @@ sub makeDeterminativeChart {
 	    }
 	}
     }
-    $remdeter -= $i;
-    $pielogo .= " ['Remaining ".$remdeter." determinatives (".$rest.")"."',   ".$rest."],";
+    $remdeter -= ($i + 1);
+    if ($remdeter > 0) { $pielogo .= " ['Remaining ".$remdeter." determinative(s) (".$rest.")"."',   ".$rest."],"; }
 
     $pielogo = substr($pielogo,0,length($pielogo)-1);
     $pielogo .= " ]";
@@ -494,12 +498,15 @@ sub prepareSyllabicTable {
 	my $name = $cat->{att}->{name};
 	if ($name eq "syllabic") {
 	    # make tables of all types of syllabic values in the order given in @types
-	    foreach my $type (@types) {
+	    my @typesSyll = $cat->get_xpath('type');
+	    foreach my $t (@typesSyll) {
+		    my $type = $t->{att}->{name};
 		#my $tempvalue = '//l[@ref="'.$wordid.'"]/xff:f'; # /xtf:transliteration//xcl:l[@ref=$wordid]/xff:f/@cf
-		my $tempvalue = '//type[@name="'.$type.'"]'; 
-		my @nodes = $cat->get_xpath($tempvalue);
-		foreach my $node (@nodes) {
-		    my @values = $node->get_xpath('value');
+		#my $tempvalue = '//type[@name="'.$type.'"]'; 
+		#my @nodes = $cat->get_xpath($tempvalue);
+		#foreach my $node (@nodes) {
+		    #my @values = $node->get_xpath('value');
+		    my @values = $t->get_xpath('value');
 		    foreach my $i (@values) {
 		        if ($i->{att}->{$wordtype}) {
 			    # put values in table 
@@ -529,7 +536,7 @@ sub prepareSyllabicTable {
 			    push (@{$variousSignsPerValue{$type}{"syllable"}{$syllable}{"value"}}, $value);
 			}
 		    }
-		}
+		#}
 	    }
 	}
     }
@@ -680,6 +687,7 @@ sub printSyllabicTables {
 		    #print p("Syllable ".$l." written as ");
 		    my %tempdata = ();
 		    foreach my $v (@{$variousSignsPerValue{$t}{"syllable"}{$l}{"value"}}) {
+			#print "find position of v = ".$v;
 			$tempdata{$v} = &findPositionData($file, $wordtype, $t, $v);
 			#if ($number > 1) { print $v." and "; }
 			#else { print $v."."; }
@@ -812,13 +820,17 @@ sub findPositionData {
     foreach my $s (@start) {
 	if ($s->{att}->{name} eq $type) {
 	    my $tempvalue = 'value[@name="'.$value.'"]';
-	    my $valueNode = ($s->get_xpath($tempvalue))[0];
-	    my @results = $valueNode->get_xpath('pos');
-	    foreach my $r (@results) {
-		my $position = $r->{att}->{name};
-		my $total = $r->{att}->{$wordtype}?$r->{att}->{$wordtype}:" ";
-		$data{$position} = $total;
-		#print "Type ".$type." value ".$value." position ".$position." total ".$total;
+	    my $valueNode = ($s->get_xpath($tempvalue))[0]; 
+	    if (defined($valueNode)) {
+	        my @results = $valueNode->get_xpath('pos');
+	        if (scalar @results > 0) {
+		    foreach my $r (@results) {
+			my $position = $r->{att}->{name};
+			my $total = $r->{att}->{$wordtype}?$r->{att}->{$wordtype}:" ";
+			$data{$position} = $total;
+			#print "Type ".$type." value ".$value." position ".$position." total ".$total;
+		    }
+		}
 	    }
 	
 # PROBLEMS with following - FIX TODO
@@ -945,6 +957,50 @@ sub findAttestations {
     return \%data;
 }
     
+sub makePhoneticList {
+    my $file = shift;
+    my $wordtype = shift;
+    
+    my $twigFile = XML::Twig->new(
+				  twig_roots => { 'category' => 1 }
+				  );
+    $twigFile->parsefile($file);
+    my $FileRoot = $twigFile->root;
+    $twigFile->purge;
+
+    my $phonetics = ($FileRoot->get_xpath('category[@name="phonetic"]'))[0];
+    my @prePosts = $phonetics->get_xpath('prePost');
+    my %phoneticdata = ();
+    foreach my $p (@prePosts) {
+	my $pre = $p->{att}->{name};
+	my @types = $p->get_xpath('type');
+	foreach my $t (@types) {
+	    my @values = $t->get_xpath('value');
+	    my $type = $t->{att}->{name};
+	    foreach my $v (@values) {
+	        my $test = $v->{att}->{$wordtype}?$v->{att}->{$wordtype}:0;
+	        if ($test > 0) {
+	            my $value = $v->{att}->{name};
+		    #print p("value ".$value);
+	            #my $number = $test;
+		    push(@{$phoneticdata{"prePost"}{$pre}{"type"}{$type}{"value"}}, $value);
+		}
+	    }
+	}
+    }
+
+# alphabetically organized list of phonetic values within pre/post and CV etc.
+    print h2("Phonetic complements");
+    foreach my $p (keys %{$phoneticdata{"prePost"}}) {
+	print h3($p);
+	foreach my $t (sort keys %{$phoneticdata{"prePost"}{$p}{"type"}}) {
+	    print h3("Type ".$t);
+	    while (my ($k, $v) = sort each(@{$phoneticdata{"prePost"}{$p}{"type"}{$t}{"value"}})) {
+		print p("Value: ".$v);
+	    }
+	}
+    }
+}
 
 sub getGlobalSignData {
     my $globalSigns = shift;
