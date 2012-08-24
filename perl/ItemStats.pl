@@ -49,6 +49,8 @@ $langmatrix{"lang h"} = "Hittite"; $langmatrix{"lang hit"} = "Hittite";
 $langmatrix{"lang s"} = "Sumerian"; $langmatrix{"lang sux"} = "Sumerian"; $langmatrix{"sux"} = "Sumerian"; $langmatrix{"lang eg"} = "Sumerian"; $langmatrix{"sux-x-emegir"} = "Sumerian"; # The abbreviation eg stands for Emegir (main-dialect Sumerian)
 
 $langmatrix{"sux akk"} = "Sumerian - Akkadian";
+$langmatrix{"sux-x-emesal sux akk"} = "Emesal - Sumerian - Akkadian";
+$langmatrix{"sux-x-emesal"} = "Emesal";
 $langmatrix{"akk-x-stdbab sux"} = "Standard Babylonian - Sumerian"; 
 
 my %config;
@@ -96,7 +98,7 @@ sub ItemStats{
     #slight pivot of corpus data
     
     foreach my $q (keys %{$corpusdata{"corpus"}}){
-	my %structure = {};
+	my %structure = (); # note to Chris: I changed {} to (). Don't know why, but at least it stops the extra messages
 	$corpusnewdata{"corpus"}{$q} = {};
 	foreach my $w (keys %{$corpusdata{"corpus"}{$q}}){
 	    $corpusnewdata{"corpus"}{$q}{$w} = {};#$corpusdata{"corpus"}{$project}{"designation"}
@@ -113,7 +115,7 @@ sub ItemStats{
 			#this is an array?
 			#die $t;
 			my $t = $_;
-			print Dumper $t;
+			#print Dumper $t;
 			push(@{$item{"ps"}{$r}},$t);
 		    }
 		    #push(@{$item{"ps"}},$corpusdata{"corpus"}{$q}{$w}{$e}{$r});
@@ -121,7 +123,6 @@ sub ItemStats{
 		push(@{$corpusnewdata{"corpus"}{$q}{$w}{"item"}}, \%item);
 	    }
 	}
-	
     }    
     
 # Create corpus metadatafile for the whole corpus
@@ -1085,8 +1086,12 @@ sub formWord{
 	my $value = $thing->{'value'};
 	if ($value eq "") { $noSign++; } # signs with no value shouldn't be counted (are probably newlines!!!) 
 	
-	if ($thing->{"type"} && ($thing->{"type"} eq "semantic" || $thing->{"type"} eq "phonetic")) { # determinatives and phonetic complements get {}
+	if ($thing->{"type"} && ($thing->{"type"} eq "semantic")) { # determinatives get {}
 	    $value = "{".$value."}";
+	}
+	
+	if ($thing->{"type"} && ($thing->{"type"} eq "phonetic")) { # phonetic complements get {+}
+	    $value = "{+".$value."}";
 	}
 	
 	if (($previousStatus eq "ok") && ($status eq "ok")) {
@@ -1961,16 +1966,16 @@ sub saveSigns {
 		## check IGI as ini ***  cf. Hämeen-Anttila
 		#}
 		
-		if ($role eq "semantic") {
-		    $syllabic = ""; $category = "determinative";
-		}
+		if ($role eq "semantic") { $syllabic = ""; $category = "determinative"; }
+		elsif ($role eq "phonetic") { $category = "phonetic"; }
+		
 		elsif (!($syllables{$syllabic})) { 
 		    if ($syllabic eq "C") {
 			if (($tempvalue eq "d") || ($tempvalue eq "m") || ($tempvalue eq "f")) { $category = "determinative"; $syllabic = ""; }
 			else { $category = "x"; $syllabic = ""; } # then the value should be x, so unreadable sign, treat as "x"
 		    } 
 		    else { $category = "syllabic"; $syllabic = "other"; }
-			#&writetoerror ("PossibleProblems.txt", localtime."Project: ".$thisCorpus.", text ".$thisText.": other syllabic value ".$value); } 
+			#&writetoerror ("PossibleProblems.txt", localtime."Project: ".$thisCorpus.", text ".$thisText.": other syllabic value ".$value); }
 		}
 		else {
 		    if ($tempvalue eq "o") { $category = ""; $syllabic = ""; }  
@@ -2057,8 +2062,18 @@ sub saveSign {
 	    $PQdata{"02_Signs"}{'lang'}{$lang}{"category"}{$category}{"prePost"}{$prePost}{"All_attested"}++;
 	    $PQdata{"02_Signs"}{'lang'}{$lang}{"category"}{$category}{"prePost"}{$prePost}{$wordtype.'_attested'}++;
     	}
+	if ($syllabic ne "") {
+	    $PQdata{"02_Signs"}{'lang'}{$lang}{"category"}{$category}{"prePost"}{$prePost}{"type"}{$syllabic}{"state"}{$break}{"num"}++;
+	    &abstractSigndata(\%{$PQdata{"02_Signs"}{'lang'}{$lang}{"category"}{$category}{"prePost"}{$prePost}{"type"}{$syllabic}}, $value, $base, $allo, $formvar, $modif, $wordtype, $pos, $gw, $cf, $break, $writtenWord, $label, $group, $for);
+	    if (($break eq "preserved") || ($break eq "damaged") || ($break eq "excised")) {
+		$PQdata{"02_Signs"}{'lang'}{$lang}{"category"}{$category}{"prePost"}{$prePost}{"type"}{$syllabic}{"All_attested"}++;
+		$PQdata{"02_Signs"}{'lang'}{$lang}{"category"}{$category}{"prePost"}{$prePost}{"type"}{$syllabic}{$wordtype.'_attested'}++;
+	    }
+        }
+        else {
+          &abstractSigndata(\%{$PQdata{"02_Signs"}{'lang'}{$lang}{"category"}{$category}{"prePost"}{$prePost}}, $value, $base, $allo, $formvar, $modif, $wordtype, $pos, $gw, $cf, $break, $writtenWord, $label, $group, $for);
+        }
 	$PQdata{"02_Signs"}{'lang'}{$lang}{"category"}{$category}{"prePost"}{$prePost}{"state"}{$break}{"num"}++;
-	&abstractSigndata(\%{$PQdata{"02_Signs"}{'lang'}{$lang}{"category"}{$category}{"prePost"}{$prePost}}, $value, $base, $allo, $formvar, $modif, $wordtype, $pos, $gw, $cf, $break, $writtenWord, $label, $group, $for);
     }
     else {
 	# wordbase only here if Sumerian
@@ -2098,7 +2113,17 @@ sub saveSign {
 	    $compilationERSigns{$PQ}{'lang'}{$lang}{"category"}{$category}{"prePost"}{$prePost}{$wordtype.'_attested'}++;
     	}
 	$compilationERSigns{$PQ}{'lang'}{$lang}{"category"}{$category}{"prePost"}{$prePost}{"state"}{$break}{"num"}++;
-	&abstractSigndata(\%{$compilationERSigns{$PQ}{'lang'}{$lang}{"category"}{$category}{"prePost"}{$prePost}}, $value, $base, $allo, $formvar, $modif, $wordtype, $pos, $gw, $cf, $break, $writtenWord, $label, $group, $for);
+	if ($syllabic ne "") {
+	    $compilationERSigns{$PQ}{'lang'}{$lang}{"category"}{$category}{"prePost"}{$prePost}{"type"}{$syllabic}{"state"}{$break}{"num"}++;
+	    if (($break eq "preserved") || ($break eq "damaged") || ($break eq "excised")) {
+		$compilationERSigns{$PQ}{'lang'}{$lang}{"category"}{$category}{"prePost"}{$prePost}{"type"}{$syllabic}{"All_attested"}++;
+		$compilationERSigns{$PQ}{'lang'}{$lang}{"category"}{$category}{"prePost"}{$prePost}{"type"}{$syllabic}{$wordtype.'_attested'}++;
+	    }
+	    &abstractSigndata(\%{$compilationERSigns{$PQ}{'lang'}{$lang}{"category"}{$category}{"prePost"}{$prePost}{"type"}{$syllabic}}, $value, $base, $allo, $formvar, $modif, $wordtype, $pos, $gw, $cf, $break, $writtenWord, $label, $group, $for);
+        }
+        else {
+	    &abstractSigndata(\%{$compilationERSigns{$PQ}{'lang'}{$lang}{"category"}{$category}{"prePost"}{$prePost}}, $value, $base, $allo, $formvar, $modif, $wordtype, $pos, $gw, $cf, $break, $writtenWord, $label, $group, $for);
+        }
     }
     else {
 	# wordbase only here if Sumerian
