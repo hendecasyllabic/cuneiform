@@ -61,16 +61,98 @@ my $startpath = "..";
 my $startdir = "datain";
 my $errorfile = "../errors";
 my $errorpath = "perlerrors";
-my $outputtype="text";
+my $outputtype="nottext";#text
 my $resultspath = "..";
 my $resultsfolder = "/dataoutNEW";
 
 my @splitrefs; # list of xml:id/headref; keep track of the split words that have been analysed through headform, so that they're not analysed twice.
 
-&ItemStats();
+if($#ARGV==2){
+    my $filepath = $ARGV[0];
+    my @files = split(/,/, $ARGV[1]);
+    my $sysdir = $ARGV[2];
+    $startpath = $sysdir;
+    $errorfile = $sysdir.$errorfile;
+    $resultspath = $sysdir;
+    
+    my %hash;
+    
+    foreach my $item(@files) {
+      my ($i,$j)= split(/:/, $item);
+      $hash{$item} = 1;
+    }
+    &writetoerror("SubStats.txt","starting ".localtime);
+    my $ext = "xtf";
+    $config{"typename"} = $ext;
+    &traverseDir($startpath, $startdir,$config{"typename"},1,$ext);
+    my @allfiles = @{$config{"filelist"}{$config{"typename"}}};
+    
+    
+    foreach(@allfiles){
+        my $filename = $_;
+        if($filename =~ m|/([^/]*).${ext}$|){
+            #my $shortname = $1;
+	    $thisText = $1;
+	    if($hash{$thisText}){
+		&outputtext("\nShortName: ". $thisText);
+		if($thisText =~ m|^Q|gsi){
+		    &doQstats($filename, $thisText, $filepath);
+		}
+		elsif($thisText =~ m|^P|gsi){
+		    &doPstats($filename, $thisText, $filepath);
+		}
+	    }
+	}
+    }
+    
+    &pivotCorpusData($filepath);
 
-sub ItemStats{    
-    &writetoerror("ItemStats.txt","starting ".localtime);
+    &writetofile("combos", \%combos, $filepath);
+    
+    &writetofile("CompilationWords", \%compilationERWords, $filepath); # maybe also to be split later TODO
+    
+    # compilations for ER
+    foreach my $PQ (keys %compilationERSigns) {
+	foreach my $lang (keys %{$compilationERSigns{$PQ}{'lang'}}){
+	    &writetofile("SIGNS_".$PQ."_LANG_".$lang, $compilationERSigns{$PQ}{'lang'}{$lang}, $filepath);
+	}
+    }
+    
+}
+else{
+    &FullStats();
+}
+
+sub pivotCorpusData{
+    my $fileprefix = shift;
+
+    my %corpusnewdata;
+    #slight pivot of corpus data
+    foreach my $q (keys %{$corpusdata{"corpus"}}){
+	$corpusnewdata{"corpus"}{$q} = {};
+	foreach my $w (keys %{$corpusdata{"corpus"}{$q}}){
+	    $corpusnewdata{"corpus"}{$q}{$w} = {};#$corpusdata{"corpus"}{$project}{"designation"}
+	    foreach my $e (keys %{$corpusdata{"corpus"}{$q}{$w}}){
+		my %item;
+		$item{"name"}[0]= $e;
+		$item{"ps"} = {};
+		foreach my $r (keys %{$corpusdata{"corpus"}{$q}{$w}{$e}}){ #$corpusdata{"corpus"}{$project}{"designation"}{$designation}{$PorQ}}
+		    foreach (@{$corpusdata{"corpus"}{$q}{$w}{$e}{$r}}){
+			#this is an array?
+			my $t = $_;
+			push(@{$item{"ps"}{$r}},$t);
+		    }
+		}
+		push(@{$corpusnewdata{"corpus"}{$q}{$w}{"item"}}, \%item);
+	    }
+	}
+    }
+    # Create corpus metadatafile for the whole corpus
+    &writetofile("CORPUS_META", \%corpusnewdata, $fileprefix);
+}
+
+sub FullStats{    
+    &writetoerror("ItemStats.txt","starting ".localtime(time));
     my $ext = "xtf";
     $config{"typename"} = $ext;
     &traverseDir($startpath, $startdir,$config{"typename"},1,$ext);
@@ -92,40 +174,8 @@ sub ItemStats{
 	}
     }
     
+    &pivotCorpusData("");
 
-    my %corpusnewdata;
-    #slight pivot of corpus data
-    
-    foreach my $q (keys %{$corpusdata{"corpus"}}){
-	my %structure = {};
-	$corpusnewdata{"corpus"}{$q} = {};
-	foreach my $w (keys %{$corpusdata{"corpus"}{$q}}){
-	    $corpusnewdata{"corpus"}{$q}{$w} = {};#$corpusdata{"corpus"}{$project}{"designation"}
-	    foreach my $e (keys %{$corpusdata{"corpus"}{$q}{$w}}){
-		my %item;
-		$item{"name"}[0]= $e;
-		$item{"ps"} = {};
-		foreach my $r (keys %{$corpusdata{"corpus"}{$q}{$w}{$e}}){ #$corpusdata{"corpus"}{$project}{"designation"}{$designation}{$PorQ}}
-		    #$r = p/q
-		    #print Dumper $r;#P Q
-		    #print Dumper $corpusdata{"corpus"}{$q}{$w}{$e}{$r}; # [ ]
-		    #die ;
-		    foreach (@{$corpusdata{"corpus"}{$q}{$w}{$e}{$r}}){
-			#this is an array?
-			#die $t;
-			my $t = $_;
-			print Dumper $t;
-			push(@{$item{"ps"}{$r}},$t);
-		    }
-		    #push(@{$item{"ps"}},$corpusdata{"corpus"}{$q}{$w}{$e}{$r});
-		}
-		push(@{$corpusnewdata{"corpus"}{$q}{$w}{"item"}}, \%item);
-	    }
-	}
-	
-    }
-# Create corpus metadatafile for the whole corpus
-    &writetofile("CORPUS_META", \%corpusnewdata);
 
 # list of combos    
     &writetofile("combos", \%combos);
@@ -144,6 +194,7 @@ sub ItemStats{
 sub doQstats{
     my $filename = shift;
     my $shortname = shift;
+    my $extradir = shift;
     my $sumlines = 0;
     my $sumgraphemes = 0;
     
@@ -191,12 +242,13 @@ sub doQstats{
 
     &checkPQdataStructure;
 
-    &writetofile($shortname, \%PQdata);
+    &writetofile($shortname, \%PQdata, $extradir);
 }
 
 sub doPstats{
     my $filename = shift;
     my $shortname = shift;
+    my $extradir = shift;
     my $sumlines = 0;
     my $sumgraphemes = 0;
     
@@ -237,7 +289,7 @@ sub doPstats{
 
     &checkPQdataStructure;
 
-    &writetofile($shortname,\%PQdata);
+    &writetofile($shortname,\%PQdata, $extradir);
 }
 
 
@@ -330,7 +382,7 @@ sub getMetaData{  # find core metadata fields and add them to each itemfile [$PQ
     }
     else {
         # append to file NewLangCodes.txt
-        &writetoerror ("NewLangCodes.txt", localtime." Project: ".$PQdata{"project"}.", text ".$PQnumber.": ".$PQdata{"language"});
+        &writetoerror ("NewLangCodes.txt", localtime(time)." Project: ".$PQdata{"project"}.", text ".$PQnumber.": ".$PQdata{"language"});
     }
     
 #   in SAA not given in metadata, but in xtf-file under
@@ -491,7 +543,7 @@ sub getStructureData{
 	elsif ($type eq "lgs") { # analyse l line, disregard lgs line (even though order on tablet - there doesn't seem to be an automatic link between the elements in the lgs and the words in l) 
 	    # NOTE: this partly distorts the data as the order in which the words are written is not the order given in l (hence the note (lgs) to the label).
 	    # in dcclt: P225958, P231055, P240986, P247847, P247848, P332923, Q000003, Q000014
-	    #&writetoerror ("PossibleProblems.txt", localtime."Project: ".$thisCorpus.", text ".$thisText.": lgs");
+	    #&writetoerror ("PossibleProblems.txt", localtime(time)."Project: ".$thisCorpus.", text ".$thisText.": lgs");
 	    foreach my $j (@speciallines) {
 		my $kind = $j->{att}->{"type"}?$j->{att}->{"type"}:"";
 		if ($kind ne "lgs") {
@@ -506,7 +558,7 @@ sub getStructureData{
 	    $structdata{'no_lines'}++;
 	}
 	else { # nts: STEVE: does this still exist??? *** if so, still has to go through getLineData 
-	    &writetoerror ("PossibleProblems.txt", localtime."Project: ".$thisCorpus.", text ".$thisText.": nts");
+	    &writetoerror ("PossibleProblems.txt", localtime(time)."Project: ".$thisCorpus.", text ".$thisText.": nts");
 	    $localdata->{"type"} = $type;
 	    $localdata->{"label"} = $label;
 	    push (@{$structdata{"line"}}, $localdata);
@@ -591,7 +643,7 @@ sub getLineData {
 		my @nonwElements = $i->children();
 		my $no_els = scalar (@nonwElements);
 		if ($no_els > 1) {
-		    &writetoerror ("PossibleProblems.txt", localtime."Project: ".$thisCorpus.", text ".$thisText.", ".$label.": more than one element in g:nonw in surro.");
+		    &writetoerror ("PossibleProblems.txt", localtime(time)."Project: ".$thisCorpus.", text ".$thisText.", ".$label.": more than one element in g:nonw in surro.");
 		}
 		$nonwLang = $i->{att}->{"xml:lang"}?$i->{att}->{"xml:lang"}:"noLang";
 		my $tempdata = {};
@@ -711,7 +763,7 @@ sub getLineData {
     foreach my $nw (@nonw) {
 	my $type = $nw->{att}->{"type"}?$nw->{att}->{"type"}:"";
 	if (($type ne "dollar") && ($type ne "punct") && ($type ne "excised"))
-	    { &writetoerror ("PossibleProblems.txt", localtime."Project: ".$thisCorpus.", text ".$thisText.": nonw of type ".$type."."); }
+	    { &writetoerror ("PossibleProblems.txt", localtime(time)."Project: ".$thisCorpus.", text ".$thisText.": nonw of type ".$type."."); }
     
 	# "comment" | "dollar" | "excised" | "punct" | "vari" - check still 'type="comment"' and 'vari' - keep checking *** 
 	# dollar: P270855; P335915; P336778; P348045; P363582; P381761; Q003232
@@ -738,7 +790,7 @@ sub getLineData {
 		    &savePunct($sign, $break, $lang, $label, "", "", ""); # these signs are saved under signs.
 		}	
 		elsif (($tag eq 'g:v') || ($tag eq 'g:s')) { # this does not yet occur - keep checking ***
-		    &writetoerror ("PossibleProblems.txt", localtime."Project: ".$thisCorpus.", text ".$thisText.": nonw of type ".$type.", with tag ".$tag);
+		    &writetoerror ("PossibleProblems.txt", localtime(time)."Project: ".$thisCorpus.", text ".$thisText.": nonw of type ".$type.", with tag ".$tag);
 		    $sign = $i->text;
 		    # these signs are NOT collected under signs or words.
 		}
@@ -757,7 +809,7 @@ sub getLineData {
 		    $sign = $i->{att}->{"g:type"}?$i->{att}->{"g:type"}:"";
 		    my $break = $i->{att}->{"g:break"}?$i->{att}->{"g:break"}:"preserved";
 		    &savePunct($sign, $break, $lang, $label, "excised", "", ""); # these signs are saved under signs.
-		    &writetoerror ("PossibleProblems.txt", localtime."Project: ".$thisCorpus.", text ".$thisText.": excised punctuation");
+		    &writetoerror ("PossibleProblems.txt", localtime(time)."Project: ".$thisCorpus.", text ".$thisText.": excised punctuation");
 		    
 		}
 		else { # e.g. in P365126; P363582 [g:d and g:s]; P363419; Q001870; P296713 [g:v]; Q003232; P334914 [g:d, g:v]; P348219 [g:n]; P363524
@@ -792,7 +844,7 @@ sub getLineData {
 	    $form =~ s|\(||g; $form =~ s|\)||g; $form =~ s|\&lt;||g; $form =~ s|\&gt;||g; $form =~ s|\&lt;\{||g; $form =~ s|\}\&gt;||g;
 	    
 	    my $wordtype = &typeWord ($form, "");
-	    #&writetoerror ("PossibleProblems.txt", localtime."Project: ".$thisCorpus.", text ".$thisText.": nonw of form ".$form." type ".$wordtype); 
+	    #&writetoerror ("PossibleProblems.txt", localtime(time)."Project: ".$thisCorpus.", text ".$thisText.": nonw of form ".$form." type ".$wordtype); 
 	    
 	    &saveWord($lang, $form, $conditionWord, $wordtype, "", "", "", $writtenWord, $label, "", "", "", $note, $writtenAs); 
 	    
@@ -817,7 +869,7 @@ sub getLineData {
 	    &saveSigns(\%allWordData, \@arrayWord);
 	}
 	else { # this does not yet occur - keep checking ***
-	    &writetoerror ("PossibleProblems.txt", localtime."Project: ".$thisCorpus.", text ".$thisText.": nonw of type ".$type." check procedure"); 
+	    &writetoerror ("PossibleProblems.txt", localtime(time)."Project: ".$thisCorpus.", text ".$thisText.": nonw of type ".$type." check procedure"); 
 	    my @children = $nw->children();  # can be g:c too, as in P363689; or g:w
 	    foreach my $i (@children) {
 	        my $tag = $i->tag;
@@ -911,7 +963,7 @@ sub getLineData {
 	my $type = $x->{att}->{"g:type"};
 	$localdata->{"kind"} = $type; 	# 'g:type="disambig"' |"user" | "word-absent" | "word-broken" | "word-linecont" | "empty" ??
 	if (($type ne "newline") && ($type ne "ellipsis")) { # - keep checking *** not in test corpus
-	    &writetoerror ("PossibleProblems.txt", localtime."Project: ".$thisCorpus.", text ".$thisText.", ".$label.": x of type ".$type);
+	    &writetoerror ("PossibleProblems.txt", localtime(time)."Project: ".$thisCorpus.", text ".$thisText.", ".$label.": x of type ".$type);
 	}
 	# OK for "newline" | "ellipsis" | 
 	#empty: (only in note, so useless Q003232)
@@ -1394,13 +1446,13 @@ sub splitWord {
 	my @mods = $root->get_xpath("g:m"); $modif = $mods[0]?$mods[0]->text:"";
 	
 	if ((($allo ne "") && ($formvar ne "")) || (($allo ne "") && ($modif ne "")) || (($modif ne "") && ($formvar ne ""))) {
-	    &writetoerror ("PossibleProblems.txt", localtime."Project: ".$thisCorpus.", text ".$thisText.": allo ".$allo." formvar ".$formvar." modif ".$modif);
+	    &writetoerror ("PossibleProblems.txt", localtime(time)."Project: ".$thisCorpus.", text ".$thisText.": allo ".$allo." formvar ".$formvar." modif ".$modif);
 	}
 	
 	if (($value eq "") && ($root->text)) { $value = $root->text; }
 	if ($status eq "") {
 	    $status = $root->{att}->{"g:status"}?$root->{att}->{"g:status"}:"";
-	    #if ($status ne "ok") { &writetoerror ("PossibleProblems.txt", localtime."Project: ".$thisCorpus.", text ".$thisText.": sign status ".$status." value ".$value); }
+	    #if ($status ne "ok") { &writetoerror ("PossibleProblems.txt", localtime(time)."Project: ".$thisCorpus.", text ".$thisText.": sign status ".$status." value ".$value); }
 	    }
 	if ($status ne "ok") {
 	    $open = $root->{att}->{'g:o'}?$root->{att}->{'g:o'}:"";
@@ -1526,9 +1578,13 @@ sub splitWord {
 		elsif ($type eq "containing") { $punct = "x"; } # should elements with containing have the same position?? ***
 		elsif ($type eq "above") { $punct = "&amp;"; }  # other types = joining, reordered, crossing, opposing; how marked ??
 		# add info to previous element
-		my $lastone = scalar @{$splitdata};
-		$splitdata->[$lastone - 1]->{"delim"} = $punct;
-		$splitdata->[$lastone - 1]->{"combo"} = $type;
+		my $lastone =0;
+		if(scalar @{$splitdata}){
+		    $lastone = scalar @{$splitdata}  - 1;
+		    $splitdata->[$lastone - 1]->{"delim"} = $punct;
+		    $splitdata->[$lastone - 1]->{"combo"} = $type;
+		}
+		
 		}
 	    else {
 		($splitdata, $position) = &splitWord($splitdata, $c, $label, $position, "", "", $break, $delim, $group, $for, $status);
@@ -1626,7 +1682,7 @@ sub splitWord {
 	$group = $root->{att}->{"g:type"};
 	
 	if (($group ne "logo") && ($group ne "correction") && ($group ne "reordering") && ($group ne "ligature")) {
-	    &writetoerror ("PossibleProblems.txt", localtime."Project: ".$thisCorpus.", text ".$thisText.": g:gg of type ".$group); # - keep checking ***
+	    &writetoerror ("PossibleProblems.txt", localtime(time)."Project: ".$thisCorpus.", text ".$thisText.": g:gg of type ".$group); # - keep checking ***
 	}
 	
 	if ($root->{att}->{"g:delim"}) { $delim = $root->{att}->{"g:delim"}; }
@@ -1670,7 +1726,7 @@ sub splitWord {
 	    }
 	}
 	else { # some uncovered situation?
-	    &writetoerror ("PossibleProblems.txt", localtime."Project: ".$thisCorpus.", text ".$thisText.": group of type ".$group); # - keep checking ***
+	    &writetoerror ("PossibleProblems.txt", localtime(time)."Project: ".$thisCorpus.", text ".$thisText.": group of type ".$group); # - keep checking ***
 	}
 	&listCombos($root, $label);
     }
@@ -1781,7 +1837,7 @@ sub saveWord {
 	if ($pofs ne "") { $PQdata{"03_Words"}{'lang'}{$lang}{'wordtype'}{$wordtype}{'form'}{$form}{'pofs'} = $pofs; }
 	if ($epos ne "") { $PQdata{"03_Words"}{'lang'}{$lang}{'wordtype'}{$wordtype}{'form'}{$form}{'epos'} = $epos; }
 	if ($split ne "") {
-	    #&writetoerror ("PossibleProblems.txt", localtime."Project: ".$thisCorpus.", text ".$thisText.", ".$label.": split words.");
+	    #&writetoerror ("PossibleProblems.txt", localtime(time)."Project: ".$thisCorpus.", text ".$thisText.", ".$label.": split words.");
 	    $PQdata{"03_Words"}{'lang'}{$lang}{'wordtype'}{$wordtype}{'form'}{$form}{'splitWord'}++; } 
 	if (($note ne "") && ($note ne "correction")) {
 	    if ($note eq "gloss") { $PQdata{"03_Words"}{'lang'}{$lang}{'wordtype'}{$wordtype}{'form'}{$form}{'num_gloss'}++; }
@@ -1956,7 +2012,7 @@ sub saveSigns {
 			else { $category = "x"; $syllabic = ""; } # then the value should be x, so unreadable sign, treat as "x"
 		    } 
 		    else { $category = "syllabic"; $syllabic = "other"; }
-			#&writetoerror ("PossibleProblems.txt", localtime."Project: ".$thisCorpus.", text ".$thisText.": other syllabic value ".$value); } 
+			#&writetoerror ("PossibleProblems.txt", localtime(time)."Project: ".$thisCorpus.", text ".$thisText.": other syllabic value ".$value); } 
 		}
 		else {
 		    if ($tempvalue eq "o") { $category = ""; $syllabic = ""; }  
@@ -2191,16 +2247,23 @@ sub outputtext{
 #issue will ensure if permissions on the parent folder are incorrect
 sub makefile{
     my $path = shift;
-    my $result = `mkdir $path 2>&1`; 
+    my $result = `mkdir $path 2>&1`;
 }
 
 #generic function to write to an file somewhere
 sub writetofile{
     my $shortname = shift; #passed in as a parameter
     my $data = shift; #passed in as a parameter
+    my $extradir = shift; #passed in as a parameter
     my $startpath = $resultspath."/".$resultsfolder;
     &makefile($startpath); #pass to function
     my $destinationdir = $startpath;
+    if($extradir && $extradir ne ""){
+	$destinationdir .= "/".$extradir;
+	print "MAKEEXTRA".$destinationdir;
+	&makefile($destinationdir);
+    }
+    
     print $destinationdir."/".$shortname;
     if((defined $data) && ($data ne "")){
     #    create a file called the shortname - allows sub sectioning of error messages
@@ -2217,10 +2280,17 @@ sub writetofile{
 sub writetoerror{
     my $shortname = shift; #passed in as a parameter
     my $error = shift; #passed in as a parameter
+    my $extradir = shift; #passed in as a parameter
     my $startpath = $errorfile."/".$errorpath;
     &makefile($startpath); #pass to function
-    
     my $destinationdir = $startpath;
+    if($extradir && $extradir ne ""){
+	$destinationdir .= "/".$extradir;
+	
+	&makefile($destinationdir);
+    }
+    
+    
     print $destinationdir."/".$shortname;
 #    create a file called the shortname - allows sub sectioning of error messages
     open(SUBFILE2, ">>".$destinationdir."/".$shortname) or die "Couldn't open: $!";
