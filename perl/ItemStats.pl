@@ -49,6 +49,8 @@ $langmatrix{"lang h"} = "Hittite"; $langmatrix{"lang hit"} = "Hittite";
 $langmatrix{"lang s"} = "Sumerian"; $langmatrix{"lang sux"} = "Sumerian"; $langmatrix{"sux"} = "Sumerian"; $langmatrix{"lang eg"} = "Sumerian"; $langmatrix{"sux-x-emegir"} = "Sumerian"; # The abbreviation eg stands for Emegir (main-dialect Sumerian)
 
 $langmatrix{"sux akk"} = "Sumerian - Akkadian";
+$langmatrix{"sux-x-emesal sux akk"} = "Emesal - Sumerian - Akkadian";
+$langmatrix{"sux-x-emesal"} = "Emesal";
 $langmatrix{"akk-x-stdbab sux"} = "Standard Babylonian - Sumerian"; 
 
 my %config;
@@ -105,27 +107,6 @@ if($#ARGV==2){
 	}
     }
     
-    &pivotCorpusData($filepath);
-
-    &writetofile("combos", \%combos, $filepath);
-    
-    &writetofile("CompilationWords", \%compilationERWords, $filepath); # maybe also to be split later TODO
-    
-    # compilations for ER
-    foreach my $PQ (keys %compilationERSigns) {
-	foreach my $lang (keys %{$compilationERSigns{$PQ}{'lang'}}){
-	    &writetofile("SIGNS_".$PQ."_LANG_".$lang, $compilationERSigns{$PQ}{'lang'}{$lang}, $filepath);
-	}
-    }
-    
-}
-else{
-    &FullStats();
-}
-
-sub pivotCorpusData{
-    my $fileprefix = shift;
-
     my %corpusnewdata;
     #slight pivot of corpus data
     foreach my $q (keys %{$corpusdata{"corpus"}}){
@@ -181,11 +162,11 @@ sub FullStats{
     &writetofile("combos", \%combos);
     
 # compilations for ER
-#    foreach my $PQ (keys %compilationERSigns) {
-#	foreach my $lang (keys $compilationERSigns{$PQ}{'lang'}){
-#	    &writetofile("SIGNS_".$PQ."_LANG_".$lang, $compilationERSigns{$PQ}{'lang'}{$lang});
-#	}
-#    }
+    foreach my $PQ (keys %compilationERSigns) {
+	foreach my $lang (keys $compilationERSigns{$PQ}{'lang'}){
+	    &writetofile("SIGNS_".$PQ."_LANG_".$lang, $compilationERSigns{$PQ}{'lang'}{$lang});
+	}
+    }
     
     #&writetofile("CompilationSigns", \%compilationERSigns);
     &writetofile("CompilationWords", \%compilationERWords); # maybe also to be split later TODO
@@ -592,9 +573,10 @@ sub getLineData {
     my $root = shift;
     my $label = shift;
     my $note = shift || "";
+    my $writtenAs = shift || "";
+    
     my %linedata = ();
     my $localdata = {};
-    my $writtenAs = shift || "";
     
     # cells, fields, alignment groups, l.inner
     my $sumgraphemes =0;
@@ -996,9 +978,15 @@ sub savePunct {
     $PQdata{"02_Signs"}{'lang'}{$lang}{"category"}{$category}{"state"}{$break}{'num'}++;
     if ($ditto eq "") {
 	push (@{$PQdata{"02_Signs"}{'lang'}{$lang}{"category"}{$category}{"value"}{$sign}{"state"}{$break}{"line"}}, $label);
-	}
+    }
     else { # as gw can be a bit nonsensical (esp. if existing of several words), I'm not yet including it. Don't yet know if there's any need. Maybe check again later ***
 	push (@{$PQdata{"02_Signs"}{'lang'}{$lang}{"category"}{$category}{"value"}{$sign}{$ditto}{$cf}{"state"}{$break}{"line"}}, $label);
+    }
+    if (($break eq "preserved") || ($break eq "damaged") || ($break eq "excised")) {
+	$PQdata{"02_Signs"}{'lang'}{$lang}{"category"}{$category}{'All_attested'}++;
+	$PQdata{"02_Signs"}{'lang'}{$lang}{"category"}{$category}{'Punct_attested'}++;
+	$PQdata{"02_Signs"}{'lang'}{$lang}{"category"}{$category}{"value"}{$sign}{'All_attested'}++;
+	$PQdata{"02_Signs"}{'lang'}{$lang}{"category"}{$category}{"value"}{$sign}{'Punct_attested'}++;
     }
     
     my $PQ = substr($thisText, 0, 1);
@@ -1014,6 +1002,13 @@ sub savePunct {
     else { # as gw can be a bit nonsensical (esp. if existing of several words), I'm not yet including it. Don't yet know if there's any need. Maybe check again later ***
 	push (@{$compilationERSigns{$PQ}{'lang'}{$lang}{"category"}{$category}{"value"}{$sign}{$ditto}{$cf}{"state"}{$break}{"line"}}, $label);
     }
+    if (($break eq "preserved") || ($break eq "damaged") || ($break eq "excised")) {
+	$compilationERSigns{$PQ}{'lang'}{$lang}{"category"}{$category}{'All_attested'}++;
+	$compilationERSigns{$PQ}{'lang'}{$lang}{"category"}{$category}{'Punct_attested'}++;
+       $compilationERSigns{$PQ}{'lang'}{$lang}{"category"}{$category}{"value"}{$sign}{'All_attested'}++;
+       $compilationERSigns{$PQ}{'lang'}{$lang}{"category"}{$category}{"value"}{$sign}{'Punct_attested'}++;
+    }
+
     
 #    $compilationERSigns{"02_Signs"}{'lang'}{$lang}{'total'}++; # total number of signs per language
 #    $compilationERSigns{"02_Signs"}{'lang'}{$lang}{"state"}{$break}{'total'}++;
@@ -1070,7 +1065,7 @@ sub checkPQdataStructure{
 }
 
 sub formWord{
-    my @arrayWord = @{$_[0]};;
+    my @arrayWord = @{$_[0]};
     
     my $writtenWord = "";
     my $signs = ();
@@ -1123,8 +1118,12 @@ sub formWord{
 	my $value = $thing->{'value'};
 	if ($value eq "") { $noSign++; } # signs with no value shouldn't be counted (are probably newlines!!!) 
 	
-	if ($thing->{"type"} && ($thing->{"type"} eq "semantic" || $thing->{"type"} eq "phonetic")) { # determinatives and phonetic complements get {}
+	if ($thing->{"type"} && ($thing->{"type"} eq "semantic")) { # determinatives get {}
 	    $value = "{".$value."}";
+	}
+	
+	if ($thing->{"type"} && ($thing->{"type"} eq "phonetic")) { # phonetic complements get {+}
+	    $value = "{+".$value."}";
 	}
 	
 	if (($previousStatus eq "ok") && ($status eq "ok")) {
@@ -1973,7 +1972,7 @@ sub saveSigns {
 		$syllables{"CVC"} = 1; $syllables{"CVCV"} = 1; # taken out, maybe better to treat them together in chart program 
 		$syllables{"VCV"} = 1; 
 		# I'd like to treat CVCV and VCV together with CVC and VC to avoid confusion (then there won't be too much problem with the differing opinions of scholars).
-		# Moreover, on CVC instead of CVCV in NA, cf. Hämeen-Anttila par. 1.2.1
+		# Moreover, on CVC instead of CVCV in NA, cf. HÃ¤meen-Anttila par. 1.2.1
 
 		my $tempvalue = $sign->{'base'}?$sign->{'base'}:$value;
 		
@@ -2000,19 +1999,19 @@ sub saveSigns {
 		#if (($syllabic eq "VCV") && (substr($tempvalue, 0, 1) eq substr($tempvalue, 2, 1))){ 
 		#    if ($tempvalue ne "ana") { $syllabic = "VC"; }
 		#    #print "\nVCV".$tempvalue;
-		## check IGI as ini ***  cf. Hämeen-Anttila
+		## check IGI as ini ***  cf. HÃ¤meen-Anttila
 		#}
 		
-		if ($role eq "semantic") {
-		    $syllabic = ""; $category = "determinative";
-		}
+		if ($role eq "semantic") { $syllabic = ""; $category = "determinative"; }
+		elsif ($role eq "phonetic") { $category = "phonetic"; }
+		
 		elsif (!($syllables{$syllabic})) { 
 		    if ($syllabic eq "C") {
 			if (($tempvalue eq "d") || ($tempvalue eq "m") || ($tempvalue eq "f")) { $category = "determinative"; $syllabic = ""; }
 			else { $category = "x"; $syllabic = ""; } # then the value should be x, so unreadable sign, treat as "x"
 		    } 
 		    else { $category = "syllabic"; $syllabic = "other"; }
-			#&writetoerror ("PossibleProblems.txt", localtime(time)."Project: ".$thisCorpus.", text ".$thisText.": other syllabic value ".$value); } 
+			#&writetoerror ("PossibleProblems.txt", localtime."Project: ".$thisCorpus.", text ".$thisText.": other syllabic value ".$value); }
 		}
 		else {
 		    if ($tempvalue eq "o") { $category = ""; $syllabic = ""; }  
@@ -2030,6 +2029,8 @@ sub saveSigns {
 		else { $category = "nonbase"; }
 	    }
 	    if ($role eq "semantic") { 	$category = "determinative"; }
+	    elsif ($role eq "phonetic") { $category = "phonetic"; }
+	    elsif ($category eq 'g:s') { $category = "logogram"; }
         }
         else {
 	# TODO different languages ***
@@ -2075,17 +2076,40 @@ sub saveSign {
     $PQdata{"02_Signs"}{'lang'}{$lang}{"zlang_total_wordtype"}{$wordtype}{'total'}++;
     $PQdata{"02_Signs"}{'lang'}{$lang}{"zlang_total_wordtype"}{$wordtype}{'state'}{$break}{'num'}++;
     $PQdata{"02_Signs"}{'lang'}{$lang}{"category"}{$category}{'total'}++; # total number of signs per language and category
+    if (($break eq "preserved") || ($break eq "damaged") || ($break eq "excised")) {
+	   $PQdata{"02_Signs"}{'lang'}{$lang}{"category"}{$category}{'All_attested'}++;
+	   $PQdata{"02_Signs"}{'lang'}{$lang}{"category"}{$category}{$wordtype.'_attested'}++;
+	}
+    
     $PQdata{"02_Signs"}{'lang'}{$lang}{"category"}{$category}{"state"}{$break}{'num'}++;
     
     if (($category eq "syllabic") && ($syllabic ne "")) {
 	$PQdata{"02_Signs"}{'lang'}{$lang}{"category"}{$category}{"type"}{$syllabic}{'total'}++; # total number of signs
-        $PQdata{"02_Signs"}{'lang'}{$lang}{"category"}{$category}{"type"}{$syllabic}{"state"}{$break}{'num'}++;
+        if (($break eq "preserved") || ($break eq "damaged") || ($break eq "excised")) {
+	    $PQdata{"02_Signs"}{'lang'}{$lang}{"category"}{$category}{"type"}{$syllabic}{'All_attested'}++;
+	    $PQdata{"02_Signs"}{'lang'}{$lang}{"category"}{$category}{"type"}{$syllabic}{$wordtype.'_attested'}++;
+	}
+	$PQdata{"02_Signs"}{'lang'}{$lang}{"category"}{$category}{"type"}{$syllabic}{"state"}{$break}{'num'}++;
 	&abstractSigndata(\%{$PQdata{"02_Signs"}{'lang'}{$lang}{"category"}{$category}{"type"}{$syllabic}}, $value, $base, $allo, $formvar, $modif, $wordtype, $pos, $gw, $cf, $break, $writtenWord, $label, $group, $for);
     }
     elsif (($role eq "semantic") || ($role eq "phonetic")) {
 	$PQdata{"02_Signs"}{'lang'}{$lang}{"category"}{$category}{"prePost"}{$prePost}{"total"}++;
+	if (($break eq "preserved") || ($break eq "damaged") || ($break eq "excised")) {
+	    $PQdata{"02_Signs"}{'lang'}{$lang}{"category"}{$category}{"prePost"}{$prePost}{"All_attested"}++;
+	    $PQdata{"02_Signs"}{'lang'}{$lang}{"category"}{$category}{"prePost"}{$prePost}{$wordtype.'_attested'}++;
+    	}
+	if ($syllabic ne "") {
+	    $PQdata{"02_Signs"}{'lang'}{$lang}{"category"}{$category}{"prePost"}{$prePost}{"type"}{$syllabic}{"state"}{$break}{"num"}++;
+	    &abstractSigndata(\%{$PQdata{"02_Signs"}{'lang'}{$lang}{"category"}{$category}{"prePost"}{$prePost}{"type"}{$syllabic}}, $value, $base, $allo, $formvar, $modif, $wordtype, $pos, $gw, $cf, $break, $writtenWord, $label, $group, $for);
+	    if (($break eq "preserved") || ($break eq "damaged") || ($break eq "excised")) {
+		$PQdata{"02_Signs"}{'lang'}{$lang}{"category"}{$category}{"prePost"}{$prePost}{"type"}{$syllabic}{"All_attested"}++;
+		$PQdata{"02_Signs"}{'lang'}{$lang}{"category"}{$category}{"prePost"}{$prePost}{"type"}{$syllabic}{$wordtype.'_attested'}++;
+	    }
+        }
+        else {
+          &abstractSigndata(\%{$PQdata{"02_Signs"}{'lang'}{$lang}{"category"}{$category}{"prePost"}{$prePost}}, $value, $base, $allo, $formvar, $modif, $wordtype, $pos, $gw, $cf, $break, $writtenWord, $label, $group, $for);
+        }
 	$PQdata{"02_Signs"}{'lang'}{$lang}{"category"}{$category}{"prePost"}{$prePost}{"state"}{$break}{"num"}++;
-	&abstractSigndata(\%{$PQdata{"02_Signs"}{'lang'}{$lang}{"category"}{$category}{"prePost"}{$prePost}}, $value, $base, $allo, $formvar, $modif, $wordtype, $pos, $gw, $cf, $break, $writtenWord, $label, $group, $for);
     }
     else {
 	# wordbase only here if Sumerian
@@ -2103,17 +2127,39 @@ sub saveSign {
     $compilationERSigns{$PQ}{'lang'}{$lang}{"zlang_total_wordtype"}{$wordtype}{'total'}++;
     $compilationERSigns{$PQ}{'lang'}{$lang}{"zlang_total_wordtype"}{$wordtype}{'state'}{$break}{'num'}++;
     $compilationERSigns{$PQ}{'lang'}{$lang}{"category"}{$category}{'total'}++; # total number of signs per language and category
+    if (($break eq "preserved") || ($break eq "damaged") || ($break eq "excised")) {
+	   $compilationERSigns{$PQ}{'lang'}{$lang}{"category"}{$category}{'All_attested'}++;
+	   $compilationERSigns{$PQ}{'lang'}{$lang}{"category"}{$category}{$wordtype.'_attested'}++;
+	}
     $compilationERSigns{$PQ}{'lang'}{$lang}{"category"}{$category}{"state"}{$break}{'num'}++;
     
     if (($category eq "syllabic") && ($syllabic ne "")) {
 	$compilationERSigns{$PQ}{'lang'}{$lang}{"category"}{$category}{"type"}{$syllabic}{'total'}++; # total number of signs
-        $compilationERSigns{$PQ}{'lang'}{$lang}{"category"}{$category}{"type"}{$syllabic}{"state"}{$break}{'num'}++;
+        if (($break eq "preserved") || ($break eq "damaged") || ($break eq "excised")) {
+	    $compilationERSigns{$PQ}{'lang'}{$lang}{"category"}{$category}{"type"}{$syllabic}{'All_attested'}++;
+	    $compilationERSigns{$PQ}{'lang'}{$lang}{"category"}{$category}{"type"}{$syllabic}{$wordtype.'_attested'}++;
+	}
+	$compilationERSigns{$PQ}{'lang'}{$lang}{"category"}{$category}{"type"}{$syllabic}{"state"}{$break}{'num'}++;
 	&abstractSigndata(\%{$compilationERSigns{$PQ}{'lang'}{$lang}{"category"}{$category}{"type"}{$syllabic}}, $value, $base, $allo, $formvar, $modif, $wordtype, $pos, $gw, $cf, $break, $writtenWord, $label, $group, $for);
     }
     elsif (($role eq "semantic") || ($role eq "phonetic")) {
 	$compilationERSigns{$PQ}{'lang'}{$lang}{"category"}{$category}{"prePost"}{$prePost}{"total"}++;
+	if (($break eq "preserved") || ($break eq "damaged") || ($break eq "excised")) {
+	    $compilationERSigns{$PQ}{'lang'}{$lang}{"category"}{$category}{"prePost"}{$prePost}{"All_attested"}++;
+	    $compilationERSigns{$PQ}{'lang'}{$lang}{"category"}{$category}{"prePost"}{$prePost}{$wordtype.'_attested'}++;
+    	}
 	$compilationERSigns{$PQ}{'lang'}{$lang}{"category"}{$category}{"prePost"}{$prePost}{"state"}{$break}{"num"}++;
-	&abstractSigndata(\%{$compilationERSigns{$PQ}{'lang'}{$lang}{"category"}{$category}{"prePost"}{$prePost}}, $value, $base, $allo, $formvar, $modif, $wordtype, $pos, $gw, $cf, $break, $writtenWord, $label, $group, $for);
+	if ($syllabic ne "") {
+	    $compilationERSigns{$PQ}{'lang'}{$lang}{"category"}{$category}{"prePost"}{$prePost}{"type"}{$syllabic}{"state"}{$break}{"num"}++;
+	    if (($break eq "preserved") || ($break eq "damaged") || ($break eq "excised")) {
+		$compilationERSigns{$PQ}{'lang'}{$lang}{"category"}{$category}{"prePost"}{$prePost}{"type"}{$syllabic}{"All_attested"}++;
+		$compilationERSigns{$PQ}{'lang'}{$lang}{"category"}{$category}{"prePost"}{$prePost}{"type"}{$syllabic}{$wordtype.'_attested'}++;
+	    }
+	    &abstractSigndata(\%{$compilationERSigns{$PQ}{'lang'}{$lang}{"category"}{$category}{"prePost"}{$prePost}{"type"}{$syllabic}}, $value, $base, $allo, $formvar, $modif, $wordtype, $pos, $gw, $cf, $break, $writtenWord, $label, $group, $for);
+        }
+        else {
+	    &abstractSigndata(\%{$compilationERSigns{$PQ}{'lang'}{$lang}{"category"}{$category}{"prePost"}{$prePost}}, $value, $base, $allo, $formvar, $modif, $wordtype, $pos, $gw, $cf, $break, $writtenWord, $label, $group, $for);
+        }
     }
     else {
 	# wordbase only here if Sumerian
@@ -2166,7 +2212,10 @@ sub abstractSigndata{
         $data->{"value"}{$value}{'num'}++;
 	$data->{"value"}{$value}{"state"}{$break}{'num'}++;
 	if (($break eq "preserved") || ($break eq "damaged") || ($break eq "excised")) {
-	   $data->{"value"}{$value}{'there'} = "yes";
+	   $data->{"value"}{$value}{'All_attested'}++;
+	   $data->{"value"}{$value}{$wordtype.'_attested'}++;
+	   $data->{"value"}{$value}{"pos"}{$pos}{'All_attested'}++;
+	   $data->{"value"}{$value}{"pos"}{$pos}{$wordtype.'_attested'}++;
 	}
 	&abstractSigndata2(\%{$data->{"value"}{$value}{"standard"}{$value}{"wordtype"}{$wordtype}{"pos"}{$pos}}, $cf, $gw, $break, $writtenWord, $label, $group, $for); 
     }
@@ -2174,7 +2223,10 @@ sub abstractSigndata{
 	$data->{"value"}{$base}{'num'}++;
 	$data->{"value"}{$base}{"state"}{$break}{'num'}++;
 	if (($break eq "preserved") || ($break eq "damaged") || ($break eq "excised")) {
-	   $data->{"value"}{$base}{'there'} = "yes";
+	   $data->{"value"}{$base}{'All_attested'}++;
+	   $data->{"value"}{$base}{$wordtype.'_attested'}++;
+	   $data->{"value"}{$base}{"pos"}{$pos}{'All_attested'}++;
+	   $data->{"value"}{$base}{"pos"}{$pos}{$wordtype.'_attested'}++;
 	}
 	# variant types...: form; allo, modif and/or formvar
 	&abstractSigndata2(\%{$data->{"value"}{$base}{$variantType}{$variantMod}{"wordtype"}{$wordtype}{"pos"}{$pos}}, $cf, $gw, $break, $writtenWord, $label, $group, $for); 
