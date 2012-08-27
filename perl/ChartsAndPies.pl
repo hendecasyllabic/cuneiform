@@ -19,10 +19,6 @@ my $projname = "***";
 my $projdir = "../dataoutNEW/";
 my $ogslfile = "../resources/ogsl.xml";
 
-my $language = "Late Babylonian";
-#my $language = "Sumerian";
-my $file = $projdir."SIGNS_P_LANG_".$language.".xml";
-
 my $kind = "All_attested"; # can be any of the word categories too, e.g. Numerical_attested, etc.
 
 my @vowels = ("a", "e", "i", "u");
@@ -43,16 +39,39 @@ my %variousSignsPerValue = ();
 my %numberdata = (); # not yet, needed?
 my %totals = (); # ?
 
-my $file = $projdir."SIGNS_P_LANG_Standard Babylonian.xml";
+#colours for the different categories in the charts
+my %colours;
+$colours{"logogram"} = 1; # red
+$colours{"number"} = 3; # purple
+$colours{"punct"} = 2; # green
+$colours{"syllabic"} = 10; # blue
+$colours{"uncertainReading"} = 5; # orange
+$colours{"determinative"} = 7; 
+$colours{"x"} = 8;
+$colours{"base"} = 9;
+$colours{"nonbase"} = 4;
+$colours{"phonetic"} = 6;
+
+my $logoForms = 0;
+my $logoTotal = 0;
+my $deterForms = 0;
+my $deterTotal = 0;
+
+my $language = "Late Babylonian";
+#my $language = "Sumerian";
+my $file = $projdir."SIGNS_P_LANG_".$language.".xml";
 #was a parameter passed...
 if($#ARGV==2){
     my $filepath = $ARGV[0];
     my $sysdir = $ARGV[1];
     my $filename = $ARGV[2];
     $ogslfile = $sysdir."resources/ogsl.xml";
+    $filename=~m|SIGNS_P_LANG_(.*).xml|;
+    $language = $1;
     $projdir = $sysdir."dataoutNEW/".$filepath."/";
     
     $file = $projdir.$filename;
+    
 }
 else{
     print   header({-charset => 'utf-8'}),
@@ -66,11 +85,12 @@ else{
                                    -src=>"../www/js/genericchart.js"}
 				    ]
                        ),
-        h1('Corpus '.$projname),
-	h2('Language: '.$language.' with data: '.$kind),
-	p ('Note that only actually attested signs are taken into account (thus: preserved, damaged and excised signs); missing, supplied, implied, maybe and erased signs are not.');
-        h1('Corpus');
 }
+
+h1('Corpus '.$projname),
+h2('Language: '.$language.' with data: '.$kind),
+p ('Note that only actually attested signs are taken into account (thus: preserved, damaged and excised signs); missing, supplied, implied, maybe and erased signs are not.');
+h1('Corpus');
 # P_LANG_...xml; Q_LANG_...xml TODO
 
 #&getGlobalSignData($projdir."SIGNS_P_global.xml");
@@ -81,20 +101,53 @@ else{
 
 
 #&getGlobalWordData($projdir."WORDS_P_global.xml"); # TODO: generate global file
-
+  
+my $twigCat = XML::Twig->new(
+			    twig_roots => { 'category' => 1 }
+			    );
+$twigCat->parsefile($file);
+my $CatRoot = $twigCat->root;
+$twigCat->purge;
 # for each language... TODO
 # all languages at the moment in CompilationSigns and CompilationWords!!!
-&makeCategoryDonut($file, $kind);
-&makeSignsPerCategoryDonut($file, $kind);
-&makeLogogramChart($file, $kind);
-&makeDeterminativeChart($file, $kind);
-&prepareSyllabicTable($file, $kind);
-&printSyllabicTables($file, $kind);
-&makePhoneticList($file, $kind);
+my @data;	#create an array of stuff
+push(@data, &makeCategoryDonut($CatRoot, $kind));
+push(@data, &makeSignsPerCategoryDonut($CatRoot, $kind));
+push(@data, &makeLogogramChart($CatRoot, $kind));
+push(@data, &makeDeterminativeChart($CatRoot, $kind));
 
-&makeCategoryDonut($file);
-&makeSignsPerCategoryDonut($file);
-&makeSyllabicTable($file);
+foreach my $i (@data){
+    print $i->{'script'};
+}
+
+foreach my $i (@data){
+    print "<div class='piechart'>";
+    print h2($i->{'h2'});
+    print $i->{'div'};
+    print "</div>";
+}
+
+print "\n <script> \$(document).ready(function() {";
+foreach my $i (@data){
+    print $i->{'onready'};
+}
+print "\n }); </script>";
+
+    #$data{'h2'} =  "\nDeterminative sign use";
+    #$data{'div'} = "\n<div id='container4' style='min-width: 400px; height: 400px; margin: 0 auto'></div>";
+    #$data{'script'} = $pielogo;
+    #$data{'onready'} = $pieready;
+    
+
+
+&prepareSyllabicTable($CatRoot, $kind);
+&printSyllabicTables($kind);
+&makePhoneticList($CatRoot, $kind);
+
+#
+#&makeCategoryDonut($CatRoot);
+#&makeSignsPerCategoryDonut($CatRoot);
+#&makeSyllabicTable($file);
 
 	#p({-style => 'text-indent:50px' },'- '.$preservedwords.' fully preserved words;'),
 	#p({-style => 'text-indent:50px' },'- '.$damagedwords.' partially preserved words;'),
@@ -134,21 +187,13 @@ sub getGlobalWordData {
 # makeCategoryDonut charts the total number of signs per category (excluding the missing ones)
 # with subdivisions for syllabic signs and determinatives
 sub makeCategoryDonut {
-    my $file = shift;
+    my $CatRoot = shift;
     my $wordtype = shift; # should be possible to do! TODO
-    
-    my $twigCat = XML::Twig->new(
-				twig_roots => { 'category' => 1 }
-				);
-    $twigCat->parsefile($file);
-    my $CatRoot = $twigCat->root;
-    $twigCat->purge;
-
-    print h2("\nGeneral distribution of the different categories of signs across the corpus");
+    #print h2("\nGeneral distribution of the different categories of signs across the corpus");
     
     # prepare Donut    
-    my $donut = "<div id='container1' style='min-width: 400px; height: 400px; margin: 0 auto'></div><script>";
-    $donut .= " var currentdata1 = [";
+    my $donut = "<script>";
+    $donut .= "\n var currentdata1 = [";
     
     my @categories = $CatRoot->get_xpath('category');
     my @mainCategories;
@@ -168,7 +213,7 @@ sub makeCategoryDonut {
 		my $n = $p->{att}->{name};
 		my $t = &totalNum($p, $wordtype);
 		#print p("category ".$n." totalCat ".$t);
-		push(@subCategories, $n);
+		push(@subCategories, $n." (".$t.")");
 		push(@catdata, $t);
 	    }
 	}
@@ -179,7 +224,7 @@ sub makeCategoryDonut {
 		my $t = &totalNum($p, $wordtype);
 		#print p("category ".$n." totalCat ".$t);
 		#if ($n eq "CVCV") { print "\nCVCV = ".$t; }
-		push(@subCategories, $n);
+		push(@subCategories, $n." (".$t.")");
 		push(@catdata, $t);
 	    }
 	}
@@ -187,16 +232,16 @@ sub makeCategoryDonut {
 	    my $n = $cat->{att}->{name};
 	    my $t = &totalNum($cat, $wordtype);
 	    #print p("category ".$n." totalCat ".$t);
-	    push(@subCategories, $n);
+	    push(@subCategories, $n." (".$t.")");
 	    push(@catdata, $t);
 	}
 	
 	# TODO: Question: for some reason really small categories are not printed on screen (e.g. category CVCV attested 0.02%)
 	# TODO: how to get the actual numbers of attestations printed along the percentages?
 	
-	#if (!($colours{$name})) { print " no colour for ".$name.". "; }
+	if (!($colours{$name})) { print " no colour for ".$name.". "; $colours{$name} = "0";}
 	
-	my $writeme = "{   y: ".$totalCat.",";
+	my $writeme = "\n{   y: ".$totalCat.",";
 	$writeme .= "      color: colors[".$colours{$name}."],";
 	$writeme .= "          drilldown: {";
 	$writeme .= "                   name: '".$cat."',";
@@ -204,7 +249,7 @@ sub makeCategoryDonut {
 	$writeme .= "                   data: [".join(",",@catdata)."],";
 	$writeme .= "                   color: colors[".$colours{$name}."]";
 	$writeme .= "      }";
-	$writeme .= "  }";
+	$writeme .= "\n  }";
     
 	push(@output,$writeme);
 	
@@ -215,13 +260,20 @@ sub makeCategoryDonut {
     
     $donut .= join(",",@output);
     $donut .= " ]";
-    $donut .= "; \$(document).ready(function() {";
+    #$donut .= "\n; \$(document).ready(function() {";
     
     my $catlist = join("','",@mainCategories);
-    $donut .= " makeDonut(currentdata1,'Distribution across corpus (attestations)','title2', ['".$catlist."'],'container1');";
-    $donut .= "});</script>";
-
-    print $donut;
+    #$donut .= "\n makeDonut(currentdata1,'Distribution across corpus (attestations)','title2', ['".$catlist."'],'container1');";
+    #$donut .= "\n });";
+    $donut .= "</script>";
+  
+    my %data;
+    $data{'h2'} =  "\nGeneral distribution of the different categories of signs across the corpus";
+    $data{'div'} = "\n<div id='container1' style='min-width: 400px; height: 400px; margin: 0 auto'></div>";
+    $data{'script'} = $donut;
+    $data{'onready'} = "\n makeDonut(currentdata1,'Distribution across corpus (attestations)','title2', ['".$catlist."'],'container1');";
+    
+    return \%data;
 }
 
 # calculate total minus missing ones.
@@ -250,20 +302,14 @@ sub totalNum {
 
 # makeSignsPerCategoryDonut charts the different categories and subcategories according to the number of distinct signs in each
 sub makeSignsPerCategoryDonut {
-    my $file = shift;
+    my $CatRoot = shift;
     my $wordtype = shift; # should be possible to do! TODO
     
-    my $twigCat = XML::Twig->new(
-				twig_roots => { 'category' => 1 }
-				);
-    $twigCat->parsefile($file);
-    my $CatRoot = $twigCat->root;
-    $twigCat->purge;
-    
-    print h2("\nDistribution of the different categories and subcategories according to the number of distinct signs in each");
+    #print h2("\nDistribution of the different categories and subcategories according to the number of distinct signs in each");
     
     # prepare Donut    
-    my $donut = "<div id='container2' style='min-width: 400px; height: 400px; margin: 0 auto'></div><script>";
+    #my $donut = "<div id='container2' style='min-width: 400px; height: 400px; margin: 0 auto'></div>";
+    my $donut = "<script>";
     $donut .= " var currentdata2 = [";
     
     my @categories = $CatRoot->get_xpath('category');
@@ -284,7 +330,7 @@ sub makeSignsPerCategoryDonut {
 		my $n = $p->{att}->{name};
 		my $t = &diffForms($p, $wordtype);
 		$totalForms += $t;
-		push(@subCategories, $n);
+		push(@subCategories, $n." (".$t.")");
 		push(@signsPerCatdata, $t);
 		if ($name eq "determinative") { $deterForms += $totalForms; }
 	    }
@@ -300,7 +346,7 @@ sub makeSignsPerCategoryDonut {
 		my $t = &diffForms($p, $wordtype);
 		$totalForms += $t;
 		#if ($n eq "CVCV") { print "\nCVCV = ".$t; }
-		push(@subCategories, $n);
+		push(@subCategories, $n." (".$t.")");
 		push(@signsPerCatdata, $t);
 	    }
 	}
@@ -308,7 +354,7 @@ sub makeSignsPerCategoryDonut {
 	    my $n = $cat->{att}->{name};
 	    my $t = &diffForms($cat, $wordtype);
 	    $totalForms += $t;
-	    push(@subCategories, $n);
+	    push(@subCategories, $n." (".$t.")");
 	    push(@signsPerCatdata, $t);
 	    if ($name eq "logogram") {
 		$logoForms = $totalForms;
@@ -317,6 +363,8 @@ sub makeSignsPerCategoryDonut {
 		#print ("\n Logograms: total = ".$logoTotal." diff forms = ".$logoForms);
 	    }
 	}
+	
+	if (!($colours{$name})) { print " no colour for ".$name.". "; $colours{$name} = "0";}
 	
 	my $writeme = "{   y: ".$totalForms.",";
 	$writeme .= "      color: colors[".$colours{$name}."],";
@@ -335,13 +383,22 @@ sub makeSignsPerCategoryDonut {
     
     $donut .= join(",",@output);
     $donut .= " ]";
-    $donut .= "; \$(document).ready(function() {";
+    #$donut .= "; \$(document).ready(function() {";
     
     my $catlist = join("','",@mainCategories);
-    $donut .= " makeDonut(currentdata2,'Distribution across corpus (categories)','title2', ['".$catlist."'],'container2');";
-    $donut .= "});</script>";
+    #$donut .= " makeDonut(currentdata2,'Distribution across corpus (categories)','title2', ['".$catlist."'],'container2');";
+    #$donut .= "});";
+    $donut .= "</script>";
 
-    print $donut;
+  
+    my %data;
+    $data{'h2'} =  "\nDistribution of the different categories and subcategories according to the number of distinct signs in each";
+    $data{'div'} = "\n<div id='container2' style='min-width: 400px; height: 400px; margin: 0 auto'></div>";
+    $data{'script'} = $donut;
+    $data{'onready'} = "\n makeDonut(currentdata2,'Distribution across corpus (categories)','title2', ['".$catlist."'],'container2');";
+    
+    return \%data;
+    #print $donut;
 }
 
 sub diffForms {
@@ -363,15 +420,8 @@ sub diffForms {
 # everything by PN, GN, etc.
 
 sub makeLogogramChart {
-    my $file = shift;
+    my $LogoRoot = shift;
     my $wordtype = shift; 
-    
-    my $twigLogo = XML::Twig->new(
-				twig_roots => { 'category' => 1 }
-				);
-    $twigLogo->parsefile($file);
-    my $LogoRoot = $twigLogo->root;
-    $twigLogo->purge;
 
     my $logograms = ($LogoRoot->get_xpath('category[@name="logogram"]'))[0];
     my @values = $logograms->get_xpath('value');
@@ -384,9 +434,10 @@ sub makeLogogramChart {
 	}
     }
         
-    print h1('Logographic sign use');
+    #print h1('Logographic sign use');
 
-    my $pielogo = "<div id='container5' style='min-width: 400px; height: 400px; margin: 0 auto'></div><script>";
+    #my $pielogo = "<div id='container5' style='min-width: 400px; height: 400px; margin: 0 auto'></div>";
+    my $pielogo = "<script>";
     $pielogo .= " var currentdata3 = [";
 
     my $i = 0;
@@ -407,48 +458,53 @@ sub makeLogogramChart {
     if ($remlogo > 0) { $pielogo .= " ['Remaining ".$remlogo." logogram(s) (".$rest.")"."',   ".$rest."],"; }
 
     $pielogo = substr($pielogo,0,length($pielogo)-1);
-    $pielogo .= " ]";
+    $pielogo .= " ];";
 
-    $pielogo .= "; \$(document).ready(function() {";
-    $pielogo .= "   var alldata3 = pieoptions;";
-    $pielogo .= "   alldata3.chart.renderTo = 'container5';"; 
-    $pielogo .= "   alldata3.title.text = 'Logographic distribution across corpus';";
-    $pielogo .= "   alldata3.series[0].data = currentdata3;";
-    $pielogo .= "	chart3 = new Highcharts.Chart(alldata3);";
-    $pielogo .= "});</script>";
+    my $pieready = "";
+    $pieready .= "   var alldata3 = pieoptions;";
+    $pieready .= "   alldata3.chart.renderTo = 'container5';"; 
+    $pieready .= "   alldata3.title.text = 'Logographic distribution across corpus';";
+    $pieready .= "   alldata3.series[0].data = currentdata3;";
+    $pieready .= "	chart3 = new Highcharts.Chart(alldata3);";
+    
+    $pielogo .= "</script>";
 
-    print $pielogo;
+    my %data;
+    $data{'h2'} =  "\nLogographic sign use";
+    $data{'div'} = "\n<div id='container5' style='min-width: 400px; height: 400px; margin: 0 auto'></div>";
+    $data{'script'} = $pielogo;
+    $data{'onready'} = $pieready;
+    
+    return \%data;
+    
+    #print $pielogo;
 }
 
 sub makeDeterminativeChart {
-    my $file = shift;
+    my $DetRoot = shift;
     my $wordtype = shift; 
     
-    my $twigDet = XML::Twig->new(
-				twig_roots => { 'category' => 1 }
-				);
-    $twigDet->parsefile($file);
-    my $DetRoot = $twigDet->root;
-    $twigDet->purge;
 
     my $determinatives = ($DetRoot->get_xpath('category[@name="determinative"]'))[0];
-    my @prePosts = $determinatives->get_xpath('prePost');
-    foreach my $p (@prePosts) {
-	my @values = $p->get_xpath('value');
-	foreach my $v (@values) {
-	    my $test = $v->{att}->{$wordtype}?$v->{att}->{$wordtype}:0;
-	    if ($test > 0) {
-	        my $value = $v->{att}->{name};
-	        my $number = $test;
-	        push(@{$deterdata{"num"}{$number}{"value"}}, $value);
+    if($determinatives){
+	my @prePosts = $determinatives->get_xpath('prePost');
+	foreach my $p (@prePosts) {
+	    my @values = $p->get_xpath('value');
+	    foreach my $v (@values) {
+		my $test = $v->{att}->{$wordtype}?$v->{att}->{$wordtype}:0;
+		if ($test > 0) {
+		    my $value = $v->{att}->{name};
+		    my $number = $test;
+		    push(@{$deterdata{"num"}{$number}{"value"}}, $value);
+		}
 	    }
 	}
     }
         
-    print h1('Determinative sign use');
-
-    my $pielogo = "<div id='container4' style='min-width: 400px; height: 400px; margin: 0 auto'></div><script>";
-    $pielogo .= " var currentdata4 = [";
+    #print h1('Determinative sign use');
+#<div id='container4' style='min-width: 400px; height: 400px; margin: 0 auto'></div>
+    my $pielogo = "\n<script>";
+    $pielogo .= "\n var currentdata4 = [  ";
 
     my $i = 0;
     my $rest = $deterTotal;
@@ -465,33 +521,34 @@ sub makeDeterminativeChart {
 	}
     }
     $remdeter -= ($i + 1);
-    if ($remdeter > 0) { $pielogo .= " ['Remaining ".$remdeter." determinative(s) (".$rest.")"."',   ".$rest."],"; }
+    if ($remdeter > 0) { $pielogo .= "\n ['Remaining ".$remdeter." determinative(s) (".$rest.")"."',   ".$rest."],"; }
 
     $pielogo = substr($pielogo,0,length($pielogo)-1);
-    $pielogo .= " ]";
+    $pielogo .= " ];";
 
-    $pielogo .= "; \$(document).ready(function() {";
-    $pielogo .= "   var alldata4 = pieoptions;";
-    $pielogo .= "   alldata4.chart.renderTo = 'container4';"; 
-    $pielogo .= "   alldata4.title.text = 'Determinative distribution across corpus';";
-    $pielogo .= "   alldata4.series[0].data = currentdata4;";
-    $pielogo .= "	chart4 = new Highcharts.Chart(alldata4);";
-    $pielogo .= "});</script>";
+    my $pieready = "\n   var alldata4 = pieoptions;";
+    $pieready .= "\n   alldata4.chart.renderTo = 'container4';"; 
+    $pieready .= "\n   alldata4.title.text = 'Determinative distribution across corpus';";
+    $pieready .= "\n   alldata4.series[0].data = currentdata4;";
+    $pieready .= "\n	chart4 = new Highcharts.Chart(alldata4);";
+    $pielogo .= "</script>";
 
-    print $pielogo;
+
+    my %data;
+    $data{'h2'} =  "\nDeterminative sign use";
+    $data{'div'} = "\n<div id='container4' style='min-width: 400px; height: 400px; margin: 0 auto'></div>";
+    $data{'script'} = $pielogo;
+    $data{'onready'} = $pieready;
+    
+    return \%data;
+    #print $pielogo;
 }
 
 
 sub prepareSyllabicTable {
-    my $file = shift;
+    my $CatRoot = shift;
     my $wordtype = shift; 
     
-    my $twigCat = XML::Twig->new(
-				twig_roots => { 'category' => 1 }
-				);
-    $twigCat->parsefile($file);
-    my $CatRoot = $twigCat->root;
-    $twigCat->purge;
     
     my @categories = $CatRoot->get_xpath('category');
     my @types = ("V", "CV", "VC", "VCV", "CVC", "CVCV", "other");
@@ -545,7 +602,8 @@ sub prepareSyllabicTable {
 			    # put value in table - make hash TODO HIER
 			}
 		    }
-		#}
+		}
+	    }
 	    }
 	}
     }
@@ -555,7 +613,6 @@ sub prepareSyllabicTable {
 
 
 sub printSyllabicTables {
-    my $file = shift;
     my $wordtype = shift; 
     
     my @types = ("V", "CV", "VC", "VCV", "CVC", "CVCV", "other");
@@ -861,46 +918,46 @@ sub findAttestations {
 }
     
 sub makePhoneticList {
-    my $file = shift;
+    my $FileRoot = shift;
     my $wordtype = shift;
     
-    my $twigFile = XML::Twig->new(
-				  twig_roots => { 'category' => 1 }
-				  );
-    $twigFile->parsefile($file);
-    my $FileRoot = $twigFile->root;
-    $twigFile->purge;
-
     my $phonetics = ($FileRoot->get_xpath('category[@name="phonetic"]'))[0];
-    my @prePosts = $phonetics->get_xpath('prePost');
-    my %phoneticdata = ();
-    foreach my $p (@prePosts) {
-	my $pre = $p->{att}->{name};
-	my @types = $p->get_xpath('type');
-	foreach my $t (@types) {
-	    my @values = $t->get_xpath('value');
-	    my $type = $t->{att}->{name};
-	    foreach my $v (@values) {
-	        my $test = $v->{att}->{$wordtype}?$v->{att}->{$wordtype}:0;
-	        if ($test > 0) {
-	            my $value = $v->{att}->{name};
-		    #print p("value ".$value);
-	            #my $number = $test;
-		    push(@{$phoneticdata{"prePost"}{$pre}{"type"}{$type}{"value"}}, $value);
+    if($phonetics){
+	my @prePosts = $phonetics->get_xpath('prePost');
+	my %phoneticdata = ();
+	foreach my $p (@prePosts) {
+	    my $pre = $p->{att}->{name};
+	    my @types = $p->get_xpath('type');
+	    foreach my $t (@types) {
+		my @values = $t->get_xpath('value');
+		my $type = $t->{att}->{name};
+		foreach my $v (@values) {
+		    my $test = $v->{att}->{$wordtype}?$v->{att}->{$wordtype}:0;
+		    if ($test > 0) {
+			my $value = $v->{att}->{name};
+			#print p("value ".$value);
+			#my $number = $test;
+			push(@{$phoneticdata{"prePost"}{$pre}{"type"}{$type}{"value"}}, $value);
+		    }
 		}
 	    }
 	}
-    }
-
-# alphabetically organized list of phonetic values within pre/post and CV etc.
-    print h1("Phonetic complements");
-    foreach my $p (keys %{$phoneticdata{"prePost"}}) {
-	print h3($p);
-	foreach my $t (sort keys %{$phoneticdata{"prePost"}{$p}{"type"}}) {
-	    print h3("Type ".$t);
-	    while (my ($k, $v) = sort each(@{$phoneticdata{"prePost"}{$p}{"type"}{$t}{"value"}})) {
-		print p("Value: ".$v);
-		&findAttestations($file, $wordtype, "phonetic", $p, $t, $v);
+    
+    
+    # alphabetically organized list of phonetic values within pre/post and CV etc.
+	print h1("Phonetic complements");
+	foreach my $p (keys %{$phoneticdata{"prePost"}}) {
+	    print h3($p);
+	    foreach my $t (sort keys %{$phoneticdata{"prePost"}{$p}{"type"}}) {
+		print h3("Type ".$t);
+		if($phoneticdata{"prePost"}{$p}{"type"}{$t}{"value"}){
+		    
+		    my @data = @{$phoneticdata{"prePost"}{$p}{"type"}{$t}{"value"}};
+		    foreach my $i (@data){
+			print p("Value: ".$i);
+			&findAttestations($file, $wordtype, "phonetic", $p, $t, $i);
+		    }
+		}
 	    }
 	}
     }

@@ -70,15 +70,14 @@ my $resultsfolder = "/dataoutNEW";
 my @splitrefs; # list of xml:id/headref; keep track of the split words that have been analysed through headform, so that they're not analysed twice.
 
 if($#ARGV==2){
-    my $filepath = $ARGV[0];
+    my $fileprefix = "datasubset/";
+    my $filepath = $fileprefix. $ARGV[0];
     my @files = split(/,/, $ARGV[1]);
     my $sysdir = $ARGV[2];
     $startpath = $sysdir;
     $errorfile = $sysdir.$errorfile;
     $resultspath = $sysdir;
-    
     my %hash;
-    
     foreach my $item(@files) {
       my ($i,$j)= split(/:/, $item);
       $hash{$item} = 1;
@@ -96,6 +95,7 @@ if($#ARGV==2){
             #my $shortname = $1;
 	    $thisText = $1;
 	    if($hash{$thisText}){
+		
 		&outputtext("\nShortName: ". $thisText);
 		if($thisText =~ m|^Q|gsi){
 		    &doQstats($filename, $thisText, $filepath);
@@ -107,6 +107,28 @@ if($#ARGV==2){
 	}
     }
     
+    &pivotCorpusData($filepath);
+
+
+# list of combos    
+    &writetofile("combos", \%combos, $filepath);
+    
+# compilations for ER
+    foreach my $PQ (keys %compilationERSigns) {
+	foreach my $lang (keys %{$compilationERSigns{$PQ}{'lang'}}){
+	    &writetofile("SIGNS_".$PQ."_LANG_".$lang, $compilationERSigns{$PQ}{'lang'}{$lang}, $filepath);
+	}
+    }
+    
+    #&writetofile("CompilationSigns", \%compilationERSigns);
+    &writetofile("CompilationWords", \%compilationERWords, $filepath); # maybe also to be split later TODO
+    
+}
+else{
+    &FullStats();    
+}
+sub pivotCorpusData {
+    my $fileprefix = shift;
     my %corpusnewdata;
     #slight pivot of corpus data
     foreach my $q (keys %{$corpusdata{"corpus"}}){
@@ -163,7 +185,7 @@ sub FullStats{
     
 # compilations for ER
     foreach my $PQ (keys %compilationERSigns) {
-	foreach my $lang (keys $compilationERSigns{$PQ}{'lang'}){
+	foreach my $lang (keys %{$compilationERSigns{$PQ}{'lang'}}){
 	    &writetofile("SIGNS_".$PQ."_LANG_".$lang, $compilationERSigns{$PQ}{'lang'}{$lang});
 	}
     }
@@ -2312,7 +2334,6 @@ sub writetofile{
     my $destinationdir = $startpath;
     if($extradir && $extradir ne ""){
 	$destinationdir .= "/".$extradir;
-	print "MAKEEXTRA".$destinationdir;
 	&makefile($destinationdir);
     }
     
