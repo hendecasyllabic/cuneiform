@@ -91,7 +91,7 @@ foreach my $r (keys %{$totals{"role"}}){
     }
 }
 
-my $count =0;
+my $count =1;
 my @output;
 my @firstcatnames;
 foreach my $t (keys %donut){
