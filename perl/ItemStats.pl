@@ -116,6 +116,7 @@ if($#ARGV==2){
 # compilations for ER
     foreach my $PQ (keys %compilationERSigns) {
 	foreach my $lang (keys %{$compilationERSigns{$PQ}{'lang'}}){
+	    $lang=~s| |_|g;
 	    &writetofile("SIGNS_".$PQ."_LANG_".$lang, $compilationERSigns{$PQ}{'lang'}{$lang}, $filepath);
 	}
     }

@@ -71,7 +71,6 @@ if($#ARGV==2){
     $projdir = $sysdir."dataoutNEW/".$filepath."/";
     
     $file = $projdir.$filename;
-    
 }
 else{
     print   header({-charset => 'utf-8'}),
@@ -424,13 +423,15 @@ sub makeLogogramChart {
     my $wordtype = shift; 
 
     my $logograms = ($LogoRoot->get_xpath('category[@name="logogram"]'))[0];
-    my @values = $logograms->get_xpath('value');
-    foreach my $v (@values) {
-	my $test = $v->{att}->{$wordtype}?$v->{att}->{$wordtype}:"no";
-	if ($test ne "no") {
-	    my $value = $v->{att}->{name};
-	    my $number = $test;
-	    push(@{$logodata{"num"}{$number}{"value"}}, $value);
+    if($LogoRoot->get_xpath('category[@name="logogram"]')){
+	my @values = $logograms->get_xpath('value');
+	foreach my $v (@values) {
+	    my $test = $v->{att}->{$wordtype}?$v->{att}->{$wordtype}:"no";
+	    if ($test ne "no") {
+		my $value = $v->{att}->{name};
+		my $number = $test;
+		push(@{$logodata{"num"}{$number}{"value"}}, $value);
+	    }
 	}
     }
         
