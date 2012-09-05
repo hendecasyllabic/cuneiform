@@ -62,7 +62,7 @@ my $logoTotal = 0;
 my $deterForms = 0;
 my $deterTotal = 0;
 
-my $language = "Late Babylonian";
+my $language = "Standard Babylonian"; #should go through many languages though ***
 #my $language = "Sumerian";
 my $file = $projdir."SIGNS_P_LANG_".$language.".xml";
 #was a parameter passed...
