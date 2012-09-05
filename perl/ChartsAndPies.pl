@@ -11,6 +11,8 @@ binmode STDOUT, ":utf8";
 #http://perlmeme.org/tutorials/cgi_script.html
 #charts with http://www.highcharts.com/
 
+# Question: is it possible to represent everything between curly brackets in superscript in html ? TODO Chris?
+
 # with logograms:
 # ? plural markers (-MESZ, -ME, -DIDLI), dual (-MIN, .2), and ditto signs distinguished somehow in Oracc? not really
 # TODO: logographic suffixes ***
@@ -24,6 +26,7 @@ my $kind = "All_attested"; # can be any of the word categories too, e.g. Numeric
 my @vowels = ("a", "e", "i", "u");
 my @consonants = ("\x{02BE}", "b", "d", "g", "h", "i", "k", "l", "m", "n", "p", "q", "r", "s", "\x{1E63}", "\x{0161}", "t", "\x{1E6D}", "z");
 my @finalconsonants = ("\x{02BE}", "b/p", "d/t/\x{1E6D}", "g/k/q", "h", "l", "m", "n", "r", "\x{0161}", "z/s/\x{1E63}");
+my @finalConsonantsNoAleph = ("b", "d", "g", "h", "i", "k", "l", "m", "n", "p", "q", "r", "s", "\x{1E63}", "\x{0161}", "t", "\x{1E6D}", "z");
 my @tableheaders = ("V", "CV", "CVC", "VC", "VCV", "CVC", "CVCV", "other");
 
 my %groups = ();
@@ -52,6 +55,8 @@ $colours{"base"} = 9;
 $colours{"nonbase"} = 4;
 $colours{"phonetic"} = 6;
 
+my $tempcounter = 0;
+
 my $logoForms = 0;
 my $logoTotal = 0;
 my $deterForms = 0;
@@ -61,6 +66,7 @@ my $language = "Late Babylonian";
 #my $language = "Sumerian";
 my $file = $projdir."SIGNS_P_LANG_".$language.".xml";
 #was a parameter passed...
+
 if($#ARGV==2){
     my $filepath = $ARGV[0];
     my $sysdir = $ARGV[1];
@@ -96,8 +102,6 @@ h1('Corpus');
 #&compileSignData;
 #&getSigns($projdir."SIGNS_P_LANG_akk.xml");
 #&getWords($projdir."WORDS_P_LANG_akk.xml");
-
-
 
 #&getGlobalWordData($projdir."WORDS_P_global.xml"); # TODO: generate global file
   
@@ -137,8 +141,6 @@ print "\n }); </script>";
     #$data{'script'} = $pielogo;
     #$data{'onready'} = $pieready;
     
-
-
 &prepareSyllabicTable($CatRoot, $kind);
 &printSyllabicTables($kind);
 &makePhoneticList($CatRoot, $kind);
@@ -432,7 +434,7 @@ sub makeLogogramChart {
 		my $number = $test;
 		push(@{$logodata{"num"}{$number}{"value"}}, $value);
 	    }
-	}
+	}    
     }
         
     #print h1('Logographic sign use');
@@ -550,7 +552,6 @@ sub prepareSyllabicTable {
     my $CatRoot = shift;
     my $wordtype = shift; 
     
-    
     my @categories = $CatRoot->get_xpath('category');
     my @types = ("V", "CV", "VC", "VCV", "CVC", "CVCV", "other");
     foreach my $cat (@categories) {
@@ -559,56 +560,49 @@ sub prepareSyllabicTable {
 	    # make tables of all types of syllabic values in the order given in @types
 	    my @typesSyll = $cat->get_xpath('type');
 	    foreach my $t (@typesSyll) {
-		    my $type = $t->{att}->{name};
-		#my $tempvalue = '//l[@ref="'.$wordid.'"]/xff:f'; # /xtf:transliteration//xcl:l[@ref=$wordid]/xff:f/@cf
-		#my $tempvalue = '//type[@name="'.$type.'"]'; 
-		#my @nodes = $cat->get_xpath($tempvalue);
-		#foreach my $node (@nodes) {
-		    #my @values = $node->get_xpath('value');
-		    my @values = $t->get_xpath('value');
-		    foreach my $i (@values) {
-		        if ($i->{att}->{$wordtype}) {
-			    # put values in table 
-			    my $value = $i->{att}->{'name'};
-			    my $syllable = $value; # without index number and without distinction of I and E in CV and CVC(V)
-			    # nuke the subscripts like numbers (unicode 2080 - 2089) 
-			    $syllable =~ s|(\x{2080})||g; $syllable =~ s|(\x{2081})||g; $syllable =~ s|(\x{2082})||g; $syllable =~ s|(\x{2083})||g; $syllable =~ s|(\x{2084})||g;
-			    $syllable =~ s|(\x{2085})||g; $syllable =~ s|(\x{2086})||g; $syllable =~ s|(\x{2087})||g; $syllable =~ s|(\x{2088})||g; $syllable =~ s|(\x{2089})||g;
-			    $syllable =~ s|(\x{2093})||g; # subscript x
-			    if (($type eq "CV") || ($type eq "CVC") || ($type eq "CVCV")) {
-				$syllable =~ s/[ie]/I/gsi;
-			    }
-			    
-			    my $first = substr($value, 0, 1);
-			    my $second = (length($type)>=2)?substr($value,1,1):"";
-			    my $third = (length($type)>=3)?substr($value,2,1):"";
-			    my $fourth = (length($type)>=4)?substr($value,3,1):"";
-			    if (length($type)<=4) {
-				push(@{$sylldata{$type}{$first.$second.$third.$fourth}},$value);
-			    }
-			    else {
-				push(@{$sylldata{$type}{$value}},$value);
-			    }
-			    #my $cunname = $signdata{$value};
-			    #print $cunhex;
-			    #push(@{$syllsign{$type}{"sign"}{$cunname}{"value"}},$value);
-			    push (@{$variousSignsPerValue{$type}{"syllable"}{$syllable}{"value"}}, $value);
-			}
-		my $tempvalue = '//type[@name="'.$name.'"]'; 
-		my $node = $cat->get_xpath($tempvalue);
-		if($node){
-		    my @values = $node->get_xpath('value');
-		    foreach my $i (@values) {
-			if ($i->{att}->{'there'}) {
-			    # put value in table - make hash TODO HIER
-			}
+		my $type = $t->{att}->{name};
+		my @values = $t->get_xpath('value');
+		foreach my $i (@values) {
+		    if ($i->{att}->{$wordtype}) {
+			# put values in table 
+			my $value = $i->{att}->{'name'};
+			my $syllable = $value; # without index number and without distinction of I and E in CV and CVC(V)
+			# nuke the subscripts like numbers (unicode 2080 - 2089) 
+			$syllable =~ s|(\x{2080})||g; $syllable =~ s|(\x{2081})||g; $syllable =~ s|(\x{2082})||g; $syllable =~ s|(\x{2083})||g; $syllable =~ s|(\x{2084})||g;
+			$syllable =~ s|(\x{2085})||g; $syllable =~ s|(\x{2086})||g; $syllable =~ s|(\x{2087})||g; $syllable =~ s|(\x{2088})||g; $syllable =~ s|(\x{2089})||g;
+			$syllable =~ s|(\x{2093})||g; # subscript x
+			if (($type eq "CV") || ($type eq "CVC") || ($type eq "CVCV")) { $syllable =~ s/[ie]/I/gsi; }
+			my $first = substr($value, 0, 1);
+			my $second = (length($type)>=2)?substr($value,1,1):"";
+			my $third = (length($type)>=3)?substr($value,2,1):"";
+			my $fourth = (length($type)>=4)?substr($value,3,1):"";
+			if (length($type)<=4) { push(@{$sylldata{$type}{$first.$second.$third.$fourth}},$value); }
+			else { push(@{$sylldata{$type}{$value}},$value); }
+			#my $cunname = $signdata{$value};
+			#print $cunhex;
+			#push(@{$syllsign{$type}{"sign"}{$cunname}{"value"}},$value);
+			push (@{$variousSignsPerValue{$type}{"syllable"}{$syllable}{"value"}}, $value);
+			my $tempvalue = '//type[@name="'.$type.'"]'; 
+			#my $node = ($cat->get_xpath($tempvalue))[0];
+			#if ($node){
+			#    #print p('tempvalue = '.$tempvalue);
+			#    my @values = $node->get_xpath('value');
+			#    foreach my $i (@values) {
+			#	my $v = $i->{att}->{name};
+			#	print p ('value = '.$v);
+			#	my $test = $i->{att}->{$wordtype}?$i->{att}->{$wordtype}:"no";
+			#	if ($test ne "no") {
+			#	    &findAttestations($file, $wordtype, "syllabic", "", $type, $v);
+			#	    # put value in table - make hash TODO HIER
+			#        }
+			#    }
+			#}
 		    }
+		    
 		}
-	    }
 	    }
 	}
     }
-    
 }
 
 
@@ -686,9 +680,17 @@ sub printSyllabicTables {
 		}
 		else {
 		    if ($lastone eq 'C'){
-			foreach my $c (@finalconsonants){
-			    print th([$c]);   # still have to get rid of aleph in CVC
+			if ($t eq 'CVC') {
+			    foreach my $c (@finalConsonantsNoAleph){
+				print th([$c]);   # still have to get rid of aleph in CVC
+			    }
 			}
+			else {
+			    foreach my $c (@finalconsonants){
+				print th([$c]);   # still have to get rid of aleph in CVC
+			    }    
+			}
+			
 		    }
 		    elsif ($lastone eq 'V'){
 			foreach my $v (@vowels){
@@ -707,7 +709,11 @@ sub printSyllabicTables {
 			    }
 			    if ($thereis != 0) {
 			        print start_Tr, td([$key]);
-				foreach my $c (@finalconsonants){
+				my @final = @finalconsonants;
+				if ($t eq 'CVC') {
+				    @final = @finalConsonantsNoAleph;
+				}
+				foreach my $c (@final){
 				    if (length($c) == 1) {
 					my $string = ref($sylldata{$t}{$key.$c}) eq 'ARRAY' ?join(", ",@{$sylldata{$t}{$key.$c}}):" ";
 					print td([$string]);
@@ -749,7 +755,7 @@ sub printSyllabicTables {
 	    foreach my $l (sort keys %{$variousSignsPerValue{$t}{"syllable"}}) {
 		my $number = scalar @{$variousSignsPerValue{$t}{"syllable"}{$l}{"value"}};
 		if ($number > 1) { # several signs used to write this syllable
-		    print p();
+		    print h4('Multiple values for:');
 		    print start_table({-border=>1, -cellpadding=>3}), start_Tr, th([$l]), th(['initial']), th(['medial']), th(['final']), th(['alone']);
 		    #print p("Syllable ".$l." written as ");
 		    my %tempdata = ();
@@ -757,8 +763,12 @@ sub printSyllabicTables {
 			&findPositionData($file, $wordtype, $t, $v);
 		    }
 		    print end_table;
-		    print p();
-		    my @positions = ("initial", "medial", "final", "alone");
+		    foreach my $v (@{$variousSignsPerValue{$t}{"syllable"}{$l}{"value"}}){
+			print h4("Attestations of ".$v.": ");
+			&findAttestations($file, $wordtype, "syllabic", "", $t, $v);
+			#die;
+		    }
+		    # add here also findattestations... HIER
 		}
 	    }
 	}
@@ -815,107 +825,138 @@ sub findAttestations {
     my $category = shift;
     my $prePost = shift; # can be empty (only used for determinative and phonetic)
     my $type = shift; # can be empty (used for syllabic and phonetic)
-    my $value = shift;
+    my $value = shift; # should always be given
     
+    my $kind = "";
     my $twigFile = XML::Twig->new(
 				  twig_roots => { 'category' => 1 }
 				  );
     $twigFile->parsefile($file);
     my $FileRoot = $twigFile->root;
     $twigFile->purge;
-    
-    my %data = ();
-    $data{"initial"} = ""; $data{"medial"} = ""; $data{"final"} = ""; $data{"alone"} = "";
 
-    my $tempvalue = '/value[@name="'.$value.'"]';
-    if ($type ne "") {
-	$tempvalue = '/type[@name="'.$type.'"]'.$tempvalue;
-    }
-    if ($prePost ne "") {
-	$tempvalue = '/prePost[@name="'.$prePost.'"]'.$tempvalue;
-    }
+    print start_table({-border=>1, -cellpadding=>3}), start_Tr, th(['Position']), th(['Wordtype']), th(['Guide word']), th(['Citation form']), th(['Spelling']), th(['Attestation(s)']);
+    
+    my $tempvalue = "";
     if ($category ne "") {
-	$tempvalue = 'category[@name="'.$category.'"]'.$tempvalue;
+	$tempvalue = 'category[@name="'.$category.'"]';
+	my @categories = $FileRoot->get_xpath($tempvalue);
+	foreach my $cat (@categories) {
+	    my $node = $cat;
+	    if ($prePost ne "") {
+		$tempvalue = $tempvalue = 'prePost[@name="'.$prePost.'"]';
+		$node = ($cat->get_xpath($tempvalue))[0]; # there should only be one pre or post in determinative and phonetic
+	    }
+	    if ($type ne "") {
+		$tempvalue = 'type[@name="'.$type.'"]';
+		$node = ($node->get_xpath($tempvalue))[0];
+	    }
+	    if ($value ne "") {
+		$tempvalue = 'value[@name="'.$value.'"]';
+		$node = ($node->get_xpath($tempvalue))[0];
+	    }
+	    else { print p("problem: no value given!"); }
+	    
+	    #print p('no pos with prepost '.$prePost.' type '.$type.' value '.$value);
+	    my @pos = $node->get_xpath('pos');
+	if ($pos[0]) {    
+	    foreach my $p (@pos) {
+		my $position = $p->{att}->{name};   #Position: $position
+		my $test = $p->{att}->{$wordtype}?$p->{att}->{$wordtype}:0;
+		if ($test > 0) {
+		    $kind = substr($wordtype, 0, length($wordtype)-9);
+		    $tempvalue = 'pos[@name="'.$position.'"]';
+		    my @posNodes = $node->get_xpath($tempvalue);
+		    foreach my $posN (@posNodes) {
+			my @wts;
+			if ($kind ne "All") {
+			    $tempvalue = './/wordtype[@name="'.$kind.'"]';
+			    @wts = $node->get_xpath($tempvalue);
+			}
+			else {
+			    @wts = $node->get_xpath('.//wordtype');
+			}
+			foreach my $wt (@wts) {
+			    my $wordtype = $wt->{att}->{name};  #Wordtype: $wordtype
+			    
+			    #find gw and cf if known
+			    my @gws = $wt->get_xpath('.//gw');
+			    my $gw = ""; my $cf = "";
+			    
+			    if (defined($gws[0])) {			    
+				foreach my $g (@gws) {
+				    $gw = $g->{att}->{name};
+				    my @cfs = $g->get_xpath("cf");
+				    if (defined($cfs[0])) {
+				        foreach my $c (@cfs) { # gw and cf
+				            $cf = $c->{att}->{name};
+					    &attestationsStates ($c, $prePost, $position, $wordtype, $gw, $cf);
+					}
+				    }
+				    else { &attestationsStates ($g, $prePost, $position, $wordtype, $gw, ""); } #gw, but no cf
+				}
+			    }
+			    else { # no gw known, possibly a cf or just the attestation
+				my @cfs = $wt->get_xpath("cf");
+				if (defined($cfs[0])) {
+				    foreach my $c (@cfs) {
+				        $cf = $c->{att}->{name}; # cf, no gw
+					&attestationsStates ($c, $prePost, $position, $wordtype, "", $cf);
+				    }
+				}
+				else { &attestationsStates ($wt, $prePost, $position, $wordtype, "", ""); } #no gw, no cf
+			    }
+			}
+		    }
+		    
+		}
+	    }
+	}
+	}
+    }
+    else {
+	print p("possible problem: no category for value ".$value);
     }
 
-    print p("tempvalue ".$tempvalue);
-    
     # values can be standard or variant
     # followed by wordtype
     # followed by position
     # followed by gw/cf/state/writtenWord/line
     
-    my @nodes = $FileRoot->get_xpath($tempvalue);
-    foreach my $n (@nodes) {
-	my @pos = $n->get_xpath('pos');
-        foreach my $p (@pos) {
-	    my $test = $p->{att}->{$wordtype}?$p->{att}->{$wordtype}:0;
-	    if ($test > 0) {
-		my $kind = substr($wordtype, 0, length($wordtype)-9);
-		print p("kind ".$kind); 
-		my @ws = ();
-		if ($kind ne "All") {
-		    $tempvalue = '//wordtype[@name="'.$kind.'"]';
-		    @ws = $p->get_xpath($tempvalue);
+    print end_table;
+}
+
+sub attestationsStates {
+    my $root = shift;
+    my $prePost = shift;
+    my $position = shift;
+    my $wordtype = shift;
+    my $gw = shift;
+    my $cf = shift;
+    
+    if ($prePost ne "") { $position = $prePost; } # when pre or post is known, the position is irrelevant
+    
+    my @states = $root->get_xpath('state');
+    foreach my $s (@states) {
+	my $name = $s->{att}->{name};
+	# only attested values are taken into account
+	if (($name eq "preserved") || ($name eq "damaged") || ($name eq "excised")) {
+	    my @written = $s->get_xpath('writtenWord');
+	    my $attest;
+	    my $word = "";
+	    foreach my $w (@written) {
+		$word = $w->{att}->{name};
+		$attest = "";
+		my @lines = $w->get_xpath('line');
+		foreach my $l (@lines) {
+		    my $temp = $l->text;
+		    $attest = $attest.$temp.", ";
 		}
-		else {
-		    @ws = $p->get_xpath('//wordtype');
-		}
-		
-		foreach my $w (@ws) {
-		    my @pos = $w->get_xpath('pos');
-		    foreach my $position (@pos) {
-			my $pos1 = $position->{att}->{name};
-			print p("getting there");
-			print p("value ".$value." wordtype ".$kind." position ".$pos1);
-		    }
-		}
+		$attest = substr($attest, 0, length($attest)-2);
+		print start_Tr, td($position), td($wordtype), td($gw), td($cf), td($word), td($attest), end_Tr;
 	    }
 	}
-	print p("node found");
     }
-    
-#    my @pos = $wordtypeNode->get_xpath('pos');
-#    foreach my $p (@pos) {
-#	my $position = $p->{att}->{name};
-#	my @gws = $p->get_xpath('gw');
-#	my $toPrint = "";
-#	if ($gws[0]) {
-#	    foreach my $gw (@gws) {
-#		my $gwName = $gws[0]->{att}->{name};
-#		my @states = $gw->get_xpath('state');
-#		foreach my $s (@states) {
-#		    my $sName = $s->{att}->{name};
-#		    if (($sName eq "preserved") || ($sName eq "damaged") || ($sName eq "excised")) {
-#			my @writtens = $s->get_xpath('writtenWord');
-#			foreach my $w (@writtens) {
-#			    my $spelling = $w->{att}->{name};
-#			    #print $spelling;
-#			    my @lines = $w->get_xpath('line');
-#			    my $string = "";
-#			    foreach my $l (@lines) {
-#				my $lineNo = $l->text;
-#				$string .= $lineNo.", ";
-#				#print p("Gw ".$gwName." written ".$spelling." line ".$lineNo);
-#			    }
-#			    $string = substr($string, 0, length($string)-2);
-#			    $toPrint .= $gwName.": ".$spelling.", reference(s): ".$string."; ";
-#			    #print p("Gw ".$gwName." written ".$spelling." line ".$string);
-#			    #push (@{$temp{$position}{"gw"}{$gwName}{"written"}{$spelling}->{"line"}}, $string);
-#			    #die;
-#			}
-#			
-#			#push (@{$temp{$position}{"word"}}, $toPrint);
-#		    }
-#		    $toPrint = substr($toPrint, 0, length($toPrint)-2);
-#		}
-#	    }
-#        }
-#	$data{$position} = $toPrint;
-#    }
-    #print Dumper (%temp);
-    #return \%temp;
-    #return \%data;
 }
     
 sub makePhoneticList {
@@ -944,7 +985,6 @@ sub makePhoneticList {
 	    }
 	}
     
-    
     # alphabetically organized list of phonetic values within pre/post and CV etc.
 	print h1("Phonetic complements");
 	foreach my $p (keys %{$phoneticdata{"prePost"}}) {
@@ -955,8 +995,9 @@ sub makePhoneticList {
 		    
 		    my @data = @{$phoneticdata{"prePost"}{$p}{"type"}{$t}{"value"}};
 		    foreach my $i (@data){
-			print p("Value: ".$i);
+			print h4("Phonetic value: ".$i);
 			&findAttestations($file, $wordtype, "phonetic", $p, $t, $i);
+			#die;
 		    }
 		}
 	    }
