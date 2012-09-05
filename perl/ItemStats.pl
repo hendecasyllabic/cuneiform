@@ -1702,6 +1702,7 @@ sub splitWord {
 	$status = $root->{att}->{"g:status"}?$root->{att}->{"g:status"}:""; 
 	my @gg_elements = $root->children();
 	$group = $root->{att}->{"g:type"};
+	my $no_els = scalar @gg_elements;
 	
 	if (($group ne "logo") && ($group ne "correction") && ($group ne "reordering") && ($group ne "ligature")) {
 	    &writetoerror ("PossibleProblems.txt", localtime(time)."Project: ".$thisCorpus.", text ".$thisText.": g:gg of type ".$group); # - keep checking ***
@@ -1737,8 +1738,26 @@ sub splitWord {
 	}
 	elsif (($group eq "logo") || ($group eq "reordering")) {
 	    $for = "";
+	    my $gg_delim = $root->{att}->{"g:delim"}?$root->{att}->{"g:delim"}:""; 
+	    my $cnt = 0;
+	#    <g:w xml:id="P348890.18.1" xml:lang="akk-x-ltebab" form="KI.KAL-MEŠ{+uʾ}" g:delim=" ">
+	#					<g:gg g:type="logo" g:delim="-">
+	#						<g:s xml:id="P348890.18.1.0" g:break="damaged" g:ho="1" g:status="ok" g:role="logo" g:logolang="sux" g:delim=".">KI</g:s>
+	#						<g:s xml:id="P348890.18.1.1" g:break="damaged" g:status="ok" g:role="logo" g:logolang="sux" g:hc="1">KAL</g:s>
+	#					</g:gg>
+	#					<g:s xml:id="P348890.18.1.2" g:status="ok" g:role="logo" g:logolang="sux">MEŠ</g:s>
+	
+	# the deliminator of the last element in the group can be given in the g:gg! TODO ***
+	    
 	    foreach my $gg (@gg_elements) {
-	        ($splitdata, $position) = &splitWord($splitdata, $gg, $label, $position, "", "", $break, $delim, $group, $for, $status);
+		($splitdata, $position) = &splitWord($splitdata, $gg, $label, $position, "", "", $break, $delim, $group, $for, $status);
+		$cnt++;
+		if ($cnt == $no_els) {
+		    if ($gg_delim ne "") {
+			my $lastone = scalar @{$splitdata};
+			$splitdata->[$lastone - 1]->{"delim"} = $gg_delim;
+		    }
+		}
 	    }
 	}
 	elsif ($group eq "ligature") { # this may be OK, but check with more normal ligatures...
@@ -2240,7 +2259,7 @@ sub abstractSigndata{
 	   $data->{"value"}{$value}{"pos"}{$pos}{'All_attested'}++;
 	   $data->{"value"}{$value}{"pos"}{$pos}{$wordtype.'_attested'}++;
 	}
-	&abstractSigndata2(\%{$data->{"value"}{$value}{"standard"}{$value}{"wordtype"}{$wordtype}{"pos"}{$pos}}, $cf, $gw, $break, $writtenWord, $label, $group, $for); 
+	&abstractSigndata2(\%{$data->{"value"}{$value}{"standard"}{$value}{"pos"}{$pos}{"wordtype"}{$wordtype}}, $cf, $gw, $break, $writtenWord, $label, $group, $for); 
     }
     else { # variant values; treat base as value and work with variants: allograph, modifier, formvar
 	$data->{"value"}{$base}{'num'}++;
@@ -2252,7 +2271,7 @@ sub abstractSigndata{
 	   $data->{"value"}{$base}{"pos"}{$pos}{$wordtype.'_attested'}++;
 	}
 	# variant types...: form; allo, modif and/or formvar
-	&abstractSigndata2(\%{$data->{"value"}{$base}{$variantType}{$variantMod}{"wordtype"}{$wordtype}{"pos"}{$pos}}, $cf, $gw, $break, $writtenWord, $label, $group, $for); 
+	&abstractSigndata2(\%{$data->{"value"}{$base}{$variantType}{$variantMod}{"pos"}{$pos}{"wordtype"}{$wordtype}}, $cf, $gw, $break, $writtenWord, $label, $group, $for); 
     }
 }
 
