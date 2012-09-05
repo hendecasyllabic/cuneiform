@@ -28,3 +28,26 @@
 
 .piechart {	float: left; width:500px;	}
 
+/* styles for search page */
+div#spinner {
+    margin: 0;
+    padding: 0;
+    background-image: url(../images/ajax-loader1.gif);
+    background-repeat: no-repeat;
+    text-align: center;
+    margin: auto;
+    width: 130px;
+}
+.spinner.ui-dialog
+{ box-shadow: 0 0 3px #333333; }
+
+.spinner .ui-tabs .ui-tabs-nav
+{ background: #fff; border-left: medium none; border-radius: 0 0 0 0; border-right: medium none; border-top: medium none; padding: 10px 25px 0; }
+
+.spinner .ui-dialog-titlebar {display:none}
+.spinner {
+    min-height:10px;
+    font-size: 12px;
+}
+
+

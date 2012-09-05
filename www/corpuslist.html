@@ -56,8 +56,8 @@ cuneiform.corpuslist.init = function() {
         cuneiform.corpuslist.page_init();
     });
 };
-cuneiform.corpuslist.sendData = function(cont){
-  testpayload = ['P345960','P338326'];
+cuneiform.corpuslist.sendData = function(cont, dataarray){
+  testpayload = dataarray;//['P345960','P338326'];
 	$.ajax({
 		type: "POST",
 		url: cuneiform.config.sendData,

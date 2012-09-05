@@ -24,24 +24,15 @@ cuneiform.config = {};
 cuneiform.config.messageTimeToLive = 4000; // Time for how long the Growl like messages appear in msec
 
 // Config > URLs
-cuneiform.config.urlUser = "php/user.php";
-cuneiform.config.urlError = "php/error.php";
-cuneiform.config.urlTop = "php/top.php";
-cuneiform.config.urlRescind = "php/rescind.php";
-cuneiform.config.urlDelegate = "php/delegate.php";
-cuneiform.config.urlDelegations = "php/delegations.php";
-cuneiform.config.urlLog = "php/log.php";
-cuneiform.config.urlExport = "php/ExportExcel.php";
-cuneiform.config.urlPapers = "php/papers.php";
-cuneiform.config.urlColleges = "php/colleges.php";
-cuneiform.config.urlInfo = "php/info.php";
-cuneiform.config.urlDos = "php/dos.php";
-cuneiform.config.urlStudent = "php/student.php";
-cuneiform.config.urlAdmin = "php/admin.php";
-cuneiform.config.urlDosStudents = "php/dosstudent.php";
-cuneiform.config.urlReports = "php/reports.php";
-cuneiform.config.urlClashics = "php/clashics.php";
-cuneiform.config.urlExtraClashics = "php/rawdata.php";
+cuneiform.config.urlUser = "../www/php/user.php";
+cuneiform.config.urlError = "../www/php/error.php";
+cuneiform.config.urlTop = "../www/php/top.php";
+cuneiform.config.urlRescind = "../www/php/rescind.php";
+cuneiform.config.urlDelegate = "../www/php/delegate.php";
+cuneiform.config.urlDelegations = "../www/php/delegations.php";
+cuneiform.config.urlLog = "../www/php/log.php";
+cuneiform.config.urlExport = "../www/php/ExportExcel.php";
+cuneiform.config.urlInfo = "../www/php/info.php";
 
 
 // Console object declaration for browsers which don't support it
@@ -198,18 +189,6 @@ cuneiform.common.login_link = function() {
 		var out = '';
 		var home = "<a href='index.html'>home</a>";
 		var adminfunctions = "";
-		if(user.perms.type == "admin"){
-			home = "<a href='index_admin.html'>Admin Dashboard</a>";
-		}
-		else if(user.perms.type=="dos"){
-			home = "<a href='dos.html'>home</a>";
-			adminfunctions = " <a class='user_delegate' href='javascript:;'>delegate</a>"+
-				" <a class='user_rescind' href='javascript:;'>rescind</a>";
-		}
-		else if(user.perms.type=="student"){
-			home = "<a href='student.html'>view/edit my choices</a>";
-			adminfunctions = "";
-		}
 		
 		if(/index.html($|#)/.test(document.URL)) {
 			home = "";
@@ -224,7 +203,7 @@ cuneiform.common.login_link = function() {
 
 		// dialog common
 		function dialog(name,options) {
-		    out = '<div id="<<_dialog" title="<>"><p>Which college: <select name="which" id="<<_which">'+options+'</select></p><p>Whom: <input type="text" id="<<_whom" name="whom"></p><button id="<<_button"><>!</button></div>';
+		    out = '<div id="<<_dialog" title="<>"><p>Which corpus: <select name="which" id="<<_which">'+options+'</select></p><p>Whom: <input type="text" id="<<_whom" name="whom"></p><button id="<<_button"><>!</button></div>';
 		    name = name.toLowerCase();
 		    out = out.replace(/<</g,name);
 		    uname = name.charAt(0).toUpperCase() + name.substr(1);
@@ -250,7 +229,7 @@ cuneiform.common.login_link = function() {
 		var options = '';
 		// Sorted list
 		var tkeys = [];
-		for(var k in user.colleges) { tkeys.push(k) };
+		for(var k in user.colleges) { tkeys.push(k) }; //TODO should be colleges
 		tkeys = tkeys.sort(function(a,b) {
 			if(user.colleges[a]<user.colleges[b]) return -1;
 			return user.colleges[a]>user.colleges[b];	
@@ -321,16 +300,21 @@ cuneiform.common.report_error = function(level,message,report) {
 
 //spinner
 cuneiform.common.spinner_init = function() {
-	var spinner_text = "<p>working...</p><p><img src='images/ajax-loader.gif'/></p>";
-	var spinner_box = jQuery('<div></div>').append(spinner_text);
-	spinner_box.attr('style','text-align: center; margin: auto; width: 130px');
-	var spinner = jQuery('<div></div>').append(spinner_box);
-	spinner.attr('id','spinner');
+	var spinner = jQuery('#spinner');
+	if(!spinner){
+	    var spinner_text = "<p>working...</p><p><img src='../www/images/ajax-loader2.gif'/></p>";
+	    var spinner_box = jQuery('<div></div>').append(spinner_text);
+	    spinner_box.attr('style','text-align: center; margin: auto; width: 130px');
+	    spinner = jQuery('<div></div>').append(spinner_box);
+	    spinner.attr('id','spinner');
+	}
+	
 	spinner.dialog({
-		'autoOpen': false, 
-		'modal': true,
-		'width': 150,
-		'height': 120	
+	    dialogClass: 'spinner',
+	    zIndex: 4000,
+	    autoOpen: false,
+	    resize: "auto", 
+	    modal: true
 	});
 };
 
@@ -342,43 +326,3 @@ cuneiform.common.spin_off = function() {
 	jQuery('#spinner').dialog('close');
 };
 
-
-
-
-
-cuneiform.common.viewpapers = function() {
-            
-    // Render event groups
-    var vghtml = '';
-    //TODO
-   return vghtml;
-};
-
-cuneiform.common.viewdos = function(dosdata,dosid, slist){
-	
-        // TODO
-        var vghtml = '<div class="eg" data-num="'+dosid+'"></div>';
-	return vghtml;
-}
-cuneiform.common.editdos = function(dosdata,dosid){
-	//TODO
-        var eghtml = '<div class="eg" data-num="'+dosid+'">';
-        eghtml += '<hr/></div>';
-	return eghtml;
-}
-cuneiform.common.viewstudent = function(studata,stuid){
-	//name, college, year, papers, comments
-        var name = studata.name;
-        var college = studata.college;
-        var type = studata.type;
-        var papers = studata.papers;
-        var shtml = '';
-        shtml += "<div><h3>"+name+" ("+college+") "+type;
-
-        return shtml;
-}
-
-cuneiform.common.editstudent = function(studata,stuid, isSingle){
-        // Paper 
-	return eghtml;
-}

@@ -1,9 +1,16 @@
 <?php
 
+require_once('config.php');
+require_once("sharedHandlers.php");
+
 require_once 'auth.php';
-require_once 'config.php';
+
+$errors = new myErrorHandling();
+$renderer = new myRenderer();
+$python = new myPythonHandler($sysdir);
 
 session_start();
+
 $out = Array();
 $perms = null;
 
@@ -39,11 +46,6 @@ if($user) {
     $out['loggedin'] = false;
 }
 
-
 $out['perms'] = $perms;
 
-header('Cache-Control: no-cache, must-revalidate');
-header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
-header('Content-type: application/json');
-
-echo json_encode($out);
+$renderer->renderpage(json_encode($out), $errors);

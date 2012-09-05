@@ -31,7 +31,9 @@ function doPOST(){
     global $data,$dataaffix,$sysdir,$errors, $python, $renderer, $pypath, $logfile;
 //who are you
 
-$forcerebuild = $data["rebuild"];
+    $forcerebuild = $data["rebuild"];
+    $corpusname = $data["corpusname"];
+    $username = $data["username"];
 
 //what do you want
     $payload3 = $data['payload'];
@@ -44,60 +46,95 @@ $forcerebuild = $data["rebuild"];
     
     $alreadyExists = false;
     $existingFileName = "";
-    
-//save as a json payload and iterate over a files with payloads and compare if we have one already?
-//filename_numofitems_timestamp
-    if ($handle = opendir($sysdir."data".$dataaffix."/datasubset")) {
-        /* This is the correct way to loop over the directory. */
-        while (false !== ($file = readdir($handle))) {
-            //how does this translate into a file name?
-            if(preg_match('/^num_'.$size.'_(.*).json$/',$file,$m)) {
-                
-                $test = json_decode(file_get_contents($sysdir."data".$dataaffix."/datasubset/num_".$size."_".$m[1].".json"),TRUE);
-                sort($test);
-                //do we already have this data?
-                if(!$alreadyExists){ //only try and find a match until we find a matching one
-                    $diff = false;
-                    foreach($test as $i=>$l){ 
-                        if($payload[$i] != $l){
-                            $diff = true;
-                            break; 
-                        }
-                    }
-                    if(!$diff){//we found a matching element
-                        $alreadyExists = true;
-                        $existingFileName = "num_".$size."_".$m[1];
-                        break;
-                    }
-                }
-            } 
-        }    
-        closedir($handle);
-    
-    }
-
-    if($forcerebuild && $alreadyExists){
-        //delete old data
-        unlink($sysdir."data".$dataaffix."/".$existingFileName.".json");
-        rrmdir($sysdir."data".$dataaffix."/".$existingFileName);
-        $alreadyExists=null;
-    }
-//do we already have this data?
-    if(!$alreadyExists){
+    if($size>0){
         
         $existingFileName = "num_".$size."_".date('Ymd_H_i_s');
-        file_put_contents($sysdir."data".$dataaffix."/datasubset/".$existingFileName.".json",json_encode($payload));
-        $vardata = implode(",",$payload);
-//send the data to perl
-        $pyerrors = $python->doit("perl ".$sysdir."perl/ItemStats.pl ".$existingFileName." ".$vardata. " ".getcwd()."/".$sysdir, $errors);
+    //save as a json payload and iterate over a files with payloads and compare if we have one already?
+    //filename_numofitems_timestamp
+        if ($handle = opendir($sysdir."data".$dataaffix."/datasubset")) {
+            /* This is the correct way to loop over the directory. */
+            while (false !== ($file = readdir($handle))) {
+                //how does this translate into a file name?
+                if(preg_match('/^num_'.$size.'_(.*).json$/',$file,$m)) {
+                    
+                    $test = json_decode(file_get_contents($sysdir."data".$dataaffix."/datasubset/num_".$size."_".$m[1].".json"),TRUE);
+                    sort($test);
+                    //do we already have this data?
+                    if(!$alreadyExists){ //only try and find a match until we find a matching one
+                        $diff = false;
+                        foreach($test as $i=>$l){ 
+                            if($payload[$i] != $l){
+                                $diff = true;
+                                break; 
+                            }
+                        }
+                        if(!$diff){//we found a matching element
+                            $alreadyExists = true;
+                            $existingFileName = "num_".$size."_".$m[1];
+                            break;
+                        }
+                    }
+                } 
+            }    
+            closedir($handle);
+        
+        }
+        //does this user have some saved searches?
+        $userdata = array();
+        if(file_exists($sysdir."data".$dataaffix."/datasubset/user_".$username.".json")){
+            $userdata = json_decode(file_get_contents($sysdir."data".$dataaffix."/datasubset/user_".$username.".json"),TRUE);
+            if(isset($userdata[$corpusname])){
+                $parray = $test[$corpusname]["files"];
+                sort($parray);
+                $diff = false;
+                foreach($parray as $i=>$l){ //is it the same array as the one we are passing?
+                    if($payload[$i] != $l){
+                        $diff = true;
+                        break; 
+                    }
+                }
+                if($diff){
+                    //overwrite the data
+                    $userdata[$corpusname]["files"] = $payload;
+                    $userdata[$corpusname]["filepath"] = $existingFileName;
+                }
+                else{
+                    //all fine - don't need to change anything just make sure the name is good.
+                    $userdata[$corpusname]["filepath"] = $existingFileName;
+                }
+            }
+            else{//doesn't exist - add it.
+                $userdata[$corpusname] = array();
+                $userdata[$corpusname]["files"] = $payload;
+                $userdata[$corpusname]["filepath"] = $existingFileName;
+            }
+        }    
+        //finish making user file now we havethe file name
+        file_put_contents($sysdir."data".$dataaffix."/datasubset/user_".$username.".json",json_encode($userdata));
+        
+    
+        if($forcerebuild && $alreadyExists){
+            //delete old data
+            unlink($sysdir."data".$dataaffix."/".$existingFileName.".json");
+            rrmdir($sysdir."data".$dataaffix."/".$existingFileName);
+            $alreadyExists=null;
+        }
+    //do we already have this data?
+        if(!$alreadyExists){
+            file_put_contents($sysdir."data".$dataaffix."/datasubset/".$existingFileName.".json",json_encode($payload));
+            $vardata = implode(",",$payload);
+    //send the data to perl
+            $pyerrors = $python->doit("perl ".$sysdir."perl/ItemStats.pl ".$existingFileName." ".$vardata. " ".getcwd()."/".$sysdir, $errors);
+        }
+        
+    
+        $response["filepath"] = $existingFileName;
+        $response["dataitems"] = $payload;
+        $response["userdata"] = $userdata;
+    //go to the correct results folder and return the data
+    //do the magic
+    
     }
-    
-    $response["filepath"] = $existingFileName;
-    $response["dataitems"] = $payload;
-//go to the correct results folder and return the data
-//do the magic
-    
-
 //return results
     $renderer->renderpage(json_encode($response), $errors);
 }

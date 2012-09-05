@@ -24,22 +24,24 @@ cuneiform.login.init = function() {
     $("#login_button").bind("click", function(e) {
         cuneiform.common.login_user(function(user) {
             cuneiform.data.user = user;
-            alert(user.loggedin);
+            //alert(user.loggedin);
             if(user.loggedin){
-            alert(user.perms.fullname+":"+user.perms.crsid+":"+user.loggedin);
-                 window.location = "./corpuslist.html";
+            //alert(user.perms.fullname+":"+user.perms.crsid+":"+user.loggedin);
+                 window.location = "./CORPUS_META.xml";
                  // window.location = "./student.html";
             }
+	    else{
+		alert("login failed");
+	    }
         
         });
     });
 
     cuneiform.common.get_user(function(user) {
         cuneiform.data.user = user;
-        alert(user.loggedin);
         if(user.loggedin){
-            alert(user.perms.fullname+":"+user.perms.crsid+":"+user.loggedin);
-                 window.location = "./corpuslist.html";
+            //alert(user.perms.fullname+":"+user.perms.crsid+":"+user.loggedin);
+                 window.location = "./CORPUS_META.xml";
          // window.location = "./student.html";
         }
         

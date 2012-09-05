@@ -39,6 +39,7 @@ function doPOST(){
     }
     
     $langcheck = array();
+    $response["langs"] = array();
     
     if ($handle = opendir($sysdir."data".$dataaffix."/datasubset/".$filename)) {
         /* This is the correct way to loop over the directory. */
@@ -46,11 +47,22 @@ function doPOST(){
             //how does this translate into a file name?
             if(preg_match('/^SIGNS_P_LANG_(.*).xml$/',$file,$m)) {
                 $lang = $m[1];
-                $response["langs"][] = $lang;
+                $returnlang = preg_replace("/ /","_", $lang);
+                $response["langs"][] = $returnlang;
                 if(!is_file($sysdir."data".$dataaffix."/datasubset/".$filename."/LANG_".$lang.".html") || $forcerebuild){
 //                    only create if doesn't exist already or been force to rebuild
                     $pyerrors = $python->doit("perl ".$sysdir."perl/ChartsAndPies.pl datasubset/".$filename." ".getcwd()."/".$sysdir." SIGNS_P_LANG_".$lang.".xml", $errors);
-                    file_put_contents($sysdir."data".$dataaffix."/datasubset/".$filename."/LANG_".$lang.".html",$pyerrors);
+                    file_put_contents($sysdir."data".$dataaffix."/datasubset/".$filename."/LANG_".$returnlang.".html",$pyerrors);
+                }
+            }
+            if(preg_match('/^SIGNS_Q_LANG_(.*).xml$/',$file,$m)) {
+                $lang = $m[1];
+                $returnlang = preg_replace("/ /","_", $lang);
+                $response["langs"][] = $returnlang;
+                if(!is_file($sysdir."data".$dataaffix."/datasubset/".$filename."/QLANG_".$lang.".html") || $forcerebuild){
+//                    only create if doesn't exist already or been force to rebuild
+                    $pyerrors = $python->doit("perl ".$sysdir."perl/ChartsAndPies.pl datasubset/".$filename." ".getcwd()."/".$sysdir." SIGNS_Q_LANG_".$lang.".xml", $errors);
+                    file_put_contents($sysdir."data".$dataaffix."/datasubset/".$filename."/QLANG_".$returnlang.".html",$pyerrors);
                 }
             }
         }    
