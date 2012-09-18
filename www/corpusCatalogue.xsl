@@ -14,8 +14,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
         <!-- <link rel="stylesheet" href="../www/css/custom-theme/jquery-ui-1.8.14.custom.css" type="text/css" media="screen, print" /> -->
         <link rel="stylesheet" href="../www/css/jquery.gritter.css" type="text/css" media="screen" />
         <link rel="stylesheet" href="../www/css/cuneiform.css?1" type="text/css" media="screen" />
-    
-      
+
     </head>
   <body id="body" style="background-image:url(/html/cuneiform/resources/brown.jpg);">
     
@@ -25,6 +24,9 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
       <td>
   <div id="accordion" style="width:500px; display: block;">
   <xsl:for-each select="opt/corpus">
+    <xsl:variable name="posn" select="position()" />
+    <a href="javascript://" onclick="togglechkbk('{$posn}',true)">Check All</a>
+    <a href="javascript://" onclick="togglechkbk('{$posn}',false)">UnCheck All</a>
     <div class="jointparent">
           <div id="checkBox" name="corpus" style="display:none;"></div>
 
@@ -37,7 +39,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
           <span style="font-size:15px; "></span>
           <xsl:for-each select="item">
           <div class="attempt">
-            <input type="checkbox" name="tickbox" value="{name}" onclick="check(this)"></input>
+            <input type="checkbox" name="tickbox" class="cclass{$posn}" value="{name}" onclick="check(this)"></input>
           <span class="subInfo" name="subInfo"><xsl:value-of select="name"/><br/></span>
             <a class="ps" id="subSubInfo" value="{name}" style="font-size:13px; text-transform: capitalize;"> Number: <span class="littlebit"><xsl:value-of select="ps"/></span></a><br/>
           </div>
@@ -89,7 +91,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
         <script src="../www/js/cuneiform_corpuslist.js" type="text/javascript"></script>
         <script src="../www/js/highcharts.js" type="text/javascript"></script>
         <script src="../www/js/genericchart.js" type="text/javascript"></script>
-        <script src="../www/js/small.js?2" type="text/javascript"></script>
+        <script src="../www/js/small.js?3" type="text/javascript"></script>
         
         <script src="../www/lib/jquery-1.5.1.min.js"></script>
         <script src="../www/lib/jquery-ui-1.8.13.custom.min.js"></script>

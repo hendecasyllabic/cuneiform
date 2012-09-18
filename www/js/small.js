@@ -12,6 +12,13 @@ $(document).ready(function(){
 });
 var submitdata = {};
 var dataToShow = {};
+function togglechkbk(inter, status) {
+              jQuery(".cclass"+inter).each( function() {
+                            jQuery(this).attr("checked",status);
+                            check(this);
+              })
+}
+        
 function check(tickbox){
               var corpus = jQuery(tickbox).parents('.jointparent').children('h2').text();
               var p = jQuery(tickbox).parents('.attempt').find('span.littlebit').text();
