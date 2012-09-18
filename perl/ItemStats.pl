@@ -52,6 +52,7 @@ $langmatrix{"sux akk"} = "Sumerian - Akkadian";
 $langmatrix{"sux-x-emesal sux akk"} = "Emesal - Sumerian - Akkadian";
 $langmatrix{"sux-x-emesal"} = "Emesal";
 $langmatrix{"akk-x-stdbab sux"} = "Standard Babylonian - Sumerian"; 
+$langmatrix{"unknown"} = "unknown"; 
 
 my %config;
 $config{"typename"} = "";
@@ -114,10 +115,12 @@ if($#ARGV==2){
     &writetofile("combos", \%combos, $filepath);
     
 # compilations for ER
+
     foreach my $PQ (keys %compilationERSigns) {
 	foreach my $lang (keys %{$compilationERSigns{$PQ}{'lang'}}){
-	    $lang=~s| |_|g;
-	    &writetofile("SIGNS_".$PQ."_LANG_".$lang, $compilationERSigns{$PQ}{'lang'}{$lang}, $filepath);
+	    my $newlang = $lang;
+	    $newlang=~s| |_|g;
+	    &writetofile("SIGNS_".$PQ."_LANG_".$newlang, $compilationERSigns{$PQ}{'lang'}{$lang}, $filepath);
 	}
     }
     
@@ -159,7 +162,9 @@ sub FullStats{
     &writetoerror("ItemStats.txt","starting ".localtime(time));
     my $ext = "xtf";
     $config{"typename"} = $ext;
+
     &traverseDir($startpath, $startdir,$config{"typename"},1,$ext);
+    
     my @allfiles = @{$config{"filelist"}{$config{"typename"}}};
     
 # loop over each of the xtf-files we found
@@ -2084,7 +2089,7 @@ sub saveSigns {
 }
 
 sub saveSign { 
-    my $lang = shift;
+    my $lang = shift || "unknown";
     my $category = shift;
     my $value = shift;
     my $base = shift;
@@ -2398,11 +2403,12 @@ sub traverseDir{  # TODO: check if this works over directory structure
     my $dirname = shift; #directory to start the search
     my $typename = shift; # parameter used in the global hash %config to save info
     my $ext = shift; # parameter to specify the file extension e.g. xml/ xtf we are interested in 
-    my $checkforchildren = shift; # parameter to set whether or not to devel into any folders found
+    my $checkforchildren = 1 ;#shift; # parameter to set whether or not to devel into any folders found
     my @childdir; #this is a local param as it is only useful in the context of it's parent directory
     
     my $dir = $path."/".$dirname;
-    
+    print "\nPATH".$path;
+    print "\n DIRNAME".$dirname;
     opendir(DIR, $dir) or die $!;
     while (my $file = readdir(DIR)) {
 
@@ -2412,7 +2418,7 @@ sub traverseDir{  # TODO: check if this works over directory structure
         # Use -f to test for a file
         if(-f "$dir/$file"){
             # Ignore all files which don't have the extension we are interested in
-            next if($file !~ m|\.${ext}$|);
+            next if($file !~ m|\.${typename}$|);
             push(@{$config{"filelist"}{$typename}}, "$dir/$file");# places in the global config so we can use the info later
             $config{"filehash"}{$typename}{"$file"} = 1;
         }
