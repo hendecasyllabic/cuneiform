@@ -192,7 +192,9 @@ sub FullStats{
 # compilations for ER
     foreach my $PQ (keys %compilationERSigns) {
 	foreach my $lang (keys %{$compilationERSigns{$PQ}{'lang'}}){
-	    &writetofile("SIGNS_".$PQ."_LANG_".$lang, $compilationERSigns{$PQ}{'lang'}{$lang});
+	    my $newlang = $lang;
+	    $newlang=~s| |_|g;
+	    &writetofile("SIGNS_".$PQ."_LANG_".$newlang, $compilationERSigns{$PQ}{'lang'}{$lang});
 	}
     }
     
@@ -678,7 +680,7 @@ sub getLineData {
 		my $wordid = $i->{att}->{"xml:id"}?$i->{att}->{"xml:id"}:""; # reference of word - can then be linked to xcl data
 		$langsurro = $i->{att}->{'xml:lang'}?$i->{att}->{'xml:lang'}:"noLang";
 		$form = $i->{att}->{"form"}?$i->{att}->{"form"}:""; 
-    		my $tempvalue = '//l[@ref="'.$wordid.'"]/xff:f'; # /xtf:transliteration//xcl:l[@ref=$wordid]/xff:f/@cf
+    		my $tempvalue = './/l[@ref="'.$wordid.'"]/xff:f'; # /xtf:transliteration//xcl:l[@ref=$wordid]/xff:f/@cf
 		
 		my @wordref = $PQroot->get_xpath($tempvalue); 
 		foreach my $item (@wordref) {
@@ -1290,7 +1292,7 @@ sub analyseWord{
     my $lang = $word->{att}->{'xml:lang'}?$word->{att}->{'xml:lang'}:"noLang";
     my $form = $word->{att}->{"form"}?$word->{att}->{"form"}:""; 
     my $wordid = $word->{att}->{"xml:id"}?$word->{att}->{"xml:id"}:"";
-    my $tempvalue = '//l[@ref="'.$wordid.'"]/xff:f'; # /xtf:transliteration//xcl:l[@ref=$wordid]/xff:f/@cf
+    my $tempvalue = './/l[@ref="'.$wordid.'"]/xff:f'; # /xtf:transliteration//xcl:l[@ref=$wordid]/xff:f/@cf
     my $cf = ""; my $pofs = ""; my $epos = ""; my $wordbase = ""; my $gw = "";
             
     # xtf-file
@@ -1477,6 +1479,9 @@ sub splitWord {
 	}
 	
 	if (($value eq "") && ($root->text)) { $value = $root->text; }
+	if (($value eq "") && ($tag eq "g:n")) {
+            my @grs = $root->get_xpath('g:r'); $value = $grs[0]?$grs[0]->text:"";
+            }
 	if ($status eq "") {
 	    $status = $root->{att}->{"g:status"}?$root->{att}->{"g:status"}:"";
 	    #if ($status ne "ok") { &writetoerror ("PossibleProblems.txt", localtime(time)."Project: ".$thisCorpus.", text ".$thisText.": sign status ".$status." value ".$value); }
@@ -2261,8 +2266,8 @@ sub abstractSigndata{
 	if (($break eq "preserved") || ($break eq "damaged") || ($break eq "excised")) {
 	   $data->{"value"}{$value}{'All_attested'}++;
 	   $data->{"value"}{$value}{$wordtype.'_attested'}++;
-	   $data->{"value"}{$value}{"pos"}{$pos}{'All_attested'}++;
-	   $data->{"value"}{$value}{"pos"}{$pos}{$wordtype.'_attested'}++;
+	   $data->{"value"}{$value}{"position"}{$pos}{'All_attested'}++;
+	   $data->{"value"}{$value}{"position"}{$pos}{$wordtype.'_attested'}++;
 	}
 	&abstractSigndata2(\%{$data->{"value"}{$value}{"standard"}{$value}{"pos"}{$pos}{"wordtype"}{$wordtype}}, $cf, $gw, $break, $writtenWord, $label, $group, $for); 
     }
@@ -2272,8 +2277,8 @@ sub abstractSigndata{
 	if (($break eq "preserved") || ($break eq "damaged") || ($break eq "excised")) {
 	   $data->{"value"}{$base}{'All_attested'}++;
 	   $data->{"value"}{$base}{$wordtype.'_attested'}++;
-	   $data->{"value"}{$base}{"pos"}{$pos}{'All_attested'}++;
-	   $data->{"value"}{$base}{"pos"}{$pos}{$wordtype.'_attested'}++;
+	   $data->{"value"}{$base}{"position"}{$pos}{'All_attested'}++;
+	   $data->{"value"}{$base}{"position"}{$pos}{$wordtype.'_attested'}++;
 	}
 	# variant types...: form; allo, modif and/or formvar
 	&abstractSigndata2(\%{$data->{"value"}{$base}{$variantType}{$variantMod}{"pos"}{$pos}{"wordtype"}{$wordtype}}, $cf, $gw, $break, $writtenWord, $label, $group, $for); 
