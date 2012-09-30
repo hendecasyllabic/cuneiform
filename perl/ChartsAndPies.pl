@@ -112,6 +112,14 @@ my $twigCat = XML::Twig->new(
 $twigCat->parsefile($file);
 my $CatRoot = $twigCat->root;
 $twigCat->purge;
+
+my $twigType = XML::Twig->new(
+				twig_roots => { 'type' => 1 }
+				);
+$twigType->parsefile($file);
+my $TypeRoot = $twigType->root;
+$twigType->purge;
+
 # for each language... TODO
 # all languages at the moment in CompilationSigns and CompilationWords!!!
 my @data;	#create an array of stuff
@@ -241,7 +249,7 @@ sub makeCategoryDonut {
 	# TODO: Question: for some reason really small categories are not printed on screen (e.g. category CVCV attested 0.02%)
 	# TODO: how to get the actual numbers of attestations printed along the percentages?
 	
-	if (!($colours{$name})) { print " no colour for ".$name.". "; $colours{$name} = "0";}
+	#if (!($colours{$name})) { print " no colour for ".$name.". "; $colours{$name} = "0";}
 	
 	my $writeme = "\n{   y: ".$totalCat.",";
 	$writeme .= "      color: colors[".$colours{$name}."],";
@@ -366,7 +374,7 @@ sub makeSignsPerCategoryDonut {
 	    }
 	}
 	
-	if (!($colours{$name})) { print " no colour for ".$name.". "; $colours{$name} = "0";}
+	#if (!($colours{$name})) { print " no colour for ".$name.". "; $colours{$name} = "0";}
 	
 	my $writeme = "{   y: ".$totalForms.",";
 	$writeme .= "      color: colors[".$colours{$name}."],";
@@ -487,7 +495,6 @@ sub makeLogogramChart {
 sub makeDeterminativeChart {
     my $DetRoot = shift;
     my $wordtype = shift; 
-    
 
     my $determinatives = ($DetRoot->get_xpath('category[@name="determinative"]'))[0];
     if($determinatives){
@@ -536,7 +543,6 @@ sub makeDeterminativeChart {
     $pieready .= "\n   alldata4.series[0].data = currentdata4;";
     $pieready .= "\n	chart4 = new Highcharts.Chart(alldata4);";
     $pielogo .= "</script>";
-
 
     my %data;
     $data{'h2'} =  "\nDeterminative sign use";
@@ -761,7 +767,7 @@ sub printSyllabicTables {
 		    #print p("Syllable ".$l." written as ");
 		    my %tempdata = ();
 		    foreach my $v (@{$variousSignsPerValue{$t}{"syllable"}{$l}{"value"}}) {
-			&findPositionData($file, $wordtype, $t, $v);
+			&findPositionData($TypeRoot, $wordtype, $t, $v);
 		    }
 		    print end_table;
 		    
@@ -772,35 +778,24 @@ sub printSyllabicTables {
 			print start_table({-border=>1, -cellpadding=>3}), start_Tr, th(['Position']), th(['Wordtype']), th(['Guide word']), th(['Citation form']), th(['Spelling']), th(['Attestation(s)']);
 			foreach my $p (@positions) {
 			 #   if (defined ($variousSignsPerValue{$t}{"syllable"}{$l}{"value"}{$p} )) {
-				&findPartialAttestations($file, $wordtype, "syllabic", "", $t, $v, $p);
+				&findPartialAttestations($CatRoot, $wordtype, "syllabic", "", $t, $v, $p);
 			  #  }
 			}
 			print end_table;
-			#&findAttestations($file, $wordtype, "syllabic", "", $t, $v);
-			#die;
 		    }
-		    # add here also findattestations... HIER
 		}
 	    }
 	}
     }
 }
 
-sub findPositionData {
-    my $file = shift;
+sub findPositionData {  
+    my $TypeRoot = shift;
     my $wordtype = shift; 
     my $type = shift; # CV, etc.
     my $value = shift;
     
     my @positions = ("initial", "medial", "final", "alone");
-    #my $tempvalue = '//type[@name="'.$type.'"]'; 
-    
-    my $twigType = XML::Twig->new(
-				twig_roots => { 'type' => 1 }
-				);
-    $twigType->parsefile($file);
-    my $TypeRoot = $twigType->root;
-    $twigType->purge;
     
     my @start = $TypeRoot->get_xpath('type');
     my %data = ();
@@ -832,8 +827,9 @@ sub findPositionData {
     #return \%data;
 }
 
+
 sub findPartialAttestations { # list all attestations of the value $value in position $position
-    my $file = shift;
+    my $FileRoot = shift;
     my $wordtype = shift;
     my $category = shift;
     my $prePost = shift; # can be empty (only used for determinative and phonetic)
@@ -841,13 +837,6 @@ sub findPartialAttestations { # list all attestations of the value $value in pos
     my $value = shift; # should always be given
     my $position = shift; # should always be given
     
-    my $twigFile = XML::Twig->new(
-				  twig_roots => { 'category' => 1 }
-				  );
-    $twigFile->parsefile($file);
-    my $FileRoot = $twigFile->root;
-    $twigFile->purge;
- 
     my $tempvalue = 'category[@name="'.$category.'"]';
     my @root = $FileRoot->get_xpath($tempvalue);
     my $node = $root[0];
@@ -921,115 +910,6 @@ sub findPartialAttestations { # list all attestations of the value $value in pos
     }
 }
 
-#sub findAttestations {
-#    my $file = shift;
-#    my $wordtype = shift;
-#    my $category = shift;
-#    my $prePost = shift; # can be empty (only used for determinative and phonetic)
-#    my $type = shift; # can be empty (used for syllabic and phonetic)
-#    my $value = shift; # should always be given
-#    
-#    my $kind = "";
-#    my $twigFile = XML::Twig->new(
-#				  twig_roots => { 'category' => 1 }
-#				  );
-#    $twigFile->parsefile($file);
-#    my $FileRoot = $twigFile->root;
-#    $twigFile->purge;
-#
-#    my @positions = ("initial", "medial", "final", "alone");
-#    
-#    print start_table({-border=>1, -cellpadding=>3}), start_Tr, th(['Position']), th(['Wordtype']), th(['Guide word']), th(['Citation form']), th(['Spelling']), th(['Attestation(s)']);
-#    
-#    my $tempvalue = "";
-#    if ($category ne "") {
-#	$tempvalue = 'category[@name="'.$category.'"]';
-#	my @categories = $FileRoot->get_xpath($tempvalue);
-#	foreach my $cat (@categories) {
-#	    my $node = $cat;
-#	    if ($prePost ne "") {
-#		$tempvalue = 'prePost[@name="'.$prePost.'"]';
-#		$node = ($cat->get_xpath($tempvalue))[0]; # there should only be one pre or post in determinative and phonetic
-#	    }
-#	    if ($type ne "") {
-#		$tempvalue = 'type[@name="'.$type.'"]';
-#		$node = ($node->get_xpath($tempvalue))[0];
-#	    }
-#	    if ($value ne "") {
-#		$tempvalue = 'value[@name="'.$value.'"]';
-#		$node = ($node->get_xpath($tempvalue))[0];
-#	    }
-#	    else { print p("problem: no value given!"); }
-#	    
-#	    #print p('no pos with prepost '.$prePost.' type '.$type.' value '.$value);
-#	    my @pos = $node->get_xpath('position');
-#	if (scalar @pos > 0) {    
-#	    foreach my $p (@pos) {
-#		my $position = $p->{att}->{name};   #Position: $position
-#		my $test = $p->{att}->{$wordtype}?$p->{att}->{$wordtype}:0;
-#		if ($test > 0) {
-#		    $kind = substr($wordtype, 0, length($wordtype)-9);
-#		    $tempvalue = 'pos[@name="'.$position.'"]';
-#		    my @posNodes = $node->get_xpath($tempvalue);
-#		    foreach my $posN (@posNodes) {
-#			my @wts;
-#			if ($kind ne "All") {
-#			    $tempvalue = './/wordtype[@name="'.$kind.'"]';
-#			    @wts = $node->get_xpath($tempvalue);
-#			}
-#			else {
-#			    @wts = $node->get_xpath('.//wordtype');
-#			}
-#			foreach my $wt (@wts) {
-#			    my $wordtype = $wt->{att}->{name};  #Wordtype: $wordtype
-#			    
-#			    #find gw and cf if known
-#			    my @gws = $wt->get_xpath('.//gw');
-#			    my $gw = ""; my $cf = "";
-#			    
-#			    if (defined($gws[0])) {			    
-#				foreach my $g (@gws) {
-#				    $gw = $g->{att}->{name};
-#				    my @cfs = $g->get_xpath("cf");
-#				    if (defined($cfs[0])) {
-#				        foreach my $c (@cfs) { # gw and cf
-#				            $cf = $c->{att}->{name};
-#					    &attestationsStates ($c, $prePost, $position, $wordtype, $gw, $cf);
-#					}
-#				    }
-#				    else { &attestationsStates ($g, $prePost, $position, $wordtype, $gw, ""); } #gw, but no cf
-#				}
-#			    }
-#			    else { # no gw known, possibly a cf or just the attestation
-#				my @cfs = $wt->get_xpath("cf");
-#				if (defined($cfs[0])) {
-#				    foreach my $c (@cfs) {
-#				        $cf = $c->{att}->{name}; # cf, no gw
-#					&attestationsStates ($c, $prePost, $position, $wordtype, "", $cf);
-#				    }
-#				}
-#				else { &attestationsStates ($wt, $prePost, $position, $wordtype, "", ""); } #no gw, no cf
-#			    }
-#			}
-#		    }
-#		    
-#		}
-#	    }
-#	}
-#	}
-#    }
-#    else {
-#	print p("possible problem: no category for value ".$value);
-#    }
-#
-#    # values can be standard or variant
-#    # followed by wordtype
-#    # followed by position
-#    # followed by gw/cf/state/writtenWord/line
-#    
-#    print end_table;
-#}
-
 sub attestationsStates {
     my $root = shift;
     my $prePost = shift;
@@ -1088,6 +968,8 @@ sub makePhoneticList {
 		}
 	    }
 	}
+	
+	my @positions = ("initial", "medial", "final", "alone");
     
     # alphabetically organized list of phonetic values within pre/post and CV etc.
 	print h1("Phonetic complements");
@@ -1098,10 +980,14 @@ sub makePhoneticList {
 		if($phoneticdata{"prePost"}{$p}{"type"}{$t}{"value"}){
 		    
 		    my @data = @{$phoneticdata{"prePost"}{$p}{"type"}{$t}{"value"}};
-		    foreach my $i (@data){
-			print h4("Phonetic value: ".$i);
-			#&findAttestations($file, $wordtype, "phonetic", $p, $t, $i);
-			#die;
+		    
+		    foreach my $v (@data){
+			print h4("Phonetic value: ".$v);  # HIER
+			print start_table({-border=>1, -cellpadding=>3}), start_Tr, th(['Position']), th(['Wordtype']), th(['Guide word']), th(['Citation form']), th(['Spelling']), th(['Attestation(s)']);
+			foreach my $pos (@positions) {
+			    &findPartialAttestations($CatRoot, $wordtype, "phonetic", $p, $t, $v, $pos);
+			}
+			print end_table;
 		    }
 		}
 	    }
