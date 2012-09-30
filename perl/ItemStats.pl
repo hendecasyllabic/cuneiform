@@ -1469,7 +1469,7 @@ sub splitWord {
 	$base = $bases[0]?$bases[0]->text:"";
 	# variants with g:a (allograph), g:f (formvar) or g:m (modifier)
 	# see http://oracc.museum.upenn.edu/ns/gdl/1.0/#schemawords
-	 
+	
 	my @allos = $root->get_xpath("g:a"); $allo = $allos[0]?$allos[0]->text:"";
 	my @formvars = $root->get_xpath("g:f"); $formvar = $formvars[0]?$formvars[0]->text:"";
 	my @mods = $root->get_xpath("g:m"); $modif = $mods[0]?$mods[0]->text:"";
@@ -1491,7 +1491,9 @@ sub splitWord {
 	    $closed = $root->{att}->{'g:c'}?$root->{att}->{'g:c'}:"";
 	}
 
-	$delim = $root->{att}->{"g:delim"}?$root->{att}->{"g:delim"}:""; 
+	if ($root->{att}->{"g:delim"}) {
+	    $delim = $root->{att}->{"g:delim"};
+	}
 	$break = $root->{att}->{"g:break"}?$root->{att}->{"g:break"}:"undetermined"; 
 	
 	# g:break = missing or damaged (otherwise not given) - however, words existing out of implied signs do not seem to have a break (e.g. P247848 (um-mar)),
