@@ -63,7 +63,7 @@ my $logoTotal = 0;
 my $deterForms = 0;
 my $deterTotal = 0;
 
-my $language = "Standard_Babylonian"; #should go through many languages though ***
+my $language = "Old_Babylonian"; #should go through many languages though ***
 #my $language = "Sumerian";
 my $file = $projdir."SIGNS_P_LANG_".$language.".xml";
 #was a parameter passed...
@@ -73,7 +73,7 @@ if($#ARGV==2){
     my $sysdir = $ARGV[1];
     my $filename = $ARGV[2];
     $ogslfile = $sysdir."resources/ogsl.xml";
-    $filename=~m|SIGNS_P_LANG_(.*).xml|;
+    $filename=~m|SIGNS_P_LANG_(.*).xml|; # TODO or Q *****
     $language = $1;
     $projdir = $sysdir."dataoutNEW/".$filepath."/";
     
@@ -890,7 +890,7 @@ sub findPartialAttestations { # list all attestations of the value $value in pos
 				else { &attestationsStates ($g, $prePost, $position, $wtype, $gw, ""); } #gw, but no cf
 			    }
 			}
-			else { # no gw known, possibly a cf or just the attestation
+			#else { # no gw known, possibly a cf or just the attestation
 			    my @cfs = $wt->get_xpath("cf");
 			    if (defined($cfs[0])) {
 				foreach my $c (@cfs) {
@@ -898,8 +898,10 @@ sub findPartialAttestations { # list all attestations of the value $value in pos
 				    &attestationsStates ($c, $prePost, $position, $wtype, "", $cf);
 				}
 			    }
-			    else { &attestationsStates ($wt, $prePost, $position, $wtype, "", ""); } #no gw, no cf
-			}
+			    #else {
+				&attestationsStates ($wt, $prePost, $position, $wtype, "", ""); #no gw, no cf
+			    #} 
+			#}
 		    }
 		}
 	    #}
