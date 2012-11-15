@@ -955,9 +955,11 @@ sub getLineData {
 	else  {
 	    my $tempdata = {};
 	    if ($word->{att}->{headform}) { # beginning of split word
+		
 		my $headref = $word->{att}->{"xml:id"};
+		print "\nheadform".$headref;
 		$tempdata = &analyseWord($word, $label, $note, "splithead");
-		$linedata{"split"}++;
+		$linedata{"splitWord"}++;
 		push (@splitrefs, $headref);
 	    }
 	    elsif ($word->{att}->{"form"} ne "o"){ # words with form="o" are not words at all and shouldn't be considered (e.g. SAA 1 10 o 18 = P 334195)
@@ -988,8 +990,8 @@ sub getLineData {
 	    # what happens here should only occur when only the end of the word is preserved (and the beginning is not reconstructed)
 	    if (!($split->{att}->{"headref"})) {
 		my $tempdata = {};
-		$tempdata = &analyseWord($split, $label, $note, "splitend");  
-		$linedata{"split"}++;
+		$tempdata = &analyseWord($split, $label, $note, "splitend");
+		$linedata{"splitWord"}++;
 		if ($tempdata->{"conditionWord"}) { $linedata{$tempdata->{"conditionWord"}}++; }
 	
 	        if ($tempdata->{"preservedSigns"}) { $linedata{"preservedSigns"} += $tempdata->{"preservedSigns"}; $linedata{'totalSigns'} += $tempdata->{"preservedSigns"}; }
@@ -1014,7 +1016,11 @@ sub getLineData {
 	# OK for "newline" | "ellipsis" | 
 	#empty: (only in note, so useless Q003232)
 	#newline: P365126, P338366, P296713
+	if ($type eq "newline") {
+	    $linedata{"splitNewLine"}++;
+	}
 	if ($x->{att}->{"g:break"}) { $localdata->{"break"} = $x->{att}->{"g:break"}; }
+	
 	push (@{$linedata{'x'}}, $localdata);
 	$localdata = {};
     }
@@ -1284,26 +1290,26 @@ sub typeWord {
     my $form = shift;
     my $pofs = shift || "";
     
-    my $wordtype = $pofs;
+    my $wordtype = "";
     
     # PERSONAL and ROYAL NAMES
-    if (($wordtype eq "RN") || ($wordtype eq "PN")) { $wordtype = "PersonalNames"; } 
+    if (($pofs eq "RN") || ($pofs eq "PN")) { $wordtype = "PersonalNames"; } 
     
     # http://oracc.museum.upenn.edu/doc/builder/linganno/QPN/
     # GEOGRAPHICAL DATA: GN, WATERCOURSE, ETHNIC (GENTILICS), AGRICULTURAL, FIELD, QUARTER, SETTLEMENT, LINE, TEMPLE 
-    if (($wordtype eq "GN") || ($wordtype eq "WN") || ($wordtype eq "EN") || ($wordtype eq "AN") || ($wordtype eq "FN") || ($wordtype eq "QN") || ($wordtype eq "SN") || ($wordtype eq "LN") || ($wordtype eq "TN")) {
+    if (($pofs eq "GN") || ($pofs eq "WN") || ($pofs eq "EN") || ($pofs eq "AN") || ($pofs eq "FN") || ($pofs eq "QN") || ($pofs eq "SN") || ($pofs eq "LN") || ($pofs eq "TN")) {
 	$wordtype = "Geography";
     }
     
     # DIVINE and CELESTIAL NAMES
-    if (($wordtype eq "DN") || ($wordtype eq "CN")) {
+    if (($pofs eq "DN") || ($pofs eq "CN")) {
 	$wordtype = "DivineCelestial"; 
     }
     
     # ROUGH CLASSIFICATION IF NOT LEMMATIZED
     if (($wordtype eq "") && ($form ne "")) { 
 	my $formsmall = lc ($form);
-	if ($formsmall =~ /(^\{1\})|(^\{m\})|(^\{f\})/) { $wordtype = "PersonalNames"; }
+	if ($formsmall =~ /(^\{1\})|(^\{m\})|(^\{f\})|(^\{di\x{0161}\})/) { $wordtype = "PersonalNames"; }
 	if (($formsmall =~ /(^\{d\})/) || ($formsmall =~ /(^\{mul\})/) || ($formsmall =~ /(^\{mul\x{2082}\})/)) { $wordtype = "DivineCelestial"; }  
 	if (($formsmall =~ /(\{ki\})/) || ($formsmall =~ /(\{kur\})/) || ($formsmall =~ /(\{uru\})/) || ($formsmall =~ /(\{iri\})/) || ($formsmall =~ /(\{id\x{2082}\})/))  { $wordtype = "Geography"; }
 	if ($formsmall =~ /^\d/) { $wordtype = "Numerical"; }
@@ -1342,7 +1348,9 @@ sub analyseWord{
 	$wordbase = $item->{att}->{"base"}?$item->{att}->{"base"}:"";
     }
     
-    my $wordtype = &typeWord ($form, $pofs);
+    my $wordtype;
+    if ($form ne '') { $wordtype = &typeWord ($form, $pofs); }
+    else { $wordtype = &typeWord ($word, $pofs); }
     
 #Split: d
 #Split: AMARUTU
@@ -1498,7 +1506,7 @@ sub splitWord {
 	$localdata = {};
 	
 	if ($tag eq "g:x") {
-	    $newline = $root->{att}->{'g:type'};
+	    $newline = $root->{att}->{'g:type'}; #possible in split words
 	}
 	$value = $root->{att}->{form}?$root->{att}->{form}:"";
 	my @bases = $root->get_xpath("g:b");
@@ -1518,6 +1526,10 @@ sub splitWord {
 	if (($value eq "") && ($tag eq "g:n")) {
             my @grs = $root->get_xpath('g:r'); $value = $grs[0]?$grs[0]->text:"";
             }
+	if (($value eq "") && ($newline eq "newline")) {
+	    $value = ";";
+	}
+	
 	if ($status eq "") {
 	    $status = $root->{att}->{"g:status"}?$root->{att}->{"g:status"}:"";
 	    #if ($status ne "ok") { &writetoerror ("PossibleProblems.txt", localtime(time)."Project: ".$thisCorpus.", text ".$thisText.": sign status ".$status." value ".$value); }
@@ -2407,89 +2419,125 @@ sub saveBorger {
     $smallValue =~ s/\x{0160}/\x{0161}/g;
     $smallValue =~ s/\x{1E6C}/\x{1E6D}/g;
     
-    my $search = 'sign/v[@n="'.$smallValue.'"]'; my $signname = "unknown";
+    my $search = 'sign/v[@n="'.$smallValue.'"]'; my $signname = "-";
     
-    if (my @temp = $OgslRoot->get_xpath($search)) {
-	my $parent = $temp[0]->parent();
-	$signname = $parent->{att}->{n};
-	#print "\nsignname of value = ".$value." is ".$signname;
-    }
-    
-    # combine with data from Borger.xml ($BorgerRoot)
-    my $BorgerNo = "None"; my $BorgerVal = "None"; my $Cuneicode = "None";
-    if ($signname ne "unknown") {
-	my $manipulate = $signname;
-	$manipulate =~ s/@/\\@/g;
-	$search = 'Borger[@signname="'.$manipulate.'"]';
-	if (my @temp = $BorgerRoot->get_xpath($search)) {
-	    $BorgerNo = $temp[0]->{att}->{n};
-	    $BorgerVal = $temp[0]->{att}->{'BorgerVal'};
-	    $Cuneicode = $temp[0]->{att}->{'utf8_hex'};
-	    #print "\n with BorgerNo = ".$BorgerNo.", BorgerVal = ".$BorgerVal." and Cuneicode ".$Cuneicode;
+    if ($value ne ";") { # split word with ;
+	my $Cuneicode = "";
+	if (my @temp = $OgslRoot->get_xpath($search)) {
+	    my $parent = $temp[0]->parent();
+	    $signname = $parent->{att}->{n};
+	    $Cuneicode = ($parent->get_xpath('utf8'))[0]->text; # still without &#...; TODO!
+	    #print "\nsignname of value = ".$value." is ".$signname;
 	}
-    }
-    
-    # save the data in structure C_Borger
-
-    # also works on punctuation 
-    
-    $PQdataBorger{"totalValues"}++;
-    $PQdataBorger{'BorgerNo'}{$BorgerNo}{'BorgerVal'} = $BorgerVal;
-    $PQdataBorger{'BorgerNo'}{$BorgerNo}{'Cuneicode'} = $Cuneicode;
-    $PQdataBorger{'BorgerNo'}{$BorgerNo}{'Signname'} = $signname;
-    $PQdataBorger{'BorgerNo'}{$BorgerNo}{'lang'}{$lang}{'category'}{$category}{'total'}++;
-    
-    if ($category eq "syllabic") {
-	my $abstract = $value;
 	
-	if (($syllabic eq "CV") || ($syllabic eq "CVC") || ($syllabic eq "V") || ($syllabic eq "VC")) {
-	    if ($syllabic eq "CV") {
-	        if (($abstract eq "ia") || ($abstract eq "ie") || ($abstract eq "ii") || ($abstract eq "iu")) {
-		    $abstract = "IA";
+	# combine with data from Borger.xml ($BorgerRoot)
+	my $BorgerNo = "None"; my $BorgerVal = $signname; 
+	if ($signname ne "-") {
+	    my $manipulate = $signname;
+	    $manipulate =~ s/@/\\@/g;
+	    $search = 'Borger[@signname="'.$manipulate.'"]';
+	    if (my @temp = $BorgerRoot->get_xpath($search)) {
+		$BorgerNo = $temp[0]->{att}->{n};
+		$BorgerVal = $temp[0]->{att}->{'BorgerVal'};
+		$Cuneicode = $temp[0]->{att}->{'utf8_hex'};
+		
+		## for xslt it's a lot easier to have the Cuneicode not as, e.g. "x12038", but as "&#x12038;"
+		## so the beginning x => &#x
+		## when several signs are combined: .x => ;&#x
+		## at the end of each entry => ;
+		#
+		#$Cuneicode =~ s|^x|\&\#x|; # this doesn't work as the stupid & is always replaced by &amp;
+		#$Cuneicode =~ s|\.x|;\&\#x|;
+		#$Cuneicode = $Cuneicode.";";
+		
+		#print "\n with BorgerNo = ".$BorgerNo.", BorgerVal = ".$BorgerVal." and Cuneicode ".$Cuneicode;
+	    }
+	    if ($BorgerNo eq "None") {
+		# probably combined sign - list after first element, but with its own name and cuneicode
+		$manipulate =~ s/\|//g;
+		$manipulate =~ s/\.\S*//gsi;
+		$manipulate =~ s/\&\S*//gsi;
+		$search = 'Borger[@signname="'.$manipulate.'"]';
+		if (my @temp = $BorgerRoot->get_xpath($search)) { $BorgerNo = $temp[0]->{att}->{n}; }
+		$BorgerNo .= "_combi";
+	    }
+	}
+	# save the data in structure C_Borger
+	# also works on punctuation 
+	$PQdataBorger{"totalValues"}++;
+	$PQdataBorger{'BorgerNo'}{$BorgerNo}{'BorgerVal'} = $BorgerVal;
+	$PQdataBorger{'BorgerNo'}{$BorgerNo}{'Cuneicode'} = $Cuneicode;
+	$PQdataBorger{'BorgerNo'}{$BorgerNo}{'Signname'} = $signname;
+	$PQdataBorger{'BorgerNo'}{$BorgerNo}{'lang'}{$lang}{'category'}{$category}{'total'}++;
+	
+	if ($category eq "syllabic") {
+	    my $abstract = $value;
+	    
+	    if (($syllabic eq "CV") || ($syllabic eq "CVC") || ($syllabic eq "V") || ($syllabic eq "VC")) {
+		if ($syllabic eq "CV") {
+		    if (($abstract eq "ia") || ($abstract eq "ie") || ($abstract eq "ii") || ($abstract eq "iu")) {
+			$abstract = "IA";
+		    }
+		    if (($abstract eq "\x{02BE}a") || ($abstract eq "\x{02BE}e") || ($abstract eq "\x{02BE}i") || ($abstract eq "\x{02BE}u")) {
+			$abstract = "\x{02BE}A";
+		    }
+		    if (($abstract eq "a\x{02BE}") || ($abstract eq "e\x{02BE}") || ($abstract eq "i\x{02BE}") || ($abstract eq "u\x{02BE}")) {
+			$abstract = "A\x{02BE}";
+		    }
 		}
-		if (($abstract eq "\x{02BE}a") || ($abstract eq "\x{02BE}e") || ($abstract eq "\x{02BE}i") || ($abstract eq "\x{02BE}u")) {
-		    $abstract = "\x{02BE}A";
-		}
-		if (($abstract eq "a\x{02BE}") || ($abstract eq "e\x{02BE}") || ($abstract eq "i\x{02BE}") || ($abstract eq "u\x{02BE}")) {
-		    $abstract = "A\x{02BE}";
-		}
+	    
+		# nuke the subscripts like numbers (unicode 2080 - 2089) 
+		$abstract =~ s|(\x{2080})||g; $abstract =~ s|(\x{2081})||g; $abstract =~ s|(\x{2082})||g; $abstract =~ s|(\x{2083})||g; $abstract =~ s|(\x{2084})||g;
+		$abstract =~ s|(\x{2085})||g; $abstract =~ s|(\x{2086})||g; $abstract =~ s|(\x{2087})||g; $abstract =~ s|(\x{2088})||g; $abstract =~ s|(\x{2089})||g;
+		$abstract =~ s|(\x{2093})||g; # subscript x
+	    
+		# make abstract value for signs ending in labial, dental or velar stop or in a sibilant (except /š/): b/p => B, d/t/thet => D, g/k/q => G, z/s/tsade => Z
+		$abstract =~ s/[bp]$/B/;
+		$abstract =~ s/[dt\x{1E6D}]$/D/;
+		$abstract =~ s/[gkq]$/G/;
+		$abstract =~ s/[z\x{1E63}s]/Z/;
+	
+		# i and e not always distinguished either
+		$abstract =~ s/[ie]/I/gsi;
+	    
+		# abstract also beginning C - combine b/p, d/t/thet, g/k/q, s/shin, tsade/z 
+		$abstract =~ s/^[bp]/B/;
+		$abstract =~ s/^[dt\x{1E6D}]/D/;
+		$abstract =~ s/^[gkq]/G/;
+		$abstract =~ s/^[s\x{0161}]/S/;
+		$abstract =~ s/^[z\x{1E63}]/Z/;
 	    }
 	
-	    # nuke the subscripts like numbers (unicode 2080 - 2089) 
-	    $abstract =~ s|(\x{2080})||g; $abstract =~ s|(\x{2081})||g; $abstract =~ s|(\x{2082})||g; $abstract =~ s|(\x{2083})||g; $abstract =~ s|(\x{2084})||g;
-	    $abstract =~ s|(\x{2085})||g; $abstract =~ s|(\x{2086})||g; $abstract =~ s|(\x{2087})||g; $abstract =~ s|(\x{2088})||g; $abstract =~ s|(\x{2089})||g;
-	    $abstract =~ s|(\x{2093})||g; # subscript x
-	
-	    # make abstract value for signs ending in labial, dental or velar stop or in a sibilant (except /š/): b/p => B, d/t/thet => D, g/k/q => G, z/s/tsade => Z
-	    $abstract =~ s/[bp]$/B/;
-	    $abstract =~ s/[dt\x{1E6D}]$/D/;
-	    $abstract =~ s/[gkq]$/G/;
-	    $abstract =~ s/[z\x{1E63}s]/Z/;
-    
-	    # i and e not always distinguished either
-	    $abstract =~ s/[ie]/I/gsi;
-	
-	    # abstract also beginning C - combine b/p, d/t/thet, g/k/q, s/shin, tsade/z 
-	    $abstract =~ s/^[bp]/B/;
-	    $abstract =~ s/^[dt\x{1E6D}]/D/;
-	    $abstract =~ s/^[gkq]/G/;
-	    $abstract =~ s/^[s\x{0161}]/S/;
-	    $abstract =~ s/^[z\x{1E63}]/Z/;
+	    &BorgerSigndata(\%{$PQdataBorger{'BorgerNo'}{$BorgerNo}{'lang'}{$lang}{'category'}{$category}{'abstract'}{$abstract}}, $value, $base, $allo, $formvar, $modif, $wordtype, $pos, $gw, $cf, $break, $writtenWord, $label, $group, $for);
+	    if (($break eq "preserved") || ($break eq "damaged") || ($break eq "excised")) {
+	       $PQdataBorger{'BorgerNo'}{$BorgerNo}{'lang'}{$lang}{'category'}{$category}{'abstract'}{$abstract}{'attested'}{'All_attested'}{'total'}++;
+	       $PQdataBorger{'BorgerNo'}{$BorgerNo}{'lang'}{$lang}{'category'}{$category}{'abstract'}{$abstract}{'attested'}{$wordtype.'_attested'}{'total'}++;
+	       $PQdataBorger{'BorgerNo'}{$BorgerNo}{'lang'}{$lang}{'category'}{$category}{'abstract'}{$abstract}{'attested'}{'All_attested'}{$pos}++;
+	       $PQdataBorger{'BorgerNo'}{$BorgerNo}{'lang'}{$lang}{'category'}{$category}{'abstract'}{$abstract}{'attested'}{$wordtype.'_attested'}{$pos}++;
+	    }
 	}
-    
-	&BorgerSigndata(\%{$PQdataBorger{'BorgerNo'}{$BorgerNo}{'lang'}{$lang}{'category'}{$category}{'abstract'}{$abstract}}, $value, $base, $allo, $formvar, $modif, $wordtype, $pos, $gw, $cf, $break, $writtenWord, $label, $group, $for);
-	if (($break eq "preserved") || ($break eq "damaged") || ($break eq "excised")) {
-	   $PQdataBorger{'BorgerNo'}{$BorgerNo}{'lang'}{$lang}{'category'}{$category}{'abstract'}{$abstract}{'attested'}{'All_attested'}{'total'}++;
-	   $PQdataBorger{'BorgerNo'}{$BorgerNo}{'lang'}{$lang}{'category'}{$category}{'abstract'}{$abstract}{'attested'}{$wordtype.'_attested'}{'total'}++;
-	   $PQdataBorger{'BorgerNo'}{$BorgerNo}{'lang'}{$lang}{'category'}{$category}{'abstract'}{$abstract}{'attested'}{'All_attested'}{$pos}++;
-	   $PQdataBorger{'BorgerNo'}{$BorgerNo}{'lang'}{$lang}{'category'}{$category}{'abstract'}{$abstract}{'attested'}{$wordtype.'_attested'}{$pos}++;
+	else {
+	    &BorgerSigndata(\%{$PQdataBorger{'BorgerNo'}{$BorgerNo}{'lang'}{$lang}{'category'}{$category}}, $value, $base, $allo, $formvar, $modif, $wordtype, $pos, $gw, $cf, $break, $writtenWord, $label, $group, $for);
 	}
     }
     else {
-	&BorgerSigndata(\%{$PQdataBorger{'BorgerNo'}{$BorgerNo}{'lang'}{$lang}{'category'}{$category}}, $value, $base, $allo, $formvar, $modif, $wordtype, $pos, $gw, $cf, $break, $writtenWord, $label, $group, $for);
+	$PQdataBorger{'splitWords'}{'num'}++; 
+	if (($wordtype ne '') && ($gw ne '') && ($cf ne '')) {
+	    push(@{$PQdataBorger{'splitWords'}{'lang'}{$lang}{'category'}{$category}{'wordtype'}{$wordtype}{'gw'}{$gw}{'cf'}{$cf}{'writtenWord'}{$writtenWord}{'label'}},$label);
+	}
+	elsif (($wordtype ne '') && ($gw ne '') && ($cf eq '')) {
+	    push(@{$PQdataBorger{'splitWords'}{'lang'}{$lang}{'category'}{$category}{'wordtype'}{$wordtype}{'gw'}{$gw}{'writtenWord'}{$writtenWord}{'label'}},$label);
+	}
+	elsif (($wordtype ne '') && ($gw eq '') && ($cf ne '')) {
+	    push(@{$PQdataBorger{'splitWords'}{'lang'}{$lang}{'category'}{$category}{'wordtype'}{$wordtype}{'cf'}{$cf}{'writtenWord'}{$writtenWord}{'label'}},$label);
+	}
+	elsif (($wordtype ne '') && ($gw eq '') && ($cf eq '')) {
+	    push(@{$PQdataBorger{'splitWords'}{'lang'}{$lang}{'category'}{$category}{'wordtype'}{$wordtype}{'writtenWord'}{$writtenWord}{'label'}},$label);
+	}
+	
     }
     
-    # don't forget signs that are not in Borger TODO !!!
+    # Signs that are not in Borger should be accounted for, but keep checking.
 }
 
 
