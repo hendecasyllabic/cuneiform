@@ -63,7 +63,7 @@ my $logoTotal = 0;
 my $deterForms = 0;
 my $deterTotal = 0;
 
-my $language = "Old_Babylonian"; #should go through many languages though ***
+my $language = "Neo-Assyrian"; #should go through many languages though ***
 #my $language = "Sumerian";
 my $file = $projdir."SIGNS_P_LANG_".$language.".xml";
 #was a parameter passed...
@@ -217,14 +217,18 @@ sub makeCategoryDonut {
 	
 	my @subCategories; # determinatives and syllabic signs may have subcategories
 	my @catdata;
+	my $newdata = "no";
 	if (($name eq "determinative") || ($name eq "phonetic")) { # subdivision of pre- and postdeterminatives
 	    my @prePost = $cat->get_xpath('prePost');
 	    foreach my $p (@prePost) {
 		my $n = $p->{att}->{name};
 		my $t = &totalNum($p, $wordtype);
 		#print p("category ".$n." totalCat ".$t);
-		push(@subCategories, $n." (".$t.")");
-		push(@catdata, $t);
+		if ($t > 0) {
+		    push(@subCategories, $n." (".$t.")");
+		    push(@catdata, $t);
+		    $newdata = "yes";
+		}
 	    }
 	}
 	elsif ($name eq "syllabic") { # subdivision of different syllabic categories
@@ -234,16 +238,22 @@ sub makeCategoryDonut {
 		my $t = &totalNum($p, $wordtype);
 		#print p("category ".$n." totalCat ".$t);
 		#if ($n eq "CVCV") { print "\nCVCV = ".$t; }
-		push(@subCategories, $n." (".$t.")");
-		push(@catdata, $t);
+		if ($t > 0) {
+		    push(@subCategories, $n." (".$t.")");
+		    push(@catdata, $t);
+		    $newdata = "yes";
+		}
 	    }
 	}
 	else {
 	    my $n = $cat->{att}->{name};
 	    my $t = &totalNum($cat, $wordtype);
 	    #print p("category ".$n." totalCat ".$t);
-	    push(@subCategories, $n." (".$t.")");
-	    push(@catdata, $t);
+	    if ($t > 0) {
+		push(@subCategories, $n." (".$t.")");
+		push(@catdata, $t);
+		$newdata = "yes";
+	    }
 	}
 	
 	# TODO: Question: for some reason really small categories are not printed on screen (e.g. category CVCV attested 0.02%)
@@ -251,17 +261,19 @@ sub makeCategoryDonut {
 	
 	#if (!($colours{$name})) { print " no colour for ".$name.". "; $colours{$name} = "0";}
 	
-	my $writeme = "\n{   y: ".$totalCat.",";
-	$writeme .= "      color: colors[".$colours{$name}."],";
-	$writeme .= "          drilldown: {";
-	$writeme .= "                   name: '".$cat."',";
-	$writeme .= "                   categories: ['".join("','",@subCategories)."'],";
-	$writeme .= "                   data: [".join(",",@catdata)."],";
-	$writeme .= "                   color: colors[".$colours{$name}."]";
-	$writeme .= "      }";
-	$writeme .= "\n  }";
+	if ($newdata eq "yes") {
+	    my $writeme = "\n{   y: ".$totalCat.",";
+	    $writeme .= "      color: colors[".$colours{$name}."],";
+	    $writeme .= "          drilldown: {";
+	    $writeme .= "                   name: '".$cat."',";
+	    $writeme .= "                   categories: ['".join("','",@subCategories)."'],";
+	    $writeme .= "                   data: [".join(",",@catdata)."],";
+	    $writeme .= "                   color: colors[".$colours{$name}."]";
+	    $writeme .= "      }";
+	    $writeme .= "\n  }";
     
-	push(@output,$writeme);
+	    push(@output,$writeme);
+	}
 	
 	#$count++;
     }
@@ -376,18 +388,19 @@ sub makeSignsPerCategoryDonut {
 	
 	#if (!($colours{$name})) { print " no colour for ".$name.". "; $colours{$name} = "0";}
 	
-	my $writeme = "{   y: ".$totalForms.",";
-	$writeme .= "      color: colors[".$colours{$name}."],";
-	$writeme .= "          drilldown: {";
-	$writeme .= "                   name: '".$cat."',";
-	$writeme .= "                   categories: ['".join("','",@subCategories)."'],";
-	$writeme .= "                   data: [".join(",",@signsPerCatdata)."],";
-	$writeme .= "                   color: colors[".$colours{$name}."]";
-	$writeme .= "      }";
-	$writeme .= "  }";
+	if ($totalForms > 0) {
+	    my $writeme = "{   y: ".$totalForms.",";
+	    $writeme .= "      color: colors[".$colours{$name}."],";
+	    $writeme .= "          drilldown: {";
+	    $writeme .= "                   name: '".$cat."',";
+	    $writeme .= "                   categories: ['".join("','",@subCategories)."'],";
+	    $writeme .= "                   data: [".join(",",@signsPerCatdata)."],";
+	    $writeme .= "                   color: colors[".$colours{$name}."]";
+	    $writeme .= "      }";
+	    $writeme .= "  }";
 	   
-	push(@output,$writeme);
-	
+	    push(@output,$writeme);
+	}
 	#$count++;
     }
     
@@ -457,7 +470,7 @@ sub makeLogogramChart {
     my $remlogo = $logoForms;
     
     foreach my $n (sort { $b <=> $a } keys %{$logodata{"num"}}) {
-        if (($i < 10) && ($rest > 0)) {
+        if (($i < 20) && ($rest > 0)) {
 	    foreach my $s (@{$logodata{"num"}{$n}{"value"}}) {
 		#print p($s." ".$n);
 		$i++;
