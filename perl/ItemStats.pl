@@ -6,6 +6,7 @@ local $SIG{__WARN__} = \&Carp::cluck;
 use Data::Dumper;
 use XML::Twig::XPath;
 use XML::Simple;
+use Scalar::Util qw(looks_like_number);
 use utf8;
 binmode STDOUT, ":utf8";
 
@@ -26,6 +27,7 @@ my %compilationERSigns = (); # temporary feature for ER - get rid of all referen
 my %compilationERWords = ();
 
 my $thisCorpus = "";
+my $corpusdesignation = "";
 my $thisText = "";
 
 my %langmatrix; # other codes in use? ask Steve TODO
@@ -105,18 +107,20 @@ if($#ARGV==2){
     my @allfiles = @{$config{"filelist"}{$config{"typename"}}};
     
     &openOgslAndBorger();
+    my $numberP = 0; my $numberQ = 0;
     foreach(@allfiles){
         my $filename = $_;
         if($filename =~ m|/([^/]*).${ext}$|){
             #my $shortname = $1;
 	    $thisText = $1;
 	    if($hash{$thisText}){
-		
 		&outputtext("\nShortName: ". $thisText);
 		if($thisText =~ m|^Q|gsi){
+		    $numberQ++;
 		    &doQstats($filename, $thisText, $filepath);
 		}
 		elsif($thisText =~ m|^P|gsi){
+		    $numberP++;
 		    &doPstats($filename, $thisText, $filepath);
 		}
 	    }
@@ -130,7 +134,6 @@ if($#ARGV==2){
     &writetofile("combos", \%combos, $filepath);
     
 # compilations for ER
-
     foreach my $PQ (keys %compilationERSigns) {
 	foreach my $lang (keys %{$compilationERSigns{$PQ}{'lang'}}){
 	    my $newlang = $lang;
@@ -139,6 +142,9 @@ if($#ARGV==2){
 	}
     }
     
+    #print "\nNumber of texts ".$numberP;
+    $compilationERWords{'no_Ps'} = $numberP;
+    $compilationERWords{'no_Qs'} = $numberQ;
     #&writetofile("CompilationSigns", \%compilationERSigns);
     &writetofile("CompilationWords", \%compilationERWords, $filepath); # maybe also to be split later TODO
     
@@ -196,6 +202,7 @@ sub FullStats{
     
     my @allfiles = @{$config{"filelist"}{$config{"typename"}}};
     &openOgslAndBorger();
+    my $numberP = 0; my $numberQ = 0;
 # loop over each of the xtf-files we found
     foreach(@allfiles){
         my $filename = $_;
@@ -204,9 +211,11 @@ sub FullStats{
 	    $thisText = $1;
 	    &outputtext("\nShortName: ". $thisText);
             if($thisText =~ m|^Q|gsi){
+		$numberQ++;
                 &doQstats($filename, $thisText);
             }
 	    elsif($thisText =~ m|^P|gsi){
+		$numberP++;
 		&doPstats($filename, $thisText);
 	    }
 	}
@@ -227,8 +236,13 @@ sub FullStats{
 	}
     }
     
+    #print "\nNumber of texts ".$numberP;
+    $compilationERWords{'no_Ps'} = $numberP;
+    $compilationERWords{'no_Qs'} = $numberQ;
     #&writetofile("CompilationSigns", \%compilationERSigns);
     &writetofile("CompilationWords", \%compilationERWords); # maybe also to be split later TODO
+    
+    &writetofile($corpusdesignation."_Borger", \%PQdataBorger);
 }
 
 
@@ -284,7 +298,7 @@ sub doQstats{
     &checkPQdataStructure;
 
     &writetofile($shortname, \%PQdata, $extradir);
-    &writetofile($shortname."_Borger", \%PQdataBorger, $extradir);
+    #&writetofile($shortname."_Borger", \%PQdataBorger, $extradir);
 }
 
 sub doPstats{
@@ -332,7 +346,8 @@ sub doPstats{
     &checkPQdataStructure;
 
     &writetofile($shortname,\%PQdata, $extradir);
-    &writetofile($shortname."_Borger",\%PQdataBorger, $extradir);
+    #&writetofile($shortname."_Borger",\%PQdataBorger, $extradir);
+    # if doing this latter, then per file - but empty hash after saving!!
 }
 
 
@@ -445,18 +460,18 @@ sub getMetaData{  # find core metadata fields and add them to each itemfile [$PQ
     
     # For corpusdata-file: allow for quick metadata search on PQ-number, period, provenance, genre, language, etc.
     
-    $PQdataBorger{"name"} = $PQnumber;
+    #$PQdataBorger{"name"} = $PQnumber;
     
-    if ($PQdata{"designation"} ne "") { $designation = $PQdata{"designation"}; $PQdataBorger{"designation"} = $designation; }
-    if ($PQdata{"genre"} ne "") { $genre = $PQdata{"genre"}; $PQdataBorger{"genre"} = $genre; }
-    if ($PQdata{"language"} ne "") { $language = $PQdata{"language"}; $PQdataBorger{"language"} = $language; }
-    if ($PQdata{"object"} ne "") { $object = $PQdata{"object"}; $PQdataBorger{"object"} = $object; }
-    if ($PQdata{"period"} ne "") { $period = $PQdata{"period"}; $PQdataBorger{"period"} = $period; }
-    if ($PQdata{"project"} ne "") { $project = $PQdata{"project"}; $PQdataBorger{"project"} = $project; }
-    if ($PQdata{"provenance"} ne "") { $provenance = $PQdata{"provenance"}; $PQdataBorger{"provenance"} = $provenance; }
-    if ($PQdata{"script"} ne "") { $script = $PQdata{"script"}; $PQdataBorger{"script"} = $script; }
-    if ($PQdata{"subgenre"} ne "") { $subgenre = $PQdata{"subgenre"}; $PQdataBorger{"subgenre"} = $subgenre; }
-    if ($PQdata{"writer"} ne "") { $writer = $PQdata{"writer"}; $PQdataBorger{"writer"} = $writer; }
+    if ($PQdata{"designation"} ne "") { $designation = $PQdata{"designation"}; } #$PQdataBorger{"designation"} = $designation; }
+    if ($PQdata{"genre"} ne "") { $genre = $PQdata{"genre"}; } #$PQdataBorger{"genre"} = $genre; }
+    if ($PQdata{"language"} ne "") { $language = $PQdata{"language"}; } #$PQdataBorger{"language"} = $language; }
+    if ($PQdata{"object"} ne "") { $object = $PQdata{"object"}; } #$PQdataBorger{"object"} = $object; }
+    if ($PQdata{"period"} ne "") { $period = $PQdata{"period"}; } #$PQdataBorger{"period"} = $period; }
+    if ($PQdata{"project"} ne "") { $project = $PQdata{"project"}; } #$PQdataBorger{"project"} = $project; }
+    if ($PQdata{"provenance"} ne "") { $provenance = $PQdata{"provenance"}; } #$PQdataBorger{"provenance"} = $provenance; }
+    if ($PQdata{"script"} ne "") { $script = $PQdata{"script"}; } #$PQdataBorger{"script"} = $script; }
+    if ($PQdata{"subgenre"} ne "") { $subgenre = $PQdata{"subgenre"}; } #$PQdataBorger{"subgenre"} = $subgenre; }
+    if ($PQdata{"writer"} ne "") { $writer = $PQdata{"writer"}; } #$PQdataBorger{"writer"} = $writer; }
     
     if (!defined $corpusdata{"corpus"}) { $corpusdata{"corpus"} = (); }
 
@@ -471,6 +486,10 @@ sub getMetaData{  # find core metadata fields and add them to each itemfile [$PQ
     push(@{$corpusdata{"corpus"}{$project}{"writer"}{$writer}{$PorQ}}, $PQnumber);
     
     $thisCorpus = $project;
+    $corpusdesignation = $thisCorpus."_".$genre;
+    if ($subgenre ne "") { $corpusdesignation = $corpusdesignation."_".$subgenre; }
+    $corpusdesignation =~ s/\//_/gsi;
+    $corpusdesignation =~ s/ /_/gsi;
 }
 
 sub getStructureData{
@@ -1040,14 +1059,15 @@ sub savePunct {
     
     $lang = $langmatrix{$lang};
     
-    &saveBorger($lang, $category, $sign, "", "", "", "", "", "", "", "", $break, $label, $cf, "", "", $gw, "", "", "");
+    &saveBorger($lang, $category, $sign, "", "", "", "", "", "", "alone", "", $break, $label, $cf, "", "Punct", $gw, "", "", "");
     
     $PQdata{"B_Signs"}{'total'}++; # total number of signs
-    $PQdata{"B_Signs"}{"ztotal_state"}{$break}{'total'}++;
+    $PQdata{"B_Signs"}{"total_".$break}++;
+    #$$PQdata{"B_Signs"}{"ztotal_state"}{$break}{'total'}++;
     $PQdata{"B_Signs"}{'lang'}{$lang}{'total'}++; # total number of signs per language
-    $PQdata{"B_Signs"}{'lang'}{$lang}{"state"}{$break}{'total'}++;
-    $PQdata{"B_Signs"}{'lang'}{$lang}{"category"}{$category}{'total'}++; # total number of signs per language and category
-    $PQdata{"B_Signs"}{'lang'}{$lang}{"category"}{$category}{"state"}{$break}{'num'}++;
+    $PQdata{"B_Signs"}{'lang'}{$lang}{"total_".$break}++;
+    #$PQdata{"B_Signs"}{'lang'}{$lang}{"category"}{$category}{'total'}++; # total number of signs per language and category
+    #$PQdata{"B_Signs"}{'lang'}{$lang}{"category"}{$category}{"state"}{$break}{'num'}++;
     if ($ditto eq "") {
 	push (@{$PQdata{"B_Signs"}{'lang'}{$lang}{"category"}{$category}{"value"}{$sign}{"state"}{$break}{"line"}}, $label);
     }
@@ -1065,9 +1085,9 @@ sub savePunct {
     #$compilationERSigns{"B_Signs"}{'total'}++; # total number of signs
     #$compilationERSigns{"B_Signs"}{"ztotal_state"}{$break}{'total'}++;
     $compilationERSigns{$PQ}{'lang'}{$lang}{'total'}++; # total number of signs per language
-    $compilationERSigns{$PQ}{'lang'}{$lang}{"state"}{$break}{'total'}++;
-    $compilationERSigns{$PQ}{'lang'}{$lang}{"category"}{$category}{'total'}++; # total number of signs per language and category
-    $compilationERSigns{$PQ}{'lang'}{$lang}{"category"}{$category}{"state"}{$break}{'num'}++;
+    $compilationERSigns{$PQ}{'lang'}{$lang}{"total_".$break}++;
+    #$compilationERSigns{$PQ}{'lang'}{$lang}{"category"}{$category}{'total'}++; # total number of signs per language and category
+    #$compilationERSigns{$PQ}{'lang'}{$lang}{"category"}{$category}{"state"}{$break}{'num'}++;
     if ($ditto eq "") {
 	push (@{$compilationERSigns{$PQ}{'lang'}{$lang}{"category"}{$category}{"value"}{$sign}{"state"}{$break}{"line"}}, $label);
 	}
@@ -1160,7 +1180,7 @@ sub formWord{
     
     #my $open = ""; my $closed = "";
     
-    my $noSign = 0; my $previousStatus = "ok";
+    my $notASign = 0; my $previousStatus = "ok";
     my $previousClosedSym = "";
     my $conditionWord = "";
     #my $print = "no";
@@ -1188,7 +1208,7 @@ sub formWord{
 	
 	my $startbit = ""; my $endbit = "";
 	my $value = $thing->{'value'};
-	if ($value eq "") { $noSign++; } # signs with no value shouldn't be counted (are probably newlines!!!) 
+	if (($value eq "") || ($value eq ";")) { $notASign++; } # signs with no value shouldn't be counted (are probably newlines!!!) 
 	
 	if ($thing->{"type"} && ($thing->{"type"} eq "semantic")) { # determinatives get {}
 	    $value = "{".$value."}";
@@ -1210,14 +1230,12 @@ sub formWord{
 	    if ($lastend ne "]") { $startbit = "[" ; }
 	    else { $lastend = ""; }
 	    $endbit = "]";
-	    $signs->{'missing'}++;
 	}
 	elsif ($break eq "damaged"){ # value gets half[]
 	    if ($lastend ne "\x{2E23}") { $startbit = "\x{2E22}" ; }
 	    else { $lastend = ""; }
 	    $endbit = "\x{2E23}";
-	    $signs->{'damaged'}++;
-	}
+    	}
 	
 	if (($previousStatus ne "ok") && ($status eq "ok")) {
 	    # we need to close before next sign with $previousClosedSym, adding $lastend before that
@@ -1244,6 +1262,7 @@ sub formWord{
 	$previousStatus = $status;
     }
     
+    $no_elements = $no_elements - $notASign;
     # always correct? OK for all my examples so far. # TODO check again
     if ($no_elements > 1) { $writtenWord .= $lastend.$previousClosedSym.$lastdelim; }
     else { $writtenWord .= $previousClosedSym.$lastend.$lastdelim; }
@@ -1274,8 +1293,10 @@ sub formWord{
     elsif ($no_elements == $signs->{'supplied'}) { $conditionWord = "suppliedWord"; }
     elsif ($no_elements == $signs->{'implied'}) { $conditionWord = "impliedWord"; }
     elsif ($no_elements == $signs->{'missing'}) { $conditionWord = "missingWord"; }
-    elsif ($no_elements == $signs->{'ok'}) { $conditionWord = "preservedWord"; }
-    else { $conditionWord = "damagedWord"; }
+    elsif (($signs->{'damaged'} > 0) || ($signs->{'missing'} > 0)) { $conditionWord = "damagedWord"; }
+    else { $conditionWord = "preservedWord"; }
+    #elsif ($no_elements == $signs->{'ok'}) { $conditionWord = "preservedWord"; }
+    #else { $conditionWord = "damagedWord"; }
     
     # well preserved signs:
     # = NOT damaged signs, NOT missing signs, NOT implied signs [because blank space], NOT supplied signs [because forgotten], NOT erased signs [because, though present, not intended to be read and 'deleted']
@@ -1291,6 +1312,10 @@ sub typeWord {
     my $pofs = shift || "";
     
     my $wordtype = "";
+    
+    if (($form eq "x") || ($form eq "X")) {
+	$wordtype = "XWord";
+    }
     
     # PERSONAL and ROYAL NAMES
     if (($pofs eq "RN") || ($pofs eq "PN")) { $wordtype = "PersonalNames"; } 
@@ -1315,7 +1340,7 @@ sub typeWord {
 	if ($formsmall =~ /^\d/) { $wordtype = "Numerical"; }
     }    
 
-    if (($wordtype ne "PersonalNames") && ($wordtype ne "DivineCelestial") && ($wordtype ne "Geography") && ($wordtype ne "Numerical")) {
+    if (($wordtype ne "PersonalNames") && ($wordtype ne "DivineCelestial") && ($wordtype ne "Geography") && ($wordtype ne "Numerical") && ($wordtype ne "XWord")) {
 	if ($form =~ /^\$/) { $wordtype = "UncertainReading"; }
 	else { $wordtype = "OtherWords"; }
     }
@@ -1509,6 +1534,9 @@ sub splitWord {
 	    $newline = $root->{att}->{'g:type'}; #possible in split words
 	}
 	$value = $root->{att}->{form}?$root->{att}->{form}:"";
+	
+	if (($value eq "1") && ($type eq "semantic")) { $value = "m"; }
+	
 	my @bases = $root->get_xpath("g:b");
 	$base = $bases[0]?$bases[0]->text:"";
 	# variants with g:a (allograph), g:f (formvar) or g:m (modifier)
@@ -1954,10 +1982,19 @@ sub saveWord {
 	    &abstractWorddata(\%{$PQdata{"D_Words"}{'lang'}{$lang}{'wordtype'}{$wordtype}{'form'}{$form}{'note'}{$note}}, $break, $writtenWord, $label);
 	}
     }
-    $PQdata{"D_Words"}{'total'}++; 
+    
+    my $wordstate = substr($break, 0, length($break)-4);
+    $PQdata{"D_Words"}{'total'}++;
+    $PQdata{"D_Words"}{'total_'.$break}++;
+    $PQdata{"D_Words"}{$totaltype}++;
+    $PQdata{"D_Words"}{$totaltype.'_'.$wordstate}++;
     $PQdata{"D_Words"}{'lang'}{$lang}{'total'}++;
     
-    
+    $compilationERWords{"D_Words"}{'total'}++;
+    $compilationERWords{"D_Words"}{$totaltype}++;
+    $compilationERWords{"D_Words"}{$totaltype.'_'.$wordstate}++;
+    $compilationERWords{"D_Words"}{'lang'}{$lang}{'total'}++;
+    $compilationERWords{"D_Words"}{'total_'.$break}++;
     $compilationERWords{"D_Words"}{'lang'}{$lang}{'wordtype'}{$wordtype}{'total'}++;
     $compilationERWords{"D_Words"}{'lang'}{$lang}{'wordtype'}{$wordtype}{'state'}{$break}{'num'}++;
     $compilationERWords{"D_Words"}{'lang'}{$lang}{'state'}{$break}{'num'}++;
@@ -1986,8 +2023,6 @@ sub saveWord {
 	    &abstractWorddata(\%{$compilationERWords{"D_Words"}{'lang'}{$lang}{'wordtype'}{$wordtype}{'form'}{$form}{'note'}{$note}}, $break, $writtenWord, $label);
 	}
     }
-    $compilationERWords{"D_Words"}{'total'}++;
-    $compilationERWords{"D_Words"}{'lang'}{$lang}{'total'}++;
     
 }
 
@@ -2137,7 +2172,9 @@ sub saveSigns {
 	# TODO different languages ***
         }
     
-    &saveSign($lang, $category, $value, $base, $allo, $formvar, $modif, $role, $prePost, $position, $syllabic, $condition, $label, $cf, $writtenWord, $wordtype, $gw, $wordbase, $group, $for);
+	if ($category ne "") {
+	    &saveSign($lang, $category, $value, $base, $allo, $formvar, $modif, $role, $prePost, $position, $syllabic, $condition, $label, $cf, $writtenWord, $wordtype, $gw, $wordbase, $group, $for);
+	}
     if ($category ne "uncertainReading") { $category = ""; }
     }
 }
@@ -2173,11 +2210,11 @@ sub saveSign {
     &saveBorger($lang, $category, $value, $base, $allo, $formvar, $modif, $role, $prePost, $pos, $syllabic, $break, $label, $cf, $writtenWord, $wordtype, $gw, $wordbase, $group, $for);
     
     $PQdata{"B_Signs"}{'total'}++; # total number of signs
-    $PQdata{"B_Signs"}{"state"}{$break}{'total'}++;
+    $PQdata{"B_Signs"}{"total_".$break}++;
     $PQdata{"B_Signs"}{'lang'}{$lang}{'total'}++; # total number of signs per language
-    $PQdata{"B_Signs"}{'lang'}{$lang}{"state"}{$break}{'total'}++;
-    $PQdata{"B_Signs"}{'lang'}{$lang}{"zlang_total_wordtype"}{$wordtype}{'total'}++;
-    $PQdata{"B_Signs"}{'lang'}{$lang}{"zlang_total_wordtype"}{$wordtype}{'state'}{$break}{'num'}++;
+    $PQdata{"B_Signs"}{'lang'}{$lang}{"total_".$break}++;
+    #$PQdata{"B_Signs"}{'lang'}{$lang}{"zlang_total_wordtype"}{$wordtype}{'total'}++;
+    #$PQdata{"B_Signs"}{'lang'}{$lang}{"zlang_total_wordtype"}{$wordtype}{'state'}{$break}{'num'}++;
     $PQdata{"B_Signs"}{'lang'}{$lang}{"category"}{$category}{'total'}++; # total number of signs per language and category
     if (($break eq "preserved") || ($break eq "damaged") || ($break eq "excised")) {
 	   $PQdata{"B_Signs"}{'lang'}{$lang}{"category"}{$category}{'All_attested'}++;
@@ -2226,9 +2263,9 @@ sub saveSign {
     
     my $PQ = substr($thisText, 0, 1);
     $compilationERSigns{$PQ}{'lang'}{$lang}{'total'}++; # total number of signs per language
-    $compilationERSigns{$PQ}{'lang'}{$lang}{"state"}{$break}{'total'}++;
-    $compilationERSigns{$PQ}{'lang'}{$lang}{"zlang_total_wordtype"}{$wordtype}{'total'}++;
-    $compilationERSigns{$PQ}{'lang'}{$lang}{"zlang_total_wordtype"}{$wordtype}{'state'}{$break}{'num'}++;
+    $compilationERSigns{$PQ}{'lang'}{$lang}{"total_".$break}++;
+    #$compilationERSigns{$PQ}{'lang'}{$lang}{"zlang_total_wordtype"}{$wordtype}{'total'}++;
+    #$compilationERSigns{$PQ}{'lang'}{$lang}{"zlang_total_wordtype"}{$wordtype}{'state'}{$break}{'num'}++;
     $compilationERSigns{$PQ}{'lang'}{$lang}{"category"}{$category}{'total'}++; # total number of signs per language and category
     if (($break eq "preserved") || ($break eq "damaged") || ($break eq "excised")) {
 	   $compilationERSigns{$PQ}{'lang'}{$lang}{"category"}{$category}{'All_attested'}++;
@@ -2310,6 +2347,63 @@ sub abstractSigndata{
 	    $variantMod .= "\\".$formvar;
 	}
     }
+    
+    # add Borger info? maybe then general sign list can be made from the compilation file as long as there's no alternative
+    # from here - x'es not taken into list
+    # find out signname in ogsl.xml ($OgslRoot)
+    if (($value ne "x") && ($value ne "X") && ($value ne ";")) { # split word with ;
+	my $BorgerNo; my $BorgerVal; my $Cuneicode = "-"; my $signname = "-";
+	my $basis = ($base ne "")?$base:$value;
+	if (looks_like_number($basis)) {
+	    $BorgerNo = "Number"; $BorgerVal = $value; 
+	} 
+	else {
+	    my $smallValue = lc ($basis); # and convert capital tsade, shin and thet to small ones
+	    $smallValue =~ s/\x{1E62}/\x{1E63}/g;
+	    $smallValue =~ s/\x{0160}/\x{0161}/g;
+	    $smallValue =~ s/\x{1E6C}/\x{1E6D}/g;
+	    $smallValue =~ s/\@/\\@/gsi;
+	    $smallValue =~ s/"//gsi;
+	    
+	    my $search = 'sign/v[@n="'.$smallValue.'"]'; 
+	    
+	    if (my @temp = $OgslRoot->get_xpath($search)) {
+		my $parent = $temp[0]->parent();
+		$signname = $parent->{att}->{n};
+		$Cuneicode = ($parent->get_xpath('utf8'))[0]->text; # still without &#...; TODO!
+	    }
+	    
+	    # combine with data from Borger.xml ($BorgerRoot)
+	    $BorgerNo = "None"; $BorgerVal = $signname;
+	    if ($signname ne "-") {
+		my $manipulate = $signname;
+		$manipulate =~ s/@/\\@/g;
+		$search = 'Borger[@signname="'.$manipulate.'"]';
+		if (my @temp = $BorgerRoot->get_xpath($search)) {
+		    $BorgerNo = $temp[0]->{att}->{n};
+		    $BorgerVal = $temp[0]->{att}->{'BorgerVal'};
+		    $Cuneicode = $temp[0]->{att}->{'utf8_hex'};
+		}
+		if ($BorgerNo eq "None") {
+		    #print "\nBase = ".$base.", manipulate = ".$manipulate;
+		    # probably combined sign - list after first element, but with its own name and cuneicode
+		    $manipulate =~ s/\|//g;
+		    $manipulate =~ s/\.\S*//gsi;
+		    $manipulate =~ s/\&\S*//gsi;
+		    $search = 'Borger[@signname="'.$manipulate.'"]';
+		    if (my @temp = $BorgerRoot->get_xpath($search)) { $BorgerNo = $temp[0]->{att}->{n}; }
+		    $BorgerNo .= "_combi";
+		}
+	    # save the data with each value
+	    # also works on punctuation
+	    }
+	}
+	$data->{"value"}{$basis}{"BorgerNo"} = $BorgerNo;
+	$data->{"value"}{$basis}{'BorgerVal'} = $BorgerVal;
+	$data->{"value"}{$basis}{'Cuneicode'} = $Cuneicode;
+	$data->{"value"}{$basis}{'Signname'} = $signname;
+    }
+    # to here
     
     if ($base eq "") { # normal values
         $data->{"value"}{$value}{'num'}++;
@@ -2413,131 +2507,142 @@ sub saveBorger {
     my $group = shift || "";
     my $for = shift || "";
     
-    # find out signname in ogsl.xml ($OgslRoot)
-    my $smallValue = lc ($value); # and convert capital tsade, shin and thet to small ones
-    $smallValue =~ s/\x{1E62}/\x{1E63}/g;
-    $smallValue =~ s/\x{0160}/\x{0161}/g;
-    $smallValue =~ s/\x{1E6C}/\x{1E6D}/g;
-    
-    my $search = 'sign/v[@n="'.$smallValue.'"]'; my $signname = "-";
-    
-    if ($value ne ";") { # split word with ;
-	my $Cuneicode = "";
-	if (my @temp = $OgslRoot->get_xpath($search)) {
-	    my $parent = $temp[0]->parent();
-	    $signname = $parent->{att}->{n};
-	    $Cuneicode = ($parent->get_xpath('utf8'))[0]->text; # still without &#...; TODO!
-	    #print "\nsignname of value = ".$value." is ".$signname;
-	}
-	
-	# combine with data from Borger.xml ($BorgerRoot)
-	my $BorgerNo = "None"; my $BorgerVal = $signname; 
-	if ($signname ne "-") {
-	    my $manipulate = $signname;
-	    $manipulate =~ s/@/\\@/g;
-	    $search = 'Borger[@signname="'.$manipulate.'"]';
-	    if (my @temp = $BorgerRoot->get_xpath($search)) {
-		$BorgerNo = $temp[0]->{att}->{n};
-		$BorgerVal = $temp[0]->{att}->{'BorgerVal'};
-		$Cuneicode = $temp[0]->{att}->{'utf8_hex'};
-		
-		## for xslt it's a lot easier to have the Cuneicode not as, e.g. "x12038", but as "&#x12038;"
-		## so the beginning x => &#x
-		## when several signs are combined: .x => ;&#x
-		## at the end of each entry => ;
-		#
-		#$Cuneicode =~ s|^x|\&\#x|; # this doesn't work as the stupid & is always replaced by &amp;
-		#$Cuneicode =~ s|\.x|;\&\#x|;
-		#$Cuneicode = $Cuneicode.";";
-		
-		#print "\n with BorgerNo = ".$BorgerNo.", BorgerVal = ".$BorgerVal." and Cuneicode ".$Cuneicode;
-	    }
-	    if ($BorgerNo eq "None") {
-		# probably combined sign - list after first element, but with its own name and cuneicode
-		$manipulate =~ s/\|//g;
-		$manipulate =~ s/\.\S*//gsi;
-		$manipulate =~ s/\&\S*//gsi;
-		$search = 'Borger[@signname="'.$manipulate.'"]';
-		if (my @temp = $BorgerRoot->get_xpath($search)) { $BorgerNo = $temp[0]->{att}->{n}; }
-		$BorgerNo .= "_combi";
-	    }
-	}
-	# save the data in structure C_Borger
-	# also works on punctuation 
-	$PQdataBorger{"totalValues"}++;
-	$PQdataBorger{'BorgerNo'}{$BorgerNo}{'BorgerVal'} = $BorgerVal;
-	$PQdataBorger{'BorgerNo'}{$BorgerNo}{'Cuneicode'} = $Cuneicode;
-	$PQdataBorger{'BorgerNo'}{$BorgerNo}{'Signname'} = $signname;
-	$PQdataBorger{'BorgerNo'}{$BorgerNo}{'lang'}{$lang}{'category'}{$category}{'total'}++;
-	
-	if ($category eq "syllabic") {
-	    my $abstract = $value;
+    if (($value ne "x") && ($value ne "X") && ($value ne ";")) { # split word with ;
+	my $BorgerNo; my $BorgerVal; my $Cuneicode = "-"; my $signname = "-";
+	my $basis = ($base ne "")?$base:$value;
+	if (looks_like_number($basis)) {
+	    $BorgerNo = "Number"; $BorgerVal = $value; 
+	} 
+	else {
+	    # find out signname in ogsl.xml ($OgslRoot)
+	    # Start from value without modifiers etc. = $base
 	    
-	    if (($syllabic eq "CV") || ($syllabic eq "CVC") || ($syllabic eq "V") || ($syllabic eq "VC")) {
-		if ($syllabic eq "CV") {
-		    if (($abstract eq "ia") || ($abstract eq "ie") || ($abstract eq "ii") || ($abstract eq "iu")) {
-			$abstract = "IA";
+	    my $smallValue = lc ($basis); # and convert capital tsade, shin and thet to small ones
+	    $smallValue =~ s/\x{1E62}/\x{1E63}/g;
+	    $smallValue =~ s/\x{0160}/\x{0161}/g;
+	    $smallValue =~ s/\x{1E6C}/\x{1E6D}/g;
+	    $smallValue =~ s/\@/\\@/gsi;
+	    $smallValue =~ s/"//gsi;
+	    
+	    my $search = 'sign/v[@n="'.$smallValue.'"]'; my $signname = "-";
+	    
+	    my $Cuneicode = "";
+	    if (my @temp = $OgslRoot->get_xpath($search)) {
+		my $parent = $temp[0]->parent();
+		$signname = $parent->{att}->{n};
+		$Cuneicode = ($parent->get_xpath('utf8'))[0]->text; # still without &#...; TODO!
+		#print "\nsignname of value = ".$value." is ".$signname;
+	    }
+	    
+	    # combine with data from Borger.xml ($BorgerRoot)
+	    my $BorgerNo = "None"; my $BorgerVal = $signname; 
+	    if ($signname ne "-") {
+		my $manipulate = $signname;
+		$manipulate =~ s/@/\\@/g;
+		$search = 'Borger[@signname="'.$manipulate.'"]';
+		if (my @temp = $BorgerRoot->get_xpath($search)) {
+		    $BorgerNo = $temp[0]->{att}->{n};
+		    $BorgerVal = $temp[0]->{att}->{'BorgerVal'};
+		    $Cuneicode = $temp[0]->{att}->{'utf8_hex'};
+		    
+		    ## for xslt it's a lot easier to have the Cuneicode not as, e.g. "x12038", but as "&#x12038;"
+		    ## so the beginning x => &#x
+		    ## when several signs are combined: .x => ;&#x
+		    ## at the end of each entry => ;
+		    #
+		    #$Cuneicode =~ s|^x|\&\#x|; # this doesn't work as the stupid & is always replaced by &amp;
+		    #$Cuneicode =~ s|\.x|;\&\#x|;
+		    #$Cuneicode = $Cuneicode.";";
+		    
+		    #print "\n with BorgerNo = ".$BorgerNo.", BorgerVal = ".$BorgerVal." and Cuneicode ".$Cuneicode;
+		}
+		if ($BorgerNo eq "None") {
+		    # probably combined sign - list after first element, but with its own name and cuneicode
+		    #print "\nBase = ".$base.", manipulate = ".$manipulate;
+		    $manipulate =~ s/\|//g;
+		    $manipulate =~ s/\.\S*//gsi;
+		    $manipulate =~ s/\&\S*//gsi;
+		    $search = 'Borger[@signname="'.$manipulate.'"]';
+		    if (my @temp = $BorgerRoot->get_xpath($search)) { $BorgerNo = $temp[0]->{att}->{n}; }
+		    $BorgerNo .= "_combi";
+		}
+	    }
+	    # save the data in structure C_Borger
+	    # also works on punctuation 
+	    $PQdataBorger{"totalValues"}++;
+	    $PQdataBorger{'BorgerNo'}{$BorgerNo}{'BorgerVal'} = $BorgerVal;
+	    $PQdataBorger{'BorgerNo'}{$BorgerNo}{'Cuneicode'} = $Cuneicode;
+	    $PQdataBorger{'BorgerNo'}{$BorgerNo}{'Signname'} = $signname;
+	    $PQdataBorger{'BorgerNo'}{$BorgerNo}{'lang'}{$lang}{'category'}{$category}{'total'}++;
+	    
+	    if ($category eq "syllabic") {
+		my $abstract = $value;
+		
+		if (($syllabic eq "CV") || ($syllabic eq "CVC") || ($syllabic eq "V") || ($syllabic eq "VC")) {
+		    if ($syllabic eq "CV") {
+			if (($abstract eq "ia") || ($abstract eq "ie") || ($abstract eq "ii") || ($abstract eq "iu")) {
+			    $abstract = "IA";
+			}
+			if (($abstract eq "\x{02BE}a") || ($abstract eq "\x{02BE}e") || ($abstract eq "\x{02BE}i") || ($abstract eq "\x{02BE}u")) {
+			    $abstract = "\x{02BE}A";
+			}
+			if (($abstract eq "a\x{02BE}") || ($abstract eq "e\x{02BE}") || ($abstract eq "i\x{02BE}") || ($abstract eq "u\x{02BE}")) {
+			    $abstract = "A\x{02BE}";
+			}
 		    }
-		    if (($abstract eq "\x{02BE}a") || ($abstract eq "\x{02BE}e") || ($abstract eq "\x{02BE}i") || ($abstract eq "\x{02BE}u")) {
-			$abstract = "\x{02BE}A";
-		    }
-		    if (($abstract eq "a\x{02BE}") || ($abstract eq "e\x{02BE}") || ($abstract eq "i\x{02BE}") || ($abstract eq "u\x{02BE}")) {
-			$abstract = "A\x{02BE}";
-		    }
+		
+		    # nuke the subscripts like numbers (unicode 2080 - 2089) 
+		    $abstract =~ s|(\x{2080})||g; $abstract =~ s|(\x{2081})||g; $abstract =~ s|(\x{2082})||g; $abstract =~ s|(\x{2083})||g; $abstract =~ s|(\x{2084})||g;
+		    $abstract =~ s|(\x{2085})||g; $abstract =~ s|(\x{2086})||g; $abstract =~ s|(\x{2087})||g; $abstract =~ s|(\x{2088})||g; $abstract =~ s|(\x{2089})||g;
+		    $abstract =~ s|(\x{2093})||g; # subscript x
+		
+		    # make abstract value for signs ending in labial, dental or velar stop or in a sibilant (except /š/): b/p => B, d/t/thet => D, g/k/q => G, z/s/tsade => Z
+		    $abstract =~ s/[bp]$/B/;
+		    $abstract =~ s/[dt\x{1E6D}]$/D/;
+		    $abstract =~ s/[gkq]$/G/;
+		    $abstract =~ s/[z\x{1E63}s]/Z/;
+	    
+		    # i and e not always distinguished either
+		    $abstract =~ s/[ie]/I/gsi;
+		
+		    # abstract also beginning C - combine b/p, d/t/thet, g/k/q, s/shin, tsade/z 
+		    $abstract =~ s/^[bp]/B/;
+		    $abstract =~ s/^[dt\x{1E6D}]/D/;
+		    $abstract =~ s/^[gkq]/G/;
+		    $abstract =~ s/^[s\x{0161}]/S/;
+		    $abstract =~ s/^[z\x{1E63}]/Z/;
 		}
 	    
-		# nuke the subscripts like numbers (unicode 2080 - 2089) 
-		$abstract =~ s|(\x{2080})||g; $abstract =~ s|(\x{2081})||g; $abstract =~ s|(\x{2082})||g; $abstract =~ s|(\x{2083})||g; $abstract =~ s|(\x{2084})||g;
-		$abstract =~ s|(\x{2085})||g; $abstract =~ s|(\x{2086})||g; $abstract =~ s|(\x{2087})||g; $abstract =~ s|(\x{2088})||g; $abstract =~ s|(\x{2089})||g;
-		$abstract =~ s|(\x{2093})||g; # subscript x
-	    
-		# make abstract value for signs ending in labial, dental or velar stop or in a sibilant (except /š/): b/p => B, d/t/thet => D, g/k/q => G, z/s/tsade => Z
-		$abstract =~ s/[bp]$/B/;
-		$abstract =~ s/[dt\x{1E6D}]$/D/;
-		$abstract =~ s/[gkq]$/G/;
-		$abstract =~ s/[z\x{1E63}s]/Z/;
-	
-		# i and e not always distinguished either
-		$abstract =~ s/[ie]/I/gsi;
-	    
-		# abstract also beginning C - combine b/p, d/t/thet, g/k/q, s/shin, tsade/z 
-		$abstract =~ s/^[bp]/B/;
-		$abstract =~ s/^[dt\x{1E6D}]/D/;
-		$abstract =~ s/^[gkq]/G/;
-		$abstract =~ s/^[s\x{0161}]/S/;
-		$abstract =~ s/^[z\x{1E63}]/Z/;
+		&BorgerSigndata(\%{$PQdataBorger{'BorgerNo'}{$BorgerNo}{'lang'}{$lang}{'category'}{$category}{'abstract'}{$abstract}}, $value, $base, $allo, $formvar, $modif, $wordtype, $pos, $gw, $cf, $break, $writtenWord, $label, $group, $for);
+		if (($break eq "preserved") || ($break eq "damaged") || ($break eq "excised")) {
+		   $PQdataBorger{'BorgerNo'}{$BorgerNo}{'lang'}{$lang}{'category'}{$category}{'abstract'}{$abstract}{'attested'}{'All_attested'}{'total'}++;
+		   $PQdataBorger{'BorgerNo'}{$BorgerNo}{'lang'}{$lang}{'category'}{$category}{'abstract'}{$abstract}{'attested'}{$wordtype.'_attested'}{'total'}++;
+		   $PQdataBorger{'BorgerNo'}{$BorgerNo}{'lang'}{$lang}{'category'}{$category}{'abstract'}{$abstract}{'attested'}{'All_attested'}{$pos}++;
+		   $PQdataBorger{'BorgerNo'}{$BorgerNo}{'lang'}{$lang}{'category'}{$category}{'abstract'}{$abstract}{'attested'}{$wordtype.'_attested'}{$pos}++;
+		}
 	    }
-	
-	    &BorgerSigndata(\%{$PQdataBorger{'BorgerNo'}{$BorgerNo}{'lang'}{$lang}{'category'}{$category}{'abstract'}{$abstract}}, $value, $base, $allo, $formvar, $modif, $wordtype, $pos, $gw, $cf, $break, $writtenWord, $label, $group, $for);
-	    if (($break eq "preserved") || ($break eq "damaged") || ($break eq "excised")) {
-	       $PQdataBorger{'BorgerNo'}{$BorgerNo}{'lang'}{$lang}{'category'}{$category}{'abstract'}{$abstract}{'attested'}{'All_attested'}{'total'}++;
-	       $PQdataBorger{'BorgerNo'}{$BorgerNo}{'lang'}{$lang}{'category'}{$category}{'abstract'}{$abstract}{'attested'}{$wordtype.'_attested'}{'total'}++;
-	       $PQdataBorger{'BorgerNo'}{$BorgerNo}{'lang'}{$lang}{'category'}{$category}{'abstract'}{$abstract}{'attested'}{'All_attested'}{$pos}++;
-	       $PQdataBorger{'BorgerNo'}{$BorgerNo}{'lang'}{$lang}{'category'}{$category}{'abstract'}{$abstract}{'attested'}{$wordtype.'_attested'}{$pos}++;
+	    else {
+		&BorgerSigndata(\%{$PQdataBorger{'BorgerNo'}{$BorgerNo}{'lang'}{$lang}{'category'}{$category}}, $value, $base, $allo, $formvar, $modif, $wordtype, $pos, $gw, $cf, $break, $writtenWord, $label, $group, $for);
 	    }
-	}
-	else {
-	    &BorgerSigndata(\%{$PQdataBorger{'BorgerNo'}{$BorgerNo}{'lang'}{$lang}{'category'}{$category}}, $value, $base, $allo, $formvar, $modif, $wordtype, $pos, $gw, $cf, $break, $writtenWord, $label, $group, $for);
 	}
     }
     else {
 	$PQdataBorger{'splitWords'}{'num'}++; 
 	if (($wordtype ne '') && ($gw ne '') && ($cf ne '')) {
-	    push(@{$PQdataBorger{'splitWords'}{'lang'}{$lang}{'category'}{$category}{'wordtype'}{$wordtype}{'gw'}{$gw}{'cf'}{$cf}{'writtenWord'}{$writtenWord}{'label'}},$label);
+	    push(@{$PQdataBorger{'splitWords'}{'lang'}{$lang}{'category'}{$category}{'wordtype'}{$wordtype}{'gw'}{$gw}{'cf'}{$cf}{'writtenWord'}{$writtenWord}{'label'}},$thisText.$label);
 	}
 	elsif (($wordtype ne '') && ($gw ne '') && ($cf eq '')) {
-	    push(@{$PQdataBorger{'splitWords'}{'lang'}{$lang}{'category'}{$category}{'wordtype'}{$wordtype}{'gw'}{$gw}{'writtenWord'}{$writtenWord}{'label'}},$label);
+	    push(@{$PQdataBorger{'splitWords'}{'lang'}{$lang}{'category'}{$category}{'wordtype'}{$wordtype}{'gw'}{$gw}{'writtenWord'}{$writtenWord}{'label'}},$thisText.$label);
 	}
 	elsif (($wordtype ne '') && ($gw eq '') && ($cf ne '')) {
-	    push(@{$PQdataBorger{'splitWords'}{'lang'}{$lang}{'category'}{$category}{'wordtype'}{$wordtype}{'cf'}{$cf}{'writtenWord'}{$writtenWord}{'label'}},$label);
+	    push(@{$PQdataBorger{'splitWords'}{'lang'}{$lang}{'category'}{$category}{'wordtype'}{$wordtype}{'cf'}{$cf}{'writtenWord'}{$writtenWord}{'label'}},$thisText.$label);
 	}
 	elsif (($wordtype ne '') && ($gw eq '') && ($cf eq '')) {
-	    push(@{$PQdataBorger{'splitWords'}{'lang'}{$lang}{'category'}{$category}{'wordtype'}{$wordtype}{'writtenWord'}{$writtenWord}{'label'}},$label);
+	    push(@{$PQdataBorger{'splitWords'}{'lang'}{$lang}{'category'}{$category}{'wordtype'}{$wordtype}{'writtenWord'}{$writtenWord}{'label'}},$thisText.$label);
 	}
-	
     }
-    
     # Signs that are not in Borger should be accounted for, but keep checking.
+    # x'es don't get any presence.
 }
 
 
