@@ -1,0 +1,1057 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- still logistic problems with "ŠUBUR"; "|NI.UD|"/"|NI.ERIN₂|"; "UN"; "ERIN₂"; "HI"; "|IGI.ERIN₂|"; "DIŠ"; "NIGIDAMIN" and "4(DIŠ)" -->
+<!-- check also whatsnew;&#xml -->
+<!-- some signs not in this list yet -->
+<BorgerSignList>
+  <Borger n="MZL001" signname="AŠ" BorgerVal="AŠ" utf8_hex="&#x12038;"/>
+  <Borger n="MZL002" signname="2(AŠ)" BorgerVal="AŠ.AŠ" utf8_hex="&#x12400;"/>
+  <Borger n="MZL003" signname="HAL" BorgerVal="ḪAL" utf8_hex="&#x1212C;"/>
+  <Borger n="MZL004" signname="3(AŠ)" BorgerVal="EŠ6 (AŠ.AŠ.AŠ)" utf8_hex="&#x12401;"/>
+  <Borger n="MZL005" signname="BAL" BorgerVal="BAL" utf8_hex="&#x12044;"/>
+  <Borger n="MZL006" signname="GIR₂" BorgerVal="GÍR" utf8_hex="&#x12108;"/>
+  <Borger n="MZL007" signname="GIR₂@g" BorgerVal="GÍR@g, ÁD" utf8_hex="&#x12109;"/>
+  <Borger n="MZL008" signname="BUR₂" BorgerVal="BÚR (UŠUM)" utf8_hex="&#x12054;"/>
+  <Borger n="MZL009" signname="TAR" BorgerVal="TAR (KUD)" utf8_hex="&#x122FB;"/>
+  <Borger n="MZL010" signname="AN" BorgerVal="AN" utf8_hex="&#x1202D;"/>
+  <Borger n="MZL011" signname="|AŠ.SUR|" BorgerVal="aš+šur" utf8_hex="&#x12038;&#x122E9;" utf8_alt="NATC"/>
+  <Borger n="MZL012" signname="MUG" BorgerVal="MUG" utf8_hex="&#x1222E;"/>
+  <Borger n="MZL013" signname="MUG@g" BorgerVal="ZADIM (MUG@g)" utf8_hex="&#x1222F;"/>
+  <Borger n="MZL014" signname="BA" BorgerVal="BA" utf8_hex="&#x12040;"/>
+  <Borger n="MZL015" signname="ZU" BorgerVal="ZU" utf8_hex="&#x1236A;"/>
+  <Borger n="MZL016" signname="SU" BorgerVal="SU" utf8_hex="&#x122E2;"/>
+  <Borger n="MZL016c01" signname="|SU&amp;SU|" BorgerVal="SU&amp;SU" utf8_hex="&#x122E3;"/>
+  <Borger n="MZL017" signname="ŠEN" BorgerVal="ŠEN (ŠUN; SU×A)" utf8_hex="&#x122BF;"/>
+  <Borger n="MZL018" signname="ARAD" BorgerVal="ARAD (NÍTA)" utf8_hex="&#x12034;"/>
+  <Borger n="MZL019" signname="|ARAD×KUR|" BorgerVal="ÁRAD (ARAD×KUR)" utf8_hex="&#x12035;"/>
+  <Borger n="MZL020" signname="|UD×(U.U.U)|" BorgerVal="ITI (UD×EŠ)" utf8_hex="&#x12317;"/>
+  <Borger n="MZL020v01" signname="UD@s" BorgerVal="ITI (UD@s)" utf8_hex="&#x1231A;"/>
+  <Borger n="MZL021" signname="|UD@s×BAD|" BorgerVal="ÍTI (ITI×BAD)" utf8_hex="&#x1231B;"/>
+  <Borger n="MZL022" signname="ŠUBUR" BorgerVal="ŠUBUR" utf8_hex="&#x122DA;"/>
+  <Borger n="MZL023" signname="ŠUBUR" BorgerVal="ŠAḪ" utf8_hex="&#x122DA;"/>
+  <Borger n="MZL024" signname="KA" BorgerVal="KA" utf8_hex="&#x12157;"/>
+  <Borger n="MZL025" signname="|KA×GIR₂|" BorgerVal="KA×GÍR" utf8_hex="&#x12168;"/>
+  <Borger n="MZL026" signname="|KA×LI|" BorgerVal="TU6 (KA×LI)" utf8_hex="&#x12172;"/>
+  <Borger n="MZL027" signname="|KA×TU|" BorgerVal="ŠEG5 (KA×TU)" utf8_hex="&#x004C;"/>
+  <Borger n="MZL028" signname="|KA×RU|" BorgerVal="KA×RU" utf8_hex="&#x1217D;"/>
+  <Borger n="MZL029" signname="|KA×BAD|" BorgerVal="UŠ11 (KA×BAD)" utf8_hex="&#x1215C;"/>
+  <Borger n="MZL030" signname="|KA×BAR|" BorgerVal="KA×BAR" utf8_hex="&#x1215E;"/>
+  <Borger n="MZL031" signname="|KA×NUN|" BorgerVal="NUNDUM (KA×NUN)" utf8_hex="&#x1217B;"/>
+  <Borger n="MZL032" signname="|KA×SA|" BorgerVal="SU6 (KA×SA)" utf8_hex="&#x1217E;"/>
+  <Borger n="MZL033" signname="|KA×GAN₂@t|" BorgerVal="PÙ (KA×KÁR)" utf8_hex="&#x12164;"/>
+  <Borger n="MZL034" signname="|KA×(AD.KU₃)|" BorgerVal="KA×AD+KUG" utf8_hex="&#x1215A;"/>
+  <Borger n="MZL035" signname="|KA×NE|" BorgerVal="KA×NE" utf8_hex="&#x1217A;"/>
+  <Borger n="MZL036" signname="|KA×UR₂|" BorgerVal="KA×ÚR" utf8_hex="&#x004C;"/>
+  <Borger n="MZL037" signname="|KA×GIŠ%GIŠ|" BorgerVal="KA×KIB" utf8_hex="&#x1216A;"/>
+  <Borger n="MZL038" signname="|KA×KAK|" BorgerVal="KA×GAG" utf8_hex="&#x1216F;"/>
+  <Borger n="MZL039" signname="|KA×UŠ|" BorgerVal="KA×UŠ" utf8_hex="&#x1218B;"/>
+  <Borger n="MZL040" signname="|KA×PA|" BorgerVal="KA×PA" utf8_hex="&#x004C;"/>
+  <Borger n="MZL041" signname="|KA×GIŠ|" BorgerVal="KA×GIŠ" utf8_hex="&#x004C;"/>
+  <Borger n="MZL042" signname="|KA×ŠID|" BorgerVal="KA×ŠID (DÍLIB)" utf8_hex="&#x12182;"/>
+  <Borger n="MZL043" signname="|KA×U₂|" BorgerVal="KA×Ú" utf8_hex="&#x12188;"/>
+  <Borger n="MZL044" signname="|KA×GA|" BorgerVal="KA×GA" utf8_hex="&#x12162;"/>
+  <Borger n="MZL045" signname="|KA×SAR|" BorgerVal="KA×SAR" utf8_hex="&#x1217F;"/>
+  <Borger n="MZL046" signname="|KA×AŠ₂|" BorgerVal="KA×ÁŠ" utf8_hex="&#x1215B;"/>
+  <Borger n="MZL047" signname="|KA×BALAG|" BorgerVal="KA×DÚB/BALAG" utf8_hex="&#x1215D;"/>
+  <Borger n="MZL048" signname="|KA×ŠA|" BorgerVal="KA×ŠA" utf8_hex="&#x12180;"/>
+  <Borger n="MZL049" signname="|KA×ŠU|" BorgerVal="ŠÙDU (KA×ŠU)" utf8_hex="&#x12183;"/>
+  <Borger n="MZL050" signname="|KA×ŠE|" BorgerVal="KA×ŠE" utf8_hex="&#x12181;"/>
+  <Borger n="MZL051" signname="|KA×UD|" BorgerVal="KA×UD" utf8_hex="&#x12189;"/>
+  <Borger n="MZL052" signname="|KA×PI|" BorgerVal="KA×PI" utf8_hex="&#x1217C;"/>
+  <Borger n="MZL053" signname="|KA×ERIN₂|" BorgerVal="KA×ERIM" utf8_hex="&#x12160;"/>
+  <Borger n="MZL054" signname="|KA×IM|" BorgerVal="BÚN (KA×IM)" utf8_hex="&#x1216E;"/>
+  <Borger n="MZL055" signname="|KA×HI×AŠ₂|" BorgerVal="KA×ḪAR" utf8_hex="&#x004C;"/>
+  <Borger n="MZL056" signname="|KA×U|" BorgerVal="KA×U" utf8_hex="&#x12187;"/>
+  <Borger n="MZL057" signname="|KA×MI|" BorgerVal="KA×MI" utf8_hex="&#x12178;"/>
+  <Borger n="MZL058" signname="|KA×(U.U.U)|" BorgerVal="KA×'EŠ'" utf8_hex="&#x004C;"/>
+  <Borger n="MZL059" signname="|KA×IGI|" BorgerVal="KA×IGI" utf8_hex="&#x1216D;"/>
+  <Borger n="MZL060" signname="|KA×KI|" BorgerVal="KA×KI" utf8_hex="&#x12170;"/>
+  <Borger n="MZL061" signname="|KA×ME|" BorgerVal="EME (KA×ME)" utf8_hex="&#x12174;"/>
+  <Borger n="MZL061c01" signname="|KA×(ME.GI)|" BorgerVal="KA×ME+GI" utf8_hex="&#x12176;"/>
+  <Borger n="MZL061c02" signname="|KA×(ME.DU)|" BorgerVal="KA×ME+DU" utf8_hex="&#x12175;"/>
+  <Borger n="MZL061c03" signname="|KA×(ME.TE)|" BorgerVal="KA×ME+TE" utf8_hex="&#x12177;"/>
+  <Borger n="MZL062" signname="|KA×EŠ₂|" BorgerVal="KA×ŠÈ" utf8_hex="&#x12161;"/>
+  <Borger n="MZL063" signname="|KA×GUR₇|" BorgerVal="KA×GUR7" utf8_hex="&#x1216C;"/>
+  <Borger n="MZL064" signname="|KA×A|" BorgerVal="NAG (KA×A)" utf8_hex="&#x12158;"/>
+  <Borger n="MZL065" signname="|KA×GAR|" BorgerVal="GU7 (KA×NÍG)" utf8_hex="&#x12165;"/>
+  <Borger n="MZL066" signname="|KA×(GAR.ŠA₃.A)|" BorgerVal="KA×KADRA (KADRA = NÍG.ŠÀ.A)" utf8_hex="&#x12166;"/>
+  <Borger n="MZL067" signname="|KA×6(DIŠ)|" BorgerVal="KA×ÀŠ" utf8_hex="&#x004C;"/>
+  <Borger n="MZL068" signname="|KA×SIG|" BorgerVal="KA×SIG" utf8_hex="&#x12184;"/>
+  <Borger n="MZL069" signname="|KA×GU|" BorgerVal="KA×GU" utf8_hex="&#x1216B;"/>
+  <Borger n="MZL070" signname="|KA×LUM|" BorgerVal="KA×LUM" utf8_hex="&#x004C;"/>
+  <Borger n="MZL071" signname="URU" BorgerVal="URU (IRI)" utf8_hex="&#x12337;"/>
+  <Borger n="MZL072" signname="|URU×TU|" BorgerVal="URU×TU" utf8_hex="&#x1234B;"/>
+  <Borger n="MZL073" signname="|URU×BAR|" BorgerVal="UKKIN (URU×BAR)" utf8_hex="&#x1233A;"/>
+  <Borger n="MZL074" signname="|URU×GAN₂@t|" BorgerVal="URU×KÁR" utf8_hex="&#x1233E;"/>
+  <Borger n="MZL075" signname="|URU×URUDA|" BorgerVal="BANŠUR (URU×URUDU)" utf8_hex="&#x1234E;"/>
+  <Borger n="MZL076" signname="|URU×GA|" BorgerVal="ŠÀKIR (URU×GA)" utf8_hex="&#x1233C;"/>
+  <Borger n="MZL077" signname="|URU×UD|" BorgerVal="ÚRU (URU×UD)" utf8_hex="&#x1234D;"/>
+  <Borger n="MZL078" signname="|URU×(U.GUD)|" BorgerVal="URU×UL" utf8_hex="&#x1234C;"/>
+  <Borger n="MZL079" signname="|URU×IGI|" BorgerVal="ASARI (URU×IGI)" utf8_hex="&#x12342;"/>
+  <Borger n="MZL080" signname="|URU×MIN|" BorgerVal="GIŠGAL (URU×MIN)" utf8_hex="&#x12347;"/>
+  <Borger n="MZL081" signname="|URU×A|" BorgerVal="URU×A" utf8_hex="&#x12338;"/>
+  <Borger n="MZL082" signname="|URU×HA|" BorgerVal="URU×ḪA" utf8_hex="&#x12341;"/>
+  <Borger n="MZL083" signname="|URU×GAR|" BorgerVal="ÈRIM (URU×NÍG)" utf8_hex="&#x1233F;"/>
+  <Borger n="MZL084" signname="|URU×GU|" BorgerVal="URU×GU (GUR5)" utf8_hex="&#x12340;"/>
+  <Borger n="MZL085" signname="LI" BorgerVal="LI" utf8_hex="&#x121F7;"/>
+  <Borger n="MZL086" signname="TU" BorgerVal="TU (DÚ)" utf8_hex="&#x12305;"/>
+  <Borger n="MZL087" signname="KU₄" BorgerVal="KU4" utf8_hex="&#x121AD;"/>
+  <Borger n="MZL088" signname="TE@g" BorgerVal="GUR8 (URU5; TE@g)" utf8_hex="&#x122FD;"/>
+  <Borger n="MZL089" signname="LA" BorgerVal="LA" utf8_hex="&#x121B7;"/>
+  <Borger n="MZL090" signname="APIN" BorgerVal="APIN (ENGAR)" utf8_hex="&#x12033;"/>
+  <Borger n="MZL091" signname="MAH" BorgerVal="MAḪ" utf8_hex="&#x12224;"/>
+  <Borger n="MZL092" signname="PAP" BorgerVal="PAB (PAP, KÚR)" utf8_hex="&#x1227D;"/>
+  <Borger n="MZL093" signname="|PAP.HAL|" BorgerVal="PÚŠ (PAB.ḪAL)" utf8_hex="&#x1227D;&#x1212C;" utf8_alt="NATC"/>
+  <Borger n="MZL094" signname="|PAP.PAP|" BorgerVal="BÙLUG (DIM4), MUNU4" utf8_hex="&#x1227D;&#x1227D;" utf8_alt="NATC"/>
+  <Borger n="MZL095" signname="|PAP.IŠ|" BorgerVal="PAB.IŠ (PA6)" utf8_hex="&#x1227D;&#x12156;"/>
+  <Borger n="MZL096" signname="|PAP.E|" BorgerVal="PAB.E (PA5)" utf8_hex="&#x1227D;&#x1208A;"/>
+  <Borger n="MZL097" signname="KAM₄" BorgerVal="GÀM (ZUBI, PAB.NÁ)" utf8_hex="&#x1219B;"/>
+  <Borger n="MZL098" signname="MU" BorgerVal="MU" utf8_hex="&#x1222C;"/>
+  <Borger n="MZL099" signname="SILA₃" BorgerVal="SÌLA (QA)" utf8_hex="&#x122E1;"/>
+  <Borger n="MZL100" signname="ŠEŠLAM" BorgerVal="ŠEŠLAM" utf8_hex="&#x122C2;"/>
+  <Borger n="MZL101" signname="|ZI&amp;ZI|" BorgerVal="ZI&amp;ZI" utf8_hex="&#x12364;"/>
+  <Borger n="MZL102" signname="|ZI&amp;ZI.LAGAB|" BorgerVal="NÚMUN (ZI&amp;ZI.LAGAB)" utf8_hex="&#x12364;&#x121B8;" utf8_alt="NATC"/>
+  <Borger n="MZL103" signname="|ZI&amp;ZI.EŠ₂|" BorgerVal="ZI&amp;ZI.ŠÈ" utf8_hex="&#x12364;&#x120A0;"/>
+  <Borger n="MZL104" signname="|ZI&amp;ZI.A|" BorgerVal="ZI&amp;ZI.A" utf8_hex="&#x12364;&#x12000;"/>
+  <Borger n="MZL105" signname="|GI%GI|" BorgerVal="GIL (GI%GI)" utf8_hex="&#x12103;"/>
+  <Borger n="MZL106" signname="TAK₄" BorgerVal="KÍD (TAG4)" utf8_hex="&#x122FA;"/>
+  <Borger n="MZL107" signname="|NUN%NUN|" BorgerVal="NUN%NUN" utf8_hex="&#x1226B;"/>
+  <Borger n="MZL108" signname="KAD₂" BorgerVal="KÁD" utf8_hex="&#x12190;"/>
+  <Borger n="MZL109" signname="KAD₃" BorgerVal="KÀD" utf8_hex="&#x12191;"/>
+  <Borger n="MZL110" signname="NA" BorgerVal="NA" utf8_hex="&#x1223E;"/>
+  <Borger n="MZL111" signname="RU" BorgerVal="RU" utf8_hex="&#x12292;"/>
+  <Borger n="MZL112" signname="NU" BorgerVal="NU" utf8_hex="&#x12261;"/>
+  <Borger n="MZL113r01" signname="BAD" BorgerVal="BAD" utf8_hex="&#x12041;"/>
+  <Borger n="MZL113r02" signname="TIL" BorgerVal="TIL" utf8_hex="&#x12300;"/>
+  <Borger n="MZL113r03" signname="UŠ₂" BorgerVal="ÚŠ" utf8_hex="&#x12357;"/>
+  <Borger n="MZL113r04" signname="IDIM" BorgerVal="IDIM" utf8_hex="&#x12142;"/>
+  <Borger n="MZL114" signname="1(EŠE₃)" BorgerVal="ÈŠE (AŠ+U)" utf8_hex="&#x12458;"/>
+  <Borger n="MZL115r01" signname="ŠIR" BorgerVal="ŠIR" utf8_hex="&#x122D3;"/>
+  <Borger n="MZL115r02" signname="NU₁₁" BorgerVal="NU11" utf8_hex="&#x12262;"/>
+  <Borger n="MZL116" signname="ŠIR@t" BorgerVal="ŠIR@t" utf8_hex="&#x122D4;"/>
+  <Borger n="MZL117" signname="KUL" BorgerVal="NUMUN" utf8_hex="&#x121B0;"/>
+  <Borger n="MZL118" signname="TI" BorgerVal="TI" utf8_hex="&#x122FE;"/>
+  <Borger n="MZL118v01" signname="TI@t" BorgerVal="TI@t" utf8_hex="&#x122FF;"/>
+  <Borger n="MZL119" signname="DIN" BorgerVal="DIN" utf8_hex="&#x12077;"/>
+  <Borger n="MZL119c01" signname="|DIN.KASKAL.U@g.DIŠ|" BorgerVal="DIN.KASKAL.SIG7" utf8_hex="&#x12078;"/>
+  <Borger n="MZL120" signname="MAŠ" BorgerVal="MAŠ" utf8_hex="&#x12226;"/>
+  <Borger n="MZL121" signname="BAR" BorgerVal="BAR" utf8_hex="&#x12047;"/>
+  <Borger n="MZL122" signname="1(BAN₂)" BorgerVal="BÁN" utf8_hex="&#x1244F;"/>
+  <Borger n="MZL123" signname="|BAR.AN|" BorgerVal="KÚNGA (BAR.AN)" utf8_hex="&#x12047;&#x1202D;"/>
+  <Borger n="MZL124" signname="|MAŠ.GU₂.GAR₃|" BorgerVal="IDIGNA (DALLA; MAŠ.GÚ.GÀR)" utf8_hex="&#x12226;&#x12118;&#x120FC;"/>
+  <Borger n="MZL125" signname="|MAŠ.U|" BorgerVal="GÍDIM (MAŠ.U)" utf8_hex="&#x12226;&#x1230B;" utf8_alt="NATC"/>
+  <Borger n="MZL126" signname="|MAŠ.U.U|" BorgerVal="MAŠ.MAN" utf8_hex="&#x12226;&#x1230B;&#x1230B;"/>
+  <Borger n="MZL127" signname="AK" BorgerVal="AG" utf8_hex="&#x1201D;"/>
+  <Borger n="MZL128" signname="|AK×(ŠITA.GIŠ)|" BorgerVal="AG×ŠÍTA" utf8_hex="&#x1201F;"/>
+  <Borger n="MZL129" signname="|AK×ERIN₂|" BorgerVal="MÈ (AG×ERIM)" utf8_hex="&#x1201E;"/>
+  <Borger n="MZL130" signname="MAŠ₂" BorgerVal="MÁŠ" utf8_hex="&#x12227;"/>
+  <Borger n="MZL131" signname="KUN" BorgerVal="KUN" utf8_hex="&#x121B2;"/>
+  <Borger n="MZL132" signname="HU" BorgerVal="ḪU" utf8_hex="&#x12137;"/>
+  <Borger n="MZL133" signname="|HU.SI|" BorgerVal="U5" utf8_hex="&#x12137;&#x122DB;" utf8_alt="NATC"/>
+  <Borger n="MZL134" signname="NAM" BorgerVal="NAM" utf8_hex="&#x12246;"/>
+  <Borger n="MZL135" signname="NAM@n" BorgerVal="BURU5 (BUR5; NAM.ERIM)" utf8_hex="&#x12245;"/>
+  <Borger n="MZL136" signname="IG" BorgerVal="IG (GÁL)" utf8_hex="&#x12145;"/>
+  <Borger n="MZL137" signname="|HU.HI|" BorgerVal="MUD" utf8_hex="&#x12137;&#x1212D;" utf8_alt="NATC"/>
+  <Borger n="MZL138" signname="|HU.NA₂|" BorgerVal="SA4 (ḪU.NÁ)" utf8_hex="&#x12137;&#x1223F;" utf8_alt="NATC"/>
+  <Borger n="MZL139" signname="SUD₂" BorgerVal="ŠÌTA (RAD)" utf8_hex="&#x122E5;"/>
+  <Borger n="MZL140" signname="ZI" BorgerVal="ZI" utf8_hex="&#x12363;"/>
+  <Borger n="MZL141" signname="GI" BorgerVal="GI" utf8_hex="&#x12100;"/>
+  <Borger n="MZL141c01" signname="|GI×E|" BorgerVal="GI×E" utf8_hex="&#x12101;"/>
+  <Borger n="MZL142" signname="RI" BorgerVal="RI" utf8_hex="&#x12291;"/>
+  <Borger n="MZL143" signname="NUN" BorgerVal="NUN" utf8_hex="&#x12263;"/>
+  <Borger n="MZL144" signname="NUN@t" BorgerVal="NUN@t" utf8_hex="&#x12269;"/>
+  <Borger n="MZL145" signname="|NUN.LAGAR|" BorgerVal="TÙR (NUN.LAGAR)" utf8_hex="&#x12263;&#x121EC;" utf8_alt="NATC"/>
+  <Borger n="MZL146" signname="|NUN.LAGAR×MAŠ|" BorgerVal="IMMAL (NUN.LAGAR×BAR/MAŠ)" utf8_hex="&#x12265;"/>
+  <Borger n="MZL146'" signname="|NUN.LAGAR×UŠ|" BorgerVal="TÙR×UŠ" utf8_hex="&#x12268;"/>
+  <Borger n="MZL146''" signname="|NUN.LAGAR×GAR|" BorgerVal="TÙR×NÍG" utf8_hex="&#x12264;"/>
+  <Borger n="MZL147" signname="|NUN.LAGAR×SAL|" BorgerVal="ŠILAM (NUN.LAGAR×MUNUS)" utf8_hex="&#x12266;"/>
+  <Borger n="MZL147c01" signname="|(NUN.LAGAR×SAL)&amp;(NUN.LAGAR×SAL)|" BorgerVal="ŠILAM&amp;ŠILAM" utf8_hex="&#x12267;"/>
+  <Borger n="MZL147c02" signname="|NUN%NUN.LAGAR&amp;LAGAR|" BorgerVal="NUN%NUN.LAGAR&amp;LAGAR" utf8_hex="&#x1226C;"/>
+  <Borger n="MZL148" signname="KAB" BorgerVal="KAB" utf8_hex="&#x1218F;"/>
+  <Borger n="MZL149" signname="HUB₂" BorgerVal="ḪÚB" utf8_hex="&#x12138;"/>
+  <Borger n="MZL150" signname="|HUB₂×UD|" BorgerVal="ḪUB (ḪÚB×UD)" utf8_hex="&#x1213D;"/>
+  <Borger n="MZL151" signname="SUR" BorgerVal="SUR (ŠUR)" utf8_hex="&#x122E9;"/>
+  <Borger n="MZL152" signname="MUŠ₃@g" BorgerVal="MÚŠ (SUḪ; MÙŠ@g)" utf8_hex="&#x1223D;"/>
+  <Borger n="MZL153" signname="MUŠ₃" BorgerVal="MÙŠ (INNIN; INANNA)" utf8_hex="&#x12239;"/>
+  <Borger n="MZL154" signname="|MUŠ₃×A|" BorgerVal="MÙŠ×A" utf8_hex="&#x1223A;"/>
+  <Borger n="MZL155" signname="|MUŠ₃×(A.DI)|" BorgerVal="SED (MÙŠ×A+DI)" utf8_hex="&#x1223B;"/>
+  <Borger n="MZL156" signname="|MUŠ₃×ZA|" BorgerVal="MÙŠ×ZA" utf8_hex="&#x004C;"/>
+  <Borger n="MZL157" signname="GAD" BorgerVal="GAD" utf8_hex="&#x120F0;"/>
+  <Borger n="MZL158" signname="|GAD.TAK₄|" BorgerVal="GAD.KÍD" utf8_hex="&#x120F0;&#x122FA;"/>
+  <Borger n="MZL159" signname="|GAD.TAK₄.SI|" BorgerVal="AKKIL (GAD.KÍD.SI)" utf8_hex="&#x120F0;&#x122FA;&#x122DB;"/>
+  <Borger n="MZL160" signname="UMBIN" BorgerVal="UMBIN (GAD.KÍD.ÚR)" utf8_hex="&#x12322;"/>
+  <Borger n="MZL161" signname="|GAD.TAK₄.GIŠ|" BorgerVal="SIG8 (GAD.KÍD.GIŠ)" utf8_hex="&#x120F0;&#x122FA;&#x12111;"/>
+  <Borger n="MZL162" signname="ŠINIG" BorgerVal="ŠINIG (GAD.NAGA)" utf8_hex="&#x122D2;"/>
+  <Borger n="MZL163" signname="|GAD&amp;GAD.GAR&amp;GAR|" BorgerVal="KINDA (GAD.NÍG&amp;GAD.NÍG)" utf8_hex="&#x120F1;"/>
+  <Borger n="MZL164" signname="EN" BorgerVal="EN" utf8_hex="&#x12097;"/>
+  <Borger n="MZL164c01" signname="|EN×ME|" BorgerVal="ENME" utf8_hex="&#x1209A;"/>
+  <Borger n="MZL164c02" signname="|EN%EN|" BorgerVal="EN%EN" utf8_hex="&#x1209B;"/>
+  <Borger n="MZL165" signname="|EN×GAN₂|" BorgerVal="BURU14 (EN×GÁN)" utf8_hex="&#x12098;"/>
+  <Borger n="MZL165v01" signname="|EN×GAN₂@t|" BorgerVal="BURU14 (EN×KÁR)" utf8_hex="&#x12099;"/>
+  <Borger n="MZL166" signname="DARA₃" BorgerVal="DÀR" utf8_hex="&#x12070;"/>
+  <Borger n="MZL167" signname="DIM" BorgerVal="DIM (TIM)" utf8_hex="&#x12074;"/>
+  <Borger n="MZL168" signname="|DIM×ŠE|" BorgerVal="MUN (DIM×KUR; DIM×ŠE)" utf8_hex="&#x12075;"/>
+  <Borger n="MZL169" signname="BULUG" BorgerVal="BULUG" utf8_hex="&#x12051;"/>
+  <Borger n="MZL169c01" signname="|BULUG&amp;BULUG|" BorgerVal="MÉNBULUG (BULUG&amp;BULUG)" utf8_hex="&#x12052;"/>
+  <Borger n="MZL170" signname="|TA×HI|" BorgerVal="LÀL (TA×ḪI)" utf8_hex="&#x122ED;"/>
+  <Borger n="MZL171" signname="KU₇" BorgerVal="KU7" utf8_hex="&#x121AF;"/>
+  <Borger n="MZL172" signname="SA" BorgerVal="SA" utf8_hex="&#x12293;"/>
+  <Borger n="MZL173" signname="AŠGAB" BorgerVal="AŠGAB" utf8_hex="&#x1203F;"/>
+  <Borger n="MZL174" signname="GAN₂" BorgerVal="GÁN" utf8_hex="&#x120F7;"/>
+  <Borger n="MZL174c01" signname="|GAN₂&amp;GAN₂|" BorgerVal="GÁN&amp;GÁN" utf8_hex="&#x120F9;"/>
+  <Borger n="MZL175" signname="GAN₂@t" BorgerVal="KÁR (GÁN@t; ŠÈ@t)" utf8_hex="&#x120F8;"/>
+  <Borger n="MZL176" signname="GU₂" BorgerVal="GÚ (TIK)" utf8_hex="&#x12118;"/>
+  <Borger n="MZL177" signname="|GU₂×NUN|" BorgerVal="USAN (GÚ×NUN; GÚ.NUN)" utf8_hex="&#x1211B;"/>
+  <Borger n="MZL178" signname="|GU₂×KAK|" BorgerVal="DUR (GÚ×GAG, GÚ.GAG)" utf8_hex="&#x12119;"/>
+  <Borger n="MZL179" signname="|GU₂.UN|" BorgerVal="GUN (GÚ.UN)" utf8_hex="&#x12118;&#x12326;" utf8_alt="NATC"/>
+  <Borger n="MZL180" signname="GUR" BorgerVal="GUR" utf8_hex="&#x12125;"/>
+  <Borger n="MZL181" signname="SI" BorgerVal="SI" utf8_hex="&#x122DB;"/>
+  <Borger n="MZL182" signname="SI@g" BorgerVal="SU4 (SI@g)" utf8_hex="&#x122DC;"/>
+  <Borger n="MZL183" signname="DAR" BorgerVal="DAR (GÙN; ḪU@g; SI@g)" utf8_hex="&#x1206F;"/>
+  <Borger n="MZL184" signname="SAG" BorgerVal="SAG" utf8_hex="&#x12295;"/>
+  <Borger n="MZL184c01" signname="|SAG&amp;SAG|" BorgerVal="SAG&amp;SAG" utf8_hex="&#x122A7;"/>
+  <Borger n="MZL185" signname="|SAG×NUN|" BorgerVal="SAG×NUN" utf8_hex="&#x1229E;"/>
+  <Borger n="MZL186" signname="|SAG×UM|" BorgerVal="SAG×UM" utf8_hex="&#x122A4;"/>
+  <Borger n="MZL187" signname="|SAG×DU|" BorgerVal="SAG×DU" utf8_hex="&#x12297;"/>
+  <Borger n="MZL188" signname="|SAG×KAK|" BorgerVal="SAG×GAG" utf8_hex="&#x1229A;"/>
+  <Borger n="MZL189" signname="|SAG×NI|" BorgerVal="SAG×NI" utf8_hex="&#x004C;"/>
+  <Borger n="MZL190" signname="|SAG×UŠ|" BorgerVal="SAG×UŠ" utf8_hex="&#x122A6;"/>
+  <Borger n="MZL191" signname="|SAG×ŠID|" BorgerVal="DÌLIB (SAG×ŠID)" utf8_hex="&#x122A0;"/>
+  <Borger n="MZL192" signname="|SAG×U₂|" BorgerVal="SAG×Ú" utf8_hex="&#x122A2;"/>
+  <Borger n="MZL193" signname="|SAG×UB|" BorgerVal="SAG×UB" utf8_hex="&#x122A3;"/>
+  <Borger n="MZL194" signname="|SAG×IGI@g|" BorgerVal="SAG×SIG7" utf8_hex=" x12295;&#x1214A;"/>
+  <Borger n="MZL195" signname="|SAG×MI|" BorgerVal="SAG×MI" utf8_hex="&#x1229D;"/>
+  <Borger n="MZL196" signname="|SAG×UR|" BorgerVal="SAG×UR" utf8_hex="&#x122A5;"/>
+  <Borger n="MZL197" signname="|SAG×A|" BorgerVal="SAG×A" utf8_hex="&#x12296;"/>
+  <Borger n="MZL198" signname="|SAG×HA|" BorgerVal="SAG×ḪA" utf8_hex="&#x12299;"/>
+  <Borger n="MZL199" signname="|SAG×SAL|" BorgerVal="SAG×MUNUS" utf8_hex="&#x1229F;"/>
+  <Borger n="MZL200" signname="|SAG×LUM|" BorgerVal="SAG×LUM" utf8_hex="&#x1229C;"/>
+  <Borger n="MZL201" signname="MA₂" BorgerVal="MÁ" utf8_hex="&#x12223;"/>
+  <Borger n="MZL202" signname="|MA₂.MUG|" BorgerVal="DIMGUL ('MÁ.MUG')" utf8_hex="&#x12223;&#x1222E;"/>
+  <Borger n="MZL203" signname="UZ₃" BorgerVal="ÙZ ('MÁ.KASKAL')" utf8_hex="&#x1235A;"/>
+  <Borger n="MZL204" signname="|UZ₃×KASKAL|" BorgerVal="ÙZ.KASKAL" utf8_hex="&#x1235B;"/>
+  <Borger n="MZL205" signname="SUR₉" BorgerVal="SUR9 (MÁ.KASKAL.SIG7)" utf8_hex="&#x122EA;"/>
+  <Borger n="MZL206" signname="|MA₂.IGI@g|" BorgerVal="SUR10 (MÁ.SIG7)" utf8_hex="&#x12223;&#x1214A;"/>
+  <Borger n="MZL207" signname="|SI.A|" BorgerVal="DIR (DIRI, DIRIG; SI.A)" utf8_hex="&#x122DB;&#x12000;" utf8_alt="NATC"/>
+  <Borger n="MZL208" signname="NIQ₃" BorgerVal="'nìq'" utf8_hex="&#x004C;"/>
+  <Borger n="MZL209" signname="TAB" BorgerVal="TAB" utf8_hex="&#x122F0;"/>
+  <Borger n="MZL209c01" signname="|TAB×4|" BorgerVal="4×TAB" utf8_hex="&#x122F2;"/>
+  <Borger n="MZL209c02" signname="|TAB&amp;TAB.NI&amp;NI.DIŠ&amp;DIŠ|" BorgerVal="TAB&amp;TAB.NI&amp;NI.DIŠ&amp;DIŠ" utf8_hex="&#x122F1;"/>
+  <Borger n="MZL210" signname="3(AŠ~b)" BorgerVal="EŠ21 (TAB.AŠ)" utf8_hex="&#x1243B;"/>
+  <Borger n="MZL211" signname="|TAB.TI|" BorgerVal="MEGIDDA (TAB.TI)" utf8_hex="&#x122F0;&#x122FE;"/>
+  <Borger n="MZL212" signname="GEŠTIN" BorgerVal="GEŠTIN (GIŠ.DIN)" utf8_hex="&#x120FE;"/>
+  <Borger n="MZL213" signname="|GEŠTIN×KUR|" BorgerVal="GEŠTIN×KUR" utf8_hex="&#x120FF;"/>
+  <Borger n="MZL214" signname="|TAB.KUN|" BorgerVal="MÉGIDDA (TAB.KUN)" utf8_hex="&#x122F0;&#x121B2;"/>
+  <Borger n="MZL215" signname="LIMMU₂" BorgerVal="LÍMMU (LÍM; TAB.TAB)" utf8_hex="&#x121F9;"/>
+  <Borger n="MZL215v01" signname="4(AŠ)" BorgerVal="LÍMMU (TAB.TAB)" utf8_hex="&#x12402;"/>
+  <Borger n="MZL216" signname="5(AŠ)" BorgerVal="IA7 (TAB.TAB.AŠ)" utf8_hex="&#x12403;"/>
+  <Borger n="MZL217" signname="6(AŠ)" BorgerVal="AŠ4 (TAB.TAB.TAB)" utf8_hex="&#x12404;"/>
+  <Borger n="MZL218" signname="7(AŠ)" BorgerVal="ÍMIN (TAB.TAB.TAB.AŠ)" utf8_hex="&#x12405;"/>
+  <Borger n="MZL219" signname="8(AŠ)" BorgerVal="ÚSSU (TAB.TAB.TAB.TAB)" utf8_hex="&#x12406;"/>
+  <Borger n="MZL220" signname="9(AŠ)" BorgerVal="ÍLIMMU (TAB.TAB.TAB.TAB.AŠ)" utf8_hex="&#x12407;"/>
+  <Borger n="MZL221" signname="TAG" BorgerVal="TAG (ŠUM)" utf8_hex="&#x122F3;"/>
+  <Borger n="MZL221c01" signname="|TAG×GUD|" BorgerVal="TAG×GU4" utf8_hex="&#x122F5;"/>
+  <Borger n="MZL221c02" signname="|TAG×ŠU|" BorgerVal="TAG×ŠU" utf8_hex="&#x122F7;"/>
+  <Borger n="MZL221c03" signname="|TAG×UD|" BorgerVal="TAG×UD" utf8_hex="&#x122F9;"/>
+  <Borger n="MZL221c04" signname="|TAG×TUG₂|" BorgerVal="UTTU (TAG×TÚG)" utf8_hex="&#x122F8;"/>
+  <Borger n="MZL222" signname="KA₂" BorgerVal="KÁ" utf8_hex="&#x1218D;"/>
+  <Borger n="MZL223" signname="AB" BorgerVal="AB" utf8_hex="&#x1200A;"/>
+  <Borger n="MZL224" signname="|AB×NUN|" BorgerVal="AB×NUN" utf8_hex="&#x004C;"/>
+  <Borger n="MZL225" signname="|AB×GAN₂@t|" BorgerVal="AB×KÁR" utf8_hex="&#x1200E;"/>
+  <Borger n="MZL226" signname="|AB×ŠEŠ|" BorgerVal="AB×ŠEŠ" utf8_hex="&#x12013;"/>
+  <Borger n="MZL227" signname="|AB×AŠ₂|" BorgerVal="AB×ÁŠ" utf8_hex="&#x1200B;"/>
+  <Borger n="MZL228" signname="|AB×GAL|" BorgerVal="URUGAL (AB×GAL)" utf8_hex="&#x1200D;"/>
+  <Borger n="MZL229" signname="|AB×IGI@g|" BorgerVal="AB×SIG7" utf8_hex="&#x12010;"/>
+  <Borger n="MZL230" signname="URUDA" BorgerVal="URUDU (URUDA)" utf8_hex="&#x1234F;"/>
+  <Borger n="MZL231" signname="|AB×U|" BorgerVal="AB×U" utf8_hex="&#x004C;"/>
+  <Borger n="MZL231v01" signname="|AB×AŠ|" BorgerVal="AB×AŠ" utf8_hex="&#x004C;"/>
+  <Borger n="MZL232" signname="AB@g" BorgerVal="UNUG (AB@g)" utf8_hex="&#x12015;"/>
+  <Borger n="MZL232v01" signname="|AB×(U.U.U)|" BorgerVal="UNUG (AB×EŠ)" utf8_hex="&#x12014;"/>
+  <Borger n="MZL233" signname="|AB×KI|" BorgerVal="AB×KI" utf8_hex="&#x004C;"/>
+  <Borger n="MZL234" signname="|AB×LAGAB|" BorgerVal="AB×LAGAB" utf8_hex="&#x12012;"/>
+  <Borger n="MZL235" signname="|AB×DUN₃@g|" BorgerVal="AB×GÍN" utf8_hex="&#x1200C;"/>
+  <Borger n="MZL236" signname="|AB×HA|" BorgerVal="NINA (AB×ḪA)" utf8_hex="&#x1200F;"/>
+  <Borger n="MZL237" signname="|AB×IMIN|" BorgerVal="AB×IMIN" utf8_hex="&#x12011;"/>
+  <Borger n="MZL238" signname="UM" BorgerVal="UM" utf8_hex="&#x1231D;"/>
+  <Borger n="MZL239" signname="|UM×U|" BorgerVal="UM×U" utf8_hex="&#x12321;"/>
+  <Borger n="MZL239v01" signname="|URUDA×U|" BorgerVal="URUDU×U" utf8_hex="&#x12350;"/>
+  <Borger n="MZL240" signname="|UM×U.LAGAB|" BorgerVal="UM×U.LAGAB" utf8_hex="&#x12321;&#x121B8;"/>
+  <Borger n="MZL240v01" signname="|URUDA×U.LAGAB|" BorgerVal="URUDU×U+LAGAB" utf8_hex="&#x12350;&#x121B8;"/>
+  <Borger n="MZL241" signname="|UM×(ME.DA)|" BorgerVal="UM×ME+DA" utf8_hex="&#x1231F;"/>
+  <Borger n="MZL242" signname="DUB" BorgerVal="DUB" utf8_hex="&#x1207E;"/>
+  <Borger n="MZL243" signname="|DUB×ŠE|" BorgerVal="DUB×ŠE" utf8_hex="&#x004C;"/>
+  <Borger n="MZL244" signname="|UM×ŠA₃|" BorgerVal="DUB×ŠÀ" utf8_hex="&#x12320;"/>
+  <Borger n="MZL245" signname="|UM×LAGAB|" BorgerVal="DUB×LAGAB" utf8_hex="&#x1231E;"/>
+  <Borger n="MZL246" signname="|AN&amp;AN|" BorgerVal="NAB (AN&amp;AN)" utf8_hex="&#x1202E;"/>
+  <Borger n="MZL247" signname="|AN×3|" BorgerVal="MUL (AN&amp;AN.AN)" utf8_hex="&#x1202F;"/>
+  <Borger n="MZL248" signname="TA" BorgerVal="TA" utf8_hex="&#x122EB;"/>
+  <Borger n="MZL248v01" signname="TA@v" BorgerVal="TA*" utf8_hex="&#x122EC;"/>
+  <Borger n="MZL249" signname="TA@g" BorgerVal="TA@g" utf8_hex="&#x122EF;"/>
+  <Borger n="MZL250" signname="|TA×HI|" BorgerVal="TA×ḪI" utf8_hex="&#x122ED;"/>
+  <Borger n="MZL251" signname="|TA×MI|" BorgerVal="TA×MI" utf8_hex="&#x122EE;"/>
+  <Borger n="MZL252" signname="I" BorgerVal="I" utf8_hex="&#x1213F;"/>
+  <Borger n="MZL253" signname="GAN" BorgerVal="GAN" utf8_hex="&#x120F6;"/>
+  <Borger n="MZL254" signname="KAM₂" BorgerVal="KÁM" utf8_hex="&#x1219A;"/>
+  <Borger n="MZL255" signname="TUR" BorgerVal="TUR (DUMU)" utf8_hex="&#x12309;"/>
+  <Borger n="MZL256" signname="|TUR.DIŠ|" BorgerVal="TUR.DIŠ" utf8_hex="&#x12309;&#x12079;"/>
+  <Borger n="MZL257" signname="|TUR&amp;TUR.ZA&amp;ZA|" BorgerVal="ZIZNA (TUR&amp;TUR.ZA&amp;ZA)" utf8_hex="&#x1230A;"/>
+  <Borger n="MZL258" signname="AD" BorgerVal="AD" utf8_hex="&#x1201C;"/>
+  <Borger n="MZL259" signname="ZE₂" BorgerVal="ZÍ(ṢÍ; AB×PA)" utf8_hex="&#x12362;"/>
+  <Borger n="MZL260" signname="|I.A|" BorgerVal="IA (I.A)" utf8_hex="&#x12140;"/>
+  <Borger n="MZL261" signname="IN" BorgerVal="IN" utf8_hex="&#x12154;"/>
+  <Borger n="MZL262" signname="RAB" BorgerVal="RAB" utf8_hex="&#x12290;"/>
+  <Borger n="MZL263" signname="|RAB.GAN|" BorgerVal="DIM8 (RAB.GAN)" utf8_hex="&#x12290;&#x120F6;"/>
+  <Borger n="MZL264" signname="LUGAL@s" BorgerVal="DÌM (RAB.GAM)" utf8_hex="&#x1221A;"/>
+  <Borger n="MZL265" signname="|RAB.HI×BAD|" BorgerVal="DIM10 (RAB.KAM)" utf8_hex="&#x12290;&#x12130;" variant="MZL263"/>
+  <Borger n="MZL266" signname="LUGAL" BorgerVal="LUGAL" utf8_hex="&#x12217;"/>
+  <Borger n="MZL266c01" signname="|LUGAL&amp;LUGAL|" BorgerVal="LUGAL&amp;LUGAL" utf8_hex="&#x12218;"/>
+  <Borger n="MZL267" signname="|LUGAL.GAN|" BorgerVal="DIM9 (LUGAL.GAN)" utf8_hex="&#x12217;&#x120F6;"/>
+  <Borger n="MZL268" signname="|LUGAL@LUGAL|" BorgerVal="LUGAL@LUGAL" utf8_hex="&#x12219;"/>
+  <Borger n="MZL269" signname="|LUGAL.HI×BAD|" BorgerVal="DIM11 (LUGAL.KAM*)" utf8_hex="&#x12217;&#x12130;" variant="MZL267"/>
+  <Borger n="MZL270" signname="MA@g" BorgerVal="ḪAŠḪUR (MA@g)" utf8_hex="&#x12222;"/>
+  <Borger n="MZL271r01" signname="EZEN" BorgerVal="EZEN (IZIN; ŠÌR; SÌR)" utf8_hex="&#x120A1;"/>
+  <Borger n="MZL271r02" signname="KEŠ₂" BorgerVal="EZEN (KEŠDA; GIR11)" utf8_hex="&#x1219F;"/>
+  <Borger n="MZL271r03" signname="SAR" BorgerVal="SAR" utf8_hex="&#x122AC;" variant="MZL541"/>
+  <Borger n="MZL272" signname="|EZEN×AN|" BorgerVal="EZEN×AN" utf8_hex="&#x120A5;"/>
+  <Borger n="MZL273" signname="|EZEN×LI|" BorgerVal="EZEN×LI" utf8_hex="&#x120B1;"/>
+  <Borger n="MZL274" signname="|EZEN×LA|" BorgerVal="EZEN×LA" utf8_hex="&#x120AF;"/>
+  <Borger n="MZL275" signname="|EZEN×BAD|" BorgerVal="BÀD, UG5 (EZEN×BAD)" utf8_hex="&#x120A6;" variant="MZL272"/>
+  <Borger n="MZL276" signname="|EZEN×SI|" BorgerVal="EZEN×SI" utf8_hex="&#x004C;"/>
+  <Borger n="MZL277" signname="|EZEN×KASKAL|" BorgerVal="UBARA (EZEN×KASKAL)" utf8_hex="&#x120AC;"/>
+  <Borger n="MZL277c01" signname="|EZEN×KASKAL×4|" BorgerVal="4×UBARA" utf8_hex="&#x120AD;"/>
+  <Borger n="MZL278" signname="|EZEN×GUD|" BorgerVal="EZEN×GU4" utf8_hex="&#x004C;" utf8_alt="NATC"/>
+  <Borger n="MZL279" signname="|EZEN×U₂|" BorgerVal="EZEN×Ú" utf8_hex="&#x120B3;"/>
+  <Borger n="MZL280" signname="|EZEN×DUN₃@g@g|" BorgerVal="EZEN×MIR" utf8_hex="&#x120A8;"/>
+  <Borger n="MZL281" signname="|EZEN×IGI@g|" BorgerVal="EZEN×SIG7" utf8_hex="&#x120AB;"/>
+  <Borger n="MZL282" signname="|EZEN×ŠE|" BorgerVal="EZEN×ŠE" utf8_hex="&#x004C;"/>
+  <Borger n="MZL283" signname="|EZEN×UD|" BorgerVal="EZEN×UD" utf8_hex="&#x120B4;"/>
+  <Borger n="MZL284" signname="|EZEN×KU₃|" BorgerVal="EZEN×KUG" utf8_hex="&#x120AE;"/>
+  <Borger n="MZL285" signname="|EZEN×LAL₂|" BorgerVal="ASILAL (EZEN×LÁL)" utf8_hex="&#x120B0;"/>
+  <Borger n="MZL286" signname="|EZEN×LU|" BorgerVal="EZEN×LU" utf8_hex="&#x120B2;"/>
+  <Borger n="MZL287" signname="|EZEN×DUN₃@g|" BorgerVal="EZEN×GÍN" utf8_hex="&#x120A7;"/>
+  <Borger n="MZL288" signname="|EZEN×A|" BorgerVal="ÀSILAL (EZEN×A)" utf8_hex="&#x120A2;"/>
+  <Borger n="MZL289" signname="|EZEN×(A.LAL)|" BorgerVal="SIL7 (EZEN×A+LAL)" utf8_hex="&#x120A3;"/>
+  <Borger n="MZL290" signname="|EZEN×(A.LAL₂)|" BorgerVal="ASILAL4 (EZEN×A+LÁL)" utf8_hex="&#x120A4;"/>
+  <Borger n="MZL291" signname="|EZEN×HA|" BorgerVal="EZEN×ḪA" utf8_hex="&#x120A9;"/>
+  <Borger n="MZL292" signname="SUM" BorgerVal="SUM (ŠÚM; SÌ)" utf8_hex="&#x122E7;"/>
+  <Borger n="MZL293" signname="NAGA" BorgerVal="NAGA (NÁG; NÍDABA; NISABA)" utf8_hex="&#x12240;"/>
+  <Borger n="MZL293c01" signname="|(AN.NAGA)@(AN.NAGA)|" BorgerVal="AN.NAGA@AN.NAGA" utf8_hex="&#x12030;"/>
+  <Borger n="MZL293c02" signname="|(AN.NAGA)×4|" BorgerVal="4×AN+NAGA" utf8_hex="&#x12031;"/>
+  <Borger n="MZL293c03" signname="NAGA@180" BorgerVal="NAGA@180" utf8_hex="&#x12241;"/>
+  <Borger n="MZL293c04" signname="|NAGA@NAGA|" BorgerVal="NAGA@NAGA" utf8_hex="&#x12243;"/>
+  <Borger n="MZL294" signname="|NAGA×ŠU@t|" BorgerVal="NAGA×ŠU@t" utf8_hex="&#x12242;"/>
+  <Borger n="MZL295" signname="|PIRIG×KAL|" BorgerVal="NIB (PIRIG×KAL)" utf8_hex="&#x1228B;"/>
+  <Borger n="MZL296" signname="|PIRIG×UD|" BorgerVal="UG (PIRIG×UD)" utf8_hex="&#x1228C;"/>
+  <Borger n="MZL297" signname="|PIRIG×ZA|" BorgerVal="AZ (AS; PIRIG×ZA)" utf8_hex="&#x1228D;"/>
+  <Borger n="MZL298r01" signname="DUH" BorgerVal="GAB" utf8_hex="&#x12083;"/>
+  <Borger n="MZL298r02" signname="GABA" BorgerVal="GAB; DU8; DUḪ; TUḪ" utf8_hex="&#x120EE;"/>
+  <Borger n="MZL299" signname="|GABA.LIŠ|" BorgerVal="GAB.LIŠ" utf8_hex="&#x120EE;&#x121FA;"/>
+  <Borger n="MZL300" signname="EDIN" BorgerVal="EDIN" utf8_hex="&#x12094;"/>
+  <Borger n="MZL301" signname="|MU&amp;MU|" BorgerVal="TAḪ (DAḪ; MU&amp;MU)" utf8_hex="&#x1222D;"/>
+  <Borger n="MZL302" signname="KASKAL" BorgerVal="KASKAL (KAS)" utf8_hex="&#x1219C;"/>
+  <Borger n="MZL303" signname="|KASKAL.UD@s|" BorgerVal="ÌTI (KASKAL.ITI)" utf8_hex="&#x1219C;&#x1231A;"/>
+  <Borger n="MZL304" signname="|KASKAL.KUR|" BorgerVal="ILLAT (KASKAL.KUR)" utf8_hex="&#x1219C;&#x121B3;" utf8_alt="NATC"/>
+  <Borger n="MZL305" signname="|KASKAL.BU|" BorgerVal="KASKAL.BU" utf8_hex="&#x1219C;&#x1204D;"/>
+  <Borger n="MZL306" signname="|KASKAL.HI×NUN|" BorgerVal="KASKAL.AḪ" utf8_hex="&#x1219C;&#x12134;"/>
+  <Borger n="MZL307" signname="|KASKAL.LAGAB|" BorgerVal="KASKAL.LAGAB" utf8_hex="&#x1219C;&#x121B8;"/>
+  <Borger n="MZL307c01" signname="|KASKAL.LAGAB×U&amp;LAGAB×U|" BorgerVal="KASKAL.TÚL&amp;TÚL" utf8_hex="&#x1219D;"/>
+  <Borger n="MZL307c02" signname="|(KASKAL.LAGAB×U)&amp;(KASKAL.LAGAB×U)|" BorgerVal="KASKAL&amp;KASKAL.TÚL&amp;TÚL" utf8_hex="&#x1219E;"/>
+  <Borger n="MZL308" signname="|KASKAL.6(DIŠ)|" BorgerVal="ZIKURA (KASKAL.ÀŠ)" utf8_hex="&#x1219C;&#x1240B;"/>
+  <Borger n="MZL309" signname="|GUD×KUR|" BorgerVal="AM (GU4×KUR)" utf8_hex="&#x12120;"/>
+  <Borger n="MZL310" signname="|GUD×(A.KUR)|" BorgerVal="AM×A" utf8_hex="&#x1211F;"/>
+  <Borger n="MZL311" signname="UZU" BorgerVal="UZU" utf8_hex="&#x1235C;"/>
+  <Borger n="MZL312" signname="NE@s" BorgerVal="BÍL (GIBIL; NE×PAB, NE@s)" utf8_hex="&#x1224B;"/>
+  <Borger n="MZL313" signname="NE" BorgerVal="NE" utf8_hex="&#x12248;"/>
+  <Borger n="MZL314" signname="|NE×UD|" BorgerVal="ÉMEŠ (NE×UD)" utf8_hex="&#x1224A;"/>
+  <Borger n="MZL315" signname="|NE×A|" BorgerVal="ENTEN (NE×A)" utf8_hex="&#x12249;"/>
+  <Borger n="MZL316" signname="NINDA₂" BorgerVal="NÍNDA" utf8_hex="&#x12252;"/>
+  <Borger n="MZL317" signname="|NINDA₂×AŠ|" BorgerVal="NÍNDA×AŠ" utf8_hex="&#x12254;"/>
+  <Borger n="MZL318" signname="|NINDA₂×(AŠ.AŠ)|" BorgerVal="NÍNDA×AŠ+AŠ" utf8_hex="&#x12255;"/>
+  <Borger n="MZL319" signname="|NINDA₂×BAL|" BorgerVal="NÍNDA×BAL" utf8_hex="&#x004C;"/>
+  <Borger n="MZL320" signname="|NINDA₂×AN|" BorgerVal="ŠÀM (NÍNDA×AN)" utf8_hex="&#x12253;"/>
+  <Borger n="MZL321" signname="|NINDA₂×1(BAN₂)|" BorgerVal="NÍNDA×BÁN" utf8_hex="&#x004C;"/>
+  <Borger n="MZL322" signname="|NINDA₂×GI|" BorgerVal="NÍNDA×GI" utf8_hex="&#x004C;"/>
+  <Borger n="MZL323" signname="SUMAŠ" BorgerVal="SUMAŠ" utf8_hex="&#x122E8;"/>
+  <Borger n="MZL324r01" signname="|NINDA₂×NUN|" BorgerVal="AZU (NÍNDA×NUN)" utf8_hex="&#x12259;"/>
+  <Borger n="MZL324r02" signname="ZU₅" BorgerVal="AZU (NÍNDA×NUN)" utf8_hex="&#x1236B;"/>
+  <Borger n="MZL325" signname="|NINDA₂×DUB|" BorgerVal="NÍNDA×DUB?" utf8_hex="&#x004C;"/>
+  <Borger n="MZL326" signname="|NINDA₂×NE|" BorgerVal="ÁG (RAM; NÍNDA×NE)" utf8_hex="&#x12258;"/>
+  <Borger n="MZL327" signname="|NINDA₂×GUD|" BorgerVal="NÍNDA×GU4" utf8_hex="&#x12256;"/>
+  <Borger n="MZL328" signname="|NINDA₂×ŠID|" BorgerVal="NÍNDA×ŠID?" utf8_hex="&#x004C;"/>
+  <Borger n="MZL329" signname="|NINDA₂×U₂|" BorgerVal="NÍNDA×Ú" utf8_hex="&#x004C;"/>
+  <Borger n="MZL330" signname="|NINDA₂×(U₂.AŠ)|" BorgerVal="NÍNDA×Ú+AŠ" utf8_hex="&#x1225E;"/>
+  <Borger n="MZL331" signname="|NINDA₂×(ŠE.AŠ)|" BorgerVal="NÍNDA×ŠE+AŠ" utf8_hex="&#x1225C;"/>
+  <Borger n="MZL332" signname="|NINDA₂×(ŠE.AŠ.AŠ)|" BorgerVal="NÍNDA×ŠE+AŠ+AŠ" utf8_hex="&#x1225D;"/>
+  <Borger n="MZL333" signname="|NINDA₂×(ŠE.A).AN|" BorgerVal="ŠÁM (NÍNDA×ŠE+A+AN)" utf8_hex="&#x1225B;"/>
+  <Borger n="MZL333v01" signname="|NINDA₂×ŠE|" BorgerVal="ŠÁM (NÍNDA×ŠE)" utf8_hex="&#x1225A;"/>
+  <Borger n="MZL334" signname="|NINDA₂×U|" BorgerVal="NÍNDA×U" utf8_hex="&#x004C;"/>
+  <Borger n="MZL335" signname="|NINDA₂×(U.U)|" BorgerVal="NÍNDA×MAN" utf8_hex="&#x004C;"/>
+  <Borger n="MZL336" signname="ZIG" BorgerVal="ZIG (ZIK; NÍNDA×EŠ)" utf8_hex="&#x12368;"/>
+  <Borger n="MZL337" signname="|NINDA₂×(ME.TAK₄)|" BorgerVal="NÍNDA×ME+KÍD" utf8_hex="&#x004C;"/>
+  <Borger n="MZL337v01" signname="|NINDA₂×(ME.GAN₂@t)|" BorgerVal="NÍNDA×ME+KÁR" utf8_hex="&#x12257;"/>
+  <Borger n="MZL338" signname="GALAM" BorgerVal="GALAM (SUKUD)" utf8_hex="&#x120F4;"/>
+  <Borger n="MZL339" signname="GUM" BorgerVal="KUM (GUM)" utf8_hex="&#x12123;"/>
+  <Borger n="MZL340" signname="|GUM×ŠE|" BorgerVal="GAZ (GAS; KUM×ŠE)" utf8_hex="&#x12124;"/>
+  <Borger n="MZL341" signname="UR₂" BorgerVal="ÚR" utf8_hex="&#x1232B;"/>
+  <Borger n="MZL342" signname="|UR₂×NUN|" BorgerVal="ÚR×NUN" utf8_hex="&#x12330;"/>
+  <Borger n="MZL343" signname="|UR₂×AL|" BorgerVal="ÚR×AL" utf8_hex="&#x1232E;"/>
+  <Borger n="MZL344" signname="|UR₂×U₂|" BorgerVal="ÚR×Ú" utf8_hex="&#x12331;"/>
+  <Borger n="MZL345" signname="|UR₂×(U₂.AŠ)|" BorgerVal="ÚR×Ú+AŠ" utf8_hex="&#x12332;"/>
+  <Borger n="MZL346" signname="|UR₂×(A.HA)|" BorgerVal="ÚR×A+ḪA" utf8_hex="&#x1232C;"/>
+  <Borger n="MZL347" signname="|UR₂×HA|" BorgerVal="ÚR×ḪA" utf8_hex="&#x1232F;"/>
+  <Borger n="MZL348" signname="IL" BorgerVal="IL (AL×ŠE)" utf8_hex="&#x1214B;"/>
+  <Borger n="MZL349" signname="|IL×GAN₂@t|" BorgerVal="IL×KÁR" utf8_hex="&#x1214C;"/>
+  <Borger n="MZL350" signname="DU" BorgerVal="DU" utf8_hex="&#x1207A;"/>
+  <Borger n="MZL350c01" signname="|DU&amp;DU|" BorgerVal="LAḪ4 (DU&amp;DU)" utf8_hex="&#x1207B;"/>
+  <Borger n="MZL351" signname="DU@g" BorgerVal="SUḪUŠ (DIR6; DU@g)" utf8_hex="&#x1207C;"/>
+  <Borger n="MZL352" signname="DU@s" BorgerVal="KAŠ4 (DIR5; DU@s)" utf8_hex="&#x1207D;"/>
+  <Borger n="MZL353" signname="ANŠE" BorgerVal="ANŠE (GÌR×PA; GÌR×'TAB')" utf8_hex="&#x12032;"/>
+  <Borger n="MZL353v01" signname="|GIR₃×PA|" BorgerVal="ANŠE" utf8_hex="&#x1210F;"/>
+  <Borger n="MZL354" signname="TUM" BorgerVal="TUM" utf8_hex="&#x12308;"/>
+  <Borger n="MZL355" signname="TUM@g" BorgerVal="TUM@g, TUM×KÁR" utf8_hex="&#x004C;"/>
+  <Borger n="MZL356" signname="EGIR" BorgerVal="EGIR" utf8_hex="&#x12095;"/>
+  <Borger n="MZL357" signname="IŠ" BorgerVal="IŠ" utf8_hex="&#x12156;"/>
+  <Borger n="MZL358" signname="BI" BorgerVal="BI" utf8_hex="&#x12049;"/>
+  <Borger n="MZL359" signname="2(EŠE₃)" BorgerVal="EŠEMIN5 ('BI')" utf8_hex="&#x12459;"/>
+  <Borger n="MZL360" signname="|BI×IGI@g|" BorgerVal="BI×SIG7 (KAŠ×SIG7)" utf8_hex="&#x1204C;"/>
+  <Borger n="MZL361" signname="|BI×GAR|" BorgerVal="BI×NÍG (KAŠ×GAR)" utf8_hex="&#x1204B;"/>
+  <Borger n="MZL362" signname="ŠIM" BorgerVal="ŠIM" utf8_hex="&#x122C6;"/>
+  <Borger n="MZL363" signname="|ŠIM×BAL|" BorgerVal="ŠIM×BAL" utf8_hex="&#x122C8;"/>
+  <Borger n="MZL364" signname="|ŠIM×BUR₂|" BorgerVal="ŠIM×BÚR" utf8_hex="&#x004C;"/>
+  <Borger n="MZL365" signname="|ŠIM×MUG|" BorgerVal="ŠIM×MUG" utf8_hex="&#x122D0;"/>
+  <Borger n="MZL366" signname="|ŠIM×DIN|" BorgerVal="ŠIM×DIN" utf8_hex="&#x122CA;"/>
+  <Borger n="MZL367" signname="|ŠIM×BULUG|" BorgerVal="ŠIM×BULUG" utf8_hex="&#x122C9;"/>
+  <Borger n="MZL368" signname="|ŠIM×IGI@g|" BorgerVal="ŠIM×SIG7" utf8_hex="&#x122CD;"/>
+  <Borger n="MZL369" signname="|ŠIM×LUL|" BorgerVal="ŠIM×LUL" utf8_hex="&#x122CF;"/>
+  <Borger n="MZL370" signname="|ŠIM×PI|" BorgerVal="ŠIM×PI" utf8_hex="&#x004C;"/>
+  <Borger n="MZL371" signname="|ŠIM×IGI|" BorgerVal="ŠIM×IGI" utf8_hex="&#x122CC;"/>
+  <Borger n="MZL372" signname="|ŠIM×A|" BorgerVal="ŠIM×A (DUMGAL)" utf8_hex="&#x122C7;"/>
+  <Borger n="MZL373" signname="|ŠIM×GAR|" BorgerVal="ŠIM×NÍG (BAPPIR; ŠIM×NINDA)" utf8_hex="&#x122CB;"/>
+  <Borger n="MZL374" signname="|ŠIM×SAL|" BorgerVal="ŠIM×MUNUS (ŠIM×SAL)" utf8_hex="&#x122D1;"/>
+  <Borger n="MZL375" signname="ŠIM×KUŠU₂" BorgerVal="ŠIM×KÚŠU" utf8_hex="&#x122CE;"/>
+  <Borger n="MZL376" signname="GISAL" BorgerVal="GISAL (BI.GIŠ, BI.IZ)" utf8_hex="&#x12110;"/>
+  <Borger n="MZL377" signname="|IDIM&amp;IDIM.BUR|" BorgerVal="BÁNŠUR" utf8_hex="&#x12143;"/>
+  <Borger n="MZL378" signname="|GAN₂%GAN₂|" BorgerVal="KIB" utf8_hex="&#x120FA;"/>
+  <Borger n="MZL378v01" signname="|GIŠ%GIŠ|" BorgerVal="KIB" utf8_hex="&#x12112;"/>
+  <Borger n="MZL379" signname="KAK" BorgerVal="GAG (KAK)" utf8_hex="&#x12195;"/>
+  <Borger n="MZL380" signname="NI" BorgerVal="NI" utf8_hex="&#x1224C;"/>
+  <Borger n="MZL381" signname="UŠ" BorgerVal="UŠ (NITA)" utf8_hex="&#x12351;"/>
+  <Borger n="MZL382" signname="|UŠ×TAK₄|" BorgerVal="UŠ×KÍD" utf8_hex="&#x12355;"/>
+  <Borger n="MZL383" signname="|UŠ×KU|" BorgerVal="UŠ×KU" utf8_hex="&#x12353;"/>
+  <Borger n="MZL384" signname="|UŠ×A|" BorgerVal="KÀŠ (UŠ×A)" utf8_hex="&#x12352;"/>
+  <Borger n="MZL385" signname="|NI.UD|" BorgerVal="NA4 (NI.UD)" utf8_hex="&#x1224C;&#x12313;"/>
+  <Borger n="MZL385v01" signname="|NI.ERIN₂|" BorgerVal="NA4 (NI.ERIM)" utf8_hex="&#x1224C;&#x1209F;" utf8_alt="NATC"/>
+  <Borger n="MZL386" signname="|NI.UD|" BorgerVal="DÀG ('NA4')" utf8_hex="&#x1224C;&#x1209F;"/>
+  <Borger n="MZL387" signname="GA₂" BorgerVal="GÁ (MAL)" utf8_hex="&#x120B7;"/>
+  <Borger n="MZL388" signname="ŠITA" BorgerVal="ŠITA ('GÁ')" utf8_hex="&#x122D6;"/>
+  <Borger n="MZL389" signname="|GA₂×AŠ|" BorgerVal="GÁ×AŠ" utf8_hex="&#x120BD;"/>
+  <Borger n="MZL390" signname="|GA₂×(HAL.LA)|" BorgerVal="GÁ×ḪAL+LA" utf8_hex="&#x120D3;"/>
+  <Borger n="MZL391" signname="|GA₂×(GIR₂.SU)|" BorgerVal="GÁ×GÍR+SU" utf8_hex="&#x120D0;"/>
+  <Borger n="MZL392" signname="|GA₂×AN|" BorgerVal="AMA (GÁ×AN)" utf8_hex="&#x120BC;"/>
+  <Borger n="MZL393" signname="|GA₂×AN.KAK.A|" BorgerVal="GÁ×AN+GAG+A" utf8_hex=" x120BC;&#x12195;&#x12000;"/>
+  <Borger n="MZL394" signname="|GA₂×TAK₄|" BorgerVal="GÁ×KÍD" utf8_hex="&#x120E9;"/>
+  <Borger n="MZL395" signname="|GA₂×BAD|" BorgerVal="GÁ×BAD" utf8_hex="&#x120BF;"/>
+  <Borger n="MZL396" signname="|GA₂×GI|" BorgerVal="GÁ×GI" utf8_hex="&#x120CD;"/>
+  <Borger n="MZL397" signname="|GA₂×NUN|" BorgerVal="GANUN (GÁ×NUN)" utf8_hex="&#x120E0;"/>
+  <Borger n="MZL398" signname="|GA₂×HUB₂|" BorgerVal="GÁ×KAB" utf8_hex="&#x120D5;"/>
+  <Borger n="MZL399" signname="|GA₂×EN|" BorgerVal="GÁ×EN" utf8_hex="&#x120C9;"/>
+  <Borger n="MZL400" signname="|GA₂×EN×GAN₂@t|" BorgerVal="GÁ×BURU14" utf8_hex="&#x120CA;"/>
+  <Borger n="MZL401" signname="|GA₂×DIM×ŠE|" BorgerVal="GÁ×MUN" utf8_hex="&#x120C5;"/>
+  <Borger n="MZL402" signname="|GA₂×GAN₂@t|" BorgerVal="GÁ×KÁR" utf8_hex="&#x120CB;"/>
+  <Borger n="MZL403" signname="|GA₂×DUB|" BorgerVal="GÁ×DUB" utf8_hex="&#x120C6;"/>
+  <Borger n="MZL404" signname="|GA₂×SUM|" BorgerVal="GÁ×SUM" utf8_hex="&#x120E8;"/>
+  <Borger n="MZL405" signname="|GA₂×KASKAL|" BorgerVal="GÁ×KASKAL" utf8_hex="&#x120D9;"/>
+  <Borger n="MZL406" signname="|GA₂×(IŠ.HU.AŠ)|" BorgerVal="GÁ×IŠ+ḪU+AŠ" utf8_hex="&#x120D7;"/>
+  <Borger n="MZL407" signname="|GA₂×KAK|" BorgerVal="GÁ×GAG" utf8_hex="&#x120D8;"/>
+  <Borger n="MZL408" signname="|GA₂×PA|" BorgerVal="SILA4 (GÁ×PA)" utf8_hex="&#x120E2;"/>
+  <Borger n="MZL409" signname="|GA₂×(KID.LAL)|" BorgerVal="GÁ×KID+LAL" utf8_hex="&#x120DB;"/>
+  <Borger n="MZL410" signname="|GA₂×ŠID|" BorgerVal="GÁ×ŠID" utf8_hex="&#x120E7;"/>
+  <Borger n="MZL411" signname="|GA₂×NUN&amp;NUN|" BorgerVal="ÙR (GÁ×NIR)" utf8_hex="&#x120E1;"/>
+  <Borger n="MZL412" signname="|GA₂×GI₄|" BorgerVal="GÁ×GI4" utf8_hex="&#x120CE;"/>
+  <Borger n="MZL413" signname="|GA₂×SAR|" BorgerVal="GÁ×SAR" utf8_hex="&#x120E4;"/>
+  <Borger n="MZL414" signname="|GA₂×(AŠ₂.GAL)|" BorgerVal="GÁ×ÁŠ+GAL" utf8_hex="&#x120BE;"/>
+  <Borger n="MZL415" signname="|GA₂×(BUR.RA)|" BorgerVal="GÁ×BUR+RA" utf8_hex="&#x120C2;"/>
+  <Borger n="MZL416" signname="|GA₂×DA|" BorgerVal="GÁ×DA" utf8_hex="&#x120C3;"/>
+  <Borger n="MZL417" signname="|GA₂×IGI@g|" BorgerVal="GÁ×SIG7" utf8_hex="&#x120D6;"/>
+  <Borger n="MZL418" signname="|GA₂×ŠE|" BorgerVal="ÉSAG (GÁ×ŠE)" utf8_hex="&#x120E5;"/>
+  <Borger n="MZL418v01" signname="|E₂×ŠE|" BorgerVal="ÉSAG (É×ŠE)" utf8_hex="&#x12092;"/>
+  <Borger n="MZL419" signname="|GA₂×(ŠE.TUR)|" BorgerVal="GÁ×ŠE+TUR" utf8_hex="&#x120E6;"/>
+  <Borger n="MZL420" signname="|GA₂×UD|" BorgerVal="GÁ×UD" utf8_hex="&#x120EB;"/>
+  <Borger n="MZL421" signname="|GA₂×(HI.LI)|" BorgerVal="GÁ×ḪI+LI" utf8_hex="&#x120D4;"/>
+  <Borger n="MZL422" signname="|GA₂×U|" BorgerVal="GÁ×U" utf8_hex="&#x120EA;"/>
+  <Borger n="MZL423" signname="|GA₂xAB₂|" BorgerVal="GÁ×ÁB" utf8_hex="&#x004C;"/>
+  <Borger n="MZL424" signname="|GA₂×MI|" BorgerVal="ITIMA (GÁ×MI)" utf8_hex="&#x120DF;"/>
+  <Borger n="MZL424v01" signname="|E₂×MI|" BorgerVal="ITIMA (É×MI)" utf8_hex="&#x12090;"/>
+  <Borger n="MZL425" signname="|GA₂×DI|" BorgerVal="GÁ×DI" utf8_hex="&#x120C4;"/>
+  <Borger n="MZL426" signname="|GA₂×(KU₃.AN)|" BorgerVal="GÁ×KUG+AN" utf8_hex="&#x120DC;"/>
+  <Borger n="MZL427" signname="|GA₂×(ME.EN)|" BorgerVal="MEN (GÁ×ME+EN)" utf8_hex="&#x120DE;"/>
+  <Borger n="MZL428" signname="|GA₂×(A.DA.HA)|" BorgerVal="GÁ×A+DA+ḪA" utf8_hex="&#x120B8;"/>
+  <Borger n="MZL428v01" signname="|E₂×(A.DA.HA)|" BorgerVal="É×A+DA+ḪA" utf8_hex="&#x120B8;"/>
+  <Borger n="MZL429" signname="|GA₂×(A.IGI)|" BorgerVal="GÁ×A+IGI" utf8_hex="&#x120BA;"/>
+  <Borger n="MZL430" signname="|GA₂×(HA.LU.EŠ₂)|" BorgerVal="GÁ×ḪA+LU+ŠÈ" utf8_hex="&#x120D1;"/>
+  <Borger n="MZL431" signname="|GA₂×GAR|" BorgerVal="GALGA (GÁ×NÍG)" utf8_hex="&#x120CC;"/>
+  <Borger n="MZL431v01" signname="|E₂×GAR|" BorgerVal="GALGA (É×NÍG)" utf8_hex="&#x1208F;"/>
+  <Borger n="MZL432" signname="|GA₂×SAL|" BorgerVal="ARḪUŠ (GÁ×MUNUS)" utf8_hex="&#x120E3;"/>
+  <Borger n="MZL432v01" signname="|E₂×SAL|" BorgerVal="ARḪUŠ (É×MUNUS)" utf8_hex="&#x12091;"/>
+  <Borger n="MZL433" signname="|GA₂×(EL.LA)|" BorgerVal="GÁ×EL+LA" utf8_hex="&#x120C8;"/>
+  <Borger n="MZL434" signname="ŠITA₂" BorgerVal="ŠÍTA ('GÁ.GIŠ')" utf8_hex="&#x120B7;&#x12111;" utf8_alt="NATC"/>
+  <Borger n="MZL435" signname="KISAL" BorgerVal="KISAL" utf8_hex="&#x121A6;"/>
+  <Borger n="MZL436" signname="|I₃.GIŠ|" BorgerVal="ì+giš" utf8_hex="&#x121A6;"/>
+  <Borger n="MZL437" signname="IR" BorgerVal="IR (GAG@g)" utf8_hex="&#x12155;"/>
+  <Borger n="MZL438" signname="DAG" BorgerVal="DAG (PÀR)" utf8_hex="&#x12056;"/>
+  <Borger n="MZL439" signname="|DAG.KISIM₅|" BorgerVal="DAG.KISIM5" utf8_hex="&#x12056;&#x121A8;"/>
+  <Borger n="MZL440" signname="|DAG.KISIM₅×GIR₂|" BorgerVal="KIŠI8 (DAG.KISIM5×GÍR(@g?))" utf8_hex="&#x1205E;"/>
+  <Borger n="MZL441" signname="|DAG.KISIM₅×LA|" BorgerVal="DAG.KISIM5×LA" utf8_hex="&#x12064;"/>
+  <Borger n="MZL442" signname="|DAG.KISIM₅×(PAP.PAP)|" BorgerVal="DAG.KISIM5×BÙLUG/MUNU4" utf8_hex="&#x12069;"/>
+  <Borger n="MZL443" signname="|DAG.KISIM₅×TAK₄|" BorgerVal="DAG.KISIM5×KÍD" utf8_hex="&#x1206B;"/>
+  <Borger n="MZL444" signname="|DAG.KISIM₅×GI|" BorgerVal="DAG.KISIM5×GI" utf8_hex="&#x1205D;"/>
+  <Borger n="MZL445" signname="|DAG.KISIM₅×SI|" BorgerVal="DAG.KISIM5×SI" utf8_hex="&#x1206A;"/>
+  <Borger n="MZL446" signname="|DAG.KISIM₅×NE|" BorgerVal="DAG.KISIM5×NE" utf8_hex="&#x12068;"/>
+  <Borger n="MZL447" signname="|DAG.KISIM₅×BI|" BorgerVal="DAG.KISIM5×BI" utf8_hex="&#x1205A;"/>
+  <Borger n="MZL448" signname="|DAG.KISIM₅×KAK|" BorgerVal="DAG.KISIM5×GAG" utf8_hex="&#x12063;"/>
+  <Borger n="MZL449" signname="|DAG.KISIM₅×UŠ|" BorgerVal="UTUA (DAG.KISIM5×UŠ)" utf8_hex="&#x1206D;"/>
+  <Borger n="MZL450" signname="|DAG.KISIM₅×IR|" BorgerVal="ÙBUR (DAG.KISIM5×'IR')" utf8_hex="&#x12061;"/>
+  <Borger n="MZL451" signname="|DAG.KISIM₅×(IR.LU)|" BorgerVal="UBUR4 (DAG.KISIM5×'IR'+LU)" utf8_hex="&#x12062;"/>
+  <Borger n="MZL452" signname="|DAG.KISIM₅×GUD|" BorgerVal="UTUL5 (DAG.KISIM5×GU4)" utf8_hex="&#x1205F;"/>
+  <Borger n="MZL453" signname="|DAG.KISIM₅×(U₂.GIR₂)|" BorgerVal="KIŠI9 (DAG.KISIM5×Ú+GÍR(@g?))" utf8_hex="&#x1206C;"/>
+  <Borger n="MZL454" signname="|DAG.KISIM₅×(U₂.BAR)|" BorgerVal="DAG.KISIM5×Ú+MAŠ/BAR" utf8_hex="&#x004C;"/>
+  <Borger n="MZL455" signname="|DAG.KISIM₅×GA|" BorgerVal="UBUR (DAG.KISIM5×GA)" utf8_hex="&#x1205B;"/>
+  <Borger n="MZL456" signname="|DAG.KISIM₅×UMUM|" BorgerVal="DAG.KISIM5×DÉ?" utf8_hex="&#x004C;"/>
+  <Borger n="MZL456v01" signname="|DAG.KISIM₅×(UD×(U.U.U@g))|" BorgerVal="DAG.KISIM5×MÚRU?" utf8_hex="&#x004C;"/>
+  <Borger n="MZL457" signname="|DAG.KISIM₅×BALAG|" BorgerVal="DAG.KISIM5×DÚB/BALAG" utf8_hex="&#x12059;"/>
+  <Borger n="MZL458" signname="|DAG.KISIM₅×AMAR|" BorgerVal="DAG.KISIM5×AMAR" utf8_hex="&#x12058;"/>
+  <Borger n="MZL459" signname="|DAG.KISIM₅×LU|" BorgerVal="ÚBUR (DAG.KISIM5×LU)" utf8_hex="&#x12065;"/>
+  <Borger n="MZL460" signname="|DAG.KISIM₅×(LU.MAŠ₂)|" BorgerVal="AMAŠ (DAG.KISIM5×LU+MÁŠ)" utf8_hex="&#x12066;"/>
+  <Borger n="MZL461" signname="|DAG.KISIM₅×(A.MAŠ)|" BorgerVal="DAG.KISIM5×A+MAŠ" utf8_hex="&#x12057;"/>
+  <Borger n="MZL462" signname="|DAG.KISIM₅×HA|" BorgerVal="DAG.KISIM5×ḪA" utf8_hex="&#x12060;"/>
+  <Borger n="MZL463" signname="|DAG.KISIM₅×LUM|" BorgerVal="DAG.KISIM5×LUM" utf8_hex="&#x12067;"/>
+  <Borger n="MZL464" signname="PA" BorgerVal="PA" utf8_hex="&#x1227A;"/>
+  <Borger n="MZL464" signname="|PA.AN|" BorgerVal="GARZA (PA.AN)" utf8_hex="&#x1227A;&#x1202D;" utf8_alt="NATC"/>
+  <Borger n="MZL464" signname="|PA.HUB₂.DU|" BorgerVal="RIG7 (PA.HÚB.DU)" utf8_hex="&#x1227A;&#x12138;&#x1207A;" utf8_alt="NATC"/>
+  <Borger n="MZL464" signname="|PA.DU|" BorgerVal="MÀŠKIM (PA.DU)" utf8_hex="&#x1227A;&#x1207A;" utf8_alt="NATC"/>
+  <Borger n="MZL464" signname="|PA.DU@g|" BorgerVal="MÁŠKIM (PA.SUHUŠ)" utf8_hex="&#x1227A;&#x1207C;" utf8_alt="NATC"/>
+  <Borger n="MZL464" signname="|PA.DU@s|" BorgerVal="MAŠKIM (PA.KAŠ4)" utf8_hex="&#x1227A;&#x1207D;" utf8_alt="NATC"/>
+  <Borger n="MZL464" signname="|PA.AL|" BorgerVal="ŠAB/PRA (PA.AL)" utf8_hex="&#x1227A;&#x12020;" utf8_alt="NATC"/>
+  <Borger n="MZL465" signname="2(BAN₂)" BorgerVal="BANMIN ('PA')" utf8_hex="&#x12450;"/>
+  <Borger n="MZL466" signname="|PA.IB|" BorgerVal="ŠAB (PA.IB)" utf8_hex="&#x1227A;&#x12141;" utf8_alt="NATC"/>
+  <Borger n="MZL467" signname="|PA.TUG₂|" BorgerVal="NUSKA (PA.TÚG)" utf8_hex="&#x1227A;&#x12306;" utf8_alt="NATC"/>
+  <Borger n="MZL468" signname="|PA.LU|" BorgerVal="SIPA (PA.LU)" utf8_hex="&#x1227A;&#x121FB;" utf8_alt="NATC"/>
+  <Borger n="MZL469" signname="GIŠ" BorgerVal="GIŠ (GEŠ)" utf8_hex="&#x12111;"/>
+  <Borger n="MZL470" signname="GIŠ@t" BorgerVal="GUR17 (GIŠ@t)" utf8_hex="&#x12115;"/>
+  <Borger n="MZL471" signname="|GIŠ×BAD|" BorgerVal="GIŠ×BAD" utf8_hex="&#x12113;"/>
+  <Borger n="MZL472" signname="GUD" BorgerVal="GU4 (GUD)" utf8_hex="&#x1211E;"/>
+  <Borger n="MZL473" signname="|GUD×KASKAL|" BorgerVal="GU4×KASKAL" utf8_hex="&#x004C;"/>
+  <Borger n="MZL474" signname="AL" BorgerVal="AL" utf8_hex="&#x12020;"/>
+  <Borger n="MZL475" signname="|AL×TAK₄|" BorgerVal="AL×KÍD?" utf8_hex="&#x004C;"/>
+  <Borger n="MZL475v01" signname="|AL×KAD₃|" BorgerVal="AL×KÀD?" utf8_hex="&#x12025;"/>
+  <Borger n="MZL476" signname="|AL×UŠ|" BorgerVal="AL×UŠ" utf8_hex="&#x12028;"/>
+  <Borger n="MZL477" signname="|AL×GIŠ|" BorgerVal="AL×GIŠ" utf8_hex="&#x12023;"/>
+  <Borger n="MZL478" signname="|AL×AL|" BorgerVal="AL×AL" utf8_hex="&#x12021;"/>
+  <Borger n="MZL479" signname="|AL×ŠE|" BorgerVal="AL×ŠE" utf8_hex="&#x12027;"/>
+  <Borger n="MZL480" signname="|AL×DIM₂|" BorgerVal="AL×GIM" utf8_hex="&#x12022;"/>
+  <Borger n="MZL481" signname="|AL×KI|" BorgerVal="AL×KI" utf8_hex="&#x12026;"/>
+  <Borger n="MZL482" signname="|AL×HA|" BorgerVal="AL×ḪA" utf8_hex="&#x12024;"/>
+  <Borger n="MZL483" signname="MAR" BorgerVal="MAR" utf8_hex="&#x12225;"/>
+  <Borger n="MZL484" signname="KID" BorgerVal="KID (LÍL)" utf8_hex="&#x121A4;"/>
+  <Borger n="MZL485" signname="ŠID" BorgerVal="ŠID (LAG)" utf8_hex="&#x122C3;"/>
+  <Borger n="MZL486" signname="MES" BorgerVal="MES (RID)" utf8_hex="&#x12229;"/>
+  <Borger n="MZL487" signname="|ŠID×IM|" BorgerVal="ŠID×IM" utf8_hex="&#x122C5;"/>
+  <Borger n="MZL488" signname="|UMxME|" BorgerVal="MES/UM×ME" utf8_hex="&#x004C;"/>
+  <Borger n="MZL489" signname="|ŠID×A|" BorgerVal="ÚMBISAG (ŠID×A)" utf8_hex="&#x122C4;"/>
+  <Borger n="MZL490" signname="U₂" BorgerVal="Ú" utf8_hex="&#x12311;"/>
+  <Borger n="MZL491" signname="GA" BorgerVal="GA" utf8_hex="&#x120B5;"/>
+  <Borger n="MZL492" signname="GA@g" BorgerVal="GA@g" utf8_hex="&#x120B6;"/>
+  <Borger n="MZL493" signname="IL₂" BorgerVal="ÍL (GA.GÍN)" utf8_hex="&#x1214D;"/>
+  <Borger n="MZL494" signname="LUH" BorgerVal="LUḪ" utf8_hex="&#x1221B;"/>
+  <Borger n="MZL495" signname="E₂" BorgerVal="É" utf8_hex="&#x1208D;"/>
+  <Borger n="MZL496r01" signname="KAL" BorgerVal="KAL" utf8_hex="&#x12197;"/>
+  <Borger n="MZL496r02" signname="GURUŠ" BorgerVal="GURUŠ" utf8_hex="&#x12128;"/>
+  <Borger n="MZL496c01" signname="|KAL%KAL|" BorgerVal="KAL%KAL" utf8_hex="&#x12199;"/>
+  <Borger n="MZL497" signname="|KAL×BAD|" BorgerVal="ALAD (KAL×BAD)" utf8_hex="&#x12198;"/>
+  <Borger n="MZL498" signname="E" BorgerVal="E" utf8_hex="&#x1208A;"/>
+  <Borger n="MZL498c01" signname="|E&amp;E.NUN&amp;NUN|" BorgerVal="E&amp;E.NUN&amp;NUN" utf8_hex="&#x1208C;"/>
+  <Borger n="MZL499" signname="DUG" BorgerVal="DUG (BI×A)" utf8_hex="&#x12081;"/>
+  <Borger n="MZL499v01" signname="BI×A" BorgerVal="DUG (BI×A)" utf8_hex="&#x1204A;"/>
+  <Borger n="MZL500" signname="UN" BorgerVal="KALAM" utf8_hex="&#x12326;"/>
+  <Borger n="MZL501" signname="UN" BorgerVal="UN" utf8_hex="&#x12326;"/>
+  <Borger n="MZL502" signname="|NUN&amp;NUN|" BorgerVal="NIR (NUN&amp;NUN)" utf8_hex="&#x1226A;"/>
+  <Borger n="MZL503" signname="GURUN" BorgerVal="GURUN" utf8_hex="&#x12127;"/>
+  <Borger n="MZL504" signname="UB" BorgerVal="UB" utf8_hex="&#x12312;"/>
+  <Borger n="MZL505" signname="|AŠ&amp;AŠ&amp;AŠ|" BorgerVal="EŠ16 (AŠ&amp;AŠ&amp;AŠ)" utf8_hex="&#x1203C;"/>
+  <Borger n="MZL505v01" signname="3(AŠ~a)" BorgerVal="EŠ16 (AŠ&amp;AŠ&amp;AŠ)" utf8_hex="&#x1243A;"/>
+  <Borger n="MZL506" signname="4(AŠ~a)" BorgerVal="LIMMU4" utf8_hex="&#x1243D;"/>
+  <Borger n="MZL507" signname="GI₄" BorgerVal="GI4 (GI@g)" utf8_hex="&#x12104;"/>
+  <Borger n="MZL508" signname="|GI₄%GI₄|" BorgerVal="GIGI (GI4%GI4)" utf8_hex="&#x12106;"/>
+  <Borger n="MZL508v01" signname="|GI₄&amp;GI₄|" BorgerVal="GIGI (GI4&amp;GI4)" utf8_hex="&#x12105;"/>
+  <Borger n="MZL509" signname="GU₂@g" BorgerVal="ÚSAN (GÚ@g)" utf8_hex="&#x1211D;"/>
+  <Borger n="MZL510" signname="|GU₂@g.KAK|" BorgerVal="ÚSAN.GAG" utf8_hex="&#x1211D;&#x12195;"/>
+  <Borger n="MZL511" signname="RA" BorgerVal="RA" utf8_hex="&#x1228F;"/>
+  <Borger n="MZL512" signname="SAG@g" BorgerVal="DÙL (SAG@g)" utf8_hex="&#x122A8;"/>
+  <Borger n="MZL513" signname="|AŠ&amp;AŠ&amp;AŠ.TAB|" BorgerVal="IA9 (EŠ16.TAB)" utf8_hex="&#x1203C;&#x122F0;" utf8_alt="NATC"/>
+  <Borger n="MZL514" signname="LU₂" BorgerVal="LÚ" utf8_hex="&#x121FD;"/>
+  <Borger n="MZL514c01" signname="|LU₂%LU₂|" BorgerVal="LÚ%LÚ" utf8_hex="&#x12212;"/>
+  <Borger n="MZL514c02" signname="|LU₂@LU₂|" BorgerVal="LÚ@LÚ" utf8_hex="&#x12213;"/>
+  <Borger n="MZL514c03" signname="|LU₂×4|" BorgerVal="4×LÚ" utf8_hex="&#x12214;"/>
+  <Borger n="MZL515" signname="LU₂@t" BorgerVal="LÚ@t" utf8_hex="&#x12211;"/>
+  <Borger n="MZL516" signname="LU₂@s" BorgerVal="LÚ@s ('LÚ.GAM')" utf8_hex="&#x12215;"/>
+  <Borger n="MZL517" signname="|LU₂×BAD|" BorgerVal="LÚ×BAD" utf8_hex="&#x121FF;"/>
+  <Borger n="MZL518" signname="|LU₂@s×BAD|" BorgerVal="LÚ@s×BAD ('LÚ×BAD.GAM')" utf8_hex="&#x004C;"/>
+  <Borger n="MZL519" signname="|LU₂×KAD₂|" BorgerVal="LÚ×KÁD" utf8_hex="&#x12205;"/>
+  <Borger n="MZL520" signname="|LU₂×KAD₃|" BorgerVal="LÚ×KÀD?" utf8_hex="&#x12206;"/>
+  <Borger n="MZL520" signname="|LU₂×TAK₄|" BorgerVal="LÚ×KÍD?" utf8_hex="&#x004C;"/>
+  <Borger n="MZL521" signname="|LU₂×GAN₂@t|" BorgerVal="LÚ×KÁR (LU×GÁN@t)" utf8_hex="&#x12202;"/>
+  <Borger n="MZL522" signname="|LU₂×NE|" BorgerVal="LÚ×NE" utf8_hex="&#x1220C;"/>
+  <Borger n="MZL523" signname="|LU₂×AL|" BorgerVal="LÚ×AL" utf8_hex="&#x121FE;"/>
+  <Borger n="MZL524" signname="|LU₂×ŠU|" BorgerVal="LÚ×ŠU" utf8_hex="&#x004C;"/>
+  <Borger n="MZL525" signname="|LU₂×HI×BAD|" BorgerVal="LÚ×KAM" utf8_hex="&#x12203;"/>
+  <Borger n="MZL526" signname="|LU₂×IM|" BorgerVal="LÚ×IM" utf8_hex="&#x12204;"/>
+  <Borger n="MZL527" signname="|LU₂×KI|" BorgerVal="LÚ×KI" utf8_hex="&#x12208;"/>
+  <Borger n="MZL527'" signname="|LU₂×(ME.EN)|" BorgerVal="LÚ×ME+EN" utf8_hex="&#x1220B;"/>
+  <Borger n="MZL528" signname="|LU₂×LAGAB|" BorgerVal="LÚ×LAGAB" utf8_hex="&#x1220A;"/>
+  <Borger n="MZL529" signname="|LU₂×KU|" BorgerVal="LÚ×KU" utf8_hex="&#x12210;"/>
+  <Borger n="MZL530r01" signname="|LU₂×TUG₂|" BorgerVal="LÚ×TÚG" utf8_hex="&#x12210;"/>
+  <Borger n="MZL530r02" signname="|LU₂×EŠ₂|" BorgerVal="LÚ×ŠÈ" utf8_hex="&#x12200;"/>
+  <Borger n="MZL531" signname="|LU₂×EŠ₂@t|" BorgerVal="LÚ×ŠÈ@t" utf8_hex="&#x12201;"/>
+  <Borger n="MZL532" signname="|LU₂×EŠ₂.LAL|" BorgerVal="LÚ×ŠÈ+LAL" utf8_hex="&#x12200;&#x121F2;"/>
+  <Borger n="MZL533" signname="|LU₂×(SIK₂.BU)|" BorgerVal="LÚ×SÍG+BU" utf8_hex="&#x1220F;"/>
+  <Borger n="MZL535r01" signname="ŠEŠ" BorgerVal="ŠEŠ" utf8_hex="&#x122C0;"/>
+  <Borger n="MZL535r02" signname="URI₃" BorgerVal="URI3" utf8_hex="&#x12336;"/>
+  <Borger n="MZL536" signname="6(AŠ~a)" BorgerVal="AŠ9 (EŠ16.EŠ16)" utf8_hex="&#x12440;"/>
+  <Borger n="MZL537" signname="7(AŠ~a)" BorgerVal="ÌMIN (EŠ16.EŠ16.AŠ)" utf8_hex="&#x12441;"/>
+  <Borger n="MZL538" signname="USSU₃" BorgerVal="ÙSSU (EŠ16.EŠ16.TAB)" utf8_hex="&#x12445;"/>
+  <Borger n="MZL539" signname="9(DIŠ~a)" BorgerVal="ÌLIMMU (EŠ16.EŠ16.EŠ16)" utf8_hex="&#x12447;"/>
+  <Borger n="MZL540" signname="ZAG" BorgerVal="ZAG" utf8_hex="&#x12360;"/>
+  <Borger n="MZL541" signname="SAR" BorgerVal="SAR" utf8_hex="&#x122AC;"/>
+  <Borger n="MZL542" signname="UD@g" BorgerVal="UD@g" utf8_hex="&#x12319;"/>
+  <Borger n="MZL543" signname="GAR₃" BorgerVal="GÀR (QAR)" utf8_hex="&#x120FC;"/>
+  <Borger n="MZL544" signname="LIL" BorgerVal="LIL" utf8_hex="&#x121F8;"/>
+  <Borger n="MZL545" signname="|UD×(U.U.U@g)|" BorgerVal="MÚRU (MURUB4, NISAG; ITI@g)" utf8_hex="&#x12318;"/>
+  <Borger n="MZL546" signname="NISAG" BorgerVal="SAG5" utf8_hex="&#x12260;" variant="MZL485"/>
+  <Borger n="MZL547" signname="UMUM" BorgerVal="DÉ (SIMUG)" utf8_hex="&#x12323;"/>
+  <Borger n="MZL548r01" signname="AŠ₂" BorgerVal="ÁŠ" utf8_hex="&#x1203E;"/>
+  <Borger n="MZL548r02" signname="ZIZ₂" BorgerVal="ZÍZ" utf8_hex="&#x12369;"/>
+  <Borger n="MZL549" signname="3(BAN₂)" BorgerVal="BANEŠ ('ÁŠ')" utf8_hex="&#x12451;"/>
+  <Borger n="MZL550" signname="4(BAN₂)" BorgerVal="BANLIMMU ('ÁŠ.U')" utf8_hex="&#x12452;"/>
+  <Borger n="MZL550v01" signname="4(BAN₂@v)" BorgerVal="BANLIMMU ('ÁŠ.U')" utf8_hex="&#x12453;"/>
+  <Borger n="MZL551" signname="5(BAN₂)" BorgerVal="BANIA ('ÁŠ.U&amp;U')" utf8_hex="&#x12454;"/>
+  <Borger n="MZL551v01" signname="5(BAN₂@v)" BorgerVal="BANIA ('ÁŠ.U&amp;U')" utf8_hex="&#x12455;"/>
+  <Borger n="MZL552" signname="MA" BorgerVal="MA" utf8_hex="&#x12220;"/>
+  <Borger n="MZL553" signname="GAL" BorgerVal="GAL" utf8_hex="&#x120F2;"/>
+  <Borger n="MZL553c01" signname="|GAL.GAD&amp;GAD.GAR&amp;GAR|" BorgerVal="GAL.KINDA" utf8_hex="&#x120F3;"/>
+  <Borger n="MZL554" signname="BARA₂" BorgerVal="BÁRA" utf8_hex="&#x12048;"/>
+  <Borger n="MZL555" signname="LU₃" BorgerVal="GÚG (LÙ; ŠÈ@g)" utf8_hex="&#x12216;"/>
+  <Borger n="MZL556" signname="DUN₃@g@g" BorgerVal="MIR (NIMGIR), AGA (UKU, GÍN@g)" utf8_hex="&#x12087;"/>
+  <Borger n="MZL557" signname="DUN₄" BorgerVal="DUN4 (UR@g@s; MIR@s)" utf8_hex="&#x12088;"/>
+  <Borger n="MZL558" signname="HA@g" BorgerVal="GIR (PEŠ; PIŠ; ḪA@g)" utf8_hex="&#x1212B;"/>
+  <Borger n="MZL559" signname="BUR" BorgerVal="BUR (NÍG@g)" utf8_hex="&#x12053;"/>
+  <Borger n="MZL560" signname="A₂" BorgerVal="Á (ID)" utf8_hex="&#x12009;"/>
+  <Borger n="MZL561" signname="DA" BorgerVal="DA" utf8_hex="&#x12055;"/>
+  <Borger n="MZL562" signname="GAŠAN" BorgerVal="GAŠAN (U@g)" utf8_hex="&#x120FD;"/>
+  <Borger n="MZL563" signname="U@g" BorgerVal="U@g, BÙR@g" utf8_hex="&#x12434;"/>
+  <Borger n="MZL564" signname="IGI@g" BorgerVal="SIG7 (IGI@g)" utf8_hex="&#x1214A;"/>
+  <Borger n="MZL565r01" signname="DUB₂" BorgerVal="DÚB" utf8_hex="&#x12080;"/>
+  <Borger n="MZL565r02" signname="BALAG" BorgerVal="BALAG" utf8_hex="&#x12046;"/>
+  <Borger n="MZL566" signname="ŠA" BorgerVal="ŠA" utf8_hex="&#x122AD;"/>
+  <Borger n="MZL567" signname="ŠU" BorgerVal="ŠU" utf8_hex="&#x122D7;"/>
+  <Borger n="MZL568" signname="KAD₄" BorgerVal="KAD4" utf8_hex="&#x12192;"/>
+  <Borger n="MZL569" signname="KAD₅" BorgerVal="KAD5" utf8_hex="&#x12193;"/>
+  <Borger n="MZL570" signname="LUL" BorgerVal="LUL (NAR)" utf8_hex="&#x1221C;"/>
+  <Borger n="MZL571" signname="ŠA₆" BorgerVal="SA6 (GIŠIMMAR; ŠAG5)" utf8_hex="&#x122B7;"/>
+  <Borger n="MZL572" signname="|GUD&amp;GUD.LUGAL|" BorgerVal="BÌŠEBA (GU4&amp;GU4.LUGAL)" utf8_hex="&#x12121;"/>
+  <Borger n="MZL573" signname="ALAN" BorgerVal="ALAM (GU4&amp;GU4.NA)" utf8_hex="&#x12029;"/>
+  <Borger n="MZL574" signname="URI" BorgerVal="URI (BUR&amp;BUR)" utf8_hex="&#x12335;"/>
+  <Borger n="MZL575" signname="AŠ@z" BorgerVal="GE23 (DIŠ@t)" utf8_hex="&#x12039;"/>
+  <Borger n="MZL576r01" signname="GAM" BorgerVal="GAM" utf8_hex="&#x120F5;"/>
+  <Borger n="MZL576r02" signname="P₃" BorgerVal=":&quot;" utf8_hex="&#x12472;"/>
+  <Borger n="MZL577r01" signname="9(DIŠ~b)" BorgerVal="ILIMMU4 (3×GE23)" utf8_hex="&#x12448;"/>
+  <Borger n="MZL577r02" signname="P₄" BorgerVal=":." utf8_hex="&#x12473;"/>
+  <Borger n="MZL578" signname="KUR" BorgerVal="KUR" utf8_hex="&#x121B3;"/>
+  <Borger n="MZL578c01" signname="|KUR@KUR|" BorgerVal="KUR.KURinversum" utf8_hex="&#x121B4;"/>
+  <Borger n="MZL579" signname="ŠE" BorgerVal="ŠE" utf8_hex="&#x122BA;"/>
+  <Borger n="MZL579c01" signname="|ŠE.NAGA|" BorgerVal="NISABA (ŠE.NAGA)" utf8_hex="&#x122BA;&#x12240;" utf8_alt="NATC"/>
+  <Borger n="MZL580" signname="BU" BorgerVal="BU (GÍD)" utf8_hex="&#x1204D;"/>
+  <Borger n="MZL581" signname="|BU%BU|" BorgerVal="BU%BU" utf8_hex="&#x12050;"/>
+  <Borger n="MZL582" signname="|BU&amp;BU.AB|" BorgerVal="SIRSIR (BU&amp;BU +AB)" utf8_hex="&#x1204E;"/>
+  <Borger n="MZL583" signname="|ŠE.HU|" BorgerVal="UZ (US)" utf8_hex="&#x122BB;"/>
+  <Borger n="MZL584" signname="SUD" BorgerVal="SUD (ŠUD; BU@g)" utf8_hex="&#x122E4;"/>
+  <Borger n="MZL585r01" signname="MUŠ" BorgerVal="MUŠ" utf8_hex="&#x12232;"/>
+  <Borger n="MZL585r02" signname="UTUKI" BorgerVal="UTUKI (KÚR.IR.GÍDIM)" utf8_hex="&#x12359;"/>
+  <Borger n="MZL586" signname="|MUŠ&amp;MUŠ|" BorgerVal="RI8 (MUŠ&amp;MUŠ; MUŠ%MUŠ)" utf8_hex="&#x12236;"/>
+  <Borger n="MZL586v01" signname="|MUŠ%MUŠ|" BorgerVal="RI8 (MUŠ%MUŠ)" utf8_hex="&#x12238;"/>
+  <Borger n="MZL586c01" signname="|MUŠ&amp;MUŠ×(A.NA)|" BorgerVal="RI8 (MUŠ&amp;MUŠ×A+NA)" utf8_hex="&#x12237;"/>
+  <Borger n="MZL587" signname="|ŠE.NUN&amp;NUN|" BorgerVal="TIR" utf8_hex="&#x12301;"/>
+  <Borger n="MZL587c01" signname="|(ŠE.NUN&amp;NUN)&amp;(ŠE.NUN&amp;NUN)|" BorgerVal="NINNI5 (TIR&amp;TIR)" utf8_hex="&#x12303;"/>
+  <Borger n="MZL588" signname="|(ŠE.NUN&amp;NUN)&amp;(ŠE.NUN&amp;NUN).GAD&amp;GAD.GAR&amp;GAR|" BorgerVal="TIR&amp;TIR.GAD&amp;GAD.NÍG&amp;NÍG" utf8_hex="&#x12304;"/>
+  <Borger n="MZL588v01" signname="|ŠE&amp;ŠE.GAD&amp;GAD.GAR&amp;GAR|" BorgerVal="ŠE&amp;ŠE.GAD&amp;GAD.NÍG&amp;NÍG" utf8_hex="&#x122BC;"/>
+  <Borger n="MZL588v02" signname="|ŠE&amp;ŠE.TAB&amp;TAB.GAR&amp;GAR|" BorgerVal="ŠE&amp;ŠE.TAB&amp;TAB.NÍG&amp;NÍG" utf8_hex="&#x122BD;"/>
+  <Borger n="MZL588v03" signname="|U&amp;U.SUR&amp;SUR|" BorgerVal="U&amp;U.SUR&amp;SUR" utf8_hex="&#x1230F;"/>
+  <Borger n="MZL588v04" signname="|U&amp;U.PA&amp;PA.GAR&amp;GAR|" BorgerVal="U&amp;U.PA&amp;PA.NÍG&amp;NÍG" utf8_hex="&#x1230E;"/>
+  <Borger n="MZL589" signname="TE" BorgerVal="TE" utf8_hex="&#x122FC;"/>
+  <Borger n="MZL590" signname="|TE.A|" BorgerVal="KAR (TE.A)" utf8_hex="&#x122FC;&#x12000;" utf8_alt="NATC"/>
+  <Borger n="MZL591" signname="LIŠ" BorgerVal="LIŠ (DÍLIM)" utf8_hex="&#x121FA;"/>
+  <Borger n="MZL592" signname="P₂" BorgerVal=":" utf8_hex="&#x12471;"/>
+  <Borger n="MZL592c01" signname="P₅" BorgerVal="::" utf8_hex="&#xE100;"/>
+  <Borger n="MZL593" signname="2(AŠ@t)" BorgerVal="TAB@t" utf8_hex="&#x1244A;"/>
+  <Borger n="MZL594" signname="F₆" BorgerVal="1/4" utf8_hex="&#x12462;"/>
+  <Borger n="MZL595" signname="|HI×BAD|" BorgerVal="KAM (ḪI×BAD)" utf8_hex="&#x12130;"/>
+  <Borger n="MZL596" signname="UD" BorgerVal="UD (BABBAR)" utf8_hex="&#x12313;"/>
+  <Borger n="MZL596c01" signname="|UD.DU|" BorgerVal="È (UD.DU)" utf8_hex="&#x12313;&#x1207A;" utf8_alt="NATC"/>
+  <Borger n="MZL597" signname="|UD×MI|" BorgerVal="ÍTIMA (UD×MI)" utf8_hex="&#x12316;"/>
+  <Borger n="MZL598" signname="PI" BorgerVal="PI" utf8_hex="&#x1227F;"/>
+  <Borger n="MZL598c01" signname="|PI%PI|" BorgerVal="PI%PI" utf8_hex="&#x12289;"/>
+  <Borger n="MZL598c02" signname="|PI×AB|" BorgerVal="PI×AB" utf8_hex="&#x12281;"/>
+  <Borger n="MZL598c03" signname="|PI×I|" BorgerVal="PI×I" utf8_hex="&#x12285;"/>
+  <Borger n="MZL598c04" signname="|PI×BI|" BorgerVal="PI×BI" utf8_hex="&#x12282;"/>
+  <Borger n="MZL598c05" signname="|PI×U₂|" BorgerVal="PI×Ú" utf8_hex="&#x12288;"/>
+  <Borger n="MZL598c06" signname="|PI×E|" BorgerVal="PI×E" utf8_hex="&#x12284;"/>
+  <Borger n="MZL598c07" signname="|PI×BU|" BorgerVal="PI×BU" utf8_hex="&#x12283;"/>
+  <Borger n="MZL598c08" signname="|PI×U|" BorgerVal="PI×U" utf8_hex="&#x12287;"/>
+  <Borger n="MZL598c09" signname="|PI×IB|" BorgerVal="PI×IB" utf8_hex="&#x12286;"/>
+  <Borger n="MZL598c10" signname="|PI×A|" BorgerVal="PI×A" utf8_hex="&#x12280;"/>
+  <Borger n="MZL599" signname="ŠA₃" BorgerVal="ŠÀ (ŠAG4)" utf8_hex="&#x122AE;"/>
+  <Borger n="MZL600" signname="|ŠA₃×BAD|" BorgerVal="ŠÀ×BAD" utf8_hex="&#x122B0;"/>
+  <Borger n="MZL601" signname="|ŠA₃×TUR|" BorgerVal="ŠÀ×TUR" utf8_hex="&#x122B4;"/>
+  <Borger n="MZL602" signname="|ŠA₃×NE|" BorgerVal="ŠÀ×NE" utf8_hex="&#x122B2;"/>
+  <Borger n="MZL603" signname="|ŠA₃×GIŠ|" BorgerVal="ŠÀ×GIŠ" utf8_hex="&#x122B1;"/>
+  <Borger n="MZL604" signname="|ŠA₃×UD|" BorgerVal="ŠÀ×UD" utf8_hex="&#x004C;"/>
+  <Borger n="MZL605" signname="|ŠA₃×U|" BorgerVal="ŠÀ×U" utf8_hex="&#x122B5;"/>
+  <Borger n="MZL606" signname="|ŠA₃×(U.A)|" BorgerVal="BIR6 (ŠÀ×U+A)" utf8_hex="&#x122B6;"/>
+  <Borger n="MZL607" signname="|ŠA₃×MI|" BorgerVal="ŠÀ×MI" utf8_hex="&#x004C;"/>
+  <Borger n="MZL608" signname="|ŠA₃×A|" BorgerVal="PEŠ4 (ŠÀ×A)" utf8_hex="&#x122AF;"/>
+  <Borger n="MZL609" signname="|ŠA₃×ŠU₂|" BorgerVal="ŠÀ×ŠÚ" utf8_hex="&#x122B3;"/>
+  <Borger n="MZL610" signname="|UD.SAL.HUB₂|" BorgerVal="ALGAMEŠ (UD.MUNUS.ḪÚB)" utf8_hex="&#x12313;&#x122A9;&#x12138;" utf8_alt="NATC"/>
+  <Borger n="MZL611" signname="|UD.KUŠU₂|" BorgerVal="ÚḪ (UD.KÚŠU)" utf8_hex="&#x12314;"/>
+  <Borger n="MZL612" signname="ERIN₂" BorgerVal="ERIM (ZÁLAG)" utf8_hex="&#x1209F;"/>
+  <Borger n="MZL613" signname="ERIN₂" BorgerVal="PÍR" utf8_hex="&#x1209F;"/>
+  <Borger n="MZL614" signname="NUNUZ" BorgerVal="NUNUZ" utf8_hex="&#x1226D;"/>
+  <Borger n="MZL615" signname="|NUNUZ.AB₂|" BorgerVal="NUNUZ.ÁB" utf8_hex="&#x1226D;&#x12016;"/>
+  <Borger n="MZL615v01" signname="|NUNUZ.KISIM₅|" BorgerVal="NUNUZ.KISIM5" utf8_hex="&#x1226D;&#x121A8;"/>
+  <Borger n="MZL616" signname="|NUNUZ.AB₂×LA|" BorgerVal="LAḪTAN (NUNUZ.ÁB×LA)" utf8_hex="&#x12274;"/>
+  <Borger n="MZL616v01" signname="|NUNUZ.KISIM₅×LA|" BorgerVal="LAḪTAN (NUNUZ.KISIM5×LA)" utf8_hex="&#x004C;"/>
+  <Borger n="MZL617" signname="|NUNUZ.AB₂×SILA₃|" BorgerVal="LÁḪTAN (NUNUZ.ÁB×SÌLA)" utf8_hex="&#x12276;"/>
+  <Borger n="MZL617v01" signname="|NUNUZ.KISIM₅×SILA₃|" BorgerVal="LÁḪTAN (NUNUZ.KISIM5×SÌLA)" utf8_hex="&#x004C;"/>
+  <Borger n="MZL618" signname="|NUNUZ.AB₂×KAD₃|" BorgerVal="NUNUZ.ÁB×KÀD" utf8_hex="&#x12273;"/>
+  <Borger n="MZL618v01" signname="|NUNUZ.KISIM₅×KAD₃|" BorgerVal="NUNUZ.KISIM5×KÀD" utf8_hex="&#x004C;"/>
+  <Borger n="MZL619" signname="|NUNUZ.AB₂×AŠGAB|" BorgerVal="ÙSAN (NUNUZ.ÁB×AŠGAB)" utf8_hex="&#x1226E;"/>
+  <Borger n="MZL619v01" signname="|NUNUZ.KISIM₅×AŠGAB|" BorgerVal="ÙSAN (NUNUZ.KISIM5×AŠGAB)" utf8_hex="&#x004C;"/>
+  <Borger n="MZL620" signname="|NUNUZ.AB₂×NE|" BorgerVal="NUNUZ.ÁB×NE" utf8_hex="&#x12275;"/>
+  <Borger n="MZL620v01" signname="|NUNUZ.KISIM₅×NE|" BorgerVal="NUNUZ.KISIM5×NE" utf8_hex="&#x004C;"/>
+  <Borger n="MZL621" signname="|NUNUZ.AB₂×BI|" BorgerVal="MÙD (NUNUZ.ÁB×BI)" utf8_hex="&#x1226F;"/>
+  <Borger n="MZL621v01" signname="|NUNUZ.KISIM₅×BI|" BorgerVal="MÙD (NUNUZ.KISIM5×BI)" utf8_hex="&#x12278;"/>
+  <Borger n="MZL622" signname="|NUNUZ.KISIM₅×BI.U|" BorgerVal="NUNUZ.KISIM5×BI.U (MÙD.U)" utf8_hex="&#x12279;"/>
+  <Borger n="MZL622v01" signname="|NUNUZ.AB₂×BI.U|" BorgerVal="NUNUZ.ÁB×BI.U" utf8_hex="&#x004C;"/>
+  <Borger n="MZL623" signname="|NUNUZ.AB₂×GUD|" BorgerVal="NUNUZ.ÁB×GU4" utf8_hex="&#x12271;"/>
+  <Borger n="MZL623v01" signname="|NUNUZ.KISIM₅×GUD|" BorgerVal="NUNUZ.KISIM5×GU4" utf8_hex="&#x004C;"/>
+  <Borger n="MZL624" signname="|NUNUZ.KISIM₅×U₂.BA|" BorgerVal="NUNUZ.KISIM5×Ú+BA" utf8_hex="&#x004C;"/>
+  <Borger n="MZL624v01" signname="|NUNUZ.AB₂×U₂.BA|" BorgerVal="NUNUZ.ÁB×Ú+BA" utf8_hex="&#x004C;"/>
+  <Borger n="MZL625" signname="|NUNUZ.AB₂×DUG|" BorgerVal="NUNUZ.ÁB×DUG" utf8_hex="&#x12270;"/>
+  <Borger n="MZL625v01" signname="|NUNUZ.KISIM₅×DUG|" BorgerVal="NUNUZ.KISIM5×DUG" utf8_hex="&#x004C;"/>
+  <Borger n="MZL626" signname="|NUNUZ.AB₂×(GUG₂.BULUG₂)|" BorgerVal="NUNUZ.ÁB×GÚG+BÙLUG(MUNU4)" utf8_hex="&#x004C;"/>
+  <Borger n="MZL626v01" signname="|NUNUZ.KISIM₅×(GUG₂.BULUG₂)|" BorgerVal="NUNUZ.KISIM5×GÚG+BÙLUG(MUNU4)" utf8_hex="&#x004C;"/>
+  <Borger n="MZL626v02" signname="|NUNUZ.AB₂×(BULUG₂.GUG₂)|" BorgerVal="NUNUZ.ÁB×BÙLUG(MUNU4)+GÚG" utf8_hex="&#x004C;"/>
+  <Borger n="MZL626v03" signname="|NUNUZ.KISIM₅×(BULUG₂.GUG₂)|" BorgerVal="NUNUZ.KISIM5×BÙLUG(MUNU4)+GÚG" utf8_hex="&#x004C;"/>
+  <Borger n="MZL627" signname="|NUNUZ.AB₂×IGI@g|" BorgerVal="NUNUZ.ÁB×SIG7" utf8_hex="&#x12272;"/>
+  <Borger n="MZL628" signname="|AŠ@z&amp;AŠ@z&amp;AŠ@z&amp;AŠ@z|" BorgerVal="ZIB" utf8_hex="&#x12366;"/>
+  <Borger n="MZL629" signname="3(AŠ@t)" BorgerVal="3" utf8_hex="&#x1244B;"/>
+  <Borger n="MZL630" signname="F₅" BorgerVal="1/6" utf8_hex="&#x12461;"/>
+  <Borger n="MZL631" signname="HI" BorgerVal="ḪI (DÙG)" utf8_hex="&#x1212D;"/>
+  <Borger n="MZL632" signname="ŠAR₂" BorgerVal="ŠÁR" utf8_hex="&#x122B9;"/>
+  <Borger n="MZL633" signname="HI" BorgerVal="TÍ" utf8_hex="&#x1212D;"/>
+  <Borger n="MZL634" signname="|HI×AŠ|" BorgerVal="SÙR (ḪI.AŠ, ḪI×AŠ)" utf8_hex="&#x1212E;"/>
+  <Borger n="MZL635" signname="ALEPH" BorgerVal="Aʾ" utf8_hex="&#x1202A;"/>
+  <Borger n="MZL636" signname="|HI×NUN|" BorgerVal="AḪ (UḪ; ḪI×NUN)" utf8_hex="&#x12134;"/>
+  <Borger n="MZL637" signname="|HI×NUN.KASKAL|" BorgerVal="AḪ.KASKAL" utf8_hex="&#x12134;&#x1219C;"/>
+  <Borger n="MZL638" signname="|HI×NUN.ME|" BorgerVal="AḪ.ME" utf8_hex="&#x12134;&#x12228;"/>
+  <Borger n="MZL639" signname="|HI×NUN.ME.U|" BorgerVal="AḪ.ME.U" utf8_hex="&#x12134;&#x12228;&#x1230B;"/>
+  <Borger n="MZL640" signname="|HI.BAD|" BorgerVal="KAM (ḪI.BAD)" utf8_hex="&#x1212D;&#x12041;"/>
+  <Borger n="MZL641r01" signname="IM" BorgerVal="IM" utf8_hex="&#x1214E;"/>
+  <Borger n="MZL641r02" signname="NI₂" BorgerVal="IM" utf8_hex="&#x1224E;"/>
+  <Borger n="MZL641c01" signname="|IM%IM|" BorgerVal="IM%IM" utf8_hex="&#x12150;"/>
+  <Borger n="MZL641c02" signname="|IM×4|" BorgerVal="4×IM" utf8_hex="&#x12152;"/>
+  <Borger n="MZL642" signname="|IM×TAK₄|" BorgerVal="KID₇" utf8_hex="&#x1214F;"/>
+  <Borger n="MZL643" signname="|HI×ŠE|" BorgerVal="BIR (ḪI×ŠE)" utf8_hex="&#x12135;"/>
+  <Borger n="MZL644" signname="|HI×AŠ₂|" BorgerVal="ḪAR (ḪUR; ḪI×ÁŠ)" utf8_hex="&#x1212F;"/>
+  <Borger n="MZL645" signname="|HI.GIR₃|" BorgerVal="ḪUŠ (ḪI.GÌR)" utf8_hex="&#x1212D;&#x1210A;" utf8_alt="NATC"/>
+  <Borger n="MZL646" signname="SUHUR" BorgerVal="SUḪUR" utf8_hex="&#x122E6;"/>
+  <Borger n="MZL647" signname="AŠ@k" BorgerVal="GE22" utf8_hex="&#x1203A;"/>
+  <Borger n="MZL648" signname="ZUBUR" BorgerVal="ZUBUR" utf8_hex="&#x1236D;"/>
+  <Borger n="MZL649" signname="|AŠ&amp;AŠ&amp;AŠ%AŠ&amp;AŠ&amp;AŠ|" BorgerVal="ŠÚŠUR" utf8_hex="&#x1203D;"/>
+  <Borger n="MZL650" signname="|HI×GAD|" BorgerVal="ŠÁR×GAD" utf8_hex="&#x12132;"/>
+  <Borger n="MZL651" signname="|ŠAR₂×(GAL.DIŠ)|" BorgerVal="ŠÁR×GAL+DIŠ" utf8_hex="&#x12432;"/>
+  <Borger n="MZL652" signname="|ŠAR₂×(GAL.MIN)|" BorgerVal="ŠÁR×GAL+MIN" utf8_hex="&#x12433;"/>
+  <Borger n="MZL653" signname="1(ŠARU)" BorgerVal="ŠÁR×U (36000)" utf8_hex="&#x1242C;"/>
+  <Borger n="MZL654" signname="1(ŠARU@g)" BorgerVal="ŠÁR×U@g (36000)" utf8_hex="&#x004C;"/>
+  <Borger n="MZL655" signname="2(ŠARU)" BorgerVal="ŠÁR×MAN" utf8_hex="&#x1242D;"/>
+  <Borger n="MZL656" signname="3(ŠARU)" BorgerVal="ŠÁR×EŠ" utf8_hex="&#x1242E;"/>
+  <Borger n="MZL656v01" signname="3(ŠARU@v)" BorgerVal="ŠÁR×EŠ" utf8_hex="&#x1242F;"/>
+  <Borger n="MZL657" signname="4(ŠARU)" BorgerVal="ŠÁR×NIMIN" utf8_hex="&#x12430;"/>
+  <Borger n="MZL658" signname="5(ŠARU)" BorgerVal="ŠÁR×NINNU" utf8_hex="&#x12431;"/>
+  <Borger n="MZL659" signname="|HI×DIŠ|" BorgerVal="ŠÁR×DIŠ (ḪI×DIŠ?)" utf8_hex="&#x12131;"/>
+  <Borger n="MZL660" signname="|HI×KIN|" BorgerVal="ḪI×KIN" utf8_hex="&#x12133;"/>
+  <Borger n="MZL661" signname="U" BorgerVal="U, BÙR" utf8_hex="&#x1230B;"/>
+  <Borger n="MZL662" signname="U@g" BorgerVal="U@g, BÙR@g" utf8_hex="&#x12434;"/>
+  <Borger n="MZL663" signname="|U.KA|" BorgerVal="UGU (U.KA)" utf8_hex="&#x1230B;&#x12157;" utf8_alt="NATC"/>
+  <Borger n="MZL664" signname="|U.(UD×(U.U.U))|" BorgerVal="U.ITI" utf8_hex="&#x1230B;&#x12317;"/>
+  <Borger n="MZL665" signname="|U.MU|" BorgerVal="UDUN (U.MU)" utf8_hex="&#x1230B;&#x1222C;" utf8_alt="NATC"/>
+  <Borger n="MZL666" signname="|U.EN×GAN₂@t|" BorgerVal="ŠIBIR (U.BURU14)" utf8_hex="&#x1230B;&#x12099;" utf8_alt="NATC"/>
+  <Borger n="MZL667" signname="|U.DIM|" BorgerVal="GÀKKUL (U.DIM)" utf8_hex="&#x1230B;&#x12074;"/>
+  <Borger n="MZL668" signname="|U.DIM×ŠE|" BorgerVal="GAKKUL (U.MUN; U.DIM×KUR; U.DIM×ŠE)" utf8_hex="&#x1230B;&#x12075;" utf8_alt="NATC"/>
+  <Borger n="MZL669" signname="|U.GUR|" BorgerVal="U.GUR" utf8_hex="&#x1230B;&#x12125;" utf8_alt="NATC"/>
+  <Borger n="MZL670" signname="|U.DAR|" BorgerVal="U.DAR (AŠDAR; U.GÙN)" utf8_hex="&#x1230B;&#x1206F;"/>
+  <Borger n="MZL671" signname="|U.SAG|" BorgerVal="SAGŠU (U.SAG)" utf8_hex="&#x1230B;&#x12295;" utf8_alt="NATC"/>
+  <Borger n="MZL672" signname="AB₂" BorgerVal="ÁB (LID)" utf8_hex="&#x12016;"/>
+  <Borger n="MZL673" signname="|AB₂×TAK₄|" BorgerVal="UB₅" utf8_hex="&#x1201B;"/>
+  <Borger n="MZL674" signname="|AB₂×GAN₂@t|" BorgerVal="KIR6 (ÁB×KÁR)" utf8_hex="&#x12018;"/>
+  <Borger n="MZL675" signname="|GIR₃×GAN₂@t|" BorgerVal="GIRI16 (GÌR×KÁR)" utf8_hex="&#x1210C;"/>
+  <Borger n="MZL676" signname="|AB₂×BALAG|" BorgerVal="LILIZ (ÁB×BALAG)" utf8_hex="&#x12017;"/>
+  <Borger n="MZL677" signname="|AB₂×ŠA₃|" BorgerVal="LIBIŠ (ÁB×ŠÀ)" utf8_hex="&#x1201A;"/>
+  <Borger n="MZL678" signname="KIŠ" BorgerVal="KIŠ" utf8_hex="&#x121A7;"/>
+  <Borger n="MZL679" signname="|AB₂×(ME.EN)|" BorgerVal="MEZE (ÁB×ME+EN)" utf8_hex="&#x12019;"/>
+  <Borger n="MZL680" signname="|AB₂×A|" BorgerVal="ÁB×A" utf8_hex="&#x004C;"/>
+  <Borger n="MZL681" signname="MI" BorgerVal="MI" utf8_hex="&#x1222A;"/>
+  <Borger n="MZL682" signname="GUL" BorgerVal="GUL (SÚN)" utf8_hex="&#x12122;"/>
+  <Borger n="MZL683" signname="|U.AD|" BorgerVal="GIR4 (U.AD)" utf8_hex="&#x1230B;&#x1201C;"/>
+  <Borger n="MZL684" signname="|U.GAN|" BorgerVal="ŠAGAN (U.GAN)" utf8_hex="&#x1230B;&#x120F6;" utf8_alt="NATC"/>
+  <Borger n="MZL685" signname="PAN" BorgerVal="PAN" utf8_hex="&#x1227C;"/>
+  <Borger n="MZL686" signname="DIM₂" BorgerVal="GIM (DÍM)" utf8_hex="&#x12076;"/>
+  <Borger n="MZL687" signname="KISIM₅" BorgerVal="KISIM5" utf8_hex="&#x121A8;"/>
+  <Borger n="MZL687c01" signname="|KISIM₅&amp;KISIM₅|" BorgerVal="KISIM5&amp;KISIM5" utf8_hex="&#x121A9;"/>
+  <Borger n="MZL688" signname="|HI×U|" BorgerVal="DÚBUR (ḪI×U)" utf8_hex="&#x12136;"/>
+  <Borger n="MZL689" signname="NA₂" BorgerVal="NÁ (NÚ)" utf8_hex="&#x1223F;"/>
+  <Borger n="MZL690" signname="NIM" BorgerVal="NIM (NUM)" utf8_hex="&#x1224F;"/>
+  <Borger n="MZL691" signname="|NIM×GAN₂@t|" BorgerVal="TÙM (NIM×KÁR)" utf8_hex="&#x12250;"/>
+  <Borger n="MZL692" signname="|NIM×(GAR.GAN₂@t)|" BorgerVal="KIR7 (NIM×NÍG+KÁR)" utf8_hex="&#x12251;"/>
+  <Borger n="MZL693" signname="LAM" BorgerVal="LAM" utf8_hex="&#x121F4;"/>
+  <Borger n="MZL694" signname="|LAM×KUR|" BorgerVal="LAM×KUR (IŠ11, EŠ22)" utf8_hex="&#x121F5;"/>
+  <Borger n="MZL695" signname="AMAR" BorgerVal="AMAR (ZUR)" utf8_hex="&#x1202B;"/>
+  <Borger n="MZL696" signname="|AMAR×ŠE|" BorgerVal="SISKUR (AMAR×ŠE)" utf8_hex="&#x1202C;"/>
+  <Borger n="MZL697" signname="|AMAR×KU₃|" BorgerVal="AMAR×KUG" utf8_hex="&#x004C;"/>
+  <Borger n="MZL698" signname="|U.GUD|" BorgerVal="UL (DU7)" utf8_hex="&#x1230C;"/>
+  <Borger n="MZL698c01" signname="|(U.GUD)&amp;(U.GUD)|" BorgerVal="DU7&amp;DU7" utf8_hex="&#x004C;" utf8_alt="NATC"/>
+  <Borger n="MZL699" signname="|U.KID|" BorgerVal="ŠITA4 (U.KID)" utf8_hex="&#x1230B;&#x121A4;" utf8_alt="NATC"/>
+  <Borger n="MZL700" signname="|U.GA|" BorgerVal="ÚTU (U.GA, ŠU4.GA)" utf8_hex="&#x1230B;&#x120B5;" utf8_alt="NATC"/>
+  <Borger n="MZL701r01" signname="GIR₃" BorgerVal="GÌR" utf8_hex="&#x1210A;"/>
+  <Borger n="MZL701r02" signname="PIRIG" BorgerVal="PIRIG" utf8_hex="&#x1228A;"/>
+  <Borger n="MZL701c01" signname="|PIRIG@PIRIG|" BorgerVal="GÌR@GÌR" utf8_hex="&#x1228E;"/>
+  <Borger n="MZL702" signname="|GIR₃×(LU.IGI)|" BorgerVal="LULIM (GÌR×LU+IGI)" utf8_hex="&#x1210E;"/>
+  <Borger n="MZL703" signname="|GIR₃×(A.IGI)|" BorgerVal="ALIM (GÌR×A+IGI)" utf8_hex="&#x1210B;"/>
+  <Borger n="MZL703v01" signname="|GIR₃×IGI|" BorgerVal="ALIM (GÌR×IGI)" utf8_hex="&#x1210D;"/>
+  <Borger n="MZL704" signname="DUGUD" BorgerVal="DUGUD" utf8_hex="&#x12082;"/>
+  <Borger n="MZL705" signname="GIG" BorgerVal="GIG (MI.NUNUZ)" utf8_hex="&#x1222A;&#x1226D;" utf8_alt="NATC"/>
+  <Borger n="MZL706" signname="|U.UD|" BorgerVal="NIGIN4 (U.UD)" utf8_hex="&#x1230B;&#x12313;"/>
+  <Borger n="MZL707" signname="|U.UD.KID|" BorgerVal="NÌGIN (U.UD.KID)" utf8_hex="&#x1230B;&#x12313;&#x121A4;" utf8_alt="NATC"/>
+  <Borger n="MZL708" signname="|U.U|" BorgerVal="MAN (XX; 20; 2×U)" utf8_hex="&#x1230B;&#x1230B;" utf8_alt="NATC"/>
+  <Borger n="MZL709" signname="|U.U@g|" BorgerVal="60000?" utf8_hex="&#x1230B;&#x12434;"/>
+  <Borger n="MZL710" signname="|U.GIR₃|" BorgerVal="KUŠU (U.GÌR)" utf8_hex="&#x1230B;&#x1210A;"/>
+  <Borger n="MZL710v01" signname="|U.PIRIG|" BorgerVal="KUŠU (U.PIRIG)" utf8_hex="&#x1230B;&#x1228A;"/>
+  <Borger n="MZL711" signname="|U.U.U|" BorgerVal="EŠ (XXX; 30; SIN)" utf8_hex="&#x1230D;"/>
+  <Borger n="MZL712" signname="4(U)" BorgerVal="NIMIN (XL; 40)" utf8_hex="&#x1240F;"/>
+  <Borger n="MZL713" signname="|U&amp;U.U@v&amp;U@v|" BorgerVal="MAŠGI; BARGI" utf8_hex="&#x12310;"/>
+  <Borger n="MZL714" signname="5(U)" BorgerVal="NINNU (L; 50)" utf8_hex="&#x12410;"/>
+  <Borger n="MZL715" signname="6(U)" BorgerVal="LX (60)" utf8_hex="&#x12411;"/>
+  <Borger n="MZL716" signname="7(U)" BorgerVal="7(U)" utf8_hex="&#x12412;"/>
+  <Borger n="MZL717" signname="8(U)" BorgerVal="8(U)" utf8_hex="&#x12413;"/>
+  <Borger n="MZL718" signname="9(U)" BorgerVal="9(U)" utf8_hex="&#x12414;"/>
+  <Borger n="MZL719" signname="LAGAR" BorgerVal="LAGAR" utf8_hex="&#x121EC;"/>
+  <Borger n="MZL720" signname="|U.TUG₂|" BorgerVal="DUL (U.TÚG, ŠU4.DUL5)" utf8_hex="&#x1230B;&#x12306;" utf8_alt="NATC"/>
+  <Borger n="MZL721" signname="LAGAR@g" BorgerVal="DU6 (LAGAR@g)" utf8_hex="&#x121EF;"/>
+  <Borger n="MZL721c01" signname="|LAGAR@g&amp;LAGAR@g.ŠE|" BorgerVal="DU6&amp;DU6.ŠE" utf8_hex="&#x121F0;"/>
+  <Borger n="MZL722" signname="|LAGAR×ŠE|" BorgerVal="SU7 (LAGAR×ŠE)" utf8_hex="&#x121ED;"/>
+  <Borger n="MZL723" signname="|LAGAR×(ŠE.SUM)|" BorgerVal="LAGAR×ŠE+SUM" utf8_hex="&#x121EE;"/>
+  <Borger n="MZL724" signname="IGI" BorgerVal="IGI (ŠI, LIM)" utf8_hex="&#x12146;"/>
+  <Borger n="MZL724c01" signname="|IGI&amp;IGI.ŠIR&amp;ŠIR.UD&amp;UD|" BorgerVal="DIMSAR" utf8_hex="&#x12149;"/>
+  <Borger n="MZL725" signname="|IGI.RU|" BorgerVal="PÀD (PÀ; IGI.RU)" utf8_hex="&#x12146;&#x12292;" utf8_alt="NATC"/>
+  <Borger n="MZL726" signname="|IGI.RI|" BorgerVal="AR (IGI.RI)" utf8_hex="&#x12148;"/>
+  <Borger n="MZL727" signname="|IGI.DUB|" BorgerVal="AGRIG (GIŠKIM; IGI.DUB)" utf8_hex="&#x12146;&#x1207E;" utf8_alt="NATC"/>
+  <Borger n="MZL728" signname="|IGI.E₂|" BorgerVal="U6 (IGI.É)" utf8_hex="&#x12146;&#x1208D;"/>
+  <Borger n="MZL729" signname="|IGI.ERIN₂|" BorgerVal="SIG5 (IGI.ERIM)" utf8_hex="&#x12146;&#x1209F;" utf8_alt="NATC"/>
+  <Borger n="MZL730" signname="|IGI.ERIN₂|" BorgerVal="KURUM7 (IGI.ERIM)" utf8_hex="&#x12146;&#x1209F;"/>
+  <Borger n="MZL731" signname="|IGI.DIB|" BorgerVal="Ù (IGI.DIB)" utf8_hex="&#x12147;"/>
+  <Borger n="MZL732" signname="|IGI.EŠ₂|" BorgerVal="LIBIR (IGI.ŠÈ)" utf8_hex="&#x12146;&#x120A0;"/>
+  <Borger n="MZL733" signname="|IGI.UR|" BorgerVal="ḪUL (IGI.UR)" utf8_hex="&#x12146;&#x12328;" utf8_alt="NATC"/>
+  <Borger n="MZL734" signname="|IGI.UR@s|" BorgerVal="ḪUL4 (IGI.UR@s)" utf8_hex="&#x12146;&#x1232A;"/>
+  <Borger n="MZL735" signname="|IGI.GAR|" BorgerVal="KURUM7 (IGI.NÍG)" utf8_hex="&#x12146;&#x120FB;"/>
+  <Borger n="MZL736" signname="DI" BorgerVal="DI" utf8_hex="&#x12072;"/>
+  <Borger n="MZL737" signname="KI" BorgerVal="KI" utf8_hex="&#x121A0;"/>
+  <Borger n="MZL738" signname="|KI×BAD|" BorgerVal="KI×BAD" utf8_hex="&#x121A1;"/>
+  <Borger n="MZL739" signname="|KI×UD|" BorgerVal="KI×UD" utf8_hex="&#x121A3;"/>
+  <Borger n="MZL740" signname="|KI×U|" BorgerVal="KI×U" utf8_hex="&#x121A2;"/>
+  <Borger n="MZL741" signname="PEŠ₂" BorgerVal="PEŠ₂" utf8_hex="&#x1227E;"/>
+  <Borger n="MZL742" signname="|KI.MIN|" BorgerVal="KIMIN" utf8_hex="&#x121A0;&#x1222B;" utf8_alt="NATC"/>
+  <Borger n="MZL743" signname="SAG@n" BorgerVal="KIŠI4" utf8_hex="&#x12294;"/>
+  <Borger n="MZL744" signname="DUN" BorgerVal="ŠUL (DUN)" utf8_hex="&#x12084;"/>
+  <Borger n="MZL745" signname="KU₃" BorgerVal="KUG (KÙ)" utf8_hex="&#x121AC;"/>
+  <Borger n="MZL746" signname="PAD" BorgerVal="PAD (ŠUK)" utf8_hex="&#x1227B;"/>
+  <Borger n="MZL747" signname="|U.5(DIŠ)|" BorgerVal="XV (U.IÁ)" utf8_hex="&#x1230B;&#x1240A;" utf8_alt="NATC"/>
+  <Borger n="MZL748" signname="DIŠ" BorgerVal="DIŠ (1)" utf8_hex="&#x12079;"/>
+  <Borger n="MZL748" signname="1(GEŠ₂)" BorgerVal="DIŠ (1)" utf8_hex="&#x12079;"/>
+  <Borger n="MZL749" signname="DIŠ" BorgerVal="NIGIDA (DIŠ)" utf8_hex="&#x12079;"/>
+  <Borger n="MZL750" signname="LAL" BorgerVal="LAL (LÁ)" utf8_hex="&#x121F2;"/>
+  <Borger n="MZL751" signname="LAL₂" BorgerVal="LÁL (LAL×LAL)" utf8_hex="&#x121F3;"/>
+  <Borger n="MZL751c01" signname="|LAL₂.SAR|" BorgerVal="ŠUR4 (LÁL.SAR)" utf8_hex="&#x121F3;&#x122AC;" utf8_alt="NATC"/>
+  <Borger n="MZL752" signname="LAL₂" BorgerVal="tašmētu" utf8_hex="&#x121F3;"/>
+  <Borger n="MZL753" signname="ME" BorgerVal="ME" utf8_hex="&#x12228;"/>
+  <Borger n="MZL754" signname="|ME.U.U.U|" BorgerVal="MEŠ (ME.EŠ)" utf8_hex="&#x12228;&#x1230D;" utf8_alt="NATC"/>
+  <Borger n="MZL755" signname="LAGAB" BorgerVal="LAGAB (NÍGIN)" utf8_hex="&#x121B8;"/>
+  <Borger n="MZL756" signname="|LAGAB×HAL|" BorgerVal="ENGUR (LAGAB×ḪAL)" utf8_hex="&#x121C9;"/>
+  <Borger n="MZL757" signname="|LAGAB×HAL|" BorgerVal="ZIKUM" utf8_hex="&#x121C9;"/>
+  <Borger n="MZL758" signname="|LAGAB×AN|" BorgerVal="LAGAB×AN" utf8_hex="&#x121BE;"/>
+  <Borger n="MZL759" signname="|LAGAB×TAK₄|" BorgerVal="LAGAB×KÍD" utf8_hex="&#x121E3;"/>
+  <Borger n="MZL760" signname="|LAGAB×BAD|" BorgerVal="GIGIR (LAGAB×BAD)" utf8_hex="&#x121C0;"/>
+  <Borger n="MZL761" signname="|LAGAB×KUL|" BorgerVal="ÉSIR (LAGAB×NUMUN)" utf8_hex="&#x121D2;"/>
+  <Borger n="MZL762" signname="|LAGAB×(KUL.HI.A)|" BorgerVal="LAGAB×NUMUN+ḪI+A" utf8_hex="&#x121D3;"/>
+  <Borger n="MZL763" signname="|LAGAB×GI|" BorgerVal="LAGAB×GI" utf8_hex="&#x004C;"/>
+  <Borger n="MZL764" signname="|LAGAB×EN|" BorgerVal="LAGAB×EN" utf8_hex="&#x121C3;"/>
+  <Borger n="MZL765" signname="|LAGAB×DAR|" BorgerVal="LAGAB×DAR" utf8_hex="&#x121C2;"/>
+  <Borger n="MZL766" signname="|LAGAB×(GUD.GUD)|" BorgerVal="U8 (LAGAB×GU4+GU4)" utf8_hex="&#x121C7;"/>
+  <Borger n="MZL767" signname="|LAGAB×SUM|" BorgerVal="ZAR (LAGAB×SUM)" utf8_hex="&#x121E1;"/>
+  <Borger n="MZL768" signname="|LAGAB×NE|" BorgerVal="UDUB (LAGAB×NE)" utf8_hex="&#x121DB;"/>
+  <Borger n="MZL769" signname="|LAGAB×BI|" BorgerVal="LAGAB×BI" utf8_hex="&#x121C1;"/>
+  <Borger n="MZL770" signname="|LAGAB×UŠ|" BorgerVal="LAGAB×UŠ" utf8_hex="&#x121EA;"/>
+  <Borger n="MZL771" signname="|LAGAB×(ŠITA@t.GIŠ)|" BorgerVal="LAGAB×ŠÍTA" utf8_hex="&#x121DE;"/>
+  <Borger n="MZL771c01" signname="|LAGAB×(ŠITA.GIŠ.ERIN₂)|" BorgerVal="LAGAB×ŠÍTA+ERIM" utf8_hex="&#x121DD;"/>
+  <Borger n="MZL772" signname="|LAGAB×GUD|" BorgerVal="LAGAB×GU4" utf8_hex="&#x121C6;"/>
+  <Borger n="MZL773" signname="|LAGAB×AL|" BorgerVal="LAGAB×AL" utf8_hex="&#x121BD;"/>
+  <Borger n="MZL774" signname="|LAGAB×(U₂.AŠ)|" BorgerVal="LAGAB×Ú+AŠ" utf8_hex="&#x121E8;"/>
+  <Borger n="MZL775" signname="|LAGAB×GA|" BorgerVal="LAGAB×GA" utf8_hex="&#x121C4;"/>
+  <Borger n="MZL776" signname="|LAGAB×IGI@g|" BorgerVal="ŠÁRA (LAGAB×SIG)" utf8_hex="&#x121CB;"/>
+  <Borger n="MZL777" signname="|LAGAB×LUL|" BorgerVal="LAGAB×LUL" utf8_hex="&#x121D7;"/>
+  <Borger n="MZL778" signname="|LAGAB×AŠ@z|" BorgerVal="LAGAB×GE23" utf8_hex="&#x121BF;"/>
+  <Borger n="MZL779" signname="|LAGAB×(ŠE.SUM)|" BorgerVal="LAGAB×ŠE+SUM" utf8_hex="&#x121DC;"/>
+  <Borger n="MZL780" signname="|LAGAB×MUŠ|" BorgerVal="LAGAB×MUŠ" utf8_hex="&#x121DA;"/>
+  <Borger n="MZL781" signname="|LAGAB×(TE.A.SU.NA)|" BorgerVal="LAGAB×KAR+SU+NA" utf8_hex="&#x121E4;"/>
+  <Borger n="MZL782" signname="|LAGAB×LIŠ|" BorgerVal="LAGAB×LIŠ" utf8_hex="&#x121D5;"/>
+  <Borger n="MZL783" signname="|LAGAB×UD|" BorgerVal="LAGAB×UD" utf8_hex="&#x121E9;"/>
+  <Borger n="MZL784" signname="|LAGAB×HI×NUN|" BorgerVal="LAGAB×AḪ" utf8_hex="&#x121CA;"/>
+  <Borger n="MZL785" signname="|LAGAB×IM|" BorgerVal="LAGAB×IM" utf8_hex="&#x121CC;"/>
+  <Borger n="MZL786" signname="|LAGAB×U|" BorgerVal="TÚL (PÚ; LAGAB×U)" utf8_hex="&#x121E5;"/>
+  <Borger n="MZL787" signname="|LAGAB×(U.A)|" BorgerVal="LAGAB×U+A" utf8_hex="&#x121E6;"/>
+  <Borger n="MZL788" signname="|LAGAB×(U.U.U)|" BorgerVal="BUL (LAGAB×EŠ)" utf8_hex="&#x121E7;"/>
+  <Borger n="MZL789" signname="|LAGAB×KI|" BorgerVal="LAGAB×KI" utf8_hex="&#x121CF;"/>
+  <Borger n="MZL790" signname="|LAGAB×KU₃|" BorgerVal="GARIM (LAGAB×KUG)" utf8_hex="&#x121D1;"/>
+  <Borger n="MZL791" signname="|LAGAB×ME|" BorgerVal="LAGAB×ME" utf8_hex="&#x121D8;"/>
+  <Borger n="MZL792" signname="|LAGAB×(ME.EN)|" BorgerVal="LAGAB×ME+EN" utf8_hex="&#x121D9;"/>
+  <Borger n="MZL793" signname="|LAGAB×LU|" BorgerVal="LAGAB×LU" utf8_hex="&#x121D6;"/>
+  <Borger n="MZL794" signname="|LAGAB×KIN|" BorgerVal="LAGAB×KIN" utf8_hex="&#x121D0;"/>
+  <Borger n="MZL795" signname="|LAGAB×A|" BorgerVal="SUG (LAGAB×A)" utf8_hex="&#x121B9;"/>
+  <Borger n="MZL796" signname="|LAGAB×A.TAR|" BorgerVal="LAGAB×A+TAR" utf8_hex="&#x121B9;&#x122FB;"/>
+  <Borger n="MZL797" signname="|LAGAB×(A.DA.HA)|" BorgerVal="LAGAB×A+DA+ḪA" utf8_hex="&#x121BA;"/>
+  <Borger n="MZL798" signname="|LAGAB×(A.LAL)|" BorgerVal="LAGAB×A+LAL" utf8_hex="&#x121BC;"/>
+  <Borger n="MZL799" signname="|LAGAB×(A.GAR)|" BorgerVal="LAGAB×A+NÍG/GAR" utf8_hex="&#x121BB;"/>
+  <Borger n="MZL800" signname="|LAGAB×HA|" BorgerVal="LAGAB×ḪA" utf8_hex="&#x121C8;"/>
+  <Borger n="MZL801" signname="|LAGAB×GAR|" BorgerVal="LAGAB×NÍG" utf8_hex="&#x121C5;"/>
+  <Borger n="MZL802" signname="|LAGAB×ŠU₂|" BorgerVal="LAGAB×ŠÚ" utf8_hex="&#x121DF;"/>
+  <Borger n="MZL803" signname="|LAGAB×(ŠU₂.ŠU₂)|" BorgerVal="LAGAB×ŠÚ+ŠÚ" utf8_hex="&#x121E0;"/>
+  <Borger n="MZL804" signname="|LAGAB.LAGAB|" BorgerVal="NIGIN (LAGAB+LAGAB, LAGAB.LAGAB)" utf8_hex="&#x121B8;&#x121B8;" utf8_alt="NATC"/>
+  <Borger n="MZL804v01" signname="|LAGAB×LAGAB|" BorgerVal="NIGIN (LAGAB×LAGAB)" utf8_hex="&#x121D4;"/>
+  <Borger n="MZL805" signname="|LAGAB×4|" BorgerVal="4×LAGAB" utf8_hex="&#x121EB;"/>
+  <Borger n="MZL806" signname="|LAGAB×(U.U.U).LAGAB×(U.U.U)|" BorgerVal="NENNI (BUL+BUL, BUL.BUL)" utf8_hex="&#x121E7;&#x121E7;" utf8_alt="NATC"/>
+  <Borger n="MZL807" signname="IB" BorgerVal="IB" utf8_hex="&#x12141;"/>
+  <Borger n="MZL808r01" signname="KU" BorgerVal="KU (TUKUL, TUŠ)" utf8_hex="&#x121AA;"/>
+  <Borger n="MZL808r02" signname="DUR₂" BorgerVal="KU (DÚR)" utf8_hex="&#x12089;"/>
+  <Borger n="MZL809r01" signname="TUG₂" BorgerVal="TÚG (NÁM)" utf8_hex="&#x12306;"/>
+  <Borger n="MZL809r02" signname="NAM₂" BorgerVal="TÚG (NÁM)" utf8_hex="&#x12247;"/>
+  <Borger n="MZL810r01" signname="EŠ₂" BorgerVal="ŠÈ (ÉŠ, GI7)" utf8_hex="&#x120A0;"/>
+  <Borger n="MZL810r02" signname="ZI₃" BorgerVal="ŠÈ (ZÌ)" utf8_hex="&#x12365;"/>
+  <Borger n="MZL811" signname="|DIŠ.ŠU|" BorgerVal="60" utf8_hex="&#x12079;&#x122D7;"/>
+  <Borger n="MZL812" signname="LU" BorgerVal="LU (UDU)" utf8_hex="&#x121FB;"/>
+  <Borger n="MZL813" signname="DIB" BorgerVal="DIB (DAB)" utf8_hex="&#x12073;"/>
+  <Borger n="MZL814" signname="|LU×BAD|" BorgerVal="ÀD (LU×BAD; UDU×ÚŠ)" utf8_hex="&#x121FC;"/>
+  <Borger n="MZL815" signname="KIN" BorgerVal="KIN" utf8_hex="&#x121A5;"/>
+  <Borger n="MZL816" signname="SIK₂" BorgerVal="SÍG (SÍK, SIKI)" utf8_hex="&#x122E0;"/>
+  <Borger n="MZL817" signname="DARA₄" BorgerVal="DARA4 (SÍG+AŠ)" utf8_hex="&#x12071;"/>
+  <Borger n="MZL818" signname="EREN" BorgerVal="EREN (SÍG.NUN)" utf8_hex="&#x1209E;"/>
+  <Borger n="MZL819" signname="GUR₇" BorgerVal="GUR7 (SÍG.AḪ.ME.U)" utf8_hex="&#x12126;"/>
+  <Borger n="MZL820" signname="MUNSUB" BorgerVal="MUNŠUB (MUNSUB; SÍG.SUḪUR)" utf8_hex="&#x12230;"/>
+  <Borger n="MZL821" signname="ŠEŠ₂" BorgerVal="ŠÉŠ (SÍG.LAM)" utf8_hex="&#x122C1;"/>
+  <Borger n="MZL822" signname="|SIK₂.LAM.AH.ME.U|" BorgerVal="SÍG.LAM.AḪ.ME.U" utf8_hex="&#x004C;"/>
+  <Borger n="MZL823" signname="|SIK₂.LAM.SUHUR|" BorgerVal="MÚNŠUB (MÚNSUB; SÍG.LAM.SUḪUR)" utf8_hex="&#x122E0;&#x121F4;&#x122E6;"/>
+  <Borger n="MZL824" signname="1(GEŠU)" BorgerVal="DIŠ.U (600)" utf8_hex="&#x1241E;"/>
+  <Borger n="MZL825" signname="MIN" BorgerVal="MIN (2)" utf8_hex="&#x1222B;"/>
+  <Borger n="MZL826" signname="ŠUŠANA" BorgerVal="ŠUŠANA (1/3)" utf8_hex="&#x1245A;"/>
+  <Borger n="MZL827" signname="TUK" BorgerVal="TUK (TUG)" utf8_hex="&#x12307;"/>
+  <Borger n="MZL828" signname="UR" BorgerVal="UR" utf8_hex="&#x12328;"/>
+  <Borger n="MZL828c01" signname="|UR%UR|" BorgerVal="URBINGU (UR%UR)" utf8_hex="&#x12329;"/>
+  <Borger n="MZL829" signname="UR@s" BorgerVal="UR@s" utf8_hex="&#x1232A;"/>
+  <Borger n="MZL830" signname="GIDIM" BorgerVal="GIDIM" utf8_hex="&#x12107;"/>
+  <Borger n="MZL831" signname="|DIŠ.DIŠ.U.U.U|" BorgerVal="2,30" utf8_hex="&#x1222B;&#x1230D;" utf8_alt="NATC"/>
+  <Borger n="MZL832" signname="ŠANABI" BorgerVal="ŠANABI (2/3)" utf8_hex="&#x1245B;"/>
+  <Borger n="MZL833" signname="UDUG" BorgerVal="UDUG" utf8_hex="&#x1231C;"/>
+  <Borger n="MZL834" signname="3(DIŠ)" BorgerVal="EŠ5(3)" utf8_hex="&#x12408;"/>
+  <Borger n="MZL835" signname="UR₄" BorgerVal="UR4" utf8_hex="&#x12334;"/>
+  <Borger n="MZL836" signname="DUN₃@g" BorgerVal="GÍN (TÙN)" utf8_hex="&#x12086;"/>
+  <Borger n="MZL837" signname="|DIŠ.DIŠ.DIŠ.U.U|" BorgerVal="IŠŠEBU (3,20)" utf8_hex="&#x12408;&#x1230B;&#x1230B;" utf8_alt="NATC"/>
+  <Borger n="MZL838" signname="KINGUSILI" BorgerVal="KINGUSILA (5/6)" utf8_hex="&#x1245C;"/>
+  <Borger n="MZL839" signname="A" BorgerVal="A" utf8_hex="&#x12000;"/>
+  <Borger n="MZL839c01" signname="|A.TU.GABA.LIŠ|" BorgerVal="A.TU.GAB/DUḪ.LIŠ" utf8_hex="&#x12037;"/>
+  <Borger n="MZL839c02" signname="|A.LAGAB×HAL|" BorgerVal="ÍD (A.ENGUR)" utf8_hex="&#x004C;" utf8_alt="NATC"/>
+  <Borger n="MZL840" signname="|A×BAD|" BorgerVal="AGAM (A×BAD)" utf8_hex="&#x12002;"/>
+  <Borger n="MZL841" signname="|A×SAG|" BorgerVal="A×SAG" utf8_hex="&#x12008;"/>
+  <Borger n="MZL842" signname="|A×MUŠ|" BorgerVal="A×MUŠ" utf8_hex="&#x12007;"/>
+  <Borger n="MZL843" signname="|A×LAGAR@g|" BorgerVal="A×DU6" utf8_hex="&#x12006;"/>
+  <Borger n="MZL844" signname="|A×IGI|" BorgerVal="A×IGI" utf8_hex="&#x12005;"/>
+  <Borger n="MZL845" signname="|A×A|" BorgerVal="EDURU (A×A)" utf8_hex="&#x12001;"/>
+  <Borger n="MZL846" signname="|A×HA|" BorgerVal="ZÀḪ (A×ḪA)" utf8_hex="&#x12004;"/>
+  <Borger n="MZL847" signname="NIGIDAMIN" BorgerVal="DIŠ&amp;DIŠ" utf8_hex="&#x12456;"/>
+  <Borger n="MZL848" signname="NIGIDAMIN" BorgerVal="NIGIDAMIN (DIŠ&amp;DIŠ)" utf8_hex="&#x12456;"/>
+  <Borger n="MZL849" signname="|NIGIDAMIN.PAP|" BorgerVal="PAPNUN" utf8_hex="&#x12456;&#x1227D;" utf8_alt="NATC"/>
+  <Borger n="MZL850" signname="NIGIDAEŠ" BorgerVal="NIGIDAEŠ (DIŠ&amp;DIŠ.DIŠ)" utf8_hex="&#x12457;"/>
+  <Borger n="MZL851" signname="ZA" BorgerVal="ZA" utf8_hex="&#x1235D;"/>
+  <Borger n="MZL852" signname="4(DIŠ)" BorgerVal="LIMMU5 (4)" utf8_hex="&#x12409;"/>
+  <Borger n="MZL853" signname="4(DIŠ)" BorgerVal="NIGIDALIMU ('ZA')" utf8_hex="&#x12409;"/>
+  <Borger n="MZL854" signname="ZA@t" BorgerVal="AD4 (ZA@t)" utf8_hex="&#x1235E;"/>
+  <Borger n="MZL855" signname="|ZA×4×KUR|" BorgerVal="GIŠTA'E (4×ZA×KUR)" utf8_hex="&#x1235F;"/>
+  <Borger n="MZL856" signname="HA" BorgerVal="ḪA (KU6)" utf8_hex="&#x12129;"/>
+  <Borger n="MZL857" signname="HA@t" BorgerVal="ZUBUD (ḪA@t)" utf8_hex="&#x1212A;"/>
+  <Borger n="MZL858" signname="|ZA.GUL|" BorgerVal="GUG (ZA.GUL)" utf8_hex="&#x1235D;&#x12122;" utf8_alt="NATC"/>
+  <Borger n="MZL859" signname="GAR" BorgerVal="NÍG (GAR, NINDA)" utf8_hex="&#x120FB;"/>
+  <Borger n="MZL860" signname="LIMMU" BorgerVal="LIMMU ('NÍG', 4)" utf8_hex="&#x1243C;"/>
+  <Borger n="MZL861" signname="5(DIŠ)" BorgerVal="IÁ (5)" utf8_hex="&#x1240A;"/>
+  <Borger n="MZL862" signname="6(DIŠ)" BorgerVal="ÀŠ (6)" utf8_hex="&#x1240B;"/>
+  <Borger n="MZL863" signname="IMIN" BorgerVal="IMIN (7)" utf8_hex="&#x12153;"/>
+  <Borger n="MZL863v01" signname="7(DIŠ)" BorgerVal="IMIN (7)" utf8_hex="&#x1240C;"/>
+  <Borger n="MZL864" signname="8(DIŠ)" BorgerVal="USSU (8)" utf8_hex="&#x1240D;"/>
+  <Borger n="MZL865" signname="9(DIŠ~c)" BorgerVal="DIŠ&amp;DIŠ&amp;DIŠ" utf8_hex="&#x12449;"/>
+  <Borger n="MZL866" signname="7(DIŠ~a)" BorgerVal="IMIN (7)" utf8_hex="&#x12442;"/>
+  <Borger n="MZL867" signname="USSU" BorgerVal="USSU (8)" utf8_hex="&#x12444;"/>
+  <Borger n="MZL868" signname="ILIMMU" BorgerVal="ILIMMU (9)" utf8_hex="&#x12446;"/>
+  <Borger n="MZL869r01" signname="ŠU₂" BorgerVal="ŠÚ" utf8_hex="&#x122D9;"/>
+  <Borger n="MZL869r02" signname="F₃" BorgerVal="1/8" utf8_hex="&#x1245F;"/>
+  <Borger n="MZL870" signname="|ŠU₂.AN|" BorgerVal="ÉN (ŠÚ.AN)" utf8_hex="&#x122D9;&#x1202D;" utf8_alt="NATC"/>
+  <Borger n="MZL871" signname="|ŠU₂.AN.HI×GAD|" BorgerVal="KÈŠ (ÉN.ŠÁR×GAD)" utf8_hex="&#x122D9;&#x1202D;&#x12132;" utf8_alt="NATC"/>
+  <Borger n="MZL872" signname="|ŠU₂.3xAN|" BorgerVal="KUNGA (ŠÚ.MUL)" utf8_hex="&#x122D9;&#x1202F;" utf8_alt="NATC"/>
+  <Borger n="MZL873" signname="|ŠU₂.NAGA|" BorgerVal="ŠEG8 (ŠÚ.NAGA)" utf8_hex="&#x122D9;&#x12240;"/>
+  <Borger n="MZL874" signname="|ŠU₂.NE|" BorgerVal="LIL5 (ŠÚ.NE)" utf8_hex="&#x122D9;&#x12248;"/>
+  <Borger n="MZL875" signname="|ŠU₂.AŠ₂|" BorgerVal="GÍBIL (ŠÚ.ÁŠ)" utf8_hex="&#x122D9;&#x1203E;" utf8_alt="NATC"/>
+  <Borger n="MZL876" signname="|ŠU₂.DUN₃@g@g@s|" BorgerVal="ŠUDUN (ŠUDUL; ŠÚ.DUN4)" utf8_hex="&#x122D9;&#x12088;" utf8_alt="NATC"/>
+  <Borger n="MZL877" signname="HUL₂" BorgerVal="ḪÚL" utf8_hex="&#x1213E;"/>
+  <Borger n="MZL878" signname="ŠEG₉" BorgerVal="ŠEG9 (ŠÚ.ŠE.KU.GAG)" utf8_hex="&#x122BE;"/>
+  <Borger n="MZL879" signname="|ŠU₂.U.U.U|" BorgerVal="LÌL (ŠÚ.EŠ)" utf8_hex="&#x122D9;&#x1230D;"/>
+  <Borger n="MZL880" signname="|ŠU₂.UR@s|" BorgerVal="ŠÚ.UR@s" utf8_hex="&#x122D9;&#x1232A;"/>
+  <Borger n="MZL881" signname="SIG" BorgerVal="SIG" utf8_hex="&#x122DD;"/>
+  <Borger n="MZL882" signname="PEŠ₂" BorgerVal="PÉŠ" utf8_hex="&#x1227E;"/>
+  <Borger n="MZL883" signname="SAL" BorgerVal="MUNUS (SAL)" utf8_hex="&#x122A9;"/>
+  <Borger n="MZL884" signname="ZUM" BorgerVal="ZUM" utf8_hex="&#x1236E;"/>
+  <Borger n="MZL885" signname="|SAL.LAGAB×AŠ₂|" BorgerVal="ZÚM (ZUM×LAGAB)" utf8_hex="&#x122AA;"/>
+  <Borger n="MZL886" signname="|SAL.KU|" BorgerVal="NIN9 (MUNUS.KU)" utf8_hex="&#x122A9;&#x121AA;"/>
+  <Borger n="MZL887" signname="|SAL.TUG₂|" BorgerVal="NIN (MUNUS.TÚG)" utf8_hex="&#x122A9;&#x12306;" utf8_alt="NATC"/>
+  <Borger n="MZL888" signname="|SAL.MA|" BorgerVal="MUNUS+MA" utf8_hex="&#x122A9;&#x12220;"/>
+  <Borger n="MZL889" signname="DAM" BorgerVal="DAM" utf8_hex="&#x1206E;"/>
+  <Borger n="MZL890" signname="|SAL.KUR|" BorgerVal="GÉME (MUNUS.KUR)" utf8_hex="&#x122A9;&#x121B3;" utf8_alt="NATC"/>
+  <Borger n="MZL891" signname="GU" BorgerVal="GU" utf8_hex="&#x12116;"/>
+  <Borger n="MZL892" signname="|GU%GU|" BorgerVal="SÙḪ (GU%GU)" utf8_hex="&#x12117;"/>
+  <Borger n="MZL893" signname="NAGAR" BorgerVal="NAGAR" utf8_hex="&#x12244;"/>
+  <Borger n="MZL894" signname="|NAGAR.ZA@t|" BorgerVal="TUGUL (NAGAR.AD4)" utf8_hex="&#x12244;&#x1235E;" utf8_alt="NATC"/>
+  <Borger n="MZL895" signname="|SAL.LAGAR|" BorgerVal="MUNUS.LAGAR" utf8_hex="&#x122A9;&#x121EC;"/>
+  <Borger n="MZL896" signname="KUŠU₂" BorgerVal="KÚŠU" utf8_hex="&#x121B5;"/>
+  <Borger n="MZL897" signname="|SAL.EŠ₂|" BorgerVal="ÉGI (MUNUS.ŠÈ)" utf8_hex="&#x122A9;&#x120A0;" utf8_alt="NATC"/>
+  <Borger n="MZL898" signname="|SAL.UR|" BorgerVal="NIG (MUNUS.UR)" utf8_hex="&#x122A9;&#x12328;" utf8_alt="NATC"/>
+  <Borger n="MZL899" signname="EL" BorgerVal="EL" utf8_hex="&#x12096;"/>
+  <Borger n="MZL900" signname="LUM" BorgerVal="LUM (ḪUM)" utf8_hex="&#x1221D;"/>
+  <Borger n="MZL901" signname="MURGU₂" BorgerVal="MÚRGU ('LUM')" utf8_hex="&#x12231;"/>
+  <Borger n="MZL902" signname="|LUM&amp;LUM|" BorgerVal="LUM&amp;LUM" utf8_hex="&#x1221E;"/>
+  <Borger n="MZL903" signname="|LUM&amp;LUM.ŠU₂|" BorgerVal="LUM&amp;LUM.ŠÚ" utf8_hex="&#x1221E;&#x122D9;"/>
+  <Borger n="MZL904" signname="|LUM&amp;LUM.GAR&amp;GAR|" BorgerVal="LÙGUD (LUM&amp;LUM.NÍG&amp;NÍG)" utf8_hex="&#x1221F;"/>
+  <Borger n="MZL905" signname="SIG₄" BorgerVal="SIG4" utf8_hex="&#x122DE;"/>
+  <Borger n="MZL906" signname="MURGU₂" BorgerVal="MURGU ('SIG4')" utf8_hex="&#x12231;"/>
+  <Borger n="MZL907" signname="|SIG₄&amp;SIG₄.ŠU₂|" BorgerVal="SIG4&amp;SIG4.ŠÚ" utf8_hex="&#x122DF;"/>
+</BorgerSignList>
