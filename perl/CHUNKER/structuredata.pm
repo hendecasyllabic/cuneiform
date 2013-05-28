@@ -15,10 +15,10 @@ sub getStructureData{
     my $thisText = shift;
     my $baseresults = shift; 
     my $filepath = shift;
+    my $thisCorpus = shift ||"";
     my %structdata = ();
     my $localdata = {};
     my $label = "";
-    
     
     &CHUNKER::generic::writetoerror("timestamping","getStructureData - starting ".localtime); 
     
@@ -52,7 +52,7 @@ sub getStructureData{
 	    $structdata{"no_surfaces"} = $no_surfaces;
 	}
 
-	$localdata = &getStructureData($s, $PorQ, $thisText, $baseresults, $filepath);
+	$localdata = &getStructureData($s, $PorQ, $thisText, $baseresults, $filepath, $thisCorpus);
 	$localdata->{'type'} = $s->{att}->{type}?$s->{att}->{type}:"";    
 	$localdata->{'label'} = $s->{att}->{label}?$s->{att}->{label}:"";
 
@@ -68,7 +68,7 @@ sub getStructureData{
 	    $structdata{"no_columns"} = $no_columns;
 	}
 	
-	$localdata = &getStructureData($c, $PorQ, $thisText, $baseresults, $filepath);
+	$localdata = &getStructureData($c, $PorQ, $thisText, $baseresults, $filepath, $thisCorpus);
 	#print  $c->{att}->{'n'};
 	my $col = $c->{att}->{'n'};
 	#print Dumper($localdata);
@@ -86,7 +86,7 @@ sub getStructureData{
 	    $structdata{"no_divs"} = $no_divs;
 	}
 	
-	$localdata = &getStructureData($d, $PorQ, $thisText, $baseresults, $filepath);
+	$localdata = &getStructureData($d, $PorQ, $thisText, $baseresults, $filepath, $thisCorpus);
 	$localdata->{'type'} = $d->{att}->{type}?$d->{att}->{type}:"";    
 	$localdata->{'n'} = $d->{att}->{n}?$d->{att}->{n}:"";
 

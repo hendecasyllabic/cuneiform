@@ -139,7 +139,7 @@ sub abstractSigndata{
     # from here - x'es not taken into list
     # find out signname in ogsl.xml ($OgslRoot)
     if (($value ne "x") && ($value ne "X") && ($value ne ";")) { # split word with ;
-	my $BorgerNo; my $BorgerVal; my $Cuneicode = "-"; my $signname = "-";
+	my $BorgerNo=""; my $BorgerVal=""; my $Cuneicode = "-"; my $signname = "-";
 	my $basis = ($base ne "")?$base:$value;
 	if (looks_like_number($basis)) {
 	    $BorgerNo = "Number"; $BorgerVal = $value; 
@@ -160,9 +160,9 @@ sub abstractSigndata{
 	    if ($signname ne "-") {
 		my $borgdata  = &CHUNKER::Borger::getBorgerValues($signname);
 		
-		$BorgerNo = $borgdata->{'BorgerNo'};
-		$BorgerVal = $borgdata->{'BorgerVal'};
-		$Cuneicode = $borgdata->{'Cuneicode'};
+		$BorgerNo = $borgdata->{'BorgerNo'}?$borgdata->{'BorgerNo'}:"";
+		$BorgerVal = $borgdata->{'BorgerVal'}?$borgdata->{'BorgerVal'}:"";
+		$Cuneicode = $borgdata->{'Cuneicode'}?$borgdata->{'Cuneicode'}:"";
 		
 	    # save the data with each value
 	    # also works on punctuation

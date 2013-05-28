@@ -25,8 +25,8 @@ sub getLineData {
     my $label = shift;
     my $note = shift || "";
     my $writtenAs = shift || "";
-    my $thisCorpus = shift;
     &CHUNKER::generic::writetoerror("timestamping","getLineData - starting ".localtime); 
+    
     
     my %linedata = ();
     my $localdata = {};
@@ -36,7 +36,7 @@ sub getLineData {
     
     my @cells = $root->get_xpath('c');
     foreach my $c (@cells){
-	$localdata = &getLineData($c, $label, "","",$thisCorpus, $thisText);
+	$localdata = &getLineData($c, $label, "","");
 	$localdata->{"span"} = $c->{att}->{"span"};
 	push(@{$linedata{'cells'}}, $localdata);
 	$localdata = {};
@@ -44,7 +44,7 @@ sub getLineData {
     
     my @fields = $root->get_xpath('f');
     foreach my $f (@fields){
-	$localdata = &getLineData($f, $label, "","",$thisCorpus, $thisText);
+	$localdata = &getLineData($f, $label, "","");
 	$localdata->{"type"} = $f->{att}->{"type"};
 	push(@{$linedata{'fields'}}, $localdata);
 	$localdata = {};
@@ -52,7 +52,7 @@ sub getLineData {
     
     my @alignmentgrp = $root->get_xpath('ag');
     foreach my $ag (@alignmentgrp) {
-	$localdata = &getLineData($ag, $label, "","",$thisCorpus, $thisText); 
+	$localdata = &getLineData($ag, $label, "",""); 
 	$localdata->{"form"} = $ag->{att}->{"form"};
 	push(@{$linedata{'alignmentgroup'}}, $localdata);
 	$localdata = {};
@@ -93,7 +93,7 @@ sub getLineData {
 		    else {
 			$type = "word"; my $position = 1;
 			$role = $nonwEl->{att}->{"g:role"}?$nonwEl->{att}->{"g:role"}:"";
-			($tempdata, $position) = &splitWord (\@arrayNonWord, $nonwEl, $label, $position); # resulting info in @arrayNonWord
+			($tempdata, $position) = &CHUNKER::word::splitWord (\@arrayNonWord, $nonwEl, $label, $position); # resulting info in @arrayNonWord
 		    }
 		    $cnt++;
 		}
@@ -130,7 +130,7 @@ sub getLineData {
 	    my $wordtype = "dittoword";
 	    my $writtenWord = ""; my $preservedSigns = 0; my $signs = ();
 	    my $conditionWord = "";
-	    ($writtenWord, $signs, $conditionWord) = &formWord(\@arrayNonWord);
+	    ($writtenWord, $signs, $conditionWord) = &CHUNKER::word::formWord(\@arrayNonWord);
 	    $linedata{$conditionWord}++;
 	    my $damagedSigns = $signs->{'damaged'}; my $missingSigns = $signs->{'missing'}; 
 	    
@@ -141,7 +141,7 @@ sub getLineData {
 	    #form = $writtenWord without [], halfbrackets
 	    $form = $writtenWord; 
 	    $form =~ s|\[||g; $form =~ s|\]||g; $form =~ s|\x{2E22}||g; $form =~ s|\x{2E23}||g;
-	    &saveWord($nonwLang, $form, $conditionWord, $wordtype, "", "", "", $writtenWord, $label, "", "", "", $note, $writtenAs);
+	    &CHUNKER::word::saveWord($nonwLang, $form, $conditionWord, $wordtype, "", "", "", $writtenWord, $label, "", "", "", $note, $writtenAs);
 	    
 	    my $count = 0; my $beginpos = 0; my $endpos = $no_signs - 1; my $severalParts = 0;
 	    while ($count < $no_signs) {
@@ -152,7 +152,7 @@ sub getLineData {
 		}
 		$count++;
 	    }
-	    &determinePosition($beginpos, $endpos, \@arrayNonWord);
+	    &CHUNKER::word::determinePosition($beginpos, $endpos, \@arrayNonWord);
 	    
 	    foreach my $sign (@arrayNonWord) {
 		my $category = "";
@@ -178,7 +178,7 @@ sub getLineData {
 		my $value = $sign->{'value'}; my $pos = $sign->{'pos'}; my $position = $sign->{'position'};
 		# can these actually have base and modifier ??? TODO - CHECK
 		# I'm not including gw as translation is possibly nonsensical (especially when combination of words)
-		&saveSign($nonwLang, $category, $value, "", "", "", "", "", "", $position, "", $condition, $label, $form, $writtenWord, $wordtype, "", "");
+		&CHUNKER::punct::saveSign($nonwLang, $category, $value, "", "", "", "", "", "", $position, "", $condition, $label, $form, $writtenWord, $wordtype, "", "");
 	    }
 	}
     }
@@ -188,7 +188,7 @@ sub getLineData {
     my $no_glosses = scalar @glosses;
     foreach my $g (@glosses) {
 	$note = "gloss";
-	$localdata = &getLineData($g, $label, $note,"",$thisCorpus, $thisText);
+	$localdata = &getLineData($g, $label, $note,"");
 	push(@{$linedata{'glosses'}}, $localdata);
 	$localdata = {};
     }
@@ -248,7 +248,7 @@ sub getLineData {
 		    
 		}
 		else { # e.g. in P365126; P363582 [g:d and g:s]; P363419; Q001870; P296713 [g:v]; Q003232; P334914 [g:d, g:v]; P348219 [g:n]; P363524
-		    ($tempdata, $position) = &splitWord (\@arrayWord, $i, $label, $position);
+		    ($tempdata, $position) = &CHUNKER::word::splitWord (\@arrayWord, $i, $label, $position);
 		    $sign = $arrayWord[$cnt]->{'value'};
 		    $cnt++;
 		}
@@ -260,7 +260,7 @@ sub getLineData {
 	    my $writtenWord = ""; 
 	    my $preservedSigns = 0; 
 	    my $signs = (); my $conditionWord = "";
-	    ($writtenWord, $signs, $conditionWord) = &formWord(\@arrayWord);
+	    ($writtenWord, $signs, $conditionWord) = &CHUNKER::word::formWord(\@arrayWord);
 	    $linedata{$conditionWord}++;
 	    
 	    if ($signs->{'preserved'}) { $linedata{"preservedSigns"} += $signs->{'preserved'}; $linedata{'totalSigns'} += $signs->{'preserved'}; }
@@ -346,7 +346,7 @@ sub getLineData {
 	    if ($word->{att}->{headform}) { # beginning of split word
 		
 		my $headref = $word->{att}->{"xml:id"};
-		print "\nheadform".$headref;
+		#print "\nheadform".$headref;
 		$tempdata = &CHUNKER::word::analyseWord($root, $word, $label, $note, "splithead");
 		$linedata{"splitWord"}++;
 		push (@splitrefs, $headref);
@@ -355,7 +355,7 @@ sub getLineData {
 		# normal words
 		# analyse words - collect all sign information (position, kind, delim, state)
 		#print "\nAnalyse ". $word->{att}->{"form"};
-		$tempdata = &CHUNKER::word::analyseWord($root, $word, $label, $note);
+		$tempdata = &CHUNKER::word::analyseWord($root, $word, $label, $note,"");
 	    }
 	    
 	    if ($tempdata->{"conditionWord"}) { $linedata{$tempdata->{"conditionWord"}}++; }

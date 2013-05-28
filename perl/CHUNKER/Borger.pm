@@ -66,8 +66,8 @@ sub openOgslAndBorger{
 	    'Borger' => sub {
 		my $thing = $_;
 		my $thing0 = $thing->{att}->{signname};
-		my $thing1 = $thing->{att}->{n};
-		my $thing2 = $thing->{att}->{BorgerVal};
+		my $thing1 = $thing->{att}->{n}?$thing->{att}->{n}:"";
+		my $thing2 = $thing->{att}->{BorgerVal}?$thing->{att}->{BorgerVal}:"";
 		my $thing3 = $thing->{att}->{utf8_hex};
 		
 		$cacheborger{$thing0}{'BorgerNo'} = $thing1;
@@ -115,10 +115,11 @@ sub saveBorger {
     &CHUNKER::generic::writetoerror("timestamping","saveBorger - starting ".localtime);
     
     if (($value ne "x") && ($value ne "X") && ($value ne ";")) { # split word with ;
-	my $BorgerNo; my $BorgerVal; my $Cuneicode = "-"; my $signname = "-";
+	my $BorgerNo=""; my $BorgerVal=""; my $Cuneicode = "-"; my $signname = "-";
 	my $basis = ($base ne "")?$base:$value;
 	if (looks_like_number($basis)) {
-	    $BorgerNo = "Number"; $BorgerVal = $value; 
+	    $BorgerNo = "Number";
+	    $BorgerVal = $value; 
 	} 
 	else {
 	    # find out signname in ogsl.xml ($OgslRoot)
@@ -139,9 +140,9 @@ sub saveBorger {
 	    $BorgerNo = "None";
 	    if ($signname ne "-") {
 		my $borgdata  = &getBorgerValues($signname);
-		$BorgerNo = $borgdata->{'BorgerNo'};
-		$BorgerVal = $borgdata->{'BorgerVal'};
-		$Cuneicode = $borgdata->{'Cuneicode'};
+		$BorgerNo = $borgdata->{'BorgerNo'}?$borgdata->{'BorgerNo'}:"";
+		$BorgerVal = $borgdata->{'BorgerVal'}?$borgdata->{'BorgerVal'}:"";
+		$Cuneicode = $borgdata->{'Cuneicode'}?$borgdata->{'Cuneicode'}:"";
 	    }
 	    # save the data in structure C_Borger
 	    # also works on punctuation 
@@ -324,7 +325,7 @@ sub getBorgerValues{
 	$newmanu =~ s/\&\S*//gsi;
 	if($cacheborger{$newmanu}){
 	    $cacheborger{$manipulate} = $cacheborger{$newmanu};
-	    $cacheborger{$manipulate}->{'BorgerNo'} .= "_combi";
+	    $cacheborger{$manipulate}{'BorgerNo'} .= "_combi";
 	    return $cacheborger{$manipulate};
 	    &CHUNKER::generic::writetoerror("timestamping","getBorgerValues - cached ".$manipulate." ".localtime);
     	}

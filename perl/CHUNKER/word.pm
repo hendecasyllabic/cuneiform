@@ -2,6 +2,7 @@ package CHUNKER::word;
 
 use strict;
 use Data::Dumper;
+use CHUNKER::extra;
 use XML::Twig::XPath;
 use XML::Simple;
 use utf8;
@@ -149,23 +150,22 @@ sub analyseWord{
     
     if ($split eq "splithead") {
 	my $ref = $word->{att}->{"xml:id"};
-	# look for splitend
-	my $tempvalue = '//g:swc[@headref="'.$ref.'"]'; 
-	my @splitenz = $root->findnodes($tempvalue); 
-	if (@splitenz) {
-	    my $lastSoFar = scalar @arrayWord;
-	    $arrayWord[$lastSoFar - 1]->{"split"} = "split";
-	    my @endchildren = $splitenz[0]->children();
-	    $localdata = {}; $cnt = 0;
-	    foreach my $j (@endchildren) { 
-	        ($tempdata, $position) = &splitWord (\@arrayWord, $j, $label, $position);
-	        $cnt++;
-	    }
-	    # add extra line number; find parent of swc
-	    my $parent = $splitenz[0]->parent();
-	    if ($parent->{att}->{"label"}) { my $extraLabel = $parent->{att}->{"label"}; $label .= "-".$extraLabel; }
+	
+	my $headref = CHUNKER::extra::returnHeadref($ref);
+	
+	if ($headref->{'parent'} ne "") {
+	    $label .= "-".$headref->{'parent'};
 	}
-	#print Dumper @arrayWord;
+	my $lastSoFar = scalar @arrayWord;
+	$arrayWord[$lastSoFar - 1]->{"split"} = "split";
+	if ($headref->{"words"}) {
+	    $localdata = {};
+	    $cnt = 0;
+	    foreach my $j (@{$headref->{'words'}}){
+		($tempdata, $position) = &splitWord (\@arrayWord, $j, $label, $position);
+		$cnt++;
+	    }
+	}
     }
     
     my $writtenWord = ""; 
@@ -479,7 +479,7 @@ sub splitWord {
 	my @mods = $root->get_xpath("g:m"); $modif = $mods[0]?$mods[0]->text:"";
 	
 	if ((($allo ne "") && ($formvar ne "")) || (($allo ne "") && ($modif ne "")) || (($modif ne "") && ($formvar ne ""))) {
-	    &writetoerror ("PossibleProblems.txt", localtime(time)."Project: ".$thisCorpus.", text ".$thisText.": allo ".$allo." formvar ".$formvar." modif ".$modif);
+	    &CHUNKER::generic::writetoerror("PossibleProblems.txt", localtime(time)."Project: ".$thisCorpus.", text ".$thisText.": allo ".$allo." formvar ".$formvar." modif ".$modif);
 	}
 	
 	if (($value eq "") && ($root->text)) { $value = $root->text; }
@@ -492,7 +492,7 @@ sub splitWord {
 	
 	if ($status eq "") {
 	    $status = $root->{att}->{"g:status"}?$root->{att}->{"g:status"}:"";
-	    #if ($status ne "ok") { &writetoerror ("PossibleProblems.txt", localtime(time)."Project: ".$thisCorpus.", text ".$thisText.": sign status ".$status." value ".$value); }
+	    #if ($status ne "ok") { &CHUNKER::generic::writetoerror ("PossibleProblems.txt", localtime(time)."Project: ".$thisCorpus.", text ".$thisText.": sign status ".$status." value ".$value); }
 	    }
 	if ($status ne "ok") {
 	    $open = $root->{att}->{'g:o'}?$root->{att}->{'g:o'}:"";
@@ -724,7 +724,7 @@ sub splitWord {
 	my $no_els = scalar @gg_elements;
 	
 	if (($group ne "logo") && ($group ne "correction") && ($group ne "reordering") && ($group ne "ligature")) {
-	    &writetoerror ("PossibleProblems.txt", localtime(time)."Project: ".$thisCorpus.", text ".$thisText.": g:gg of type ".$group); # - keep checking ***
+	    &CHUNKER::generic::writetoerror("PossibleProblems.txt", localtime(time)."Project: ".$thisCorpus.", text ".$thisText.": g:gg of type ".$group); # - keep checking ***
 	}
 	
 	if ($root->{att}->{"g:delim"}) { $delim = $root->{att}->{"g:delim"}; }
@@ -786,7 +786,7 @@ sub splitWord {
 	    }
 	}
 	else { # some uncovered situation?
-	    &writetoerror ("PossibleProblems.txt", localtime(time)."Project: ".$thisCorpus.", text ".$thisText.": group of type ".$group); # - keep checking ***
+	    &CHUNKER::generic::writetoerror("PossibleProblems.txt", localtime(time)."Project: ".$thisCorpus.", text ".$thisText.": group of type ".$group); # - keep checking ***
 	}
 	&listCombos($root, $label);
     }

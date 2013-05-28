@@ -1,4 +1,5 @@
 package CHUNKER::generic;
+use Data::Dumper;
 
 my $errorfile = "../errors";
 my $errorpath = "perlerrors";
@@ -71,7 +72,6 @@ sub writetofile{
     my $extradir = shift; #passed in as a parameter
     my $startpath = shift; #$resultspath."/".$resultsfolder;
     &makefile($startpath); #pass to function
-    
     my $destinationdir = $startpath;
     if($extradir && $extradir ne ""){
         $extradir =~s|( \|-)|_|gsi;
