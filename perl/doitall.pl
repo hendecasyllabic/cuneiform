@@ -22,7 +22,7 @@ use utf8;
 
 &CHUNKER::generic::writetoerror("timemarking","starting ".localtime);
 # first get a list of all the texts 
-&CHUNKER::getcorpus::getthetexts("/home/varoracc/local/oracc/bld", $basepath);
+&CHUNKER::getcorpus::getthetexts($baseresults, "/home/varoracc/local/oracc/bld");
 
 #initialise Borger and osl
 
