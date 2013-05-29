@@ -12,10 +12,6 @@ use utf8;
 binmode STDOUT, ":utf8";
 
 my $dir = "fulllist";
-my $thisCorpus = "";
-my $corpusdesignation = "";
-
-
 
 sub getthetexts {
     my $baseresults = shift;
@@ -23,14 +19,12 @@ sub getthetexts {
     my $rebuild = shift || 0;#should we rebuild or ignore if we have the data already
     my $PQroot = "";
     # phase one - iterate over oracc and get full list of projects
-    my $ptexts = &spidertheoracc($basepath,"P", "xtf",$baseresults."/".$dir, $rebuild);
-    my $qtexts = &spidertheoracc($basepath,"Q", "xtf",$baseresults."/".$dir, $rebuild);
+    &spidertheoracc($basepath,"P", "xtf",$baseresults."/".$dir, $rebuild);
+    &spidertheoracc($basepath,"Q", "xtf",$baseresults."/".$dir, $rebuild);
     
 }
 
 # assume path like /home/varoracc/local/oracc/bld/dcclt/P432/P432448
-# killing it at 6000 records to speed up testing - remove when all good at end
-# where we are sure that the folders after the project name are prefixed with P or Q
 # if this changes you will need to change this function as it will stop finding the files
 sub spidertheoracc {
     my $startdir = shift;
@@ -43,44 +37,42 @@ sub spidertheoracc {
     my $count = 0;  
     my %projects = ();
     
-
-    opendir (THISDIR, $startdir) or warn "Could not open the dir ".$startdir.": $!";
+    if(-d "$startdir"){
+	opendir (THISDIR, $startdir) or warn "Could not open the dir ".$startdir.": $!";
 	my @allfiles = grep !/^\.\.?$/, readdir THISDIR;
 	print "\n folders .".scalar @allfiles;
 	closedir THISDIR;
 	foreach (@allfiles) {
-        	my $file = $_;
-		$subcount++;
-#		if($count >6000){
-#        		next;
-#		}
+	    my $file = $_;
+	    $subcount++;
 
-
-print "\n this num ".$subcount;
-        # Use a regular expression to ignore files beginning with a period as they aren't important
-        next if ($file =~ m|^\.|);
-#        get project folders
-# use -d to test for a directory
-        if(-d "$startdir/$file"){
-	    my $filename = $baseresults."/".$testitem."/".$file.".xml";
-		
-	    if ($rebuild || !(-e $filename)) {
-print "\n started ".$file;
-		$count = &spiderleveltwo("$startdir/$file",$testitem, $fileextension, $file, \%projects, $count);
-		my $data = @{$projects{$file}};
-		&CHUNKER::generic::writetofile($file, $data, $testitem, $baseresults);
-print "\n finished ".$file;
+	    print "\n this num ".$subcount;
+	    # Use a regular expression to ignore files beginning with a period as they aren't important
+	    next if ($file =~ m|^\.|);
+    #        get project folders
+    # use -d to test for a directory
+	    if(-d "$startdir/$file"){
+		my $filename = $baseresults."/".$testitem."/".$file.".xml";
+		    
+		if ($rebuild || !(-e $filename)) {
+		    print "\n started ".$file;
+		    $count = &spiderleveltwo("$startdir/$file",$testitem, $fileextension, $file, \%projects, $count);
+		    my $data = @{$projects{$file}};
+		    &CHUNKER::generic::writetofile($file, $data, $testitem, $baseresults);
+		    print "\n finished ".$file;
+		}
+		else{
+		    print "\n ignore as already done ".$file;
+		}
 	    }
-	    else{
-		print "\n ignore as already done ".$file;
-	    }
+	    %projects = ();#null it so it is ready for next one.
+	#	write file 
+	print "\n count  ".$count;
         }
-	%projects = ();#null it so it is ready for next one.
-#	write file 
-print "\n count  ".$count;
-
     }
-   #return \%projects;
+    else{
+	print "\n no such directory ".$startdir;
+    }
 }
 sub spiderleveltwo{
     my $startdir = shift;
@@ -132,26 +124,31 @@ sub spiderleveltwo{
 sub processtexts{
     my $baseresults = shift;
     my $directory = $baseresults."/".$dir."/P";
-    opendir (DIR, $directory) or die $!;
-    while (my $file = readdir(DIR)) {
-        # We only want files
-        next unless (-f "$directory/$file");
-        # Use a regular expression to find files ending in .txt
-        next unless ($file =~ m/\.xml$/);
-	print "\n starting $file ";
-	open (MYFILE, $directory/$file);
-	while (<MYFILE>) {
-	    chomp;
-	    my $item = $_;
-#	<opt name="P415909.xtf" path="/home/varoracc/local/oracc/bld/alalakh/P415/P415909" />
-	    $item=~m|name="([^"]*)" path="([^"]*)"|g;
-	    my $xtf = $1;
-	    my $path = $2;
-	       
-	    &CHUNKER::singlefilestats::statasinglefile($path."/".$xtf, $baseresults);
+    if(-d "$directory"){
+	opendir (DIR, $directory) or die $!;
+	while (my $file = readdir(DIR)) {
+	    # We only want files
+	    next unless (-f "$directory/$file");
+	    # Use a regular expression to find files ending in .txt
+	    next unless ($file =~ m/\.xml$/);
+	    print "\n starting $file ";
+	    open (MYFILE, $directory/$file);
+	    while (<MYFILE>) {
+		chomp;
+		my $item = $_;
+    #	<opt name="P415909.xtf" path="/home/varoracc/local/oracc/bld/alalakh/P415/P415909" />
+		$item=~m|name="([^"]*)" path="([^"]*)"|g;
+		my $xtf = $1;
+		my $path = $2;
+		   
+		&CHUNKER::singlefilestats::statasinglefile($path."/".$xtf, $baseresults);
+	    }
+	    print "\n finishing $file ";
+	    close (MYFILE);
 	}
-	print "\n finishing $file ";
-	close (MYFILE);
+    }
+    else{
+	print "\n no such directory ".$directory;
     }
     
 }
