@@ -14,7 +14,6 @@ my $base = "/home/qlab/02www/cuneiform";#/Users/csm22/Work/Cuneiform/git/cuneifo
 my $basepath = $base."/datain";
 my $baseresults = $base."/dataout4";
 
-use CGI qw(:all *table *Tr *td);
 use Data::Dumper;
 use XML::Twig::XPath;
 use XML::Simple;
@@ -30,22 +29,16 @@ my $ogslfile = $base."/resources/ogsl.xml";
 my $Borgerfile = $base."/resources/Borger.xml";
 &CHUNKER::Borger::openOgslAndBorger($ogslfile, $Borgerfile);
 
+#loop over all files in fulllist
+&CHUNKER::getcorpus::processtexts($baseresults);
 
-#second loop over those texts and do the stats stuff
-&CHUNKER::singlefilestats::statasinglefile($base."/datain/Q002575/Q002575.xtf", $baseresults);
-&CHUNKER::singlefilestats::statasinglefile($base."/datain/P224395/P224395.xtf", $baseresults);
-&CHUNKER::singlefilestats::statasinglefile($base."/datain/P002296/P002296.xtf", $baseresults);
-&CHUNKER::singlefilestats::statasinglefile($base."/datain/P336398/P336398.xtf", $baseresults);
-&CHUNKER::singlefilestats::statasinglefile($base."/datain/P224395/P224395.xtf", $baseresults);
-&CHUNKER::singlefilestats::statasinglefile($base."/datain/P224431/P224431.xtf", $baseresults);
-&CHUNKER::singlefilestats::statasinglefile($base."/datain/P235724/P235724.xtf", $baseresults);
-&CHUNKER::singlefilestats::statasinglefile($base."/datain/P338326/P338326.xtf", $baseresults);
-&CHUNKER::singlefilestats::statasinglefile($base."/datain/P338462/P338462.xtf", $baseresults);
-&CHUNKER::singlefilestats::statasinglefile($base."/datain/P338499/P338499.xtf", $baseresults);
-&CHUNKER::singlefilestats::statasinglefile($base."/datain/P338566/P338566.xtf", $baseresults);
-&CHUNKER::singlefilestats::statasinglefile($base."/datain/P345960/P345960.xtf", $baseresults);
-&CHUNKER::singlefilestats::statasinglefile($base."/datain/P348776/P348776.xtf", $baseresults);
-&CHUNKER::singlefilestats::statasinglefile($base."/datain/P382687/P382687.xtf", $baseresults);
+#if you want to specify individual files instead...
+#&CHUNKER::singlefilestats::statasinglefile($base."/datain/Q002575/Q002575.xtf", $baseresults);
+#&CHUNKER::singlefilestats::statasinglefile($base."/datain/P224395/P224395.xtf", $baseresults);
+#&CHUNKER::singlefilestats::statasinglefile($base."/datain/P002296/P002296.xtf", $baseresults);
+#&CHUNKER::singlefilestats::statasinglefile($base."/datain/P336398/P336398.xtf", $baseresults);
+#&CHUNKER::singlefilestats::statasinglefile($base."/datain/P224395/P224395.xtf", $baseresults);
+#&CHUNKER::singlefilestats::statasinglefile($base."/datain/P224431/P224431.xtf", $baseresults);
 
 # get the compilations needed for the bar charts.
 &CHUNKER::compilationLang::makeFiles($baseresults."/signs",$baseresults);
