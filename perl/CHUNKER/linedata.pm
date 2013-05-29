@@ -278,7 +278,7 @@ sub getLineData {
 	    $form =~ s|\[||g; $form =~ s|\]||g; $form =~ s|\x{2E22}||g; $form =~ s|\x{2E23}||g;
 	    $form =~ s|\(||g; $form =~ s|\)||g; $form =~ s|\&lt;||g; $form =~ s|\&gt;||g; $form =~ s|\&lt;\{||g; $form =~ s|\}\&gt;||g;
 	    
-	    my $wordtype = &typeWord ($form, "");
+	    my $wordtype = &CHUNKER::word::typeWord ($form, "");
 	    #&writetoerror ("PossibleProblems.txt", localtime(time)."Project: ".$thisCorpus.", text ".$thisText.": nonw of form ".$form." type ".$wordtype); 
 	    
 	    &saveWord($lang, $form, $conditionWord, $wordtype, "", "", "", $writtenWord, $label, "", "", "", $note, $writtenAs); 
