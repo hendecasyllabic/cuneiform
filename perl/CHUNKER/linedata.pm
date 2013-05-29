@@ -301,7 +301,7 @@ sub getLineData {
 	    $allWordData{"word"}->{"wordtype"} = $wordtype; $allWordData{"word"}->{"wordbase"} = "";
 	    $allWordData{"word"}->{"gw"} = "";
         
-	    &CHUNKER::punct::saveSigns($thisText, \%allWordData, \@arrayWord);
+	    &CHUNKER::punct::saveSigns(\%allWordData, \@arrayWord);
 	}
 	else { # this does not yet occur - keep checking ***
 	    &CHUNKER::generic::writetoerror ("PossibleProblems.txt", localtime(time)."Project: ".$thisCorpus.", text ".$thisText.": nonw of type ".$type." check procedure"); 
