@@ -60,7 +60,6 @@ sub writetoerror{
 	
 	&makefile($destinationdir);
     }
-    print $destinationdir."/".$shortname;
 #    create a file called the shortname - allows sub sectioning of error messages
     open(SUBFILE2, ">>".$destinationdir."/".$shortname) or die "Couldn't open:".$destinationdir."/".$shortname." $!";
     binmode SUBFILE2, ":utf8";
@@ -79,11 +78,9 @@ sub writetojson{
     if($extradir && $extradir ne ""){
         $extradir =~s|( \|-)|_|gsi;
         #$extradir =~s|(\W*)|_|gsi;
-        print $extradir;
 	$destinationdir .= "/".$extradir;
 	&makefile($destinationdir);
     }
-    print $destinationdir."/".$shortname;
     
     if((defined $data) && ($data ne "")){
 	my $json = to_json($data, {utf8 => 1, pretty => 1});
@@ -105,17 +102,14 @@ sub writetofile{
     if($extradir && $extradir ne ""){
         $extradir =~s|( \|-)|_|gsi;
         #$extradir =~s|(\W*)|_|gsi;
-        print $extradir;
 	$destinationdir .= "/".$extradir;
 	&makefile($destinationdir);
     }
     
-    print $destinationdir."/".$shortname;
     if((defined $data) && ($data ne "")){
     #    create a file called the shortname - allows sub sectioning of error messages
     
 	my $xs = new XML::Simple(keeproot => 1,forcecontent => 1,forcearray => 0, keyattr =>  ['name', 'key', 'id']);
-	
 	open(SUBFILE2, ">".$destinationdir."/".$shortname.".xml") or die "Couldn't open:".$destinationdir."/".$shortname.".xml $!";
 	binmode SUBFILE2, ":utf8";
         my $xml = $xs->XMLout($data, rootname => 'data');
