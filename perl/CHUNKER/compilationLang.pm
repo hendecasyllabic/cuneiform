@@ -16,7 +16,7 @@ sub useFiles{
 	    $comps = &makeComp($directory, $file.".xml", $comps);
 	}
 	else{
-	    print "missing file".$filename ; die;
+	    print "missing file ".$filename ; die;
 	}
     }
     #loop over all the compilationERSigns stuff and split by lang

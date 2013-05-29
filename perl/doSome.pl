@@ -3,6 +3,7 @@ use strict;
 use Cwd 'abs_path';
 use File::Basename;
 use lib dirname( abs_path $0 );
+use lib "/home/varoracc/local/oracc/www/qlab/cuneiform/perl/lib/lib/perl5/";
 
 use CHUNKER::generic;
 use CHUNKER::singlefilestats;
@@ -12,7 +13,7 @@ use CHUNKER::punct;
 use CHUNKER::getcorpus;
 use CHUNKER::getProjectList;
 
-my $base = "/Users/csm22/Work/Cuneiform/git/cuneiform";
+my $base = "/home/varoracc/local/oracc/www/qlab/cuneiform";#/Users/csm22/Work/Cuneiform/git/cuneiform";
 
 #/home/varoracc/local/oracc/bld
 my $basepath = $base."/datain";

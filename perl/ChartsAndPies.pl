@@ -1,5 +1,6 @@
 #!/usr/bin/perl -w
 use strict;
+use lib "/home/varoracc/local/oracc/www/qlab/cuneiform/perl/lib/lib/perl5/";
 use CGI qw(:all *table *Tr *td);
 use Data::Dumper;
 use XML::Twig;
@@ -260,15 +261,18 @@ sub makeCategoryDonut {
 	# TODO: how to get the actual numbers of attestations printed along the percentages?
 	
 	#if (!($colours{$name})) { print " no colour for ".$name.". "; $colours{$name} = "0";}
-	
+my $colournum = 0;
+if(exists $colours{$name}){
+$colournum = $colours{$name};
+}	
 	if ($newdata eq "yes") {
 	    my $writeme = "\n{   y: ".$totalCat.",";
-	    $writeme .= "      color: colors[".$colours{$name}."],";
+	    $writeme .= "      color: colors[".$colournum."],";
 	    $writeme .= "          drilldown: {";
 	    $writeme .= "                   name: '".$cat."',";
 	    $writeme .= "                   categories: ['".join("','",@subCategories)."'],";
 	    $writeme .= "                   data: [".join(",",@catdata)."],";
-	    $writeme .= "                   color: colors[".$colours{$name}."]";
+	     $writeme .= "                   color: colors[".$colournum."]";
 	    $writeme .= "      }";
 	    $writeme .= "\n  }";
     
@@ -389,13 +393,17 @@ sub makeSignsPerCategoryDonut {
 	#if (!($colours{$name})) { print " no colour for ".$name.". "; $colours{$name} = "0";}
 	
 	if ($totalForms > 0) {
+my $colournum =0;
+if(exists $colours{$name}){
+$colournum =$colours{$name};;
+}
 	    my $writeme = "{   y: ".$totalForms.",";
-	    $writeme .= "      color: colors[".$colours{$name}."],";
+	    $writeme .= "      color: colors[".$colournum."],";
 	    $writeme .= "          drilldown: {";
 	    $writeme .= "                   name: '".$cat."',";
 	    $writeme .= "                   categories: ['".join("','",@subCategories)."'],";
 	    $writeme .= "                   data: [".join(",",@signsPerCatdata)."],";
-	    $writeme .= "                   color: colors[".$colours{$name}."]";
+	    $writeme .= "                   color: colors[".$colournum."]";
 	    $writeme .= "      }";
 	    $writeme .= "  }";
 	   

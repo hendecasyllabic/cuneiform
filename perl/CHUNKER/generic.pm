@@ -1,9 +1,9 @@
 package CHUNKER::generic;
 use Data::Dumper;
-use lib "/home/qlab/02www/cuneiform/perl/lib/lib/perl5/";
+use lib "/home/varoracc/local/oracc/www/qlab/cuneiform/perl/lib/lib/perl5/";
 use JSON;
 
-my $base = "/home/qlab/02www/cuneiform/";
+my $base = "/home/varoracc/local/oracc/www/qlab/cuneiform";
 my $errorfile = $base."/errors";
 my $errorpath = "perlerrors";
 my $outputtype = "text";
@@ -84,7 +84,7 @@ sub writetojson{
     
     if((defined $data) && ($data ne "")){
 	my $json = to_json($data, {utf8 => 1, pretty => 1});
-	open(SUBFILE2, ">".$destinationdir."/".$shortname.".json") or die "Couldn't open: $!";
+	open(SUBFILE2, ">".$destinationdir."/".$shortname.".json") or die "Couldn't open:".$destinationdir."/".$shortname.".json $!";
 	binmode SUBFILE2, ":utf8";
 	print SUBFILE2 $json; 
 	close(SUBFILE2);
