@@ -1,1 +1,10 @@
 Cuneiform library
+
+The heavy lifting is done in the perl libraries
+
+CHUNKER::getcorpus creates a list of all the files by spidering the site and writes it to dataout4/fulllist/{P|Q}DATA.xml
+
+doitall.pl can be run from the command line and will create that list and then use it to iterate over the files to fill up the data
+
+doSome.pl is used by the website to create small stats files. It is assumed that doitall has been run so all the files have been created.
+
