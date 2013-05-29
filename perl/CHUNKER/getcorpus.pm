@@ -1,23 +1,17 @@
 package CHUNKER::getcorpus;
 
 use base 'CHUNKER';
-
 use strict;
 use Data::Dumper;
 use XML::Twig::XPath;
 use XML::Simple;
 use utf8;
 # phase one - iterate over oracc and get full list of projects
-# scrap important meta data and create structure that can be used later.
-# phase two - allow greta to cherry pick the projects that will be offered
-# phase three - potentially allow more granualar restrictions so can restrict sub docs of a project
-# phase four - show list to users to select
-# pashe 5 cache/ speed up queries to make it a better experience - can we separately some of the heavy lifting to happen asyncly
 
 #this fixes the wide warnings and the numbers not being sub script
 binmode STDOUT, ":utf8";
 
-
+my $dir = "fulllist";
 my $thisCorpus = "";
 my $corpusdesignation = "";
 
@@ -29,30 +23,9 @@ sub getthetexts {
     my $rebuild = shift || 0;#should we rebuild or ignore if we have the data already
     my $PQroot = "";
     # phase one - iterate over oracc and get full list of projects
-    my $ptexts = &spidertheoracc($basepath,"P", "xtf",$baseresults."/fulllist", $rebuild);
-    my $qtexts = &spidertheoracc($basepath,"Q", "xtf",$baseresults."/fulllist", $rebuild);
+    my $ptexts = &spidertheoracc($basepath,"P", "xtf",$baseresults."/".$dir, $rebuild);
+    my $qtexts = &spidertheoracc($basepath,"Q", "xtf",$baseresults."/".$dir, $rebuild);
     
-    #write data to file
-    
-    #&CHUNKER::generic::writetofile("PDATA", $ptexts, "fulllist", $baseresults);
-    #&CHUNKER::generic::writetofile("QDATA", $qtexts, "fulllist", $baseresults);
-    #
-    #print Dumper $ptexts;
-    
-    #phase 1.5
-    #harvest meta data about each item.
-    
-    
-    #foreach my $i (keys %{$ptexts}){
-    #        print $i."\n";
-    #                foreach my $j (@{$ptexts->{$i}})	{
-    #                        $j->{"name"}=~m|^(.*)\.xtf$|;
-    #                        my $shortname = $1;
-    #                        my $fullfilename = $j->{"path"} ."/".$j->{"name"};
-    #                        print $shortname ."\n";
-    #                        &ptexts($fullfilename, $shortname, $baseresults);
-    #                }
-    #}
 }
 
 # assume path like /home/varoracc/local/oracc/bld/dcclt/P432/P432448
@@ -78,9 +51,9 @@ sub spidertheoracc {
 	foreach (@allfiles) {
         	my $file = $_;
 		$subcount++;
-		if($count >6000){
-        		next;
-		}
+#		if($count >6000){
+#        		next;
+#		}
 
 
 print "\n this num ".$subcount;
@@ -154,4 +127,32 @@ sub spiderleveltwo{
 
 
 
+
+# loop over xml files which list files produced by getthetexts
+sub processtexts{
+    my $baseresults = shift;
+    my $directory = $baseresults."/".$dir."/P";
+    opendir (DIR, $directory) or die $!;
+    while (my $file = readdir(DIR)) {
+        # We only want files
+        next unless (-f "$directory/$file");
+        # Use a regular expression to find files ending in .txt
+        next unless ($file =~ m/\.xml$/);
+	print "\n starting $file ";
+	open (MYFILE, $directory/$file);
+	while (<MYFILE>) {
+	    chomp;
+	    my $item = $_;
+#	<opt name="P415909.xtf" path="/home/varoracc/local/oracc/bld/alalakh/P415/P415909" />
+	    $item=~m|name="([^"]*)" path="([^"]*)"|g;
+	    my $xtf = $1;
+	    my $path = $2;
+	       
+	    &CHUNKER::singlefilestats::statasinglefile($path."/".$xtf, $baseresults);
+	}
+	print "\n finishing $file ";
+	close (MYFILE);
+    }
+    
+}
 1;
