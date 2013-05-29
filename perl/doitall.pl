@@ -5,7 +5,6 @@ use CHUNKER::singlefilestats;
 use CHUNKER::Borger;
 use CHUNKER::metadata;
 use CHUNKER::punct;
-use CHUNKER::getcorpus;
 use CHUNKER::getProjectList;
 
 my $base = "/home/qlab/02www/cuneiform";#/Users/csm22/Work/Cuneiform/git/cuneiform";
@@ -21,8 +20,8 @@ use XML::Simple;
 use utf8;
 
 &CHUNKER::generic::writetoerror("timemarking","starting ".localtime);
-# first get a list of all the texts and some basic meta data
-#&CHUNKER::getcorpus::getthetexts($baseresults, $basepath);
+# first get a list of all the texts 
+&CHUNKER::getcorpus::getthetexts($baseresults, $basepath);
 
 #initialise Borger and osl
 
