@@ -1,9 +1,9 @@
 package CHUNKER::generic;
 use Data::Dumper;
-
+use lib "/home/qlab/02www/cuneiform/perl/lib/lib/perl5/";
 use JSON;
 
-my $base = "/Users/csm22/Work/Cuneiform/git/cuneiform";
+my $base = "/home/qlab/02www/cuneiform/";
 my $errorfile = $base."/errors";
 my $errorpath = "perlerrors";
 my $outputtype = "text";
