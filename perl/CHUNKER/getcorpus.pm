@@ -94,9 +94,16 @@ print "\n this num ".$subcount;
 	    if ($rebuild || !(-e $filename)) {
 print "\n started ".$file;
 		$count = &spiderleveltwo("$startdir/$file",$testitem, $fileextension, $file, \%projects, $count);
-		my $data = @{$projects{$file}};
-		&CHUNKER::generic::writetofile($file, $data, $testitem, $baseresults);
+		if(exists $projects{$file} && ref($projects{$file}) eq 'ARRAY'){
+		print $file;
+				
+my %all = ("opt"=>$projects{$file});
+		&CHUNKER::generic::writetofile($file, \%all, $testitem, $baseresults);
 print "\n finished ".$file;
+		}
+		else{
+			print "\n $file is empty";
+		}
 	    }
 	    else{
 		print "\n ignore as already done ".$file;
