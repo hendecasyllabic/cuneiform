@@ -4,6 +4,7 @@ use CHUNKER::generic;
 use CHUNKER::singlefilestats;
 use CHUNKER::Borger;
 use CHUNKER::metadata;
+use CHUNKER::getcorpus;
 use CHUNKER::punct;
 use CHUNKER::getProjectList;
 
