@@ -7,7 +7,7 @@ $errors = new myErrorHandling();
 $renderer = new myRenderer();
 $python = new myPythonHandler($sysdir);
 
-$dataaffix = "outNEW";
+$dataaffix = "out4/projectList";
 
 $debugit = false;
 if(isset($_REQUEST['debug'])){

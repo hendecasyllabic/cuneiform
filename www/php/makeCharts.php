@@ -9,7 +9,7 @@ $errors = new myErrorHandling();
 $renderer = new myRenderer();
 $python = new myPythonHandler($sysdir);
 
-$dataaffix = "outNEW";
+$dataaffix = "out4/compilation/subset";
 
 $data = $_POST;
 $response = array();
@@ -41,25 +41,28 @@ function doPOST(){
     $langcheck = array();
     $response["langs"] = array();
     
-    if ($handle = opendir($sysdir."data".$dataaffix."/datasubset/".$filename)) {
+    if ($handle = opendir($sysdir."data".$dataaffix."/")) {
         /* This is the correct way to loop over the directory. */
         while (false !== ($file = readdir($handle))) {
             //how does this translate into a file name?
-            if(preg_match('/^SIGNS_P_LANG_(.*).xml$/',$file,$m)) {
-                $lang = $m[1];
-                $returnlang = preg_replace("/ /","_", $lang);
-                $response["langs"][] = $returnlang;
-                if(!is_file($sysdir."data".$dataaffix."/datasubset/".$filename."/LANG_".$lang.".html") || $forcerebuild){
-//                    only create if doesn't exist already or been force to rebuild
-                    $pyerrors = $python->doit("perl ".$sysdir."perl/ChartsAndPies.pl datasubset/".$filename." ".getcwd()."/".$sysdir." SIGNS_P_LANG_".$lang.".xml", $errors);
-                    file_put_contents($sysdir."data".$dataaffix."/datasubset/".$filename."/LANG_".$returnlang.".html",$pyerrors);
+            if(preg_match('/^(.*)SIGNS_P_LANG_(.*).xml$/',$file,$m)) {
+                $group =$m[1];
+                $lang = $m[2];
+                if($group == $filename){
+                    $returnlang = preg_replace("/ /","_", $lang);
+                    $response["langs"][] = $returnlang;
+                    if(!is_file($sysdir."data".$dataaffix."/".$filename."LANG_".$lang.".html") || $forcerebuild){
+    //                    only create if doesn't exist already or been force to rebuild
+                        $pyerrors = $python->doit("perl ".$sysdir."perl/ChartsAndPies.pl compilation/subset/".$filename." ".getcwd()."/".$sysdir." SIGNS_P_LANG_".$lang.".xml", $errors);
+                        file_put_contents($sysdir."data".$dataaffix."/".$filename."LANG_".$returnlang.".html",$pyerrors);
+                    }
                 }
             }
-            if(preg_match('/^SIGNS_Q_LANG_(.*).xml$/',$file,$m)) {
+            if(preg_match('/^${filename}SIGNS_Q_LANG_(.*).xml$/',$file,$m)) {
                 $lang = $m[1];
                 $returnlang = preg_replace("/ /","_", $lang);
                 $response["langs"][] = $returnlang;
-                if(!is_file($sysdir."data".$dataaffix."/datasubset/".$filename."/QLANG_".$lang.".html") || $forcerebuild){
+                if(!is_file($sysdir."data".$dataaffix."/".$filename."QLANG_".$lang.".html") || $forcerebuild){
 //                    only create if doesn't exist already or been force to rebuild
                     $pyerrors = $python->doit("perl ".$sysdir."perl/ChartsAndPies.pl datasubset/".$filename." ".getcwd()."/".$sysdir." SIGNS_Q_LANG_".$lang.".xml", $errors);
                     file_put_contents($sysdir."data".$dataaffix."/datasubset/".$filename."/QLANG_".$returnlang.".html",$pyerrors);

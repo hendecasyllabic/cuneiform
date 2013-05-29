@@ -2,6 +2,38 @@ package CHUNKER::compilationLang;
 use Data::Dumper;
 
 
+#&CHUNKER::compilationLang::useFiles($baseresults."/signs",$baseresults,["P002296","P345960"],"sub1");
+## use a list of files to create a bespoke selection
+sub useFiles{
+    my $directory = shift;
+    my $baseresults = shift;
+    my $files =shift;
+    my $groupname = shift;
+    
+    foreach my $file (@{$files}){
+	my $filename = $directory."/".$file.".xml";
+	if (-e $filename) {
+	    $comps = &makeComp($directory, $file.".xml", $comps);
+	}
+	else{
+	    print "missing file".$filename ; die;
+	}
+    }
+    #loop over all the compilationERSigns stuff and split by lang
+    foreach my $PQ (keys %{$comps}) {
+	foreach my $lang (keys %{$comps->{$PQ}{'lang'}}){
+	    my $newlang = $lang;
+	    $newlang=~s| |_|g;
+            print "\nPROCESSING LANG ".$newlang;
+            &CHUNKER::generic::writetofile("".$groupname."SIGNS_".$PQ."_LANG_".$newlang, $comps->{$PQ}{'lang'}{$lang}, "compilation/subset", $baseresults);
+	    #&writetofile("SIGNS_".$PQ."_LANG_".$newlang, $compilationERSigns{$PQ}{'lang'}{$lang}, $filepath);
+	}
+    }
+    &CHUNKER::generic::writetofile("".$groupname, $comps, "compilation/subset", $baseresults);
+    
+}
+
+
 #loop over the Borger lang stuff and make big totals file...
 #
 sub makeFiles{

@@ -18,7 +18,7 @@ binmode STDOUT, ":utf8";
 # TODO: logographic suffixes ***
 
 my $projname = "***";
-my $projdir = "../dataoutNEW/";
+my $projdir = "../dataout4/";
 my $ogslfile = "../resources/ogsl.xml";
 
 my $kind = "All_attested"; # can be any of the word categories too, e.g. Numerical_attested, etc.
@@ -75,7 +75,7 @@ if($#ARGV==2){
     $ogslfile = $sysdir."resources/ogsl.xml";
     $filename=~m|SIGNS_P_LANG_(.*).xml|; # TODO or Q *****
     $language = $1;
-    $projdir = $sysdir."dataoutNEW/".$filepath."/";
+    $projdir = $sysdir."dataout4/".$filepath."";
     
     $file = $projdir.$filename;
 }

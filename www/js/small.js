@@ -1,15 +1,4 @@
 
-   
-$(document).ready(function(){
-
-        jQuery("#accordion").accordion({
-              active: false,
-              fillspace: true,
-              autoHeight: false,
-              collapsible: true,
-              header: "h2"
-        });
-});
 var submitdata = {};
 var dataToShow = {};
 function togglechkbk(inter, status) {
@@ -32,21 +21,21 @@ function check(tickbox){
 }
 
 function showDataOnScreen(dataToShow){
-              var strng = "Corpus Name:<input type='text' name='corpusname' class='corpusname'><br/>";
-              submitdata = {};
-              jQuery.each(dataToShow,function(name,val){
-                  if(val.checked){
-                            strng += "<li style=font-size:15px; text-transform:capitalize;>"+val.corpus+"<br/>"+val.name+"<br/>"+"<a class='number' style=font-weight:bold;>"+
-                            val.p+"</a>"
-                            +"<br />";
-                            
-                            var bits = val.p.split(" ");
-                            for(var i in bits){
-                                          submitdata[jQuery.trim(bits[i])] = 1;
-                            }
+      var strng = "Corpus Name:<input type='text' name='corpusname' class='corpusname'><br/>";
+      submitdata = {};
+      jQuery.each(dataToShow,function(name,val){
+            if(val.checked){
+                  strng += "<li style=font-size:15px; text-transform:capitalize;>"+val.corpus+"<br/>"+val.name+"<br/>"+"<a class='number' style=font-weight:bold;>"+
+                  val.p+"</a>"
+                  +"<br />";
+                  
+                  var bits = val.p.split(" ");
+                  for(var i in bits){
+                        submitdata[jQuery.trim(bits[i])] = 1;
                   }
-              });
-              jQuery("#list").html(strng);
+            }
+      });
+      jQuery("#list").html(strng);
 }
 
 

@@ -34,12 +34,18 @@ sub makeFile{
     foreach my $item (keys %{$comps}){
         my %corpus;
         $corpus{"name"} = $item;
+        if ($item eq "") {
+            $corpus{"name"} = "None Specified";
+        }
         
         foreach my $section (keys %{$comps->{$item}}){
             $corpus{$section}{"item"} = [];
             foreach my $sitem (keys %{$comps->{$item}{$section}{"item"}}){
                 my %sim;
                 $sim{"name"}[0] = $sitem;
+                if ($sitem eq "") {
+                    $sim{"name"}[0] = "None Specified";
+                }
                 
                 foreach my $pq (@{$comps->{$item}{$section}{"item"}{$sitem}{"ps"}}){
                     my $len = 0;
@@ -47,11 +53,8 @@ sub makeFile{
                     if ($sim{"ps"}{$PQ}) {
                        $len = scalar @{$sim{"ps"}{$PQ}};
                     }
-                    
-                    
-                    my $endpq = substr($pq, 0, -4);#is this a P or a Q
+                    my $endpq = substr($pq, 0, -4);#remove .xml bit
                     $sim{"ps"}{$PQ}[$len] = $endpq;
-                    
                 }
                 push(@{$corpus{$section}{"item"}},\%sim);
             }
@@ -59,7 +62,7 @@ sub makeFile{
         push (@{$all{"opt"}{"corpus"}},\%corpus);
 
     }
-
+    &CHUNKER::generic::writetojson("CORPUS_META", \%all, "projectList", $baseresults);
     &CHUNKER::generic::writetofile("CORPUS_META", \%all, "projectList", $baseresults);
 }
 

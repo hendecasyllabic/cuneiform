@@ -9,7 +9,7 @@ $errors = new myErrorHandling();
 $renderer = new myRenderer();
 $python = new myPythonHandler($sysdir);
 
-$dataaffix = "outNEW";
+$dataaffix = "out4";
 
 $data = $_POST;
 $response = array();
@@ -124,7 +124,7 @@ function doPOST(){
             file_put_contents($sysdir."data".$dataaffix."/datasubset/".$existingFileName.".json",json_encode($payload));
             $vardata = implode(",",$payload);
     //send the data to perl
-            $pyerrors = $python->doit("perl ".$sysdir."perl/ItemStats.pl ".$existingFileName." ".$vardata. " ".getcwd()."/".$sysdir, $errors);
+            $pyerrors = $python->doit("perl ".$sysdir."perl/doSome.pl ".$existingFileName." ".$vardata. " ".getcwd()."/".$sysdir, $errors);
         }
         
     

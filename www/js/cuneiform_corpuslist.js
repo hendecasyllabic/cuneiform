@@ -120,7 +120,7 @@ cuneiform.corpuslist.showhtml = function(lang, filepath){
         cuneiform.common.spin_on();
   	$.ajax({
 		type: "POST",
-		url: "../dataoutNEW/datasubset/"+filepath+"/LANG_"+lang+".html",
+		url: "../dataout4/compilation/subset/"+filepath+"LANG_"+lang+".html",
 		dataType: "text",
 
 		success: function(data, textStatus, jqXHR) {

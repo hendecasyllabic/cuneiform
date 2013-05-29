@@ -45,9 +45,14 @@ my $Borgerfile = "../resources/Borger.xml";
 &CHUNKER::singlefilestats::statasinglefile("/Users/csm22/Work/Cuneiform/git/cuneiform/datain/P348776/P348776.xtf", $baseresults);
 &CHUNKER::singlefilestats::statasinglefile("/Users/csm22/Work/Cuneiform/git/cuneiform/datain/P382687/P382687.xtf", $baseresults);
 
-print "\n\n::";
-#&CHUNKER::compilationLang::makeFiles($baseresults."/signs",$baseresults);
+# get the compilations needed for the bar charts.
+&CHUNKER::compilationLang::makeFiles($baseresults."/signs",$baseresults);
+
+# get a sub section compilation for bar charts
+&CHUNKER::compilationLang::useFiles($baseresults."/signs",$baseresults,["P002296","P345960"],"sub1");
+
+
+#make the CORPUS_META file used to select the sections to search against
 &CHUNKER::getProjectList::makeFile($baseresults."/metadata",$baseresults);
 
-print ";;\n\n";
 &CHUNKER::generic::writetoerror("timemarking","ending ".localtime);

@@ -1,7 +1,10 @@
 package CHUNKER::generic;
 use Data::Dumper;
 
-my $errorfile = "../errors";
+use JSON;
+
+my $base = "/Users/csm22/Work/Cuneiform/git/cuneiform";
+my $errorfile = $base."/errors";
 my $errorpath = "perlerrors";
 my $outputtype = "text";
 
@@ -57,14 +60,40 @@ sub writetoerror{
 	
 	&makefile($destinationdir);
     }
-    
+    print $destinationdir."/".$shortname;
 #    create a file called the shortname - allows sub sectioning of error messages
-    open(SUBFILE2, ">>".$destinationdir."/".$shortname) or die "Couldn't open: $!";
+    open(SUBFILE2, ">>".$destinationdir."/".$shortname) or die "Couldn't open:".$destinationdir."/".$shortname." $!";
     binmode SUBFILE2, ":utf8";
     print SUBFILE2 $error."\n";
     close(SUBFILE2);
 }
 
+#generic function to write to file as json rather than xml
+sub writetojson{
+    my $shortname = shift; #passed in as a parameter
+    my $data = shift; #passed in as a parameter
+    my $extradir = shift; #passed in as a parameter
+    my $startpath = shift; #$resultspath."/".$resultsfolder;
+    &makefile($startpath); #pass to function
+    my $destinationdir = $startpath;
+    if($extradir && $extradir ne ""){
+        $extradir =~s|( \|-)|_|gsi;
+        #$extradir =~s|(\W*)|_|gsi;
+        print $extradir;
+	$destinationdir .= "/".$extradir;
+	&makefile($destinationdir);
+    }
+    print $destinationdir."/".$shortname;
+    
+    if((defined $data) && ($data ne "")){
+	my $json = to_json($data, {utf8 => 1, pretty => 1});
+	open(SUBFILE2, ">".$destinationdir."/".$shortname.".json") or die "Couldn't open: $!";
+	binmode SUBFILE2, ":utf8";
+	print SUBFILE2 $json; 
+	close(SUBFILE2);
+    }
+    
+}
 #generic function to write to an file somewhere
 sub writetofile{
     my $shortname = shift; #passed in as a parameter
@@ -86,16 +115,18 @@ sub writetofile{
     #    create a file called the shortname - allows sub sectioning of error messages
     
 	my $xs = new XML::Simple(keeproot => 1,forcecontent => 1,forcearray => 0, keyattr =>  ['name', 'key', 'id']);
-	&outputtext("\n");
-	open(SUBFILE2, ">".$destinationdir."/".$shortname.".xml") or die "Couldn't open: $!";
+	
+	open(SUBFILE2, ">".$destinationdir."/".$shortname.".xml") or die "Couldn't open:".$destinationdir."/".$shortname.".xml $!";
 	binmode SUBFILE2, ":utf8";
         my $xml = $xs->XMLout($data, rootname => 'data');
         print SUBFILE2 $xml;  # Use of uninitialized value ?
 #	print SUBFILE2 XMLout($data);  
 	close(SUBFILE2);
-	&outputtext("\n");
+	
     }
 }
+
+
 #create the folder if it doesn't already exist -
 #issue will ensure if permissions on the parent folder are incorrect
 sub makefile{
