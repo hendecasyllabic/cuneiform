@@ -26,16 +26,17 @@ my $corpusdesignation = "";
 sub getthetexts {
     my $baseresults = shift;
     my $basepath = shift;
+    my $rebuild = shift || 0;#should we rebuild or ignore if we have the data already
     my $PQroot = "";
     # phase one - iterate over oracc and get full list of projects
-    my $ptexts = &spidertheoracc($basepath,"P", "xtf");
-    my $qtexts = &spidertheoracc($basepath,"Q", "xtf");
+    my $ptexts = &spidertheoracc($basepath,"P", "xtf",$baseresults."/fulllist", $rebuild);
+    my $qtexts = &spidertheoracc($basepath,"Q", "xtf",$baseresults."/fulllist", $rebuild);
     
     #write data to file
     
-    &CHUNKER::generic::writetofile("PDATA", $ptexts, "fulllist", $baseresults);
-    &CHUNKER::generic::writetofile("QDATA", $qtexts, "fulllist", $baseresults);
-    
+    #&CHUNKER::generic::writetofile("PDATA", $ptexts, "fulllist", $baseresults);
+    #&CHUNKER::generic::writetofile("QDATA", $qtexts, "fulllist", $baseresults);
+    #
     #print Dumper $ptexts;
     
     #phase 1.5
@@ -62,10 +63,14 @@ sub spidertheoracc {
     my $startdir = shift;
     my $testitem = shift;
     my $fileextension = shift;
+    my $baseresults = shift;
+    my $rebuild = shift || 0;
     my $subcount = 0;  
     #initialise the count
     my $count = 0;  
     my %projects = ();
+    
+
     opendir (THISDIR, $startdir) or warn "Could not open the dir ".$startdir.": $!";
 	my @allfiles = grep !/^\.\.?$/, readdir THISDIR;
 	print "\n folders .".scalar @allfiles;
@@ -84,14 +89,24 @@ print "\n this num ".$subcount;
 #        get project folders
 # use -d to test for a directory
         if(-d "$startdir/$file"){
+	    my $filename = $baseresults."/".$testitem."/".$file.".xml";
+		
+	    if ($rebuild || !(-e $filename)) {
 print "\n started ".$file;
-            $count = &spiderleveltwo("$startdir/$file",$testitem, $fileextension, $file, \%projects, $count);
-        }
+		$count = &spiderleveltwo("$startdir/$file",$testitem, $fileextension, $file, \%projects, $count);
+		&CHUNKER::generic::writetofile($file, \%projects, $testitem, $baseresults);
 print "\n finished ".$file;
+	    }
+	    else{
+		print "\n ignore as already done ".$file;
+	    }
+        }
+	%projects = ();#null it so it is ready for next one.
+#	write file 
 print "\n count  ".$count;
 
     }
-   return \%projects;
+   #return \%projects;
 }
 sub spiderleveltwo{
     my $startdir = shift;
