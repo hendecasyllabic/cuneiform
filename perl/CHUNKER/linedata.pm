@@ -78,7 +78,7 @@ sub getLineData {
 		my @nonwElements = $i->children();
 		my $no_els = scalar (@nonwElements);
 		if ($no_els > 1) {
-		    &writetoerror ("PossibleProblems.txt", localtime(time)."Project: ".$thisCorpus.", text ".$thisText.", ".$label.": more than one element in g:nonw in surro.");
+		    &CHUNKER::generic::writetoerror ("PossibleProblems.txt", localtime(time)."Project: ".$thisCorpus.", text ".$thisText.", ".$label.": more than one element in g:nonw in surro.");
 		}
 		$nonwLang = $i->{att}->{"xml:lang"}?$i->{att}->{"xml:lang"}:"noLang";
 		my $tempdata = {};
@@ -147,7 +147,7 @@ sub getLineData {
 	    while ($count < $no_signs) {
 		if (($arrayNonWord[$count]->{'delim'}) && ($arrayNonWord[$count]->{'delim'} eq "--")) {
 		    $endpos = $count; $severalParts++;
-		    &determinePosition($beginpos, $endpos, \@arrayNonWord);
+		    &CHUNKER::word::determinePosition($beginpos, $endpos, \@arrayNonWord);
 		    $beginpos = $endpos+1; $endpos = $no_signs - 1;
 		}
 		$count++;
@@ -198,7 +198,7 @@ sub getLineData {
     foreach my $nw (@nonw) {
 	my $type = $nw->{att}->{"type"}?$nw->{att}->{"type"}:"";
 	if (($type ne "dollar") && ($type ne "punct") && ($type ne "excised"))
-	    { &writetoerror ("PossibleProblems.txt", localtime(time)."Project: ".$thisCorpus.", text ".$thisText.": nonw of type ".$type."."); }
+	    { &CHUNKER::generic::writetoerror ("PossibleProblems.txt", localtime(time)."Project: ".$thisCorpus.", text ".$thisText.": nonw of type ".$type."."); }
     
 	# "comment" | "dollar" | "excised" | "punct" | "vari" - check still 'type="comment"' and 'vari' - keep checking *** 
 	# dollar: P270855; P335915; P336778; P348045; P363582; P381761; Q003232
@@ -225,7 +225,7 @@ sub getLineData {
 		    &CHUNKER::punct::savePunct($sign, $break, $lang, $label, "", "", "", $thisText); # these signs are saved under signs.
 		}	
 		elsif (($tag eq 'g:v') || ($tag eq 'g:s')) { # this does not yet occur - keep checking ***
-		    &writetoerror ("PossibleProblems.txt", localtime(time)."Project: ".$thisCorpus.", text ".$thisText.": nonw of type ".$type.", with tag ".$tag);
+		    &CHUNKER::generic::writetoerror ("PossibleProblems.txt", localtime(time)."Project: ".$thisCorpus.", text ".$thisText.": nonw of type ".$type.", with tag ".$tag);
 		    $sign = $i->text;
 		    # these signs are NOT collected under signs or words.
 		}
@@ -244,7 +244,7 @@ sub getLineData {
 		    $sign = $i->{att}->{"g:type"}?$i->{att}->{"g:type"}:"";
 		    my $break = $i->{att}->{"g:break"}?$i->{att}->{"g:break"}:"preserved";
 		    &CHUNKER::punct::savePunct($sign, $break, $lang, $label, "excised", "", "", $thisText); # these signs are saved under signs.
-		    &writetoerror ("PossibleProblems.txt", localtime(time)."Project: ".$thisCorpus.", text ".$thisText.": excised punctuation");
+		    &CHUNKER::generic::writetoerror ("PossibleProblems.txt", localtime(time)."Project: ".$thisCorpus.", text ".$thisText.": excised punctuation");
 		    
 		}
 		else { # e.g. in P365126; P363582 [g:d and g:s]; P363419; Q001870; P296713 [g:v]; Q003232; P334914 [g:d, g:v]; P348219 [g:n]; P363524
@@ -287,12 +287,12 @@ sub getLineData {
 	    while ($count < $no_signs) {
 	        if (($arrayWord[$count]->{'delim'}) && ($arrayWord[$count]->{'delim'} eq "--")) {
 	            $endpos = $count; $severalParts++;
-	            &determinePosition($beginpos, $endpos, \@arrayWord);
+	            &CHUNKER::word::determinePosition($beginpos, $endpos, \@arrayWord);
 	            $beginpos = $endpos+1; $endpos = $no_signs - 1;
 	        }
 	        $count++;
 	    }
-	    &determinePosition($beginpos, $endpos, \@arrayWord);
+	    &CHUNKER::word::determinePosition($beginpos, $endpos, \@arrayWord);
     
 	    my %allWordData;
 	    $allWordData{"word"}->{"written"} = $writtenWord; $allWordData{"word"}->{"cf"} = "";
@@ -301,10 +301,10 @@ sub getLineData {
 	    $allWordData{"word"}->{"wordtype"} = $wordtype; $allWordData{"word"}->{"wordbase"} = "";
 	    $allWordData{"word"}->{"gw"} = "";
         
-	    &saveSigns($thisText, \%allWordData, \@arrayWord);
+	    &CHUNKER::punct::saveSigns($thisText, \%allWordData, \@arrayWord);
 	}
 	else { # this does not yet occur - keep checking ***
-	    &writetoerror ("PossibleProblems.txt", localtime(time)."Project: ".$thisCorpus.", text ".$thisText.": nonw of type ".$type." check procedure"); 
+	    &CHUNKER::generic::writetoerror ("PossibleProblems.txt", localtime(time)."Project: ".$thisCorpus.", text ".$thisText.": nonw of type ".$type." check procedure"); 
 	    my @children = $nw->children();  # can be g:c too, as in P363689; or g:w
 	    foreach my $i (@children) {
 	        my $tag = $i->tag;
@@ -400,7 +400,7 @@ sub getLineData {
 	my $type = $x->{att}->{"g:type"};
 	$localdata->{"kind"} = $type; 	# 'g:type="disambig"' |"user" | "word-absent" | "word-broken" | "word-linecont" | "empty" ??
 	if (($type ne "newline") && ($type ne "ellipsis")) { # - keep checking *** not in test corpus
-	    &writetoerror ("PossibleProblems.txt", localtime(time)."Project: ".$thisCorpus.", text ".$thisText.", ".$label.": x of type ".$type);
+	    &CHUNKER::generic::writetoerror ("PossibleProblems.txt", localtime(time)."Project: ".$thisCorpus.", text ".$thisText.", ".$label.": x of type ".$type);
 	}
 	# OK for "newline" | "ellipsis" | 
 	#empty: (only in note, so useless Q003232)
