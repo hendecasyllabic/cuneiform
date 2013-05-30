@@ -13,7 +13,8 @@ use CHUNKER::punct;
 use CHUNKER::getcorpus;
 use CHUNKER::getProjectList;
 
-my $base = "/home/varoracc/local/oracc/www/qlab/cuneiform";#/Users/csm22/Work/Cuneiform/git/cuneiform";
+#my $base = "/home/varoracc/local/oracc/www/qlab/cuneiform";
+my $base ="/Users/csm22/Work/Cuneiform/git/cuneiform";
 
 #/home/varoracc/local/oracc/bld
 my $basepath = $base."/datain";

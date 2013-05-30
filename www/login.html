@@ -24,11 +24,8 @@ cuneiform.login.init = function() {
     $("#login_button").bind("click", function(e) {
         cuneiform.common.login_user(function(user) {
             cuneiform.data.user = user;
-            //alert(user.loggedin);
             if(user.loggedin){
-            //alert(user.perms.fullname+":"+user.perms.crsid+":"+user.loggedin);
-                 window.location = "./CORPUS_META.xml";
-                 // window.location = "./student.html";
+                 window.location = "./dataset.html";
             }
 	    else{
 		alert("login failed");
@@ -40,9 +37,7 @@ cuneiform.login.init = function() {
     cuneiform.common.get_user(function(user) {
         cuneiform.data.user = user;
         if(user.loggedin){
-            //alert(user.perms.fullname+":"+user.perms.crsid+":"+user.loggedin);
-                 window.location = "./CORPUS_META.xml";
-         // window.location = "./student.html";
+                 window.location = "./dataset.html";
         }
         
     });

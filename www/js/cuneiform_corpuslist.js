@@ -6,7 +6,6 @@ cuneiform.config.userData = "../www/php/getUserData.php";
 
 cuneiform.corpuslist = {};
 //cuneiform.c.$viewgroup_container = $("#show_view");
-cuneiform.c.$select_corpuslist = $("#show_view");
 cuneiform.c.$select_userlist = $("#show_list");
 cuneiform.corpuslist.results = "";
 
@@ -18,7 +17,6 @@ cuneiform.corpuslist.init = function() {
         cuneiform.common.spin_off();
         if(!user || !user.loggedin){
             window.location = "../www/login.html";
-            //alert(user.perms.fullname+":"+user.perms.crsid+":"+user.loggedin);
         }
         else{
               cuneiform.corpuslist.page_init();
@@ -26,35 +24,25 @@ cuneiform.corpuslist.init = function() {
     });
 };
 cuneiform.corpuslist.getUserData = function(){
-              cuneiform.common.spin_on();
-              $.ajax({
-		type: "POST",
-		url: cuneiform.config.userData,
-		dataType: "json",
-		data: {
-			'username': cuneiform.data.user.perms.crsid
-		},
-		success: function(data, textStatus, jqXHR) {
-			cuneiform.common.spin_off();
-                        var chtml ="";
-                        //userdata
-                        if(data && data.dataitems){
-                            for(var i in data.dataitems){
-                                chtml += "<div id='"+data.dataitems[i].filepath+"'>";
-                                chtml += "<a href='javascript://' onclick='cuneiform.corpuslist.charts(\""+data.dataitems[i].filepath+"\")'>";
-                                chtml += i+":"+data.dataitems[i].files.join(",")+"</a><br/> ";
-                                chtml += "<div class=\"langs\"></div></div><div class='alllang'></div></div>";
-                            }
-                        }
-                        cuneiform.c.$select_userlist.html(chtml);
-			
-		},
-		error: function(jqXHR, textStatus, errorThrown) {
-			cuneiform.common.spin_off();
-			var error_msg = "Could not load corpus data!";
-			ajaxError.apply(this, [null, jqXHR, $.ajaxSettings, errorThrown, error_msg]);
-		}
-	});
+    var chtml ="";
+    //userdata
+    var data = cuneiform.data.user.lists;
+    if(data && data != ""){
+	for(var i in data){
+	    chtml += "<div id='"+data[i].filepath+"'>";
+	    chtml += "<h3 onclick='cuneiform.corpuslist.charts(\""+data[i].filepath+"\")'><a href='javascript://' >";
+	    chtml += i+":"+data[i].files.join(",")+"</a></h3>";
+	    chtml += "<div class=\"langs\"></div></div>";
+	}
+    }
+    cuneiform.c.$select_userlist.html(chtml);
+    jQuery("div#show_list").accordion('destroy').accordion({
+	active: false,
+	autoHeight: false,
+	collapsible: true,
+	header: "h3"
+    });
+    //show_list
 };
 cuneiform.corpuslist.sendData = function(dataarray, cont){
               cuneiform.common.spin_on();
@@ -71,7 +59,7 @@ cuneiform.corpuslist.sendData = function(dataarray, cont){
 		    url: cuneiform.config.sendData,
 		    dataType: "json",
 		    data: {
-			    'username': cuneiform.data.user.perms.crsid,
+			    'username': cuneiform.data.user.user,
 			    'rebuild': 0,//set to 1 if you want to force rebuild stuff.
 			    'payload': JSON.stringify(testpayload),
 			    'corpusname': corpusname
@@ -80,28 +68,25 @@ cuneiform.corpuslist.sendData = function(dataarray, cont){
 		    success: function(data, textStatus, jqXHR) {
 				cuneiform.common.spin_off();
 			    cuneiform.corpuslist.results = data;
-			    var chtml ="";
-			    if(data && data.dataitems){
-				chtml += "<div id='"+data.filepath+"'>";
-				chtml += "<a href='javascript://' onclick='cuneiform.corpuslist.charts(\""+data.filepath+"\")'>";
-				chtml += data.dataitems.join(",")+"</a><br/> ";
-				chtml += "<div class=\"langs\"></div><div class='alllang'></div></div>";
-			    
-			    }
-			    cuneiform.c.$select_corpuslist.html(chtml);
 			    
 			    //userdata
 			    var uhtml = "";
 			    if(data && data.userdata){
 				for(var i in data.userdata){
 				    uhtml += "<div id='"+data.userdata[i].filepath+"'>";
-				    uhtml += "<h3>"+"<a href='javascript://' onclick='cuneiform.corpuslist.charts(\""+data.userdata[i].filepath+"\")'>";
-				    uhtml += i+":"+data.userdata[i].files.join(",")+"</a></h3> ";
-				    uhtml += "<div class=\"langs\"></div><div class='alllang'></div></div>";
+				    uhtml += "<h3 onclick='cuneiform.corpuslist.charts(\""+data.userdata[i].filepath+"\")'><a href='javascript://' >";
+				    uhtml += i+":"+data.userdata[i].files.join(",")+"</a></h3>";
+				    uhtml += "<div class=\"langs\"></div></div>";
 				}
 			    }
 			    cuneiform.c.$select_userlist.html(uhtml);
 			    
+			    jQuery("div#show_list").accordion('destroy').accordion({
+				active: false,
+				autoHeight: false,
+				collapsible: true,
+				header: "h3"
+			    });
 			    if(cont){
 			      cont(cuneiform.corpuslist.results);
 			    }
@@ -114,8 +99,14 @@ cuneiform.corpuslist.sendData = function(dataarray, cont){
 	    });
 
 	}
+	else{
+	    
+              cuneiform.common.spin_off();
+	}
+	
 }
 
+//show html page with all the nice pie charts
 cuneiform.corpuslist.showhtml = function(lang, filepath){
         cuneiform.common.spin_on();
   	$.ajax({
@@ -139,100 +130,160 @@ cuneiform.corpuslist.showhtml = function(lang, filepath){
 }
 
 cuneiform.corpuslist.charts = function(filepath){
+    //have we already got the langs?
+    if (cuneiform.corpuslist.charts && cuneiform.corpuslist.charts[filepath]) {
+	var data = cuneiform.corpuslist.charts[filepath];
+	jQuery(data.langs).each(function(){
+	    var name = this;
+	    name = name.replace(/\s+/g, '');
+	    html +="<a href='javascript://' onclick='cuneiform.corpuslist.showhtml(\""+this+"\", \""+data.filepath+"\" )'>"+this+"</a><br/>"; 
+	});
+	if(html == ""){
+	    html +="No lang data found";
+	}
+	jQuery("#"+data.filepath).find(".langs").html(html);
+	
+	jQuery("div#show_list").accordion('destroy').accordion({
+	    active: false,
+	    autoHeight: false,
+	    collapsible: true,
+	    header: "h3"
+	});
+			
+    }
+    else{
+	//get it
   	$.ajax({
 		type: "POST",
 		url: cuneiform.config.chartData,
 		dataType: "json",
 		data: {
-			'username': cuneiform.data.user.perms.crsid,
+			'username': cuneiform.data.user.user,
 			'rebuild': 0,
 			'payload': filepath
 		},
 
 		success: function(data, textStatus, jqXHR) {
-			cuneiform.corpuslist.results = data;
-			//alert(data.filepath);
-			var html = "";
+		    cuneiform.corpuslist.charts[filepath] = data;
+		    //cuneiform.corpuslist.results = data;
+		    var html = "";
+		    
+		    jQuery(data.langs).each(function(){
+			var name = this;
+			name = name.replace(/\s+/g, '');
+			html +="<a href='javascript://' onclick='cuneiform.corpuslist.showhtml(\""+this+"\", \""+data.filepath+"\" )'>"+this+"</a><br/>"; 
+		    });
+		    if(html == ""){
+			html +="No lang data found";
+		    }
+		    jQuery("#"+data.filepath).find(".langs").html(html);
+		    
+		    jQuery("div#show_list").accordion('destroy').accordion({
+			active: false,
+			autoHeight: false,
+			collapsible: true,
+			header: "h3"
+		    });
 			
-			jQuery(data.langs).each(function(){
-			  var name = this;
-			  name = name.replace(/\s+/g, '');
-			  html +="<a href='javascript://' onclick='cuneiform.corpuslist.showhtml(\""+this+"\", \""+data.filepath+"\" )'>"+this+"</a><div class=\"lang_"+name+"\"></div>";
-			});
-			if(html == ""){
-			    html +="No lang data found";
-			}
-			jQuery("#"+data.filepath).find(".langs").html(html);
-			
-			jQuery(cuneiform.c.$select_userlist).accordion({
-			     active: false,
-			     fillspace: true,
-			     autoHeight: false,
-			     collapsible: true,
-			     header: "h3"
-		       });
 		},
 		error: function(jqXHR, textStatus, errorThrown) {
 			var error_msg = "Could not load charts!";
 			ajaxError.apply(this, [null, jqXHR, $.ajaxSettings, errorThrown, error_msg]);
 		}
 	});
+	
+    }
   
 }
-
+cuneiform.corpuslist.showCorpora = function(){
+    var count = 0;
+    var data = cuneiform.data.top.ALLCorpora;
+    jQuery.each(data.opt.corpus, function() {
+	var corpusitem = "<div class=\"jointparent\">";
+	count++;
+	corpusitem += "<h2  style=\"text-indent:30px; text-transform: capitalize;\">"+this.name+"</h2>";
+	corpusitem += "<div style=\"height:300px; \" class=\"subitems\" >"
+	jQuery.each(this, function(k, v) {
+	    if (k != "name") {
+		corpusitem += '<h3 style="text-transform: capitalize;">';
+		corpusitem += k;
+		corpusitem += '</h3> ';
+		if (v.item) {
+		    jQuery.each(v.item, function (l, w){
+			if (w.name) {
+			    corpusitem += '<div class="attempt">';
+			    corpusitem += '<input type="checkbox" name="tickbox" class="cclass'+count+'" value="'+k+' - '+w.name+'" onclick="check(this)"></input>';
+			    corpusitem += '<span class="subInfo" name="subInfo">'+w.name+'<br/></span>';
+			    jQuery.each(w.ps, function(m,x){
+				corpusitem += '<a class="ps" id="subSubInfo" style="font-size:13px; text-transform: capitalize;"> Number: <span class="littlebit">';
+				corpusitem += x;//number
+				corpusitem += '</span></a><br/>';
+			    });
+			    corpusitem += '</div>';
+			}
+		    });
+		}   
+	    }
+	});
+	corpusitem +="</div>"
+	corpusitem +="</div>";
+	jQuery("div#accordion").append(corpusitem);
+    });
+    jQuery("div#accordion").accordion('destroy').accordion({
+	active: false,
+	fillspace: true,
+	autoHeight: false,
+	collapsible: true,
+	header: "h2"
+    });
+    
+}
 cuneiform.corpuslist.page_init = function() {
     // Fetch top feed
-    $.ajax({
-        type: "GET",
-        url: cuneiform.config.urlTop,
-        dataType: "json",
-        success: function(data, textStatus, jqXHR) {
-
-            if (data !== null) {
-                // Save data in memory
-                cuneiform.data.top = data;
-		
-		//send corpus hash list to function
-		cuneiform.corpuslist.sendData();
-                
-                cuneiform.corpuslist.getUserData();
-                // Transform top data into a form which is easier to drive selectors from
-//                cuneiform.data.selector = cuneiform.processTopData(cuneiform.data.top);
-                // Read URL hash
-//                var hash = $.deparam.fragment();
-
-                // Read state stored in local storage
-                //var storedState = ($.jStorage.get("mercury-list-selection") || false);
-                
-                //not used
-//                cuneiform.corpuslist.pushState();
-
-                // Wire up - not used
-//                cuneiform.corpuslist.wire();
-                
-                // Render selector area - not used
-//		cuneiform.corpuslist.renderSelectors();
-                
-                //Render collegesedit
-//                clashics.corpuslist.AllInit();
-                //Bind buttons
-                //clashics.corpuslist.buttons_bind();
-                
-            } else {
-                alert("The following data feed did not produce any data: "+clashics.config.urlTop);
-                cuneiform.data.top = {};
-            }
-
-        },
-        error: function(jqXHR, textStatus, errorThrown) {
-            var error_msg = "Could not load data from the feed!";
-            ajaxError.apply(this, [null, jqXHR, $.ajaxSettings, errorThrown, error_msg]);
-            cuneiform.data.top = {};
-        }
-    });
-
+    if (cuneiform.data.top) {
+	//get list of all Corpora
+	cuneiform.corpuslist.showCorpora();
+	
+	//send corpus hash list to function
+	cuneiform.corpuslist.sendData();
+	
+	
+	cuneiform.corpuslist.getUserData();
+    }
+    else{
+	$.ajax({
+	    type: "GET",
+	    url: cuneiform.config.urlTop,
+	    dataType: "json",
+	    success: function(data, textStatus, jqXHR) {
+    
+		if (data !== null) {
+		    // Save data in memory
+		    cuneiform.data.top = data;
+		    
+		    //get list of all Corpora
+		    cuneiform.corpuslist.showCorpora();
+		    
+		    //send corpus hash list to function
+		    cuneiform.corpuslist.sendData();
+		    
+		    
+		    cuneiform.corpuslist.getUserData();
+		    
+		} else {
+		    alert("The following data feed did not produce any data: "+cuneiform.config.urlTop);
+		    cuneiform.data.top = {};
+		}
+    
+	    },
+	    error: function(jqXHR, textStatus, errorThrown) {
+		var error_msg = "Could not load data from the feed!";
+		ajaxError.apply(this, [null, jqXHR, $.ajaxSettings, errorThrown, error_msg]);
+		cuneiform.data.top = {};
+	    }
+	});
+    }
     cuneiform.common.login_link();
-        
 };
 
         // Start with calling  page init function

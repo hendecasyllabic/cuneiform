@@ -21,14 +21,15 @@ config
 */
 
 $data = $_REQUEST;
-$file1 = $sysdir."data".$dataaffix."/CORPUS_META.xml";
+$file1 = $sysdir."data".$dataaffix."/CORPUS_META.json";
 
 $response = array();
 $response{'root'} = get_config('base');
 
 if (file_exists($file1)) {
-	$stuff = xmlstr_to_array(file_get_contents($file1));
-	$response{"ALLCorpora"} = $stuff;
+	$response{"ALLCorpora"} = json_decode(file_get_contents($file1), true);
+	//$stuff = xmlstr_to_array(file_get_contents($file1));
+	//$response{"ALLCorpora"} = $stuff;
 }
 else{
 	$errors->addErrors("View failed: file does not exist: ".$file1);

@@ -3,10 +3,13 @@ use Data::Dumper;
 use lib "/home/varoracc/local/oracc/www/qlab/cuneiform/perl/lib/lib/perl5/";
 use JSON;
 
-my $base = "/home/varoracc/local/oracc/www/qlab/cuneiform";
+#my $base = "/home/varoracc/local/oracc/www/qlab/cuneiform";
+my $base = "/Users/csm22/Work/Cuneiform/git/cuneiform";
 my $errorfile = $base."/errors";
 my $errorpath = "perlerrors";
 my $outputtype = "text";
+
+
 
 my %langmatrix; # other codes in use? ask Steve TODO
 $langmatrix{"lang akk"} = "Akkadian"; $langmatrix{"lang a"} = "Akkadian"; $langmatrix{"akk"} = "Akkadian";
