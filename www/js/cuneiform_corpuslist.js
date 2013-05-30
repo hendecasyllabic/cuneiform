@@ -110,7 +110,7 @@ cuneiform.corpuslist.sendData = function(dataarray, cont){
 cuneiform.corpuslist.showhtml = function(lang, filepath){
         cuneiform.common.spin_on();
   	$.ajax({
-		type: "POST",
+		type: "GET",
 		url: "../dataout4/compilation/subset/"+filepath+"LANG_"+lang+".html",
 		dataType: "text",
 
