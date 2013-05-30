@@ -57,9 +57,14 @@ sub spidertheoracc {
 		if ($rebuild || !(-e $filename)) {
 		    print "\n started ".$file;
 		    $count = &spiderleveltwo("$startdir/$file",$testitem, $fileextension, $file, \%projects, $count);
-		    my $data = @{$projects{$file}};
-		    &CHUNKER::generic::writetofile($file, $data, $testitem, $baseresults);
+                if(exists $projects{$file} && ref($projects{$file}) eq 'ARRAY'){
+			my %all = ("opt"=>$projects{$file});
+                	&CHUNKER::generic::writetofile($file, \%all, $testitem, $baseresults);		    
 		    print "\n finished ".$file;
+		}
+                else{
+                        print "\n $file is empty";
+                }
 		}
 		else{
 		    print "\n ignore as already done ".$file;
@@ -116,8 +121,6 @@ sub spiderleveltwo{
     	}
         return $count;
 }
-
-
 
 
 # loop over xml files which list files produced by getthetexts
