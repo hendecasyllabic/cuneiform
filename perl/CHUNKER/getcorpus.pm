@@ -144,7 +144,7 @@ sub processtexts{
         # Use a regular expression to find files ending in .txt
         next unless ($file =~ m/\.xml$/);
 	print "\n starting $file ";
-	open (MYFILE, $directory/$file);
+	open (MYFILE, $directory."/".$file);
 	while (<MYFILE>) {
 	    chomp;
 	    my $item = $_;
