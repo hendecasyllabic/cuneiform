@@ -8,8 +8,7 @@ use CHUNKER::getcorpus;
 use CHUNKER::punct;
 use CHUNKER::getProjectList;
 
-my $base = "/home/varoracc/local/oracc/www/qlab/cuneiform";
-#my $base ="/Users/csm22/Work/Cuneiform/git/cuneiform";
+my $base = "/home/qlab/02www/cuneiform";#/Users/csm22/Work/Cuneiform/git/cuneiform";
 
 #/home/varoracc/local/oracc/bld
 my $basepath = $base."/datain";
@@ -22,7 +21,7 @@ use utf8;
 
 &CHUNKER::generic::writetoerror("timemarking","starting ".localtime);
 # first get a list of all the texts 
-&CHUNKER::getcorpus::getthetexts($baseresults, "/home/varoracc/local/oracc/bld");
+#&CHUNKER::getcorpus::getthetexts($baseresults, "/home/varoracc/local/oracc/bld");
 
 #initialise Borger and osl
 
@@ -31,7 +30,7 @@ my $Borgerfile = $base."/resources/Borger.xml";
 &CHUNKER::Borger::openOgslAndBorger($ogslfile, $Borgerfile);
 
 #loop over all files in fulllist
-&CHUNKER::getcorpus::processtexts($baseresults);
+#&CHUNKER::getcorpus::processtexts($baseresults);
 
 #if you want to specify individual files instead...
 #&CHUNKER::singlefilestats::statasinglefile($base."/datain/Q002575/Q002575.xtf", $baseresults);

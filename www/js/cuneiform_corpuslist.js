@@ -36,12 +36,14 @@ cuneiform.corpuslist.getUserData = function(){
 	}
     }
     cuneiform.c.$select_userlist.html(chtml);
+/*
     jQuery("div#show_list").accordion('destroy').accordion({
 	active: false,
 	autoHeight: false,
 	collapsible: true,
 	header: "h3"
     });
+*/
     //show_list
 };
 cuneiform.corpuslist.sendData = function(dataarray, cont){
@@ -80,13 +82,14 @@ cuneiform.corpuslist.sendData = function(dataarray, cont){
 				}
 			    }
 			    cuneiform.c.$select_userlist.html(uhtml);
-			    
+			   /* 
 			    jQuery("div#show_list").accordion('destroy').accordion({
 				active: false,
 				autoHeight: false,
 				collapsible: true,
 				header: "h3"
 			    });
+*/
 			    if(cont){
 			      cont(cuneiform.corpuslist.results);
 			    }
@@ -133,6 +136,7 @@ cuneiform.corpuslist.charts = function(filepath){
     //have we already got the langs?
     if (cuneiform.corpuslist.charts && cuneiform.corpuslist.charts[filepath]) {
 	var data = cuneiform.corpuslist.charts[filepath];
+	var html ="";
 	jQuery(data.langs).each(function(){
 	    var name = this;
 	    name = name.replace(/\s+/g, '');
@@ -142,14 +146,14 @@ cuneiform.corpuslist.charts = function(filepath){
 	    html +="No lang data found";
 	}
 	jQuery("#"+data.filepath).find(".langs").html(html);
-	
+/*	
 	jQuery("div#show_list").accordion('destroy').accordion({
 	    active: false,
 	    autoHeight: false,
 	    collapsible: true,
 	    header: "h3"
 	});
-			
+*/			
     }
     else{
 	//get it
@@ -177,14 +181,14 @@ cuneiform.corpuslist.charts = function(filepath){
 			html +="No lang data found";
 		    }
 		    jQuery("#"+data.filepath).find(".langs").html(html);
-		    
+		   /* 
 		    jQuery("div#show_list").accordion('destroy').accordion({
 			active: false,
 			autoHeight: false,
 			collapsible: true,
 			header: "h3"
 		    });
-			
+		*/	
 		},
 		error: function(jqXHR, textStatus, errorThrown) {
 			var error_msg = "Could not load charts!";

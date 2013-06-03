@@ -53,7 +53,10 @@ sub statasinglefile{
         #my $shortname = $1;
         $thisText = $1;
 	my $shortname = $thisText;
-	
+	my $xmdfile = $filepath;
+        $xmdfile =~ s|(\.\w*)$|.xmd|;
+#does file exist
+	if(-e $filepath && -e $xmdfile){	
 	if (&doesthisfileexits($baseresults."/structure/".$shortname.".xml")) {
 	    print "finished as already exists\n";
 	}
@@ -67,8 +70,6 @@ sub statasinglefile{
 		my $twigObjXmd = XML::Twig->new(
 					     twig_roots => { 'cat' => \&CHUNKER::metadata::getCatM }
 					     );
-		my $xmdfile = $filepath;
-		$xmdfile =~ s|(\.\w*)$|.xmd|;
 		$twigObjXmd->parsefile($xmdfile);
 		my $rootxmd = $twigObjXmd->root;
 		$twigObjXmd->purge;
@@ -119,6 +120,7 @@ sub statasinglefile{
 		&CHUNKER::generic::writetofile($shortname, $signs, "signs", $baseresults);
 	    }
 	}	
+	}
     }
     &CHUNKER::generic::writetoerror("timestamping","statasinglefile - ending ".localtime); 
 }

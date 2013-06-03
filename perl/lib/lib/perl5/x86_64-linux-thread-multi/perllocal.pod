@@ -1,0 +1,66 @@
+=head2 Wed May 29 11:54:57 2013: C<Module> L<XML::XPath|XML::XPath>
+
+=over 4
+
+=item *
+
+C<installed into: /home/qlab/02www/cuneiform/perl/lib//lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 1.13>
+
+=item *
+
+C<EXE_FILES: examples/xpath>
+
+=back
+
+=head2 Wed May 29 11:55:16 2013: C<Module> L<JSON|JSON>
+
+=over 4
+
+=item *
+
+C<installed into: /home/qlab/02www/cuneiform/perl/lib//lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 2.53>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Wed May 29 11:55:53 2013: C<Module> L<XML::Simple|XML::Simple>
+
+=over 4
+
+=item *
+
+C<installed into: /home/qlab/02www/cuneiform/perl/lib//lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 2.20>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
