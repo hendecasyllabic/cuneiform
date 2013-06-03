@@ -3,8 +3,8 @@ use Data::Dumper;
 use lib "/home/varoracc/local/oracc/www/qlab/cuneiform/perl/lib/lib/perl5/";
 use JSON;
 
-my $base = "/home/varoracc/local/oracc/www/qlab/cuneiform";
-#my $base = "/Users/csm22/Work/Cuneiform/git/cuneiform";
+#my $base = "/home/varoracc/local/oracc/www/qlab/cuneiform";
+my $base = "/Users/csm22/Work/Cuneiform/git/cuneiform";
 my $errorfile = $base."/errors";
 my $errorpath = "perlerrors";
 my $outputtype = "text";

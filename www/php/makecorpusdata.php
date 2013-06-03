@@ -58,16 +58,16 @@ function doDelete(){
         /* This is the correct way to loop over the directory. */
         while (false !== ($file = readdir($handle))) {
             //how does this translate into a file name?
-            if(preg_match('/^'.$existingFileName.'(.*)$/',$file,$m)) {
+            if(preg_match('/'.$existingFileName.'(.*)$/',$file,$m)) {
                 //echo $file;
                 //var_dump($m);
-                unlink($file);
+                unlink($sysdir."data".$dataaffix."/subset/".$file);
             }
             else{ //clean up any left over bits
                 if(preg_match('/^(num_\d+_\d+_\d+_\d+_\d+)[^\d]*$/',$file,$m)){
                     if($removeall[$m[1]]){
                     //    echo $file;
-                        unlink($file);
+                        unlink($sysdir."data".$dataaffix."/subset/".$file);
                     }
                 }
             }

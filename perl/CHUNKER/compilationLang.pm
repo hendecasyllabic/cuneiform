@@ -83,7 +83,7 @@ sub makeComp{
         foreach my $totals (keys %{$x->{'lang'}{$lang}}){
             if ($totals=~m|^total|) {
                 if ($comps->{$PQ}{'lang'}{$lang}[0]{$totals}) {
-                    $comps->{$PQ}{'lang'}{$lang}[0]{$totals} = $comps->{$PQ}{'lang'}{$lang}[0]{$totals} + $x->{'lang'}{$lang}{$totals};
+                    $comps->{$PQ}{'lang'}{$lang}[0]{$totals} += $x->{'lang'}{$lang}{$totals};
                 }
                 else{
                     $comps->{$PQ}{'lang'}{$lang}[0]{$totals} = $x->{'lang'}{$lang}{$totals};
@@ -117,7 +117,7 @@ sub makeComp{
             if (!$comps->{$PQ}{'lang'}{$lang}[0]{"category"}{$category}{"state"}{'preserved'}{"num"}) {
                 $comps->{$PQ}{'lang'}{$lang}[0]{"category"}{$category}{"state"}{'preserved'}{"num"} = 0;
             }
-            
+    
             #print "CATEGORY".$category."\n";
             if (!$comps->{$PQ}{'lang'}{$lang}[0]{"category"}{$category}{'All_attested'}) {
                 $comps->{$PQ}{'lang'}{$lang}[0]{"category"}{$category}{'All_attested'} = 0;
@@ -177,7 +177,8 @@ sub makeComp{
                                                 $comps->{$PQ}{'lang'}{$lang}[0]{"category"}{$category}{"prePost"}{$prepost}{"value"}{$item}{"type"}{$syllabic}{$totals} = 0;
                                             }
                                             if ($x->{'lang'}{$lang}{"category"}{$category}{"prePost"}{$prepost}{"value"}{$item}{"type"}{$syllabic}{$totals}) {
-                                                $comps->{$PQ}{'lang'}{$lang}[0]{"category"}{$category}{"prePost"}{$prepost}{"value"}{$item}{"type"}{$syllabic}{$totals} =$comps->{$PQ}{'lang'}{$lang}[0]{"category"}{$category}{"prePost"}{$prepost}{"type"}{$syllabic}{$totals} +$x->{'lang'}{$lang}{"category"}{$category}{"prePost"}{$prepost}{"type"}{$syllabic}{$totals};
+                                                $comps->{$PQ}{'lang'}{$lang}[0]{"category"}{$category}{"prePost"}{$prepost}{"value"}{$item}{"type"}{$syllabic}{$totals}
+						+= $x->{'lang'}{$lang}{"category"}{$category}{"prePost"}{$prepost}{"type"}{$syllabic}{$totals};
                                             }
                                         }
                                         if ($totals eq "state") {
@@ -201,105 +202,137 @@ sub makeComp{
             }
             
 
-            foreach my $sign (keys %{$x->{'lang'}{$lang}{"category"}{$category}{"value"}}){
-                if (!$comps->{$PQ}{'lang'}{$lang}[0]{"category"}{$category}{"value"}{$sign}{'All_attested'}) {
-                    $comps->{$PQ}{'lang'}{$lang}[0]{"category"}{$category}{"value"}{$sign}{'All_attested'} = 0;
-                }
-                
-                if (!$comps->{$PQ}{'lang'}{$lang}[0]{"category"}{$category}{"value"}{$sign}{'Punct_attested'}) {
-                    $comps->{$PQ}{'lang'}{$lang}[0]{"category"}{$category}{"value"}{$sign}{'Punct_attested'} = 0;
-                }
-                if ($x->{'lang'}{$lang}{"category"}{$category}{"value"}{$sign}{'All_attested'}) {
-                    $comps->{$PQ}{'lang'}{$lang}[0]{"category"}{$category}{"value"}{$sign}{'All_attested'} = $comps->{$PQ}{'lang'}{$lang}[0]{"category"}{$category}{"value"}{$sign}{'All_attested'} + $x->{'lang'}{$lang}{"category"}{$category}{"value"}{$sign}{'All_attested'};
-                }
-                if ($x->{'lang'}{$lang}{"category"}{$category}{"value"}{$sign}{'Punct_attested'}) {
-                    $comps->{$PQ}{'lang'}{$lang}[0]{"category"}{$category}{"value"}{$sign}{'Punct_attested'} = $comps->{$PQ}{'lang'}{$lang}[0]{"category"}{$category}{"value"}{$sign}{'Punct_attested'} + $x->{'lang'}{$lang}{"category"}{$category}{"value"}{$sign}{'Punct_attested'};
-                }
-                #print "SIGN".$sign."\n";
-                foreach my $t (keys %{$x->{'lang'}{$lang}{"category"}{$category}{"value"}{$sign}}){
-                    #print $t."\n";
-                    if ($t eq "state") {#weird punctuation
-                        foreach my $punctstate (keys %{$x->{'lang'}{$lang}{"category"}{$category}{"value"}{$sign}{"state"}}){
-                            if ($x->{'lang'}{$lang}{"category"}{$category}{"value"}{$sign}{"state"}{$punctstate}{"line"}) {
-                                my $count = scalar @{$x->{'lang'}{$lang}{"category"}{$category}{"value"}{$sign}{"state"}{$punctstate}{"line"}};
-                                
-                                $comps->{$PQ}{'lang'}{$lang}[0]{"state"}{$punctstate}{"num"} += $count;
-                                $comps->{$PQ}{'lang'}{$lang}[0]{"category"}{$category}{"state"}{$punctstate}{"num"} += $count;
-                
-                                
-                                foreach my $line (@{$x->{'lang'}{$lang}{"category"}{$category}{"value"}{$sign}{"state"}{$punctstate}{"line"}}){
-                                    push(@{$comps->{$PQ}{'lang'}{$lang}[0]{"category"}{$category}{"value"}{$sign}{"state"}{$punctstate}{"line"}}, $line);
-                                }
-                            }
-                        }
-                    }
-                    
-                    if ($t eq "standard") {
-                        my $standard = $x->{'lang'}{$lang}{"category"}{$category}{"value"}{$sign}{"standard"};
-                        foreach my $word (keys %{$standard}){
-                            foreach my $pos (keys %{$standard->{$word}{"pos"}}){
-                                foreach my $wordtype (keys %{$standard->{$word}{"pos"}{$pos}{"wordtype"}}){
-                                    if ($standard->{$word}{"pos"}{$pos}{"wordtype"}{$wordtype}{"gw"}) {
-                                        foreach my $gwname (keys %{$standard->{$word}{"pos"}{$pos}{"wordtype"}{$wordtype}{"gw"}}){
-                                            my $gwitem =  $standard->{$word}{"pos"}{$pos}{"wordtype"}{$wordtype}{"gw"}{$gwname};
-                                            foreach my $gwstate (keys %{$gwitem->{"state"}}){
-                                                if (!$comps->{$PQ}{'lang'}{$lang}[0]{"category"}{$category}{"value"}{$sign}{"standard"}{$word}{"wordtype"}{$wordtype}{"pos"}{$pos}{"gw"}{$gwname}{"state"}{$gwstate}{"num"}) {
-                                                    $comps->{$PQ}{'lang'}{$lang}[0]{"category"}{$category}{"value"}{$sign}{"standard"}{$word}{"wordtype"}{$wordtype}{"pos"}{$pos}{"gw"}{$gwname}{"state"}{$gwstate}{"num"} = 0;
-                                                }
-                                                $comps->{$PQ}{'lang'}{$lang}[0]{"category"}{$category}{"value"}{$sign}{"standard"}{$word}{"wordtype"}{$wordtype}{"pos"}{$pos}{"gw"}{$gwname}{"state"}{$gwstate}{"num"} =
-                                                $comps->{$PQ}{'lang'}{$lang}[0]{"category"}{$category}{"value"}{$sign}{"standard"}{$word}{"wordtype"}{$wordtype}{"pos"}{$pos}{"gw"}{$gwname}{"state"}{$gwstate}{"num"}
-                                                + $gwitem->{"state"}{$gwstate}{"num"};
-                                                
-                                                $comps->{$PQ}{'lang'}{$lang}[0]{"state"}{$gwstate}{"num"} += $gwitem->{"state"}{$gwstate}{"num"};
-                                                $comps->{$PQ}{'lang'}{$lang}[0]{"category"}{$category}{"state"}{$gwstate}{"num"} += $gwitem->{"state"}{$gwstate}{"num"};
             
-                                                foreach my $writtenWord (keys %{$gwitem->{"state"}{$gwstate}{"writtenWord"}}){
-                                                    if (!$comps->{$PQ}{'lang'}{$lang}[0]{"category"}{$category}{"value"}{$sign}{"standard"}{$word}{"wordtype"}{$wordtype}{"pos"}{$pos}{"gw"}{$gwname}{"state"}{$gwstate}{"writtenWord"}{$writtenWord}{"line"}) {
-                                                        $comps->{$PQ}{'lang'}{$lang}[0]{"category"}{$category}{"value"}{$sign}{"standard"}{$word}{"wordtype"}{$wordtype}{"pos"}{$pos}{"gw"}{$gwname}{"state"}{$gwstate}{"writtenWord"}{$writtenWord}{"line"} = [];
-                                                    }
-                                                    foreach my $line (@{$gwitem->{"state"}{$gwstate}{"writtenWord"}{$writtenWord}{"line"}}){
-                                                        push(@{$comps->{$PQ}{'lang'}{$lang}[0]{"category"}{$category}{"value"}{$sign}{"standard"}{$word}{"wordtype"}{$wordtype}{"pos"}{$pos}{"gw"}{$gwname}{"state"}{$gwstate}{"writtenWord"}{$writtenWord}{"line"}}, $line);
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                    else{
-                                        #go straight to state
-                                        my $nongw = $standard->{$word}{"pos"}{$pos}{"wordtype"}{$wordtype};
-                                        foreach my $gwstate (keys %{$nongw->{"state"}}){
-                                            if (!$comps->{$PQ}{'lang'}{$lang}[0]{"category"}{$category}{"value"}{$sign}{"standard"}{$word}{"wordtype"}{$wordtype}{"pos"}{$pos}{"state"}{$gwstate}{"num"}) {
-                                                $comps->{$PQ}{'lang'}{$lang}[0]{"category"}{$category}{"value"}{$sign}{"standard"}{$word}{"wordtype"}{$wordtype}{"pos"}{$pos}{"state"}{$gwstate}{"num"} = 0;
-                                            }
-                                            $comps->{$PQ}{'lang'}{$lang}[0]{"category"}{$category}{"value"}{$sign}{"standard"}{$word}{"wordtype"}{$wordtype}{"pos"}{$pos}{"state"}{$gwstate}{"num"} =
-                                            $comps->{$PQ}{'lang'}{$lang}[0]{"category"}{$category}{"value"}{$sign}{"standard"}{$word}{"wordtype"}{$wordtype}{"pos"}{$pos}{"state"}{$gwstate}{"num"}
-                                            + $nongw->{"state"}{$gwstate}{"num"};
-                                            $comps->{$PQ}{'lang'}{$lang}[0]{"state"}{$gwstate}{"num"} += $nongw->{"state"}{$gwstate}{"num"};
-                                            $comps->{$PQ}{'lang'}{$lang}[0]{"category"}{$category}{"state"}{$gwstate}{"num"} += $nongw->{"state"}{$gwstate}{"num"};
-            
-                                            foreach my $writtenWord (keys %{$gwitem->{"state"}{$gwstate}{"writtenWord"}}){
-                                                print $writtenWord;
-                                                if (!$comps->{$PQ}{'lang'}{$lang}[0]{"category"}{$category}{"value"}{$sign}{"standard"}{$word}{"wordtype"}{$wordtype}{"pos"}{$pos}{"state"}{$gwstate}{"writtenWord"}{$writtenWord}{"line"}) {
-                                                    $comps->{$PQ}{'lang'}{$lang}[0]{"category"}{$category}{"value"}{$sign}{"standard"}{$word}{"wordtype"}{$wordtype}{"pos"}{$pos}{"state"}{$gwstate}{"writtenWord"}{$writtenWord}{"line"} = [];
-                                                }
-                                                foreach my $line (@{$gwitem->{"state"}{$gwstate}{"writtenWord"}{$writtenWord}{"line"}}){
-                                                    push(@{$comps->{$PQ}{'lang'}{$lang}[0]{"category"}{$category}{"value"}{$sign}{"standard"}{$word}{"wordtype"}{$wordtype}{"pos"}{$pos}{"state"}{$gwstate}{"writtenWord"}{$writtenWord}{"line"}}, $line);
-                                                }
-                                            }
-                                        }
-                                    }
-                                    
-                                }
-                            }
-                        }                      
-                    }
-                    
-                }
-            }
+	    if ($x->{'lang'}{$lang}{"category"}{$category}{"value"}) {
+		$comps->{$PQ}{'lang'}{$lang}[0] = &reorder(\%{$comps->{$PQ}{'lang'}{$lang}[0]},\%{$x->{'lang'}{$lang}{"category"}{$category}{"value"}}, $category, "value");
+	    }
+	    if ($x->{'lang'}{$lang}{"category"}{$category}{"type"}) {
+		foreach my $type (keys %{$x->{'lang'}{$lang}{"category"}{$category}{"type"}}){
+		    $comps->{$PQ}{'lang'}{$lang}[0] = &reorder(\%{$comps->{$PQ}{'lang'}{$lang}[0]},\%{$x->{'lang'}{$lang}{"category"}{$category}{"type"}{$type}{"value"}}, $category, "value", $type,"type");
+		}
+	    }
         }
 #        $signsData{'lang'}[0]{$lang}{"category"}{$category}{"prePost"}{$prePost}{"type"}{$syllabic}
     }
     return $comps;
+}
+
+sub reorder{
+    my $item = shift;#$comps->{$PQ}{'lang'}{$lang}[0]
+    my $match = shift;#$x->{'lang'}{$lang}{"category"}{$category}{"value"}
+    my $category = shift;
+    my $section = shift;
+    my $extra = shift;
+    my $extratype = shift;
+    my $cat;
+    if ($extra) {
+	$cat = $item->{"category"}{$category}{$extratype}{$extra}{$section};
+    }
+    else{
+	$cat = $item->{"category"}{$category}{$section};
+    }
+    
+    foreach my $sign (keys %{$match}){
+	if (!$cat->{$sign}{'All_attested'}) {
+	    $cat->{$sign}{'All_attested'} = 0;
+	}
+	
+	if (!$cat->{$sign}{'Punct_attested'}) {
+	    $cat->{$sign}{'Punct_attested'} = 0;
+	}
+	if ($match->{$sign}{'All_attested'}) {
+	    $cat->{$sign}{'All_attested'} += $match->{$sign}{'All_attested'};
+	}
+	if ($match->{$sign}{'Punct_attested'}) {
+	    $cat->{$sign}{'Punct_attested'} += $match->{$sign}{'Punct_attested'};
+	}
+	#print "SIGN".$sign."\n";
+	foreach my $t (keys %{$match->{$sign}}){
+	    #print $t."\n";
+	    if ($t eq "state") {#weird punctuation
+		foreach my $punctstate (keys %{ $match->{$sign}{"state"}}){
+		    if ( $match->{$sign}{"state"}{$punctstate}{"line"}) {
+			my $count = scalar @{$match->{$sign}{"state"}{$punctstate}{"line"}};
+			
+			$item->{"state"}{$punctstate}{"num"} += $count;
+			$item->{"category"}{$category}{"state"}{$punctstate}{"num"} += $count;
+	
+			foreach my $line (@{$match->{$sign}{"state"}{$punctstate}{"line"}}){
+			    push(@{$cat->{$sign}{"state"}{$punctstate}{"line"}}, $line);
+			}
+		    }
+		}
+	    }
+	    
+	    if ($t eq "standard") {
+		my $standard =  $match->{$sign}{"standard"};
+		foreach my $word (keys %{$standard}){
+		    foreach my $pos (keys %{$standard->{$word}{"pos"}}){
+			foreach my $wordtype (keys %{$standard->{$word}{"pos"}{$pos}{"wordtype"}}){
+			    if ($standard->{$word}{"pos"}{$pos}{"wordtype"}{$wordtype}{"gw"}) {
+				foreach my $gwname (keys %{$standard->{$word}{"pos"}{$pos}{"wordtype"}{$wordtype}{"gw"}}){
+				    my $gwitem =  $standard->{$word}{"pos"}{$pos}{"wordtype"}{$wordtype}{"gw"}{$gwname};
+				    foreach my $gwstate (keys %{$gwitem->{"state"}}){
+					if (!$cat->{$sign}{"standard"}{$word}{"wordtype"}{$wordtype}{"pos"}{$pos}{"gw"}{$gwname}{"state"}{$gwstate}{"num"}) {
+					    $cat->{$sign}{"standard"}{$word}{"wordtype"}{$wordtype}{"pos"}{$pos}{"gw"}{$gwname}{"state"}{$gwstate}{"num"} = 0;
+					}
+					$cat->{$sign}{"standard"}{$word}{"wordtype"}{$wordtype}{"pos"}{$pos}{"gw"}{$gwname}{"state"}{$gwstate}{"num"}
+					+= $gwitem->{"state"}{$gwstate}{"num"};
+					
+					$item->{"state"}{$gwstate}{"num"} += $gwitem->{"state"}{$gwstate}{"num"};
+					$item->{"category"}{$category}{"state"}{$gwstate}{"num"} += $gwitem->{"state"}{$gwstate}{"num"};
+    
+					foreach my $writtenWord (keys %{$gwitem->{"state"}{$gwstate}{"writtenWord"}}){
+					    if (!$cat->{$sign}{"standard"}{$word}{"wordtype"}{$wordtype}{"pos"}{$pos}{"gw"}{$gwname}{"state"}{$gwstate}{"writtenWord"}{$writtenWord}{"line"}) {
+						$cat->{$sign}{"standard"}{$word}{"wordtype"}{$wordtype}{"pos"}{$pos}{"gw"}{$gwname}{"state"}{$gwstate}{"writtenWord"}{$writtenWord}{"line"} = [];
+					    }
+					    foreach my $line (@{$gwitem->{"state"}{$gwstate}{"writtenWord"}{$writtenWord}{"line"}}){
+						push(@{$cat->{$sign}{"standard"}{$word}{"wordtype"}{$wordtype}{"pos"}{$pos}{"gw"}{$gwname}{"state"}{$gwstate}{"writtenWord"}{$writtenWord}{"line"}}, $line);
+					    }
+					}
+				    }
+				}
+			    }
+			    else{
+				#go straight to state
+				my $nongw = $standard->{$word}{"pos"}{$pos}{"wordtype"}{$wordtype};
+				foreach my $gwstate (keys %{$nongw->{"state"}}){
+				    if (!$cat->{$sign}{"standard"}{$word}{"wordtype"}{$wordtype}{"pos"}{$pos}{"state"}{$gwstate}{"num"}) {
+					$cat->{$sign}{"standard"}{$word}{"wordtype"}{$wordtype}{"pos"}{$pos}{"state"}{$gwstate}{"num"} = 0;
+				    }
+				    $cat->{$sign}{"standard"}{$word}{"wordtype"}{$wordtype}{"pos"}{$pos}{"state"}{$gwstate}{"num"} =
+				    $cat->{$sign}{"standard"}{$word}{"wordtype"}{$wordtype}{"pos"}{$pos}{"state"}{$gwstate}{"num"}
+				    + $nongw->{"state"}{$gwstate}{"num"};
+				    $item->{"state"}{$gwstate}{"num"} += $nongw->{"state"}{$gwstate}{"num"};
+				    $item->{"category"}{$category}{"state"}{$gwstate}{"num"} += $nongw->{"state"}{$gwstate}{"num"};
+    
+				    foreach my $writtenWord (keys %{$gwitem->{"state"}{$gwstate}{"writtenWord"}}){
+					print $writtenWord;
+					if (!$cat->{$sign}{"standard"}{$word}{"wordtype"}{$wordtype}{"pos"}{$pos}{"state"}{$gwstate}{"writtenWord"}{$writtenWord}{"line"}) {
+					    $cat->{$sign}{"standard"}{$word}{"wordtype"}{$wordtype}{"pos"}{$pos}{"state"}{$gwstate}{"writtenWord"}{$writtenWord}{"line"} = [];
+					}
+					foreach my $line (@{$gwitem->{"state"}{$gwstate}{"writtenWord"}{$writtenWord}{"line"}}){
+					    push(@{$cat->{$sign}{"standard"}{$word}{"wordtype"}{$wordtype}{"pos"}{$pos}{"state"}{$gwstate}{"writtenWord"}{$writtenWord}{"line"}}, $line);
+					}
+				    }
+				}
+			    }
+			}
+		    }
+		}                      
+	    }
+	    
+	}
+    }
+    
+    if ($extra) {
+	$item->{"category"}{$category}{$extratype}{$extra}{$section} = $cat;
+    }
+    else{
+	$item->{"category"}{$category}{$section} = $cat;
+    }
+    
+    return $item;
 }
 
 sub returnComp{
