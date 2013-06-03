@@ -19,13 +19,73 @@ switch($_SERVER['REQUEST_METHOD'])
 case 'GET':
 break;
 case 'POST':
+    if($data["delete"]){doDelete();}
+    else{doPOST();}
 //do post
-doPOST($data);
+
 break;
 case 'DELETE':
-    break;
+
+break;
 }
 $payload = array();
+
+function doDelete(){
+    global $data,$dataaffix,$sysdir,$errors, $python, $renderer, $pypath, $logfile;
+    
+    $forcerebuild = $data["rebuild"];
+    $existingFileName = $data['payload'];
+    $corpusname = $data["corpusname"];
+    $username = $data["username"];
+    
+    $removeall = array();
+    //remove from saved searched?
+    $userdata = array();
+    if(file_exists($sysdir."data".$dataaffix."/subset/user_".$username.".json")){
+        $userdata = json_decode(file_get_contents($sysdir."data".$dataaffix."/subset/user_".$username.".json"),TRUE);
+    }
+    //remove unused items
+    foreach( $userdata as $i=>$l){
+        if(!file_exists($sysdir."data".$dataaffix."/subset/".$userdata[$i]["filepath"].".json")){
+            $removeall[$userdata[$i]["filepath"]] = 1;
+            if(isset($userdata[$corpusname])){
+                unset($userdata[$corpusname]);
+            }
+        }
+        
+    }
+    if ($handle = opendir($sysdir."data".$dataaffix."/subset")) {
+        /* This is the correct way to loop over the directory. */
+        while (false !== ($file = readdir($handle))) {
+            //how does this translate into a file name?
+            if(preg_match('/^'.$existingFileName.'(.*)$/',$file,$m)) {
+                //echo $file;
+                //var_dump($m);
+                unlink($file);
+            }
+            else{ //clean up any left over bits
+                if(preg_match('/^(num_\d+_\d+_\d+_\d+_\d+)[^\d]*$/',$file,$m)){
+                    if($removeall[$m[1]]){
+                    //    echo $file;
+                        unlink($file);
+                    }
+                }
+            }
+        }
+    }
+    
+    if(isset($userdata[$corpusname])){
+        unset($userdata[$corpusname]);
+    }
+    file_put_contents($sysdir."data".$dataaffix."/subset/user_".$username.".json",json_encode($userdata));
+    
+    $response["filepath"] = $existingFileName;
+    $response["dataitems"] = $payload;
+    $response["userdata"] = $userdata;
+    
+    $renderer->renderpage(json_encode($response), $errors);
+}
+
 
 function doPOST(){
     global $data,$dataaffix,$sysdir,$errors, $python, $renderer, $pypath, $logfile;

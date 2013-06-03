@@ -1,6 +1,7 @@
 
 var cuneiform = cuneiform || {};
 cuneiform.config.sendData = "../www/php/makecorpusdata.php";
+cuneiform.config.chartData = "../www/php/removeCorpusdata.php";
 cuneiform.config.chartData = "../www/php/makeCharts.php";
 cuneiform.config.userData = "../www/php/getUserData.php";
 
@@ -32,6 +33,7 @@ cuneiform.corpuslist.getUserData = function(){
 	    chtml += "<div id='"+data[i].filepath+"'>";
 	    chtml += "<h3 onclick='cuneiform.corpuslist.charts(\""+data[i].filepath+"\")'><a href='javascript://' >";
 	    chtml += i+":"+data[i].files.join(",")+"</a></h3>";
+	    chtml += "<a href='javascript://' onclick='cuneiform.corpuslist.removeitem(\""+data[i].filepath+"\",\""+i+"\")'>delete</a>";
 	    chtml += "<div class=\"langs\"></div></div>";
 	}
     }
@@ -78,6 +80,7 @@ cuneiform.corpuslist.sendData = function(dataarray, cont){
 				    uhtml += "<div id='"+data.userdata[i].filepath+"'>";
 				    uhtml += "<h3 onclick='cuneiform.corpuslist.charts(\""+data.userdata[i].filepath+"\")'><a href='javascript://' >";
 				    uhtml += i+":"+data.userdata[i].files.join(",")+"</a></h3>";
+				    uhtml += "<a href='javascript://' onclick='cuneiform.corpuslist.removeitem(\""+data.userdata[i].filepath+"\",\""+i+"\")'>delete</a>";
 				    uhtml += "<div class=\"langs\"></div></div>";
 				}
 			    }
@@ -130,6 +133,56 @@ cuneiform.corpuslist.showhtml = function(lang, filepath){
 		    ajaxError.apply(this, [null, jqXHR, $.ajaxSettings, errorThrown, error_msg]);
 		}
 	});
+}
+
+cuneiform.corpuslist.removeitem = function(filepath, corpusname){
+    $.ajax({
+		type: "POST",
+		url: cuneiform.config.sendData,
+		traditional: true,
+		dataType: "json",
+		data: {
+			'username': cuneiform.data.user.user,
+			'delete': 1,
+			'payload': filepath,
+			'corpusname':corpusname
+		},
+	    success: function(data, textStatus, jqXHR) {
+    
+		cuneiform.corpuslist.results = data;
+		
+		//userdata
+		var uhtml = "";
+		if(data && data.userdata){
+		    for(var i in data.userdata){
+			uhtml += "<div id='"+data.userdata[i].filepath+"'>";
+			uhtml += "<h3 onclick='cuneiform.corpuslist.charts(\""+data.userdata[i].filepath+"\")'><a href='javascript://' >";
+			uhtml += i+":"+data.userdata[i].files.join(",")+"</a></h3>";
+			uhtml += "<a href='javascript://' onclick='cuneiform.corpuslist.removeitem(\""+data.userdata[i].filepath+"\",\""+i+"\")'>delete</a>";
+			uhtml += "<div class=\"langs\"></div></div>";
+		    }
+		}
+		cuneiform.c.$select_userlist.html(uhtml);
+		jQuery("#langjquery").html("");
+	       /* 
+		jQuery("div#show_list").accordion('destroy').accordion({
+		    active: false,
+		    autoHeight: false,
+		    collapsible: true,
+		    header: "h3"
+		});
+*/
+		if(cont){
+		  cont(cuneiform.corpuslist.results);
+		}
+    
+	    },
+	    error: function(jqXHR, textStatus, errorThrown) {
+		var error_msg = "Could not load data from the feed!";
+		ajaxError.apply(this, [null, jqXHR, $.ajaxSettings, errorThrown, error_msg]);
+		cuneiform.data.top = {};
+	    }
+    });
 }
 
 cuneiform.corpuslist.charts = function(filepath){
