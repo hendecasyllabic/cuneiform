@@ -123,14 +123,16 @@ sub makeComp{
                 $comps->{$PQ}{'lang'}{$lang}[0]{"category"}{$category}{'All_attested'} = 0;
             }
             if ($x->{'lang'}{$lang}{"category"}{$category}{'All_attested'}) {
-                $comps->{$PQ}{'lang'}{$lang}[0]{"category"}{$category}{'All_attested'} = $comps->{$PQ}{'lang'}{$lang}[0]{"category"}{$category}{'All_attested'} + $x->{'lang'}{$lang}{"category"}{$category}{'All_attested'};
+                $comps->{$PQ}{'lang'}{$lang}[0]{"category"}{$category}{'All_attested'} +=
+		$x->{'lang'}{$lang}{"category"}{$category}{'All_attested'};
             }
             
             if (!$comps->{$PQ}{'lang'}{$lang}[0]{"category"}{$category}{'Punct_attested'}) {
                 $comps->{$PQ}{'lang'}{$lang}[0]{"category"}{$category}{'Punct_attested'} = 0;
             }
             if ($x->{'lang'}{$lang}{"category"}{$category}{'Punct_attested'}) {
-                $comps->{$PQ}{'lang'}{$lang}[0]{"category"}{$category}{'Punct_attested'} = $comps->{$PQ}{'lang'}{$lang}[0]{"category"}{$category}{'Punct_attested'} + $x->{'lang'}{$lang}{"category"}{$category}{'Punct_attested'};
+                $comps->{$PQ}{'lang'}{$lang}[0]{"category"}{$category}{'Punct_attested'}
+		+= $x->{'lang'}{$lang}{"category"}{$category}{'Punct_attested'};
             }
             
             if ($x->{'lang'}{$lang}{"category"}{$category}{"prePost"}) {
@@ -225,26 +227,34 @@ sub reorder{
     my $extra = shift;
     my $extratype = shift;
     my $cat;
+    
     if ($extra) {
 	$cat = $item->{"category"}{$category}{$extratype}{$extra}{$section};
     }
     else{
 	$cat = $item->{"category"}{$category}{$section};
     }
-    
+    my %totals = {};
     foreach my $sign (keys %{$match}){
+	if (!$totals{'All_attested'}) {
+	    $totals{'All_attested'} = 0;
+	}
+	if (!$totals{'Punct_attested'}) {
+	    $totals{'Punct_attested'} = 0;
+	}
 	if (!$cat->{$sign}{'All_attested'}) {
 	    $cat->{$sign}{'All_attested'} = 0;
 	}
-	
 	if (!$cat->{$sign}{'Punct_attested'}) {
 	    $cat->{$sign}{'Punct_attested'} = 0;
 	}
 	if ($match->{$sign}{'All_attested'}) {
 	    $cat->{$sign}{'All_attested'} += $match->{$sign}{'All_attested'};
+	    $totals{'All_attested'} +=$match->{$sign}{'All_attested'};
 	}
 	if ($match->{$sign}{'Punct_attested'}) {
 	    $cat->{$sign}{'Punct_attested'} += $match->{$sign}{'Punct_attested'};
+	    $totals{'Punct_attested'} +=$match->{$sign}{'Punct_attested'};
 	}
 	#print "SIGN".$sign."\n";
 	foreach my $t (keys %{$match->{$sign}}){
@@ -326,6 +336,7 @@ sub reorder{
     }
     
     if ($extra) {
+	$item->{"category"}{$category}{$extratype}{$extra} = \%totals;
 	$item->{"category"}{$category}{$extratype}{$extra}{$section} = $cat;
     }
     else{
