@@ -331,7 +331,13 @@ sub reorder{
 				    + $nongw->{"state"}{$gwstate}{"num"};
 				    $item->{"state"}{$gwstate}{"num"} += $nongw->{"state"}{$gwstate}{"num"};
 				    $item->{"category"}{$category}{"state"}{$gwstate}{"num"} += $nongw->{"state"}{$gwstate}{"num"};
-    
+    if (($gwstate eq "preserved") || ($gwstate eq "damaged") || ($gwstate eq "excised")) {
+#    All_attested++;
+	if (!$cat->{$sign}{"position"}{$pos}{"All_attested"}) {
+	    $cat->{$sign}{"position"}{$pos}{"All_attested"}=0;
+	}
+	$cat->{$sign}{"position"}{$pos}{"All_attested"}+=$nongw->{"state"}{$gwstate}{"num"};
+    }
 				    foreach my $writtenWord (keys %{$gwitem->{"state"}{$gwstate}{"writtenWord"}}){
 					print $writtenWord;
 					if (!$cat->{$sign}{"standard"}{$word}{"wordtype"}{$wordtype}{"pos"}{$pos}{"state"}{$gwstate}{"writtenWord"}{$writtenWord}{"line"}) {
