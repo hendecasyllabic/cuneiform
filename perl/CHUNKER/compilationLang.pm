@@ -137,7 +137,23 @@ sub makeComp{
             
             if ($x->{'lang'}{$lang}{"category"}{$category}{"prePost"}) {
                 foreach my $prepost (keys %{$x->{'lang'}{$lang}{"category"}{$category}{"prePost"}}){
-                    foreach my $item (keys %{$x->{'lang'}{$lang}{"category"}{$category}{"prePost"}{$prepost}{"value"}}){
+		    if (!$comps->{$PQ}{'lang'}{$lang}[0]{"category"}{$category}{"prePost"}{$prepost}{'All_attested'}) {
+			$comps->{$PQ}{'lang'}{$lang}[0]{"category"}{$category}{"prePost"}{$prepost}{'All_attested'}=0;
+		    }
+		    if (!$comps->{$PQ}{'lang'}{$lang}[0]{"category"}{$category}{"prePost"}{$prepost}{'Punct_attested'}) {
+			$comps->{$PQ}{'lang'}{$lang}[0]{"category"}{$category}{"prePost"}{$prepost}{'Punct_attested'}=0;
+		    }
+		    
+                    if ($x->{'lang'}{$lang}{"category"}{$category}{"prePost"}{$prepost}{'Punct_attested'}) {
+			$comps->{$PQ}{'lang'}{$lang}[0]{"category"}{$category}{"prePost"}{$prepost}{'Punct_attested'}+=
+			$x->{'lang'}{$lang}{"category"}{$category}{"prePost"}{$prepost}{'Punct_attested'}
+		    }
+                    if ($x->{'lang'}{$lang}{"category"}{$category}{"prePost"}{$prepost}{'All_attested'}) {
+			$comps->{$PQ}{'lang'}{$lang}[0]{"category"}{$category}{"prePost"}{$prepost}{'All_attested'}+=
+			$x->{'lang'}{$lang}{"category"}{$category}{"prePost"}{$prepost}{'All_attested'}
+		    }
+		    
+		    foreach my $item (keys %{$x->{'lang'}{$lang}{"category"}{$category}{"prePost"}{$prepost}{"value"}}){
 #                        $item - is sign name e.g.LU₂
                         foreach my $subitem (keys %{$x->{'lang'}{$lang}{"category"}{$category}{"prePost"}{$prepost}{"value"}{$item}}){
                             if ($subitem =~m|_attested$| || $subitem eq 'total') {
