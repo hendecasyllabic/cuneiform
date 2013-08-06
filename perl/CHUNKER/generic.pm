@@ -1,10 +1,14 @@
 package CHUNKER::generic;
 use Data::Dumper;
-use lib "/home/varoracc/local/oracc/www/qlab/cuneiform/perl/lib/lib/perl5/";
+use lib '/Users/csm22/Work/Cuneiform/git/cuneiform/perl';
+use base 'CHUNKER';
+#use lib "/home/varoracc/local/oracc/www/qlab/cuneiform/perl/lib/lib/perl5/";
 use JSON;
 
-my $base = "/home/varoracc/local/oracc/www/qlab/cuneiform";
-#my $base = "/Users/csm22/Work/Cuneiform/git/cuneiform";
+use CHUNKER::configit;
+
+my $config = CHUNKER::configit::getConfigItems();
+my $base = $config->{"base"};
 my $errorfile = $base."/errors";
 my $errorpath = "perlerrors";
 my $outputtype = "text";
@@ -92,8 +96,25 @@ sub writetojson{
 	print SUBFILE2 $json; 
 	close(SUBFILE2);
     }
-    
 }
+
+#generic file to remove a file somewhere
+sub deletefile{
+    my $shortname = shift; #passed in as a parameter
+    my $extradir = shift; #passed in as a parameter
+    my $startpath = shift; #$resultspath."/".$resultsfolder;
+    &makefile($startpath); #pass to function
+    my $destinationdir = $startpath;
+    if($extradir && $extradir ne ""){
+        $extradir =~s|( \|-)|_|gsi;
+        #$extradir =~s|(\W*)|_|gsi;
+	$destinationdir .= "/".$extradir;
+	&makefile($destinationdir);
+    }
+    my $file = $destinationdir."/".$shortname.".xml";
+    unlink($file);
+}
+
 #generic function to write to an file somewhere
 sub writetofile{
     my $shortname = shift; #passed in as a parameter

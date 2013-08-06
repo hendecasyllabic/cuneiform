@@ -153,6 +153,34 @@ sub processtexts{
     else{
 	print "\n no such directory ".$directory;
     }
-    
+}
+#clean up and remove files so can recreate them
+sub removetexts{
+    my $baseresults = shift;
+    my $directory = $baseresults."/".$dir."/P";
+    if(-d "$directory"){
+	opendir (DIR, $directory) or die $!;
+	while (my $file = readdir(DIR)) {
+	    # We only want files
+	    next unless (-f "$directory/$file");
+	    # Use a regular expression to find files ending in .txt
+	    next unless ($file =~ m/\.xml$/);
+	    print "\n removing $file ";
+	    open (MYFILE, $directory."/".$file);
+	    while (<MYFILE>) {
+		chomp;
+		my $item = $_;
+    #	<opt name="P415909.xtf" path="/home/varoracc/local/oracc/bld/alalakh/P415/P415909" />
+		$item=~m|name="([^"]*)" path="([^"]*)"|g;
+		my $xtf = $1;
+		my $path = $2;
+		   
+		&CHUNKER::singlefilestats::removesinglefile($path."/".$xtf, $baseresults);
+	    }
+	    print "\n finishing $file ";
+	    close (MYFILE);
+	    
+	}
+    }
 }
 1;
