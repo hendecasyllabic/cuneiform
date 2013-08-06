@@ -1,9 +1,9 @@
 
 var cuneiform = cuneiform || {};
 cuneiform.config.sendData = "../www/php/makecorpusdata.php";
-cuneiform.config.chartData = "../www/php/removeCorpusdata.php";
 cuneiform.config.chartData = "../www/php/makeCharts.php";
 cuneiform.config.userData = "../www/php/getUserData.php";
+cuneiform.config.purgeData = "../www/php/purge.php";
 
 cuneiform.corpuslist = {};
 //cuneiform.c.$viewgroup_container = $("#show_view");
@@ -250,8 +250,64 @@ cuneiform.corpuslist.charts = function(filepath){
 	});
 	
     }
-  
 }
+
+cuneiform.corpuslist.purge = function(name){
+   //cuneiform.config.purgeData
+     $.ajax({
+		type: "POST",
+		url: cuneiform.config.purgeData,
+		traditional: true,
+		dataType: "json",
+		data: {
+		    'username': cuneiform.data.user.user,
+		    'purge': 1,
+		    'rebuild': 0,
+		    'payload': name
+		},
+		success: function(data, textStatus, jqXHR) {
+		    cuneiform.common.spin_off();
+		    var name = lang;
+		    name = name.replace(/\s+/g, '');
+		    //should show multiple of these but we have namespace issue
+		    //jQuery("#langjquery").html("<h2>"+lang+"</h2>"+data);
+		},
+		error: function(jqXHR, textStatus, errorThrown) {
+		    cuneiform.common.spin_off();
+		    var error_msg = "Could not purge data!";
+		    ajaxError.apply(this, [null, jqXHR, $.ajaxSettings, errorThrown, error_msg]);
+		}
+     });
+		
+}
+cuneiform.corpuslist.rebuild = function(name){
+   $.ajax({
+		type: "POST",
+		url: cuneiform.config.purgeData,
+		traditional: true,
+		dataType: "json",
+		data: {
+		    'username': cuneiform.data.user.user,
+		    'purge': 1,
+		    'rebuild': 1,
+		    'payload': name
+		},
+		success: function(data, textStatus, jqXHR) {
+		    cuneiform.common.spin_off();
+		    var name = lang;
+		    name = name.replace(/\s+/g, '');
+		    //should show multiple of these but we have namespace issue
+		    //jQuery("#langjquery").html("<h2>"+lang+"</h2>"+data);
+		},
+		error: function(jqXHR, textStatus, errorThrown) {
+		    cuneiform.common.spin_off();
+		    var error_msg = "Could not purge data!";
+		    ajaxError.apply(this, [null, jqXHR, $.ajaxSettings, errorThrown, error_msg]);
+		}
+     });
+	  
+}
+
 cuneiform.corpuslist.showCorpora = function(){
     var count = 0;
     var data = cuneiform.data.top.ALLCorpora;
@@ -259,6 +315,8 @@ cuneiform.corpuslist.showCorpora = function(){
 	var corpusitem = "<div class=\"jointparent\">";
 	count++;
 	corpusitem += "<h2  style=\"text-indent:30px; text-transform: capitalize;\">"+this.name+"</h2>";
+	corpusitem += "<a href='javascript://' onclick='cuneiform.corpuslist.purge('"+this.name+"')' >purge</a> | &nbsp;";
+	corpusitem += "<a href='javascript://' onclick='cuneiform.corpuslist.rebuild('"+this.name+"')' >rebuild</a>";
 	corpusitem += "<div style=\"height:300px; \" class=\"subitems\" >"
 	jQuery.each(this, function(k, v) {
 	    if (k != "name") {

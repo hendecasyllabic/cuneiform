@@ -1,5 +1,6 @@
 #!/usr/bin/perl -w
 use strict;
+use CHUNKER::configit;
 use CHUNKER::generic;
 use CHUNKER::singlefilestats;
 use CHUNKER::Borger;
@@ -7,13 +8,12 @@ use CHUNKER::metadata;
 use CHUNKER::getcorpus;
 use CHUNKER::punct;
 use CHUNKER::getProjectList;
+# this file allows us to build up the corpus lists to be used later
 
-my $base = "/home/varoracc/local/oracc/www/qlab/cuneiform";
-#my $base ="/Users/csm22/Work/Cuneiform/git/cuneiform";
-
-#/home/varoracc/local/oracc/bld
-my $basepath = $base."/datain";
-my $baseresults = $base."/dataout4";
+my $config = CHUNKER::configit::getConfigItems();
+my $base = $config->{"base"};
+my $basepath = $config->{"basepath"};
+my $baseresults = $config->{"baseresults"};
 
 use Data::Dumper;
 use XML::Twig::XPath;
@@ -22,7 +22,7 @@ use utf8;
 
 &CHUNKER::generic::writetoerror("timemarking","starting ".localtime);
 # first get a list of all the texts 
-&CHUNKER::getcorpus::getthetexts($baseresults, "/home/varoracc/local/oracc/bld");
+&CHUNKER::getcorpus::getthetexts($baseresults, $config->{"buildpath"});
 
 #initialise Borger and osl
 

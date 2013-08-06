@@ -7,12 +7,12 @@ use CHUNKER::metadata;
 use CHUNKER::getcorpus;
 use CHUNKER::punct;
 use CHUNKER::getProjectList;
+use CHUNKER::configit;
 
-my $base = "/home/qlab/02www/cuneiform";#/Users/csm22/Work/Cuneiform/git/cuneiform";
-
-#/home/varoracc/local/oracc/bld
-my $basepath = $base."/datain";
-my $baseresults = $base."/dataout4";
+my $config = CHUNKER::configit::getConfigItems();
+my $base = $config->{"base"};
+my $basepath = $config->{"basepath"};
+my $baseresults = $config->{"baseresults"};
 
 use Data::Dumper;
 use XML::Twig::XPath;

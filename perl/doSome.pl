@@ -5,6 +5,9 @@ use File::Basename;
 use lib dirname( abs_path $0 );
 use lib "/home/varoracc/local/oracc/www/qlab/cuneiform/perl/lib/lib/perl5/";
 
+
+#can run from command line: perl doSome.pl num_test P249253 /home/varoracc/local/oracc/www/qlab/cuneiform
+# where num_test is an arbitrary name for the file. 
 use CHUNKER::generic;
 use CHUNKER::singlefilestats;
 use CHUNKER::Borger;
@@ -12,13 +15,13 @@ use CHUNKER::metadata;
 use CHUNKER::punct;
 use CHUNKER::getcorpus;
 use CHUNKER::getProjectList;
+use CHUNKER::configit;
 
-my $base = "/home/varoracc/local/oracc/www/qlab/cuneiform";
-#my $base ="/Users/csm22/Work/Cuneiform/git/cuneiform";
+my $config = CHUNKER::configit::getConfigItems();
+my $base = $config->{"base"};
 
-#/home/varoracc/local/oracc/bld
-my $basepath = $base."/datain";
-my $baseresults = $base."/dataout4";
+my $basepath = $config->{"basepath"};
+my $baseresults = $config->{"baseresults"};
 
 use CGI qw(:all *table *Tr *td);
 use Data::Dumper;
